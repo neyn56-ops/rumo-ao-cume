@@ -8497,13 +8497,14 @@ function loseWings(e){
 /* pulo normal: inimigo de chão dorme um tempo; voador é derrubado (cai e dorme, depois volta a voar). Pulo giratório (sjump) derrota. */
 function sjTxt(){return 'pulo giratório ('+(coarse?'arraste o Pular para cima':'K')+')'}
 var FLYERS={bat:1,dfly:1,moth:1,turtle:1,tchase:1,witch:1};
-function sleepE(e){var fl=!!FLYERS[e.type];if(!(e.slp>0))e.slpY=e.y;e.slp=fl?4:5;e.fly=fl;e.landed=!fl;e.svy=0;e.wake=0;e.safe=true;e.cur=0;e.st='patrol';e.alertT=0;if(e.type==='moth')e.sit=0;/* mariposa derrubada: a luz da roda volta */
+function sleepE(e){var fl=!!FLYERS[e.type];if(!(e.slp>0))e.slpY=e.y;e.slp=fl?4:5;e.fly=fl;var g0=floorBelow(e.x,e.y+.1);e.landed=!fl&&g0>-90&&e.y-g0<.06;e.svy=0;e.vx=0;/* todos caem até o que tiver embaixo (sapo no meio do pulo também) */e.wake=0;e.safe=true;e.cur=0;e.st='patrol';e.alertT=0;if(e.type==='moth')e.sit=0;/* mariposa derrubada: a luz da roda volta */
   emit(sparkPool,e.x,e.y+e.h,8,2.2,.4,.3,.2,2);if(!sleepE.told){sleepE.told=true;toast((fl?'Derrubado!':'Dormindo!')+' Use o '+sjTxt()+' para derrotar')}}
 function sleepUpd(e,dt){/* true = está dormindo/voltando (a IA espera) */
   if(e.slp>0){e.slp-=dt;e.cur=0;e.safe=true;
-    if(!e.landed){e.svy-=22*dt;var ny=e.y+e.svy*dt,g=floorBelow(e.x,e.y+.1);if(g>-90&&ny<=g){ny=g;e.landed=true;e.svy=0;emit(dustPool,e.x,g+.1,6,2,.5,.5,1.2,-.3)}e.y=ny;if(e.y<-9){e.alive=false;e.deadT=9;if(e.vis)e.vis.g.visible=false;return true}}
+    if(!e.landed){e.svy-=22*dt;var ny=e.y+e.svy*dt,g=floorBelow(e.x,e.y+.1);if(g>-90&&ny<=g){ny=g;e.landed=true;e.svy=0;emit(dustPool,e.x,g+.1,6,2,.5,.5,1.2,-.3);if(!e.fly){e.vy=0;e.fg=true;e.grounded=true}}e.y=ny;if(e.y<-9){e.alive=false;e.deadT=9;if(e.vis)e.vis.g.visible=false;return true}}
+    else{var g3=floorBelow(e.x,e.y+.1);if(g3<e.y-.3){e.landed=false;e.svy=0}else if(g3>e.y)e.y=g3}/* o apoio andou ou sumiu: cai de novo */
     if(((tm*3+e.ph)|0)%3===0&&Math.random()<.04)emit(sparkPool,e.x+.2,e.y+e.h*.6+.4,1,.5,.9,.3,.25,-.6);/* zzz */
-    if(e.slp<=0){if(e.fly)e.wake=1;else e.safe=false;emit(dustPool,e.x,e.y+.3,5,1.8,.4,.5,1.2,-.3)}
+    if(e.slp<=0){if(e.fly)e.wake=1;else{e.safe=false;e.vy=0;e.vx=0;e.fg=true;e.hop=Math.max(e.hop||0,.8)}emit(dustPool,e.x,e.y+.3,5,1.8,.4,.5,1.2,-.3)}
     return true}
   if(e.wake){var dy=(e.slpY||e.y)-e.y;if(Math.abs(dy)<.08){e.y=e.slpY;e.wake=0;e.safe=false;return false}e.y+=Math.sign(dy)*Math.min(Math.abs(dy),4*dt);e.safe=true;return true}
   return false}
