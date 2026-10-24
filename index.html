@@ -10627,12 +10627,17 @@ requestAnimationFrame(frame);
 (function(){
   var b=document.getElementById('fsBtn'),de=document.documentElement;
   var rf=de.requestFullscreen||de.webkitRequestFullscreen;
-  var isFs=function(){return !!(document.fullscreenElement||document.webkitFullscreenElement)};
+  /* app instalado (ícone na tela inicial) já abre em tela cheia: sem botão nem aviso */
+  var app=function(){try{return matchMedia('(display-mode: fullscreen)').matches||matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}};
+  var isFs=function(){return !!(document.fullscreenElement||document.webkitFullscreenElement)||app()};
   function upd(){b.hidden=!rf||isFs()||!(navigator.maxTouchPoints>0)}
   upd();
-  b.addEventListener('click',function(){
-    try{var r=rf.call(de);if(r&&r.then)r.then(function(){try{screen.orientation.lock('landscape').catch(function(){})}catch(e){}}).catch(function(){b.hidden=true});else try{screen.orientation.lock('landscape')}catch(e){}}catch(e){b.hidden=true}
-  });
+  function lockL(){try{var p=screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape');if(p&&p.catch)p.catch(function(){})}catch(e){}}
+  function goFs(){try{var r=rf.call(de);if(r&&r.then)r.then(lockL).catch(function(){});else lockL()}catch(e){}}
+  b.addEventListener('click',goFs);
+  /* no navegador do celular: o 1º toque na tela já entra em tela cheia sozinho (o navegador exige um toque antes) */
+  function first(){window.removeEventListener('pointerdown',first,true);if(app()){lockL();return}if(rf&&!isFs()&&navigator.maxTouchPoints>0)goFs()}
+  window.addEventListener('pointerdown',first,true);
   document.addEventListener('fullscreenchange',upd);document.addEventListener('webkitfullscreenchange',upd);
 })();
 </script>
