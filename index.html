@@ -10638,7 +10638,7 @@ requestAnimationFrame(frame);
   b.addEventListener('click',goFs);
   /* no navegador do celular: o 1º toque na tela já entra em tela cheia sozinho (o navegador exige um toque antes) */
   var realFs=function(){return !!(document.fullscreenElement||document.webkitFullscreenElement)};
-  function first(){window.removeEventListener('pointerdown',first,true);if(app()){lockL();return}/* app: usa só a tela cheia do próprio app (sem o aviso do Chrome; a barra do celular pode aparecer) — escolha do dono */
+  function first(){window.removeEventListener('pointerdown',first,true);if(app()){if(rf&&!realFs())goFs();else lockL();return}/* app: o 1º toque pede a tela cheia completa uma vez só por abertura (o aviso do Chrome aparece só essa vez) — escolha do dono */
     if(rf&&!isFs()&&navigator.maxTouchPoints>0)goFs()}
   window.addEventListener('pointerdown',first,true);
   document.addEventListener('fullscreenchange',upd);document.addEventListener('webkitfullscreenchange',upd);
