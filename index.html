@@ -9153,7 +9153,7 @@ function step(dt){
   if(P.sj){P.sjA=(P.sjA||0)+dt*21;if(P.grounded&&P.vy<=0||P.inW||P.climb)P.sj=false}
   if(P.sjbuf>0&&!P.inW&&!P.climb&&!P.warp&&!(P.stun>0)){
     if(P.grounded||P.coyote>0){P.sjbuf=0;if(P.mount){dismountFox('off');if(fox)fox.away=true;P.crouch=false;P.h=stdH()}
-      P.vy=(P.mount?13.5:12.8)*(LV.jk||1);P.grounded=false;P.onPlat=null;P.coyote=0;P.jbuf=0;sjGo()}
+      P.vy=(P.mount?14.8:14.2)*(LV.jk||1);P.grounded=false;P.onPlat=null;P.coyote=0;P.jbuf=0;sjGo()}
     else if(P.jT<.25&&P.vy>0&&!P.sj){P.sjbuf=0;if(P.mount){dismountFox('off');if(fox)fox.away=true;P.crouch=false;P.h=stdH()}sjGo()}/* celular: o Pular já saiu e o dedo subiu logo depois — vira giratório no ar */
     else if(P.mount){P.sjbuf=0;dismountFox('off');if(fox)fox.away=true;P.crouch=false;P.h=stdH();P.vy=Math.max(P.vy,9);sjGo()}/* montado no ar: salta de cima dela */
   }
@@ -9279,7 +9279,7 @@ function step(dt){
     if((e.type==='guard'||(e.type==='beetle'&&curTheme.name==='village'))&&pHidden())continue;/* atrás do biombo: o guarda e o gato passam sem encostar */
     if(!e.noHit&&Math.abs(P.x-(e.bx!==undefined?e.bx:e.x))<P.w/2+(e.bhw!==undefined?e.bhw:e.w)&&P.y<e.y+e.h&&P.y+P.h>e.y){
       if(e.stomp&&P.vy<=.5&&P.y>e.y+e.h*.45){
-        killE(e,P.sj?'sjump':'stomp');P.vy=P.inW?(keys.jump?8.5:6.5):(keys.jump?14.5:10.5);P.grounded=false;P.onPlat=null;P.dj=false;
+        killE(e,(P.sj||P.mount)?'sjump':'stomp')/* giratório ou montado na raposinha: derrota na hora */;P.vy=P.inW?(keys.jump?8.5:6.5):(keys.jump?14.5:10.5);P.grounded=false;P.onPlat=null;P.dj=false;
         sfx.stomp();emit(dustPool,e.x,e.y+.4,7,2.4,.55,.55,1.2,-.3);
       }else if(P.spinT<=0&&!e.safe)hurt(e.x,(e.type==='urchin'&&curTheme.name!=='peaks'&&curTheme.name!=='ruins')?1:0);
     }
