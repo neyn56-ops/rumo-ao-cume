@@ -10636,7 +10636,9 @@ requestAnimationFrame(frame);
   function goFs(){try{var r=rf.call(de);if(r&&r.then)r.then(lockL).catch(function(){});else lockL()}catch(e){}}
   b.addEventListener('click',goFs);
   /* no navegador do celular: o 1º toque na tela já entra em tela cheia sozinho (o navegador exige um toque antes) */
-  function first(){window.removeEventListener('pointerdown',first,true);if(app()){lockL();return}if(rf&&!isFs()&&navigator.maxTouchPoints>0)goFs()}
+  var realFs=function(){return !!(document.fullscreenElement||document.webkitFullscreenElement)};
+  function first(){if(app()){if(rf&&!realFs())goFs();else lockL();return}/* app: todo toque fora da tela cheia de verdade volta para ela (esconde a barra da operadora/bateria) */
+    window.removeEventListener('pointerdown',first,true);if(rf&&!isFs()&&navigator.maxTouchPoints>0)goFs()}
   window.addEventListener('pointerdown',first,true);
   document.addEventListener('fullscreenchange',upd);document.addEventListener('webkitfullscreenchange',upd);
 })();
