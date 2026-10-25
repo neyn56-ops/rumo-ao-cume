@@ -236,7 +236,7 @@ var bench=null,benchOv=null,cfgView=null,cmpBase=null,needReload=false;
 var CFGKEY='rumo-ao-cume-cfg',gPart=1,gFx=1,bumpOn=null,shadowOn=null,bumpReg=[],matReg=[];
 /* placa de vídeo fraca no PC (vídeo integrado Intel/AMD): Ultra e Máximo não passam da resolução da tela */
 var gpuName='',weakG=false;try{var _gc=document.createElement('canvas').getContext('webgl'),_gi=_gc&&_gc.getExtension('WEBGL_debug_renderer_info');gpuName=_gi?String(_gc.getParameter(_gi.UNMASKED_RENDERER_WEBGL)):'';
-  weakG=!coarse&&/intel|swiftshader|llvmpipe|radeon\(tm\) (r\d |vega|graphics)|microsoft basic/i.test(gpuName)&&!/arc\(tm\) a\d|arc a\d/i.test(gpuName);/* Intel Arc dedicada fica de fora */
+  weakG=!coarse&&/intel|swiftshader|llvmpipe|radeon\(tm\) (r\d |vega|graphics)|microsoft basic|mali|powervr|adreno|videocore/i.test(gpuName)/* mali/powervr/adreno sem tela de toque = TV/TV box (Fire TV etc.) */&&!/arc\(tm\) a\d|arc a\d/i.test(gpuName);/* Intel Arc dedicada fica de fora */
   try{if(/[?&]weakg=(\d)/.test(location.search))weakG=RegExp.$1==='1'}catch(e){}
   var _lx=_gc&&_gc.getExtension('WEBGL_lose_context');if(_lx)_lx.loseContext()}catch(e){}
 var lowG=coarse||weakG;
@@ -1089,7 +1089,7 @@ function perfTick(raw){
     else if(au&&pfW.good>=8&&autoLvl<autoMax()){autoSet(autoLvl+1);pfW.probe=5}
   }else{pfW.bad=0;pfW.good=0}
 }
-var autoLvl=coarse?0:2,failedLvl=99,failW={},autoGood=0,autoSkip=15,capMs=0,fpsBoxT=0,fpsBoxN=0;
+var autoLvl=(coarse||weakG)?0:2,failedLvl=99,failW={},autoGood=0,autoSkip=15,capMs=0,fpsBoxT=0,fpsBoxN=0;
 function effCfg(){
   if(benchOv)return PRESETS[benchOv];
   if(cfg.preset==='auto')return PRESETS[AUTO[autoLvl]];
