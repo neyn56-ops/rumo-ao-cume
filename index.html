@@ -9173,10 +9173,10 @@ function step(dt){
       P.vy=12.4;P.dj=true;P.jbuf=0;sfx.dbl();emit(sparkPool,P.x,P.y+.2,8,2.5,.45,.3,.2,3);
     }
   }
-  if(!P.inW&&!keys.jump&&P.vy>5&&P.noCut<=0)P.vy-=60*dt;
+  if(!P.inW&&!keys.jump&&!(keys.sjHold&&P.sj)&&P.vy>5&&P.noCut<=0)P.vy-=60*dt;
   var gr=P.vy<0?43:34;
   if(P.cape&&P.flyT>0&&!P.grounded)gr*=.55;
-  if(keys.jump&&!P.grounded&&Math.abs(P.vy)<2.2)gr*=.62;
+  if((keys.jump||(keys.sjHold&&P.sj))&&!P.grounded&&Math.abs(P.vy)<2.2)gr*=.62;
   if(P.inW)waterVy(dt);else P.vy-=gr*dt;
   if(P.cape&&P.inW){P.flyT=0;P.pm=0;P.glide=0}
   else if(P.cape){
@@ -9773,7 +9773,7 @@ function press(code,down){
       keys.jump=down;break;
     case 'ShiftLeft':case 'ShiftRight':keys.run=down;break;
     case 'KeyJ':case 'KeyX':case 'KeyZ':if(down)act();else actUp();break;
-    case 'KeyK':if(P.arena){if(down)act();else actUp()}else if(down)spinJump();break;/* K: pulo giratório (na luta de katana continua sendo golpe) */
+    case 'KeyK':keys.sjHold=down;if(P.arena){if(down)act();else actUp()}else if(down)spinJump();break;/* segurar o K = segurar o pulo (mesma altura do celular) *//* K: pulo giratório (na luta de katana continua sendo golpe) */
     case 'KeyL':case 'KeyC':if(down&&P.arena)throwStar();break;
     case 'ArrowDown':case 'KeyS':keys.down=down;break;
   }
@@ -9843,7 +9843,7 @@ window.addEventListener('keydown',function(e){
   press(e.code,true);
 });
 window.addEventListener('keyup',function(e){press(e.code,false)});
-window.addEventListener('blur',function(){keys.left=keys.right=keys.jump=keys.run=keys.down=keys.up=false;keys.dbl=0;keys.jx=0;keys.jy=0});
+window.addEventListener('blur',function(){keys.left=keys.right=keys.jump=keys.run=keys.down=keys.up=keys.sjHold=false;keys.dbl=0;keys.jx=0;keys.jy=0});
 (function touch(){
   var zone=$('stickZone'),base=$('stickBase'),knob=$('stickKnob'),jb=$('bJump'),pid=null,ox=0,oy=0,R=58;
   function home(){
@@ -10019,7 +10019,7 @@ soundOn=cfg.snd!==false;musicOn=cfg.mus!==false;
     setCx(cmp.clientWidth*.3);
     window.__cfgRefresh();
   }
-  function clearKeys(){keys.left=keys.right=keys.jump=keys.run=keys.down=keys.up=false;keys.dbl=0;keys.jx=0;keys.jy=0}
+  function clearKeys(){keys.left=keys.right=keys.jump=keys.run=keys.down=keys.up=keys.sjHold=false;keys.dbl=0;keys.jx=0;keys.jy=0}
   function pauseUI(on){
     $('cfgClose').textContent=on?'Continuar':'Voltar';$('cfg').classList.toggle('pausing',on);$('cfgBox').querySelector('h2').textContent=on?'Pausado':'Configurações';
     $('pauseRestart').hidden=!on;$('pauseMenu').hidden=!on;
