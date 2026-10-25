@@ -10654,7 +10654,7 @@ requestAnimationFrame(frame);
   var b=document.getElementById('fsBtn'),de=document.documentElement;
   var rf=de.requestFullscreen||de.webkitRequestFullscreen;
   /* app instalado (ícone na tela inicial) já abre em tela cheia: sem botão nem aviso */
-  var app=function(){try{return matchMedia('(display-mode: fullscreen)').matches||matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}};
+  var app=function(){try{return location.protocol==='file:'||/[?&]apk=1/.test(location.search)||matchMedia('(display-mode: fullscreen)').matches||matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}};
   var isFs=function(){return !!(document.fullscreenElement||document.webkitFullscreenElement)||app()};
   function upd(){b.hidden=!rf||isFs()||!(navigator.maxTouchPoints>0)}
   upd();
