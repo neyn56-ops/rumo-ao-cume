@@ -9826,7 +9826,25 @@ function mapKey(e){
   if((e.code==='KeyQ'||e.code==='Minus'||e.code==='NumpadSubtract'))mapCam.userData.zoom=Math.min(2.2,(mapCam.userData.zoom||1)*1.1);
   if((e.code==='KeyE'||e.code==='Equal'||e.code==='NumpadAdd'))mapCam.userData.zoom=Math.max(.6,(mapCam.userData.zoom||1)*.9);
 }
-window.addEventListener('pointerdown',function(){navClear()},true);/* usou mouse/toque: some o destaque */
+window.addEventListener('pointerdown',function(){navClear()},true);
+/* ===== controle (gamepad) direto no jogo: vira teclas por dentro, então vale em tudo (jogo, menus, mapa, pausa) =====
+   analógico/setas = setas · A = pular/confirmar · B = giratório (nos menus: voltar) · X = ação · Y = estrela · RB/RT = correr · Start = pausa · Back = voltar */
+var gpPrev={},gpOn=false;
+function gpKey(code,down){try{window.dispatchEvent(new KeyboardEvent(down?'keydown':'keyup',{code:code,key:code,bubbles:true,cancelable:true}))}catch(e){}}
+function gpPoll(){
+  if(!navigator.getGamepads)return;var gs=navigator.getGamepads(),g=null;for(var i=0;i<gs.length;i++)if(gs[i]&&gs[i].connected){g=gs[i];break}
+  if(!g){if(gpOn){gpOn=false;for(var k in gpPrev)if(gpPrev[k])gpKey(k,false);gpPrev={}}return}
+  if(!gpOn){gpOn=true;try{toast('Controle conectado! A pula · B giratório · X ação · Start pausa')}catch(e){}}
+  var b=function(n){var q=g.buttons[n];return !!(q&&(q.pressed||q.value>.5))},ax=g.axes[0]||0,ay=g.axes[1]||0;
+  var menu=(state!=='play')||paused||(typeof navBox==='function'&&!!navBox());
+  var want={ArrowLeft:b(14)||ax<-.5,ArrowRight:b(15)||ax>.5,ArrowUp:b(12)||ay<-.5,ArrowDown:b(13)||ay>.5,
+    Space:b(0),KeyJ:b(2),KeyL:b(3),ShiftLeft:b(5)||b(7)||Math.abs(ax)>.93,KeyP:b(9)};
+  want[menu?'Escape':'KeyK']=b(1);if(!menu)want.Escape=b(8);else want.Escape=want.Escape||b(8);
+  if(menu&&!card.hidden&&b(9))want.Enter=true,want.KeyP=false;/* nos cartões o Start confirma */
+  for(var c in want){var v=!!want[c];if(v!==!!gpPrev[c]){gpKey(c,v);gpPrev[c]=v}}
+  for(var c2 in gpPrev)if(!(c2 in want)&&gpPrev[c2]){gpKey(c2,false);gpPrev[c2]=false}
+}
+window.addEventListener('gamepadconnected',function(){gpPoll()});/* usou mouse/toque: some o destaque */
 window.addEventListener('keydown',function(e){
   if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space'].indexOf(e.code)>=0)e.preventDefault();
   if(state==='map'){mapKey(e);return}
@@ -10582,6 +10600,7 @@ function benchStep(raw){
 var lastT=0;
 function frame(now){
   requestAnimationFrame(frame);
+  gpPoll();/* controle: lido todo quadro, até pausado e no mapa */
   if(!bench&&capMs&&now-lastT<capMs-3)return;
   lastT=(capMs&&now-lastT<capMs*2)?lastT+capMs:now;/* limite de quadros certo também em tela de 90/120 Hz */
   var raw=(now-last)/1000;last=now;
