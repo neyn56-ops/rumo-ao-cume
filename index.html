@@ -10645,4 +10645,4 @@ requestAnimationFrame(frame);
 })();
 </script>
 
-<script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script></body></html>
+<script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").then(function(r){try{r.update()}catch(e){}}).catch(function(){});var t0=Date.now(),rl=false,had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(had&&!rl&&Date.now()-t0<20000){rl=true;location.reload()}})/* versão nova chegou logo ao abrir: recarrega sozinho uma vez */})}</script></body></html>
