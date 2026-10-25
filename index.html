@@ -9278,7 +9278,7 @@ function step(dt){
     updEnemy(e,dt);
     if((e.type==='guard'||(e.type==='beetle'&&curTheme.name==='village'))&&pHidden())continue;/* atrás do biombo: o guarda e o gato passam sem encostar */
     if(!e.noHit&&Math.abs(P.x-(e.bx!==undefined?e.bx:e.x))<P.w/2+(e.bhw!==undefined?e.bhw:e.w)&&P.y<e.y+e.h&&P.y+P.h>e.y){
-      if((e.slp>0||e.wake)&&!P.sj&&!P.mount){/* dormindo: vira um degrau baixinho — o Kuro sobe e anda por cima (não quica, não atravessa) */
+      if((e.slp>0||e.wake)&&!P.sj&&!(P.mount&&P.vy<-1&&P.y>e.y+e.h*.45)){/* montado: caindo de verdade por cima derrota; andando sobe e passa por cima igual *//* dormindo: vira um degrau baixinho — o Kuro sobe e anda por cima (não quica, não atravessa) */
         var stp=e.y+e.h*.55;if(e.slp>0&&e.landed&&P.vy<=.5&&P.y>stp-.6&&P.y<stp+.3){P.y=stp;P.vy=0;P.grounded=true;P.onPlat=null;P.dj=false}continue}
       if(e.stomp&&P.vy<=.5&&P.y>e.y+e.h*.45&&(!(e.slp>0||e.wake)||P.sj||P.mount)){/* dormindo: o pulo normal não quica de novo (o Kuro passa e pisa no chão); giratório/raposinha derrotam */
         killE(e,(P.sj||P.mount)?'sjump':'stomp')/* giratório ou montado na raposinha: derrota na hora */;P.vy=P.inW?(keys.jump?8.5:6.5):(keys.jump?14.5:10.5);P.grounded=false;P.onPlat=null;P.dj=false;
