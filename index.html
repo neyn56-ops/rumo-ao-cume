@@ -28,6 +28,7 @@ body{position:relative;margin:0;background:var(--ink);color:var(--mist);font-fam
 .grow{flex:1}
 .tbtn{pointer-events:auto;cursor:pointer;font-size:14px;font-style:normal;font-family:var(--body);font-weight:600;letter-spacing:.02em;text-transform:none}
 .tbtn:focus-visible,.btn:focus-visible,.pad-btn:focus-visible,.wbtn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.nocur,.nocur *{cursor:none!important}
 .kfocus{outline:3px solid #fff!important;outline-offset:3px;box-shadow:0 0 0 6px rgba(255,210,74,.55)!important;position:relative;z-index:1}/* destaque do teclado/controle */
 input[type=range].kfocus{outline-offset:6px}
 .heart{width:22px;height:22px;fill:var(--ember)}
@@ -9844,7 +9845,10 @@ function gpPoll(){
   for(var c in want){var v=!!want[c];if(v!==!!gpPrev[c]){gpKey(c,v);gpPrev[c]=v}}
   for(var c2 in gpPrev)if(!(c2 in want)&&gpPrev[c2]){gpKey(c2,false);gpPrev[c2]=false}
 }
-window.addEventListener('gamepadconnected',function(){gpPoll()});/* usou mouse/toque: some o destaque */
+window.addEventListener('gamepadconnected',function(){gpPoll()});
+/* setinha do mouse some sozinha depois de 2,5 s parada (volta ao mexer o mouse) */
+(function(){var t=null,de=document.documentElement;function hide(){de.classList.add('nocur')}function show(){de.classList.remove('nocur');clearTimeout(t);t=setTimeout(hide,2500)}
+  window.addEventListener('mousemove',show,{passive:true});window.addEventListener('keydown',hide);t=setTimeout(hide,2500)})();/* usou mouse/toque: some o destaque */
 window.addEventListener('keydown',function(e){
   if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space'].indexOf(e.code)>=0)e.preventDefault();
   if(state==='map'){mapKey(e);return}
