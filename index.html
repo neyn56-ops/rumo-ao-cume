@@ -5887,6 +5887,14 @@ function mnBossVis(dt){var b=boss,v=b.vis,st=b.state;if(st==='wait')return;
   if(b.flash>0){b.flash=Math.max(0,b.flash-dt);v.fur.emissive.setHex(0xffffff);v.fur.emissiveIntensity=b.flash/.16}else v.fur.emissiveIntensity=0;
   if(st==='dead'){var k=b.deadT;v.inner.scale.set(1+k*.3,Math.max(.05,1-k*.8),1+k*.3)}else{var pu=st==='hurt'?1+Math.sin(tm*40)*.05:1;v.inner.scale.set(pu,pu,pu)}
   v.beam.material.opacity=hid?0:.45+.1*Math.sin(tm*7)}
+/* paredes do vagonete: dentro dele o Kuro não sai andando pelos lados; só sai pulando por cima da borda */
+function mnWallX(){mnCarts.forEach(function(K){
+  if(P.onPlat===K.so&&K.st!=='gone')K.inside=true;
+  if(!K.inside)return;
+  var rim=K.so.t+.77;
+  if(K.st==='gone'||P.y>=rim||P.y<K.so.t-.6||Math.abs(P.x-K.x)>2.5||P.warp||P.climb||state!=='play'){K.inside=false;return}
+  var lo=K.x-.98+P.w/2,hi=K.x+.98-P.w/2;
+  if(P.x<lo){P.x=lo;if(P.vx<0)P.vx=0}else if(P.x>hi){P.x=hi;if(P.vx>0)P.vx=0}})}
 
 /*@@parte:29_abertura.js*/
 /* ===================== Clipe de abertura: o Rei Besouro rouba o Coração de Cristal da vila =====================
@@ -9609,6 +9617,7 @@ function step(dt){
       P.vx=0;hl=P.x-P.w/2;hr=P.x+P.w/2;
     }
   }
+  if(curTheme.name==='mine')mnWallX();/* Mina: as paredes do vagonete seguram o Kuro dentro */
   /* eixo Y */
   P.prevY=P.y;P.y+=(P.vy+cvy)*dt;
   var wasG=P.grounded;P.grounded=false;P.onPlat=null;
