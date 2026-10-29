@@ -1630,6 +1630,23 @@ LEVELS.push({name:'Mina dos Trilhos',theme:14,camMax:330,limit:600,es:1.05,noLif
  springs:[],gems:[[17.5,6.4],[134,9.6],[255.5,7.3]],hearts:[],feathers:[],
  checkpoints:[[27,0],[45,0],[105,0],[138,6],[260,3.6],[290,3.6]],
  boss:{x:320,top:3.6,hp:5,arena:[300,326],trigger:303,mine:1},start:{x:2,y:0}});
+/* Mundo 15 — parte 1: a superfície (paisagem normal com inimigos e obstáculos). No fim, um cano é a única saída: o Kuro entra e cai dentro da mina.
+   Fica guardada em .pre do Mundo 15 (não conta como mundo novo); buildLevel monta ela primeiro e, depois do cano, monta a mina. */
+LEVELS[LEVELS.length-1].pre={name:'Mina dos Trilhos',theme:0,camMax:114,xMax:120.6,limit:300,es:1,noLift:1,jk:1.1,minePre:1,
+ solids:[[-14,24,0],[28,44,0],[44,47,1.2],[47,58,2.4],[64,76,1.2],[86,104,0],[104,107,1.2],[107,121,2.4],[121,134,8.4]],
+ floats:[[8,11,2.8],[90.5,94,3.2]],
+ crumbles:[[59.4,62.6,2.4]],
+ movers:[{cx:81,range:2.4,speed:.9,top:1.6,w:3.6}],
+ spikes:[[20,21.6,0],[36.4,37.8,0],[96,97.6,0]],
+ enemies:[{t:'beetle',x0:12,x1:19,y:0,s:1.6},{t:'beetle',x0:29,x1:35.5,y:0,s:1.7},{t:'frog',x0:50,x1:55,y:2.4},
+  {t:'bat',x0:65,x1:75,y:4.6,s:1.8},{t:'beetle',x0:87,x1:95,y:0,s:1.9},{t:'bat',x0:98,x1:106,y:4.4,s:1.7},{t:'beetle',x0:108,x1:114,y:2.4,s:1.4}],
+ blocks:[{x:6,y:2.6,t:'q',c:'mushroom'},{x:39,y:2.6,t:'brick'},{x:40,y:2.6,t:'q',c:'coin'},{x:41,y:2.6,t:'brick'},{x:70,y:3.8,t:'q',c:'flower'},{x:100,y:2.6,t:'q',c:'fruit'}],
+ coins:[['r',3,5,.9,3],['r',8.3,10.7,3.7,3],['a',26,.9,2.4,2.4,4],['r',30,34,.9,3],['r',45,46,2.1,2],['r',49,56,3.3,5],['a',61,3.3,2.4,1.6,3],
+  ['r',65,68,2.1,3],['r',72,75,2.1,3],['r',78,84,2.6,4],['r',87,94,.9,4],['r',91,93.5,4.1,3],['r',105,106,2.1,2],['r',108,114,3.3,4]],
+ pipes:[{x:117.5,base:2.4,top:4.0,to:{mine:1}}],
+ springs:[],gems:[],hearts:[],feathers:[],
+ checkpoints:[[48.5,2.4],[87.5,0]],start:{x:2,y:0}};
+var prePast={};/* mundo com parte de superfície: true depois que o Kuro entrou no cano (tentar de novo começa já na mina) */
 /* Raposinha Foguete: um bloco no começo dos mundos permitidos (não entra na água nem no castelo: Mundos 4 e 5 ficam sem) */
 [[1,13.5,2],[2,4.5,5],[6,13,2]].forEach(function(q){LEVELS[q[0]].blocks.push({x:q[1],y:q[2],t:'q',c:'fox'})});
 liftLevel(LEVELS[0],1.2,1.08);
@@ -1667,7 +1684,7 @@ STORY.worlds.push({kicker:'Mundo 12 · Terra Nova',title:'Floresta Ancestral',te
 STORY.worlds.push({kicker:'Mundo 13 · Terra Nova',title:'Escalada dos Blocos Celestes',text:'Aqui o caminho é só para cima! Pule de bloco em bloco e olhe a cor das runas: azul desliza, verde sobe e desce, roxo some depois que você pisa, laranja gira e dourado lança o Kuro lá no alto. Cuidado com as tartarugas voadoras.',end:'O Kuro chegou ao topo da torre celeste e tocou o sino! O som ecoou por toda a Terra Nova.'});
 STORY.worlds.push({kicker:'Mundo 14 · Terra Nova',title:'Torre dos Vaga-lumes',text:'No meio do pântano, uma torre de relógio antiga parou e ficou no escuro. Lá dentro só os vaga-lumes ainda moram. As engrenagens só giram quando um vaga-lume pousa no eixo: espere a luz, suba nas tábuas e pule de roda em roda até a porta lá do alto. Lá fora o dia nasce: atravesse o pântano e suba a colina até o sino.',end:'Dooong! O sino tocou e a torre inteira acendeu. O mecanismo voltou a funcionar e os vaga-lumes mostram o caminho da próxima aventura.'});
 
-STORY.worlds.push({kicker:'Mundo 15 · Terra Nova',title:'Mina dos Trilhos',text:'Debaixo da Terra Nova existe uma mina antiga, cheia de trilhos e cristais. Pule dentro dos vagonetes: eles voam por cima dos abismos! Abaixe-se nas vigas baixas e, se o trilho acabar, pule para outro vagonete. Lá no fundo, alguém não para de cavar...',end:'O Toupeirão caiu tonto e soltou o Cristal da Mina! Os lampiões acenderam um por um e os trilhos voltaram a brilhar. Um vagonete levou o Kuro de volta para a luz do dia: a Terra Nova ainda guarda muitos segredos.'});
+STORY.worlds.push({kicker:'Mundo 15 · Terra Nova',title:'Mina dos Trilhos',text:'Debaixo da Terra Nova existe uma mina antiga, cheia de trilhos e cristais. Para chegar lá, atravesse o campo lá em cima: no fim do caminho, um cano velho é a única saída. Entre nele e caia dentro da mina! Lá embaixo, pule dentro dos vagonetes: eles voam por cima dos abismos! Abaixe-se nas vigas baixas e, se o trilho acabar, pule para outro vagonete. Lá no fundo, alguém não para de cavar...',end:'O Toupeirão caiu tonto e soltou o Cristal da Mina! Os lampiões acenderam um por um e os trilhos voltaram a brilhar. Um vagonete levou o Kuro de volta para a luz do dia: a Terra Nova ainda guarda muitos segredos.'});
 
 /*@@parte:11_construcao.js*/
 /* ---------- contêineres do mundo atual ---------- */
@@ -1946,7 +1963,7 @@ function makeEel(){
 /* ---------- construção do mundo ---------- */
 function buildLevel(idx){
   disposeLevel();trIntro=null;
-  levelIdx=idx;LV=LEVELS[idx];
+  levelIdx=idx;LV=(LEVELS[idx].pre&&!prePast[idx])?LEVELS[idx].pre:LEVELS[idx];
   if(typeof autoPick==='function')autoPick(idx);/* Automático: começa na qualidade que já deu certo neste mundo */
   if(typeof spitB!=='undefined')spitB=[];
   if(rig.setOutfit)rig.setOutfit(idx>=11?1:0);/* roupa nova do Kuro na Terra Nova (Mundo 12 em diante) */
@@ -1970,6 +1987,7 @@ function buildLevel(idx){
   buildCollectibles();
   buildBlocks();
   buildPipes();buildPlants();
+  if(LV.minePre)buildMinePre();
   buildMarks();
   buildEnemies();
   buildBlades();buildDrops();buildBalls();buildSandSys();buildWater();buildCoral();buildFlames();buildDoor();
@@ -5712,6 +5730,43 @@ function updMine(dt){if(!mnFx)return;var i;
   if(!mnFx.dropTold&&mnRails[2]){mnCarts.forEach(function(K){if(K.ri===2&&P.onPlat===K.so&&mnRails[2].x1-K.x<12){mnFx.dropTold=1;toast('O trilho acabou! Pule para o outro vagonete')}})}
   /* lampiões piscando, poeira caindo */
   mnFx.lamps.forEach(function(l,k){var f=.85+.15*Math.sin(tm*9+k*2.3)*Math.sin(tm*3.1+k);l.material.opacity=.5*f});mnFx.lx=P.x}
+/* ---------- Mundo 15, parte 1: a superfície. O cano do fim leva o Kuro para dentro da mina ---------- */
+var mpFx=null;
+function buildMinePre(){mnMats();var pp=null;(LV.pipes||[]).forEach(function(d){if(d.to&&d.to.mine)pp=d});mpFx={pp:pp,told:0,puff:0};if(!pp)return;
+  var top=pp.base,r=rnd(1599);
+  /* placa "MINA" com seta para baixo, ao lado do cano */
+  var c=document.createElement('canvas');c.width=128;c.height=96;var k=c.getContext('2d');k.fillStyle='#6a4a2a';k.fillRect(0,0,128,96);k.strokeStyle='#3a2414';k.lineWidth=6;k.strokeRect(3,3,122,90);
+  k.fillStyle='#ffe6a8';k.font='bold 30px Arial';k.textAlign='center';k.textBaseline='middle';k.fillText('MINA',64,30);
+  k.beginPath();k.moveTo(64,86);k.lineTo(46,58);k.lineTo(56,58);k.lineTo(56,46);k.lineTo(72,46);k.lineTo(72,58);k.lineTo(82,58);k.closePath();k.fill();
+  var t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;var sg=new T.Group();sg.position.set(pp.x-2.6,top,-1.4);add(sg);
+  var po=mesh(new T.CylinderGeometry(.07,.08,2.4,6),mnM.woodD,true,false);po.position.y=1.2;sg.add(po);
+  var pl=new T.Mesh(new T.PlaneGeometry(1.3,1,1,1),new T.MeshStandardMaterial({map:t,roughness:.7}));pl.position.y=2.5;sg.add(pl);
+  /* restos de mineração no fim do caminho: vagonete velho com ouro, caixotes, barril e trilho quebrado */
+  var oc=new T.Group();oc.position.set(pp.x-6.5,top,-3.2);oc.rotation.y=.25;add(oc);var ob=mesh(boxGeo(1.8,.8,1.1,1),mnM.rust,true,false);ob.position.y=.7;oc.add(ob);
+  for(var i=0;i<6;i++){var on=mesh(new T.DodecahedronGeometry(.2+r()*.1,0),mnM.ore,false,false);on.position.set(-.6+r()*1.2,1.15+r()*.12,-.3+r()*.6);oc.add(on)}
+  [-.55,.55].forEach(function(x){var wh=mesh(new T.CylinderGeometry(.26,.26,.1,12),mnM.iron,false,false);wh.rotation.x=Math.PI/2;wh.position.set(x,.26,.58);oc.add(wh)});
+  var CR=[];CR.push(xf(boxGeo(1,1,1,1),[pp.x+1.8,top+.5,-3.4],[0,.3,0]));CR.push(xf(boxGeo(.8,.8,.8,1),[pp.x+2,top+1.4,-3.4],[0,-.2,0]));CR.push(xf(boxGeo(.9,.9,.9,1),[pp.x-9.6,top+.45,-2.6],[0,.5,0]));
+  add(mesh(mgL(CR),mnM.wood,true,false));
+  var ba=mesh(new T.CylinderGeometry(.45,.45,1.1,12),mnM.woodD,true,false);ba.position.set(pp.x+3.2,top+.55,-2.2);add(ba);
+  var RL=[];for(var u=0;u<7;u+=.62)RL.push(xf(new T.BoxGeometry(.28,.1,1.5),[pp.x-13+u,top+.05,-2.6]));add(mesh(mgL(RL),mnM.woodD,false,true));
+  [-.5,.5].forEach(function(z){var rl=mesh(new T.BoxGeometry(6.4,.12,.1),mnM.steel,false,false);rl.position.set(pp.x-9.6,top+.16,-2.6+z);add(rl)});
+  var bt=mesh(new T.BoxGeometry(1.2,.1,.1),mnM.steel,false,false);bt.position.set(pp.x-6.1,top+.28,-2.1);bt.rotation.z=.45;add(bt)}
+function updMinePre(dt){if(!mpFx||!mpFx.pp)return;var pp=mpFx.pp;
+  /* fumacinha saindo do cano, para chamar a atenção */
+  mpFx.puff-=dt;if(mpFx.puff<=0){mpFx.puff=.35+Math.random()*.3;emit(dustPool,pp.x+(Math.random()-.5)*.6,pp.top+.2,2,1.2,.5,.6,1.4,-.6)}
+  if(!mpFx.told&&state==='play'&&P.x>pp.x-9){mpFx.told=1;toast('O caminho acabou! Entre no cano: suba nele e segure para baixo')}}
+/* o Kuro desceu pelo cano: monta a mina e ele cai lá dentro pelo cano do teto (moedas, tempo, corações e poderes continuam) */
+function mineFall(){
+  var keep={coins:coinsGot,gems:gemsGot,t:timeT,hearts:hearts,bank:bank,big:!!P.big,fire:!!P.fire,cape:!!P.cape,shield:!!P.shield,tot:coins.length+extraCoins};
+  $('fade').style.opacity=1;
+  prePast[levelIdx]=true;var cn=carryNow;carryNow=null;
+  buildLevel(levelIdx);resetState();carryNow=cn;
+  coinsGot=keep.coins;gemsGot=keep.gems;timeT=keep.t;hearts=keep.hearts;bank=keep.bank;extraCoins+=keep.tot;
+  P.big=keep.big;if(keep.cape)setCape(true);else if(keep.fire)setFire(true);P.shield=keep.shield;
+  setHearts();$('coinN').textContent=bank;$('gemN').textContent=String(gemsGot);
+  var sx=LV.pipeIn||4.6;P.x=sx;P.y=mnCeil(sx)-3.5-(P.big?1.8:1.35);P.vx=0;P.vy=0;P.grounded=false;P.onPlat=null;P.face=1;
+  P.warp={t:.4,pp:{x:sx,top:P.y},tg:{x:sx,y:P.y},moved:true,exit:null};
+  updateCamera(0,true);sfx.pop();toast('Kuro caiu na Mina dos Trilhos!')}
 /* ---------- cenário de dentro da mina ---------- */
 function mnCeil(x){var c=null;(LV.solids||[]).forEach(function(s){if(x>=s[0]-6&&x<=s[1]+6){var v=s[2]+(s[5]==='tres'?11:9.5);if(c===null||v>c)c=v}});return c===null?14:c}
 function buildDecorMine(th){mnMats();var r=rnd(1503),lite=LITE,i,x,xe=sceneEnd()-30;
@@ -5748,9 +5803,12 @@ function buildDecorMine(th){mnMats();var r=rnd(1503),lite=LITE,i,x,xe=sceneEnd()
     if(k%2){BA.push(xf(new T.CylinderGeometry(.45,.45,1.1,12),[bx,q[1]+.55,-3.7]));BA.push(xf(new T.CylinderGeometry(.45,.45,1.1,12),[bx+1,q[1]+.55,-3.9]))}
     else{CR.push(xf(boxGeo(1,1,1,1),[bx,q[1]+.5,-3.8],[0,.3,0]));CR.push(xf(boxGeo(.8,.8,.8,1),[bx+.2,q[1]+1.4,-3.8],[0,-.2,0]))}});
   add(mesh(mgL(BA),mnM.woodD,true,false));add(mesh(mgL(CR),mnM.wood,true,false));
-  /* entrada da mina, atrás do começo: luz do dia e a placa */
-  var sky=new T.Mesh(new T.PlaneGeometry(10,9),new T.MeshBasicMaterial({color:0xcfe8ff,fog:false}));sky.position.set(-8.5,4,-6);add(sky);
-  var sg=new T.Sprite(new T.SpriteMaterial({map:softSprite(),color:0xfff0c0,transparent:true,blending:T.AdditiveBlending,depthWrite:false,fog:false,opacity:.6}));sg.scale.set(16,12,1);sg.position.set(-6,4,-3);add(sg);
+  /* entrada da mina, atrás do começo: escuro (o Kuro chega pelo cano do teto) e a placa */
+  /* cano pendurado no teto: por ele o Kuro cai da superfície (parte 1 do Mundo 15) */
+  var px0=LV.pipeIn||4.6,pcy=mnCeil(px0),pb=pcy-3.5;
+  var pbd=mesh(new T.CylinderGeometry(.62,.62,pcy+1-pb,22),pipeM,true,false);pbd.position.set(px0,(pcy+1+pb)/2,0);add(pbd);
+  var prm=mesh(new T.CylinderGeometry(.76,.76,.42,22),pipeRimM,false,false);prm.position.set(px0,pb+.21,0);add(prm);
+  var phole=mesh(new T.CircleGeometry(.6,20),new T.MeshBasicMaterial({color:0x050302}),false,false);phole.rotation.x=Math.PI/2;phole.position.set(px0,pb-.005,0);add(phole);
   var EA=[];EA.push(xf(new T.BoxGeometry(.7,9,.7),[-3.4,4.5,-1.4]));EA.push(xf(new T.BoxGeometry(.7,9,.7),[-3.4,4.5,-5.6]));EA.push(xf(new T.BoxGeometry(.8,.8,5.2),[-3.4,9,-3.5]));add(mesh(mgL(EA),mnM.wood,true,false));
   var pc=document.createElement('canvas');pc.width=256;pc.height=64;var k2=pc.getContext('2d');k2.fillStyle='#6a4a2a';k2.fillRect(0,0,256,64);k2.strokeStyle='#3a2414';k2.lineWidth=6;k2.strokeRect(3,3,250,58);
   k2.fillStyle='#ffe6a8';k2.font='bold 30px Arial';k2.textAlign='center';k2.textBaseline='middle';k2.fillText('MINA DOS TRILHOS',128,34);
@@ -7208,7 +7266,7 @@ function showMenu(){
 var carryNow=null;
 function startLevel(i){
   if(i===0&&!save.seenOpen&&!opn&&!window.__noOpen){playOpening(function(){startLevel(0)});return}/* primeira vez no Mundo 1: o clipe do roubo do Coração de Cristal */
-  initAudio();cpSave[i]=null;trIntroDone=false;
+  initAudio();cpSave[i]=null;trIntroDone=false;prePast[i]=false;
   carryNow=(i>0&&save.carryFor===i&&save.carry)?save.carry:null;
   buildLevel(i);resetState();
   state='intro';
@@ -7870,7 +7928,7 @@ function updPlants(dt){
   }
 }
 function buildPipes(){
-  if(LV.pipes){var ex=[];LV.pipes.forEach(function(d){if(d.to&&d.to.pipe===undefined&&!LV.pipes.some(function(q){return q.entry&&q.x===d.to.x}))ex.push({x:d.to.x,base:d.to.y||0,top:(d.to.y||0)+1.3,entry:1})});ex.forEach(function(q){LV.pipes.push(q)})}
+  if(LV.pipes){var ex=[];LV.pipes.forEach(function(d){if(d.to&&d.to.pipe===undefined&&!d.to.mine&&!LV.pipes.some(function(q){return q.entry&&q.x===d.to.x}))ex.push({x:d.to.x,base:d.to.y||0,top:(d.to.y||0)+1.3,entry:1})});ex.forEach(function(q){LV.pipes.push(q)})}
   (LV.pipes||[]).forEach(function(d){
     var g=new T.Group(),h=d.top-d.base,pM=pipeM,rM=pipeRimM;
     if(curTheme.name==='cave'){pM=M(0x3a78c8,.2,.2,{emissive:0x1a4aa0,emissiveIntensity:.55});rM=M(0x9fd8ff,.15,.2,{emissive:0x3a8ae0,emissiveIntensity:.8})}
@@ -8013,6 +8071,7 @@ function warpStep(dt){
   var w=P.warp;w.t+=dt;P.vx=0;P.vy=0;
   if(w.t<.4){P.x=w.pp.x;P.y=w.pp.top-1.95*(w.t/.4)}
   else{
+    if(w.tg.mine&&!w.moved){mineFall();return}
     if(!w.moved){
       w.moved=true;
       if(w.tg.pipe!==undefined){w.exit=pipes[w.tg.pipe];P.x=w.exit.x;P.y=w.exit.top-1.95}
@@ -9511,6 +9570,7 @@ function step(dt){
   else if(curTheme.name==='sky')updSky(dt);
   else if(curTheme.name==='tower')updTower(dt);
   else if(curTheme.name==='mine')updMine(dt);
+  else if(LV&&LV.minePre)updMinePre(dt);
   if(P.onPlat&&P.onPlat.mover)P.x+=P.onPlat.x-P.onPlat.px;
   var ax=keys.jx!==0?keys.jx:((keys.right?1:0)-(keys.left?1:0));
   if(P.stun>0){P.stun-=dt;ax=0}
