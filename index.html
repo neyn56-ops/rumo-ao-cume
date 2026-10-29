@@ -1695,10 +1695,10 @@ STORY.worlds.push({kicker:'Mundo 14 · Terra Nova',title:'Torre dos Vaga-lumes',
 STORY.worlds.push({kicker:'Mundo 15 · Terra Nova',title:'Mina dos Trilhos',text:'Debaixo da Terra Nova existe uma mina antiga, cheia de trilhos e cristais. Para chegar lá, atravesse o campo lá em cima: no fim do caminho, um cano velho é a única saída. Entre nele e caia dentro da mina! Lá embaixo, pule dentro dos vagonetes: eles voam por cima dos abismos! Abaixe-se nas vigas baixas e, se o trilho acabar, pule para outro vagonete. Lá no fundo, alguém não para de cavar...',end:'O Toupeirão caiu tonto e soltou o Cristal da Mina! Os lampiões acenderam um por um e os trilhos voltaram a brilhar. Um vagonete levou o Kuro de volta para a luz do dia: a Terra Nova ainda guarda muitos segredos.'});
 /* ===== Terra Nova — Mundo 16: Vale das Cachoeiras (sem chefe) =====
    Ilhas de grama sobre o rio, Minhocões pulando entre as tocas, enxames de abelhas e os Pedrões-totem que despencam. */
-LEVELS.push({name:'Vale das Cachoeiras',theme:16,music:11,tall:1,camMax:402,limit:600,es:1.05,noLift:1,riverY:-2.4,
+LEVELS.push({name:'Vale das Cachoeiras',theme:16,music:11,tall:1,camMax:440,limit:640,es:1.05,noLift:1,riverY:-2.4,tTip:336.4,
  solids:[[-14,22,0],[28,46,0],[46,49,1.2],[49,52,2.4],[52,64,2.4],[70,90,2.4],[94,118,0],[123,140,0],[140,143,1.2],[143,146,2.4],[146,149,3.6],[149,172,4.8],
   [186.4,200,4.8],[204,226,2.4],[238,262,3.2],[262,266,.8],[266,280,3.2],[280,283,4.4],[283,286,5.6],[286,306,6.8],
-  [318.5,332,3.6],[349,362,3.2],[362,365,4.4],[365,368,5.6],[368,382,6.8],[382,385,8],[385,388,9.2],[388,416,10.4]],
+  [356.5,370,3.6],[387,400,3.2],[400,403,4.4],[403,406,5.6],[406,420,6.8],[420,423,8],[423,426,9.2],[426,454,10.4]],
  floats:[[23.6,26.4,1.3],[119.4,121.6,1.6],[228.6,231.2,2.6],[233.6,236.2,3.2]],
  crumbles:[[172,173.2,4.8],[173.2,174.4,4.8],[174.4,175.6,4.8],[175.6,176.8,4.8],[176.8,178,4.8],[178,179.2,4.8],[179.2,180.4,4.8],[180.4,181.6,4.8],[181.6,182.8,4.8],[182.8,184,4.8],[184,185.2,4.8],[185.2,186.4,4.8]],
  movers:[{cx:67,range:1.4,speed:.9,top:2.4,w:3}],
@@ -1711,22 +1711,24 @@ LEVELS.push({name:'Vale das Cachoeiras',theme:16,music:11,tall:1,camMax:402,limi
   {t:'jfish',x0:226.6,x1:232.6,y:0,ph:.3,hgt:6.4},{t:'jfish',x0:231.8,x1:237.8,y:0,ph:1.9,hgt:6.8},
   {t:'sprout',x0:255,x1:255,y:3.2,ph:.9},{t:'bee',x0:250,x1:260,y:6.2,s:1.4},
   {t:'armad',x0:268,x1:279,x:275,y:3.2},
-  {t:'owl',x0:320,x1:332,x:326,y:9.4},{t:'jfish',x0:336.6,x1:342,y:0,ph:.6,hgt:6.6},{t:'jfish',x0:341.6,x1:347,y:0,ph:2,hgt:6.6},
-  {t:'owl',x0:351,x1:362,x:357,y:9.6},{t:'sprout',x0:374,x1:374,y:6.8,ph:.4},{t:'bee',x0:370,x1:380,y:9.4,s:1.4},{t:'owl',x0:389,x1:400,x:395,y:15.4}],
- wlogs:[{x:310.5,top:12,bot:-3,sp:1.5,gap:4.6},{x:315.5,top:12.8,bot:-3,sp:1.7,gap:4.6}],
- sinks:[[334,336.6,3.2],[339,341.6,3.2],[344,346.6,3.2]],
- gate:{x:406.5,y:10.4,sx:399.6},
+  {t:'tchase',moss:1,x0:310,x1:310,y:10.6},{t:'tchase',moss:1,x0:315,x1:315,y:9.4},{t:'tchase',moss:1,x0:320,x1:320,y:10.8},{t:'tchase',moss:1,x0:325,x1:325,y:9.6},{t:'tchase',moss:1,x0:330,x1:330,y:10.6},{t:'tchase',moss:1,x0:335,x1:335,y:9.6},
+  {t:'turtle',moss:1,x0:339.5,x1:339.5,y:5.2,s:.01,amp:.25},{t:'turtle',moss:1,x0:342.8,x1:342.8,y:5.2,s:.01,amp:.25},{t:'turtle',moss:1,x0:346.1,x1:346.1,y:5.2,s:.01,amp:.25},{t:'turtle',moss:1,x0:349.4,x1:349.4,y:5.2,s:.01,amp:.25},{t:'turtle',moss:1,x0:352.7,x1:352.7,y:5.2,s:.01,amp:.25},
+  {t:'owl',x0:358,x1:370,x:364,y:9.4},{t:'jfish',x0:374.6,x1:380,y:0,ph:.6,hgt:6.6},{t:'jfish',x0:379.6,x1:385,y:0,ph:2,hgt:6.6},
+  {t:'owl',x0:389,x1:400,x:395,y:9.6},{t:'sprout',x0:412,x1:412,y:6.8,ph:.4},{t:'bee',x0:408,x1:418,y:9.4,s:1.4},{t:'owl',x0:427,x1:438,x:433,y:15.4}],
+ wlogs:[{x:310,top:12,bot:-3,sp:1.4,gap:4.6},{x:315,top:12.8,bot:-3,sp:1.9,gap:4.8,w:2},{x:320,top:12.4,bot:-3,sp:1.6,gap:4.4},{x:325,top:13,bot:-3,sp:2.2,gap:5,w:1.8},{x:330,top:12.2,bot:-3,sp:1.5,gap:4.6,w:2.2},{x:335,top:12.8,bot:-3,sp:2,gap:4.8,w:2}],
+ sinks:[[372,374.6,3.2],[377,379.6,3.2],[382,384.6,3.2]],
+ gate:{x:444.5,y:10.4,sx:437.6},
  logs:[{x:246,y:5.6,gy:3.2,L:4.4,speed:1.5}],
  totems:[{x:42,y:0},{x:86,y:2.4,up:3.6},{x:108,y:0},{x:111.6,y:0,up:3.8}],
- falls:[{x:12,top:15},{x:60,top:17},{x:112,top:15},{x:152,top:18},{x:205,top:19},{x:255,top:20},{x:298,top:22},{x:340,top:21},{x:378,top:25}],
+ falls:[{x:12,top:15},{x:60,top:17},{x:112,top:15},{x:152,top:18},{x:205,top:19},{x:255,top:20},{x:298,top:22},{x:378,top:21},{x:416,top:25}],
  blocks:[{x:6.5,y:2,t:'q',c:'mushroom'},{x:16,y:2,t:'brick'},{x:17,y:2,t:'q',c:'coin'},{x:18,y:2,t:'brick'},
   {x:56.5,y:4.4,t:'q',c:'flower'},{x:57.5,y:4.4,t:'brick'},{x:58.5,y:4.4,t:'q',c:'coin'},
   {x:100,y:2,t:'q',c:'feather'},{x:136.5,y:2,t:'brick'},{x:137.5,y:2,t:'q',c:'fruit'},
-  {x:198,y:6.8,t:'q',c:'flower'},{x:240,y:5.2,t:'brick'},{x:241,y:5.2,t:'hid',c:'multi',n:4},{x:242,y:5.2,t:'brick'},{x:322.5,y:5.6,t:'q',c:'mushroom'},{x:371,y:8.8,t:'brick'},{x:372,y:8.8,t:'q',c:'flower'},{x:373,y:8.8,t:'brick'}],
+  {x:198,y:6.8,t:'q',c:'flower'},{x:240,y:5.2,t:'brick'},{x:241,y:5.2,t:'hid',c:'multi',n:4},{x:242,y:5.2,t:'brick'},{x:360.5,y:5.6,t:'q',c:'mushroom'},{x:409,y:8.8,t:'brick'},{x:410,y:8.8,t:'q',c:'flower'},{x:411,y:8.8,t:'brick'}],
  coins:[['r',2,6,.9,5],['r',24,26,2.3,3],['r',39,45,.9,6],['r',53,63,3.3,6],['r',66,68,3.6,3],['r',82,89,3.3,6],['r',95,99,.9,4],['r',105,115,.9,8],['r',119.6,121.4,2.6,3],['r',124,128,.9,4],['r',150,158,5.7,6],
-  ['r',173,185,5.7,8],['r',188,199,5.7,6],['r',207,224,3.3,9],['r',229.2,230.6,3.5,2],['r',234.2,235.6,4.1,2],['r',239,244,4.1,4],['r',249,260,4.1,6],['r',268,279,4.1,6],['r',288,300,7.7,6],['r',319.5,331,4.5,6],['r',334.6,336,4.1,2],['r',339.6,341,4.1,2],['r',344.6,346,4.1,2],['r',350,361,4.1,6],['r',369,381,7.7,6],['r',389,400,11.3,6]],
+  ['r',173,185,5.7,8],['r',188,199,5.7,6],['r',207,224,3.3,9],['r',229.2,230.6,3.5,2],['r',234.2,235.6,4.1,2],['r',239,244,4.1,4],['r',249,260,4.1,6],['r',268,279,4.1,6],['r',288,300,7.7,6],['r',357.5,369,4.5,6],['r',372.6,374,4.1,2],['r',377.6,379,4.1,2],['r',382.6,384,4.1,2],['r',388,399,4.1,6],['r',407,419,7.7,6],['r',427,438,11.3,6]],
  springs:[],gems:[[25,4.4],[86,9.1],[120.5,5.4]],feathers:[],
- checkpoints:[[71,2.4],[95,0],[124,0],[187.5,4.8],[239,3.2],[287,6.8],[350,3.2],[369,6.8]],goal:{x:402,top:10.4},start:{x:2,y:0}});
+ checkpoints:[[71,2.4],[95,0],[124,0],[187.5,4.8],[239,3.2],[388,3.2],[407,6.8]],goal:{x:440,top:10.4},start:{x:2,y:0}});
 STORY.worlds.push({kicker:'Mundo 16 · Terra Nova',title:'Vale das Cachoeiras',text:'Um vale cheio de água: cachoeiras por todo lado e um rio lá embaixo. Pule de ilha em ilha, fuja do Minhocão que salta da terra, das abelhas que voam em bando e da coruja que mergulha lá do alto. Cuidado com os Pedrões-totem: quando o Kuro passa embaixo, eles despencam! Lá no alto do morro, o castelo guarda a Semente de Luz.',end:'O Kuro subiu até o portão do castelo e encontrou a Semente de Luz! Ela brilhou tão forte que as cachoeiras do vale ficaram douradas. Agora o Kuro sabe: a Terra Nova inteira está esperando por essa luz...'});
 
 /*@@parte:11_construcao.js*/
@@ -5173,9 +5175,9 @@ function buildFarSky(th,r){
 function shellTex(base,line){var c=document.createElement('canvas');c.width=c.height=128;var x=c.getContext('2d');x.fillStyle=base;x.fillRect(0,0,128,128);x.strokeStyle=line;x.lineWidth=4;
   for(var r=0;r<4;r++)for(var q=0;q<5;q++){var cx=q*30+(r%2)*15,cy=r*34+10;x.beginPath();for(var k=0;k<6;k++){var a=k/6*6.283+Math.PI/6;var px=cx+Math.cos(a)*14,py=cy+Math.sin(a)*14;if(k)x.lineTo(px,py);else x.moveTo(px,py)}x.closePath();x.stroke()}
   var t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;return t}
-function makeTurtle(kind){
+function makeTurtle(kind,moss){
   var g=new T.Group(),inner=new T.Group();g.add(inner);
-  var C={turtle:['#3aa86a','#1f6a40',0x9ad87a],tchase:['#d8402a','#7a1a10',0x9ad87a],tshell:['#8a92a0','#3a4250',0x9ad87a],tguard:['#7a4ad0','#3a1a70',0x9ad87a]}[kind];
+  var C=moss?['#4f9a5e','#24583a',0x7ad8c8]:{turtle:['#3aa86a','#1f6a40',0x9ad87a],tchase:['#d8402a','#7a1a10',0x9ad87a],tshell:['#8a92a0','#3a4250',0x9ad87a],tguard:['#7a4ad0','#3a1a70',0x9ad87a]}[kind];
   var skin=M(C[2],.7),shell=new T.MeshStandardMaterial({map:shellTex(C[0],C[1]),roughness:kind==='tshell'?.35:.6,metalness:kind==='tshell'?.6:0});
   var dome=mesh(new T.SphereGeometry(.42,18,10,0,6.283,0,1.6),shell);dome.scale.set(1.15,.85,1);dome.position.y=.42;inner.add(dome);
   var rim=mesh(new T.TorusGeometry(.45,.06,6,22),M(0xf2e6c0,.7));rim.rotation.x=Math.PI/2;rim.scale.set(1.15,1,1);rim.position.y=.4;inner.add(rim);
@@ -5187,7 +5189,11 @@ function makeTurtle(kind){
   var flip=[];[[.25,1],[.25,-1],[-.28,1],[-.28,-1]].forEach(function(q){var p=new T.Group();p.position.set(q[0],.3,q[1]*.32);var f=mesh(new T.SphereGeometry(.13,8,6),skin,false,false);f.scale.set(1.4,.35,.8);f.position.z=q[1]*.1;p.add(f);inner.add(p);flip.push({p:p,sd:q[1],fr:q[0]>0})});
   var tail=mesh(new T.ConeGeometry(.06,.18,6),skin,false,false);tail.rotation.z=Math.PI/2;tail.position.set(-.55,.36,0);inner.add(tail);
   /* asinhas de penas em cima do casco */
-  var wingM=new T.MeshStandardMaterial({color:0xffffff,roughness:.7,side:T.DoubleSide,emissive:0xffffff,emissiveIntensity:.25}),wings=[];
+  var wingM=moss?new T.MeshStandardMaterial({color:0x9ae6ff,roughness:.2,side:T.DoubleSide,transparent:true,opacity:.75,emissive:0x2a8ad0,emissiveIntensity:.35}):new T.MeshStandardMaterial({color:0xffffff,roughness:.7,side:T.DoubleSide,emissive:0xffffff,emissiveIntensity:.25}),wings=[];
+  if(moss){/* Tartaruga-cachoeira (Mundo 16): musgo e folhinhas em cima do casco, gotas pingando */
+    var mm=M(0x6ac04a,.85),ms=mesh(new T.SphereGeometry(.36,12,6,0,6.283,0,1.1),mm,false,false);ms.scale.set(1.15,.55,1);ms.position.y=.7;inner.add(ms);
+    for(var lf=0;lf<3;lf++){var l2=mesh(new T.SphereGeometry(.1,8,5),M(0x8ae05a,.6),false,false);l2.scale.set(1,.3,2);l2.position.set(-.1+lf*.1,.86,(lf-1)*.12);l2.rotation.y=lf;inner.add(l2)}
+    var dr=mesh(new T.SphereGeometry(.05,8,6),new T.MeshStandardMaterial({color:0xbff0ff,roughness:.1,transparent:true,opacity:.8}),false,false);dr.position.set(-.3,.12,.1);inner.add(dr);g.userData.drop=dr}
   var ws=new T.Shape();ws.moveTo(0,0);ws.quadraticCurveTo(.1,.45,.5,.55);ws.lineTo(.42,.4);ws.lineTo(.55,.38);ws.lineTo(.42,.24);ws.lineTo(.5,.18);ws.quadraticCurveTo(.25,.05,0,0);
   [-1,1].forEach(function(sd){var p=new T.Group();p.position.set(-.05,.72,sd*.2);var w=mesh(new T.ShapeGeometry(ws,6),wingM,false,false);w.rotation.y=sd>0?-Math.PI/2:Math.PI/2;w.rotation.x=0;w.scale.set(1.5,1.5,1.5);p.add(w);inner.add(p);wings.push({p:p,sd:sd})});
   var spikes=null;if(kind==='tshell'){spikes=new T.Group();inner.add(spikes);var sm=M(0xd8dce4,.25,.8);for(var i=0;i<7;i++){var a=i/7*6.283,sp=mesh(new T.ConeGeometry(.09,.32,6),sm,false,false);sp.position.set(Math.cos(a)*.34,.66+(i%2)*.06,Math.sin(a)*.3);sp.lookAt(Math.cos(a)*2,1.6,Math.sin(a)*2);sp.rotateX(Math.PI/2);spikes.add(sp)}}
@@ -5196,7 +5202,7 @@ function makeTurtle(kind){
     var cr=mesh(new T.BoxGeometry(.3,.12,.05),M(0xd8302a,.6),false,false);cr.position.set(-.02,.26,0);head.add(cr);
     var sp=new T.Group();sp.position.set(.25,.42,.36);g.userData.spear=sp;var sh2=mesh(new T.CylinderGeometry(.025,.025,1.1,6),M(0x7a5434,.7),false,false);sh2.rotation.z=-1.2;sp.add(sh2);
     var tip=mesh(new T.ConeGeometry(.06,.2,6),M(0xd8dce4,.25,.8),false,false);tip.rotation.z=-1.2-Math.PI/2+Math.PI;tip.position.set(.55*Math.sin(1.2),.55*Math.cos(1.2)*-1+.0,0);tip.position.set(.51,.2,0);tip.rotation.z=-Math.PI/2+.37;sp.add(tip);inner.add(sp)}
-  add(g);return {g:g,inner:inner,head:head,flip:flip,wings:wings,spikes:spikes,dome:dome,spear:g.userData.spear};
+  add(g);return {g:g,inner:inner,head:head,flip:flip,wings:wings,spikes:spikes,dome:dome,spear:g.userData.spear,drop:g.userData.drop};
 }
 var gSpears=[];
 function guardThrow(e,dt,inT){/* arremessa a lança no Kuro: avisa erguendo a lança, joga, e pega outra depois */
@@ -5261,6 +5267,7 @@ function turtleVis(e,dt){
   if(nw){v.flip.forEach(function(f,i){f.p.rotation.z=Math.sin(tm*8+i*Math.PI)*.4})}
   if(v.spear){v.spear.visible=!e.noSpear;v.spear.rotation.z=(e.aim||0)*.9;v.spear.position.y=.42+(e.aim||0)*.25}
   v.flip.forEach(function(f,i){f.p.rotation.y=(shell?0:Math.sin(tm*6+i*1.6+e.ph)*.5);f.p.visible=!shell});
+  if(v.drop){var du=(tm*.8+e.ph)%1;v.drop.position.y=.12-du*.5;v.drop.visible=du<.8}
   v.head.visible=!shell;v.inner.rotation.z=shell?0:Math.sin(tm*2+e.ph)*.06;
   if(shell){v.inner.rotation.y+=dt*6;if(v.spikes)v.spikes.scale.setScalar(.3)}else{v.inner.rotation.y*=.8;if(v.spikes)v.spikes.scale.setScalar(1)}
 }
@@ -7176,7 +7183,7 @@ function buildEnemies(){
     else if(t==='frog'){o.vis=nin?makeNinja():makeFrog();o.w=.45;o.h=nin?1.25:.75;o.speed=0;o.x=(e.x0+e.x1)/2;if(nin){o.ninja=true;o.w=.4}}
     else if(t==='spit'){o.vis=makeSpitter();o.stomp=false;o.w=.45;o.h=1.4;o.speed=0;o.x=(e.x0+e.x1)/2}
     else if(t==='bat'){o.vis=vil?makeCrow():(curTheme.name==='heights'?makeBird():makeBat(ice6?'ice':(des7?'vult':(curTheme.name==='volcano'?'ash':false))));o.w=des7?.5:.4;o.h=.55}
-    else if(t==='turtle'||t==='tchase'||t==='tshell'||t==='tguard'){o.vis=makeTurtle(t);o.w=.55;o.h=.8;o.amp=e.amp||.4;if(t==='tchase'){o.speed=0;o.x=(e.x0+e.x1)/2}if(t==='tguard'){o.x=e.bx;o.hx=e.bx;o.by0=e.y;o.terr=[e.x0-1,e.x1+1,e.by-3,e.by+6];o.wings=true}}
+    else if(t==='turtle'||t==='tchase'||t==='tshell'||t==='tguard'){o.vis=makeTurtle(t,e.moss);o.w=.55;o.h=.8;o.amp=e.amp||.4;if(t==='tchase'){o.speed=0;o.x=(e.x0+e.x1)/2}if(t==='tguard'){o.x=e.bx;o.hx=e.bx;o.by0=e.y;o.terr=[e.x0-1,e.x1+1,e.by-3,e.by+6];o.wings=true}}
     else if(t==='dfly'){o.vis=makeDfly();o.w=.5;o.h=.45;o.speed=(e.s||1.6)}
     else if(t==='wrob'){o.vis=makeWrob();o.w=.42;o.h=1.25;o.speed=(e.s||1.2);o.off=0}
     else if(t==='worm'){o.vis=makeWorm();o.w=.4;o.h=.7;o.speed=0;o.mt=-(e.ph||0);o.ph0=e.ph||0;o.dir=1;o.out=0;o.hgt=e.hgt||3.2;o.wait=e.wait||1.7;o.air=e.air||1.35;o.noHit=true}
@@ -7371,6 +7378,7 @@ function updFalls(dt){if(!flFx)return;
   flM.rt.offset.x-=dt*.12;
   flFx.foam.forEach(function(o){var u=(tm*.45+o.ph)%1;o.s.position.set(o.x+(o.ph-.5)*o.w*1.1,o.y+.3+u*1.6,o.z);o.s.material.opacity=.5;o.s.scale.set(1.4+u*1.6,1+u,1)});
   flTot.forEach(function(T0){totemUpd(T0,dt)});logsUpd(dt);wlogsUpd(dt);sinksUpd(dt);seedUpd();
+  if(LV.tTip&&!flFx.tTold&&state==='play'&&P.x>LV.tTip&&P.x<LV.tTip+3){flFx.tTold=1;toast('Pule de tartaruga em tartaruga! Segure o pulo para quicar mais alto')}
   /* respingo ao cair no rio */
   if(P.y<=flFx.ry&&flFx.py>flFx.ry){splashFx(P.x,flFx.ry,8);try{noise(.3,.05,900,'lowpass')}catch(e){}}flFx.py=P.y}
 /* ---------- Minhocão ---------- */
