@@ -338,7 +338,9 @@ var THEMES=[
   {name:'tower',sky:['#04081a','#0a1434','#16244a','#1c2a46'],fog:'#101a30',fd:.009,sun:0xaab8f0,si:1.1,sunOff:[-10,26,14],hemi:[0x8a9ad0,0x1e2418,.85],exp:1.22,env:4,lantern:0,snow:false,mz:-40,valley:0x0a1222},
   {name:'mine',sky:['#120a06','#1e120a','#2a1a10','#1a100a'],fog:'#2c1c12',fd:.0095,sun:0xffd8a8,si:1.7,sunOff:[-10,24,14],hemi:[0xffd8b0,0x4a3424,1.3],exp:1.5,env:5,lantern:3.6,snow:false,mz:-30,valley:0x1a100a},
   /* 15: região mineradora seca em cima da mina (Mundo 15, parte 1) — monta como o Vale, mas sem grama: terra, pedra e poeira */
-  {name:'valley',dry:1,sky:['#4a7cb4','#8cb2d2','#e8d4b2','#dcc29e'],fog:'#dcc6a2',fd:.0105,sun:0xffe2b4,si:2.3,sunOff:[-14,24,16],hemi:[0xffe6c4,0x6a4a30,.24],exp:.84,env:0,lantern:0,snow:false,mz:-45,valley:0x9a7650}
+  {name:'valley',dry:1,sky:['#4a7cb4','#8cb2d2','#e8d4b2','#dcc29e'],fog:'#dcc6a2',fd:.0105,sun:0xffe2b4,si:2.3,sunOff:[-14,24,16],hemi:[0xffe6c4,0x6a4a30,.24],exp:.84,env:0,lantern:0,snow:false,mz:-45,valley:0x9a7650},
+  /* 16: Vale das Cachoeiras (Mundo 16) — meio-dia, céu bem azul, água por todo lado; monta como o Vale (grama, árvores) e ganha cachoeiras, rio e o castelo lá longe */
+  {name:'valley',falls:1,sky:['#2a7fd8','#5cb0ee','#c6ecfa','#d4f0ea'],fog:'#cdeaf2',fd:.0085,sun:0xfff4dc,si:2.4,sunOff:[-12,30,16],hemi:[0xd6f0ff,0x4a5a3a,.26],exp:.84,env:0,lantern:0,snow:false,mz:-45,valley:0x3a6a24}
 ];
 var curTheme=THEMES[0];
 
@@ -569,7 +571,8 @@ var MATS=[
   {top:grassM,side:dirtM,slab:stoneM,meadow:meadowM,cliff:dirtM},
   {top:mossM,side:barkM,slab:barkM,meadow:barkDarkM,cliff:barkDarkM},
   {top:caveTopM,side:caveSideM,slab:caveTopM,meadow:caveFloorM,cliff:caveWallM},
-  {top:pbr(texDirt,.97,1.2,{color:new T.Color(0xc89a6a)}),side:pbr(texStone,.95,.3,{color:new T.Color(0xa07a58)}),slab:pbr(texStone,.9,.2,{color:new T.Color(0xb08a66)}),meadow:pbr(texDirt,.97,1,{color:new T.Color(0xd4ae80)}),cliff:pbr(texStone,.95,.3,{color:new T.Color(0x8a6848)})}
+  {top:pbr(texDirt,.97,1.2,{color:new T.Color(0xc89a6a)}),side:pbr(texStone,.95,.3,{color:new T.Color(0xa07a58)}),slab:pbr(texStone,.9,.2,{color:new T.Color(0xb08a66)}),meadow:pbr(texDirt,.97,1,{color:new T.Color(0xd4ae80)}),cliff:pbr(texStone,.95,.3,{color:new T.Color(0x8a6848)})},
+  {top:grassM,side:dirtM,slab:grassM,meadow:meadowM,cliff:dirtM}
 ];
 
 function boxGeo(w,h,d,tile){
@@ -1690,6 +1693,25 @@ STORY.worlds.push({kicker:'Mundo 13 · Terra Nova',title:'Escalada dos Blocos Ce
 STORY.worlds.push({kicker:'Mundo 14 · Terra Nova',title:'Torre dos Vaga-lumes',text:'No meio do pântano, uma torre de relógio antiga parou e ficou no escuro. Lá dentro só os vaga-lumes ainda moram. As engrenagens só giram quando um vaga-lume pousa no eixo: espere a luz, suba nas tábuas e pule de roda em roda até a porta lá do alto. Lá fora o dia nasce: atravesse o pântano e suba a colina até o sino.',end:'Dooong! O sino tocou e a torre inteira acendeu. O mecanismo voltou a funcionar e os vaga-lumes mostram o caminho da próxima aventura.'});
 
 STORY.worlds.push({kicker:'Mundo 15 · Terra Nova',title:'Mina dos Trilhos',text:'Debaixo da Terra Nova existe uma mina antiga, cheia de trilhos e cristais. Para chegar lá, atravesse o campo lá em cima: no fim do caminho, um cano velho é a única saída. Entre nele e caia dentro da mina! Lá embaixo, pule dentro dos vagonetes: eles voam por cima dos abismos! Abaixe-se nas vigas baixas e, se o trilho acabar, pule para outro vagonete. Lá no fundo, alguém não para de cavar...',end:'O Toupeirão caiu tonto e soltou o Cristal da Mina! Os lampiões acenderam um por um e os trilhos voltaram a brilhar. Um vagonete levou o Kuro de volta para a luz do dia: a Terra Nova ainda guarda muitos segredos.'});
+/* ===== Terra Nova — Mundo 16: Vale das Cachoeiras (sem chefe) — parte 1 =====
+   Ilhas de grama sobre o rio, Minhocões pulando entre as tocas, enxames de abelhas e os Pedrões-totem que despencam. */
+LEVELS.push({name:'Vale das Cachoeiras',theme:16,music:11,camMax:160,limit:420,es:1.05,noLift:1,riverY:-2.4,
+ solids:[[-14,22,0],[28,46,0],[46,49,1.2],[49,52,2.4],[52,64,2.4],[70,90,2.4],[94,118,0],[123,140,0],[140,143,1.2],[143,146,2.4],[146,149,3.6],[149,172,4.8]],
+ floats:[[23.6,26.4,1.3],[119.4,121.6,1.6]],
+ movers:[{cx:67,range:1.4,speed:.9,top:2.4,w:3}],
+ spikes:[],
+ enemies:[{t:'beetle',x0:9,x1:19,y:0,s:1.4},{t:'worm',x0:31,x1:37,y:0,ph:0},{t:'bee',x0:53,x1:63,y:4.8,s:1.3},
+  {t:'worm',x0:74,x1:80,y:2.4,ph:.8,hgt:3.4},{t:'beetle',x0:96,x1:104,y:0,s:1.6},
+  {t:'worm',x0:126,x1:133,y:0,ph:1.2,hgt:3.6},{t:'bee',x0:128,x1:138,y:4,s:1.5}],
+ totems:[{x:42,y:0},{x:86,y:2.4,up:3.6},{x:108,y:0},{x:111.6,y:0,up:3.8}],
+ falls:[{x:12,top:15},{x:60,top:17},{x:112,top:15},{x:152,top:18}],
+ blocks:[{x:6.5,y:2,t:'q',c:'mushroom'},{x:16,y:2,t:'brick'},{x:17,y:2,t:'q',c:'coin'},{x:18,y:2,t:'brick'},
+  {x:56.5,y:4.4,t:'q',c:'flower'},{x:57.5,y:4.4,t:'brick'},{x:58.5,y:4.4,t:'q',c:'coin'},
+  {x:100,y:2,t:'q',c:'feather'},{x:136.5,y:2,t:'brick'},{x:137.5,y:2,t:'q',c:'fruit'}],
+ coins:[['r',2,6,.9,5],['r',24,26,2.3,3],['r',39,45,.9,6],['r',53,63,3.3,6],['r',66,68,3.6,3],['r',82,89,3.3,6],['r',95,99,.9,4],['r',105,115,.9,8],['r',119.6,121.4,2.6,3],['r',124,128,.9,4],['r',150,158,5.7,6]],
+ springs:[],gems:[[25,4.4],[86,9.1],[120.5,5.4]],feathers:[],
+ checkpoints:[[71,2.4],[95,0],[124,0]],goal:{x:160,top:4.8},start:{x:2,y:0}});
+STORY.worlds.push({kicker:'Mundo 16 · Terra Nova',title:'Vale das Cachoeiras',text:'Um vale cheio de água: cachoeiras por todo lado e um rio lá embaixo. Pule de ilha em ilha, fuja do Minhocão que salta da terra e das abelhas que voam em bando. Cuidado com os Pedrões-totem: quando o Kuro passa embaixo, eles despencam! Lá longe, no alto do morro, o castelo espera.',end:'O Kuro atravessou o Vale das Cachoeiras! Lá no alto do morro, o castelo está cada vez mais perto...'});
 
 /*@@parte:11_construcao.js*/
 /* ---------- contêineres do mundo atual ---------- */
@@ -1982,6 +2004,7 @@ function buildLevel(idx){
   buildFar(th);
   if(th.name==='trail'){buildTrailDecor(th);buildTrailFar()}
   buildLush(th);
+  if(th.falls)buildFalls(th);/* Mundo 16: cachoeiras, rio, castelo lá longe e os Pedrões-totem */
   if(th.name==='ruins')buildRuinsExtra();
   buildHazards();
   buildMovers();
@@ -6591,7 +6614,7 @@ function buildFar(th){
       var u=(y+h/2)/h;
       if(peaks){var rock=(u<.92&&Math.sin(p.getX(v)*.45+i*1.7+y*.12)*Math.cos(p.getZ(v)*.37+y*.22)>.05)||(u>.2&&u<.5&&r()<.45);
         c.set(rock?(r()<.5?'#5a4232':'#463428'):(u<.15?'#c8ccd4':'#f4f7fb'))}
-      else if(th.name==='trail')c.set('#3f7a4e').lerp(new T.Color('#9cc48a'),u*u);/* Terra Nova: morros verdes, sem neve */
+      else if(th.name==='trail'||th.falls)c.set('#3f7a4e').lerp(new T.Color('#9cc48a'),u*u);/* Terra Nova: morros verdes, sem neve */
       else if(u>.72)c.set('#eef3f7');
       else c.set('#6b7f95').lerp(new T.Color('#8fa3b6'),u);
       cols2.push(c.r,c.g,c.b);
@@ -7137,6 +7160,8 @@ function buildEnemies(){
     else if(t==='turtle'||t==='tchase'||t==='tshell'||t==='tguard'){o.vis=makeTurtle(t);o.w=.55;o.h=.8;o.amp=e.amp||.4;if(t==='tchase'){o.speed=0;o.x=(e.x0+e.x1)/2}if(t==='tguard'){o.x=e.bx;o.hx=e.bx;o.by0=e.y;o.terr=[e.x0-1,e.x1+1,e.by-3,e.by+6];o.wings=true}}
     else if(t==='dfly'){o.vis=makeDfly();o.w=.5;o.h=.45;o.speed=(e.s||1.6)}
     else if(t==='wrob'){o.vis=makeWrob();o.w=.42;o.h=1.25;o.speed=(e.s||1.2);o.off=0}
+    else if(t==='worm'){o.vis=makeWorm();o.w=.4;o.h=.7;o.speed=0;o.mt=-(e.ph||0);o.ph0=e.ph||0;o.dir=1;o.out=0;o.hgt=e.hgt||3.2;o.wait=e.wait||1.7;o.air=e.air||1.35;o.noHit=true}
+    else if(t==='bee'){o.vis=makeBees();o.w=.5;o.h=.6;o.speed=(e.s||1.4);o.mt=e.ph||0;o.by=e.y;o.cy=e.y;o.px=(e.x0+e.x1)/2;o.x=o.px}
     else if(t==='mole'){o.vis=makeMole();o.w=.45;o.h=.95;o.speed=.9;o.pop=0;o.mt=0}
     else if(t==='moth'){o.vis=makeMoth();o.w=.5;o.h=.5;o.route=e.route;o.ri=0;o.sit=0;o.speed=(e.s||1.5)}
     else if(t==='wbeetle'){o.vis=makeWBeetle();o.w=.5;o.h=.85;o.amp=e.amp||.55}
@@ -7234,6 +7259,144 @@ function resetBoss(){
 }
 function setBossBar(){$('bossFill').style.width=(boss?boss.hp/boss.max*100:0)+'%'}
 
+/*@@parte:32_cachoeiras.js*/
+/* ===================== Mundo 16: Vale das Cachoeiras =====================
+   Meio-dia num vale cheio de água: paredões com cachoeiras atrás da fase, um rio lá embaixo (aparece nos buracos)
+   e, bem longe, o castelo no alto do morro (só cenário, é para onde o Kuro vai).
+   Bichos novos (todos originais):
+   - Minhocão: mora debaixo da terra; pula de um buraco, faz um arco no ar e mergulha no outro buraco.
+   - Enxame de abelhas: três abelhinhas voando juntas em zigue-zague; chegam perto do Kuro, mas não saem do seu pedaço.
+   Obstáculo: o Pedrão-totem, pedra com cara de coruja pendurada num cipó; quando o Kuro passa embaixo ela despenca, depois sobe devagar
+   (dá para subir em cima dela e pegar carona). */
+var flM=null,flFx=null,flTot=[];
+function flMats(){if(flM)return;
+  var cv=document.createElement('canvas');cv.width=64;cv.height=64;var x=cv.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,64,64);
+  for(var i=0;i<26;i++){x.strokeStyle='rgba(180,230,255,'+(.25+Math.random()*.4)+')';x.lineWidth=1+Math.random()*2;var yy=Math.random()*64;x.beginPath();x.moveTo(0,yy);x.bezierCurveTo(20,yy-3,44,yy+3,64,yy);x.stroke()}
+  var rt=new T.CanvasTexture(cv);rt.wrapS=rt.wrapT=T.RepeatWrapping;rt.encoding=T.sRGBEncoding;
+  flM={rock:pbr(texStone,.95,.9,{color:new T.Color(0xb0ab96)}),
+    tot:pbr(texStone,.9,.35,{color:new T.Color(0x9a9a88)}),totL:M(0xd8d2b8,.8),dk:M(0x1e1a14,.5),
+    beak:M(0xe0a840,.5),vine:M(0x3f7a2a,.85),
+    river:new T.MeshStandardMaterial({color:0x36b4dc,map:rt,roughness:.25,metalness:0,transparent:true,opacity:.86,depthWrite:false}),
+    pool:new T.MeshStandardMaterial({color:0x5ccbe8,roughness:.2,transparent:true,opacity:.8}),
+    foam:new T.SpriteMaterial({map:softSprite(),color:0xf2faff,transparent:true,opacity:.55,depthWrite:false}),
+    wm:new T.ShaderMaterial({transparent:true,depthWrite:false,side:T.DoubleSide,uniforms:{time:lushU.time},
+      vertexShader:'varying vec2 vU;void main(){vU=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+      fragmentShader:'uniform float time;varying vec2 vU;float h(vec2 p){return fract(sin(dot(p,vec2(12.9,78.2)))*43758.5);}void main(){float st=0.;for(int i=0;i<3;i++){float fi=float(i);float x=floor(vU.x*(8.+fi*6.));float sp=1.6+h(vec2(x,fi))*1.5;st+=smoothstep(.5,1.,fract(vU.y*(2.+fi)+time*sp+h(vec2(x,fi+3.))))*.45;}float edge=smoothstep(0.,.14,vU.x)*smoothstep(1.,.86,vU.x);vec3 c=mix(vec3(.32,.66,.9),vec3(.96,.99,1.),clamp(st,0.,1.));gl_FragColor=vec4(c,(.72+st*.28)*edge);}'})};
+  flM.rt=rt}
+/* ---------- cenário ---------- */
+function buildFalls(th){flMats();flTot=[];var lite=LITE,r=rnd(1616),xe=sceneEnd(),i;
+  flFx={foam:[],ry:LV.riverY!==undefined?LV.riverY:-2.4,py:0};
+  /* o rio lá embaixo, correndo para a direita (aparece nos buracos entre as plataformas) */
+  var rg=new T.PlaneGeometry(xe+60,14,1,1);rg.rotateX(-Math.PI/2);flM.rt.repeat.set((xe+60)/6,2.4);
+  var rv=mesh(rg,flM.river,false,false);rv.position.set((xe-60)/2+30,flFx.ry,1.5);rv.renderOrder=2;add(rv);
+  var bed=mesh(new T.PlaneGeometry(xe+60,14),M(0x4a8a8a,.95),false,false);bed.rotation.x=-Math.PI/2;bed.position.set((xe-60)/2+30,flFx.ry-1.2,1.5);add(bed);
+  /* paredões de pedra (uma rocha só, ondulada) com grama em cima e a cachoeira na frente, atrás da fase */
+  var RK=[],GR=[],WF=[];
+  (LV.falls||[]).forEach(function(F){var cx=F.x,top=F.top||15,z=F.z||-11,base=mY(cx,z)-1,w=F.w||2.8,cw=F.cw||11,ch=top-base,cd=3.2;
+    var g=new T.BoxGeometry(cw,ch,cd,lite?8:14,lite?8:14,2),pa=g.attributes.position,uv=g.attributes.uv,k;
+    for(k=0;k<pa.count;k++){var vx=pa.getX(k),vy=pa.getY(k),vz=pa.getZ(k),ed=Math.abs(vx)/(cw/2),n=Math.sin(vy*.9+cx)*.35+Math.sin(vy*2.3+vx*.7)*.18;
+      pa.setX(k,vx*(1-.1*Math.max(0,vy/ch+.5))+(ed>.95?n*.5:0));pa.setZ(k,vz+(vz>0?n*.8+(ed>.8?-(ed-.8)*3:0):0));uv.setXY(k,uv.getX(k)*cw/3.5,uv.getY(k)*ch/3.5)}
+    g.computeVertexNormals();g.translate(0,ch/2,0);RK.push(xf(g,[cx,base,z-cd/2-.2],0,0));
+    GR.push(xf(new T.SphereGeometry(1,14,5,0,6.283,0,1.25),[cx,top-.15,z-cd/2-.2],0,[cw*.52,.75,cd*.62]));
+    var wg=new T.PlaneGeometry(w,ch,1,1);wg.translate(0,ch/2,0);WF.push({g:xf(wg,[cx,base,z+.12],0,0)});
+    for(var k2=0;k2<(lite?3:6);k2++){var s=new T.Sprite(flM.foam);s.scale.set(2,1.5,1);add(s);flFx.foam.push({s:s,x:cx,y:mY(cx,z+1),z:z+.9,w:w,ph:k2/(lite?3:6)})}});
+  if(RK.length)add(mesh(mgL(RK),flM.rock,false,true));if(GR.length)add(mesh(mgL(GR),mossM,false,true));
+  if(WF.length){var wfm=new T.Mesh(mergeG(WF),flM.wm);wfm.renderOrder=3;add(wfm)}
+  /* lá longe: morros com fiozinhos de cachoeira e o castelo no alto do morro */
+  if(farG){var hm=new T.MeshStandardMaterial({color:0x5a9a4a,roughness:1,flatShading:true}),H=[],FW=[];
+    [[-60,-120,34],[10,-130,40],[85,-118,30],[150,-128,44]].forEach(function(q,k){H.push(xf(new T.SphereGeometry(q[2],14,7,0,6.283,0,1.57),[q[0],-10,q[1]],0,[1.2,.55,.6]));
+      var fg=new T.PlaneGeometry(1.6,q[2]*.5);fg.translate(0,q[2]*.25,0);FW.push({g:xf(fg,[q[0]+q[2]*.3*(k%2?1:-1),-10+q[2]*.05,q[1]+q[2]*.6*.6],0,0)})});
+    farG.add(new T.Mesh(mergeG(H.map(function(g){return {g:g}})),hm));var fwm=new T.Mesh(mergeG(FW),flM.wm);farG.add(fwm);
+    var cs=new T.Group(),wall=new T.MeshStandardMaterial({color:0xe8e2d2,roughness:.9}),roofA=new T.MeshStandardMaterial({color:0x3a6ad8,roughness:.6}),roofB=new T.MeshStandardMaterial({color:0xd84a3a,roughness:.6});
+    var C=[],RA=[],RB=[];C.push(xf(new T.BoxGeometry(9,6,5),[0,3,0]));C.push(xf(new T.BoxGeometry(4.2,9,4.2),[0,4.5,-.5]));
+    [[-5,0,1],[5,0,1],[-2.6,-2.6,0],[2.6,-2.6,0]].forEach(function(q,k){C.push(xf(new T.CylinderGeometry(1.2,1.3,8+k%2*2,10),[q[0],4+k%2,q[1]]));(k<2?RA:RB).push(xf(new T.ConeGeometry(1.6,3,10),[q[0],9.5+k%2*2,q[1]]))});
+    RB.push(xf(new T.ConeGeometry(3.2,4,4),[0,11,-.5],[0,Math.PI/4,0]));
+    cs.add(new T.Mesh(mgL(C),wall));cs.add(new T.Mesh(mgL(RA),roofA));cs.add(new T.Mesh(mgL(RB),roofB));
+    cs.position.set(LV.castleX!==undefined?LV.castleX:22,8.6,-66);cs.scale.setScalar(1.15);farG.add(cs);
+    var hill=new T.Mesh(new T.SphereGeometry(22,16,8,0,6.283,0,1.57),hm);hill.scale.set(1.2,.48,.6);hill.position.set(cs.position.x,-2,-64);farG.add(hill)}
+  buildTotems()}
+/* ---------- Pedrão-totem ---------- */
+function buildTotems(){(LV.totems||[]).forEach(function(d){var w=d.w||1.7,h=d.h||1.9,up=d.up||3.4,g=new T.Group(),inner=new T.Group();g.add(inner);
+  var bd=mesh(boxGeo(w,h,1.5,1),flM.tot,true,true);bd.position.y=h/2;inner.add(bd);
+  var ms=mesh(new T.SphereGeometry(1,12,5,0,6.283,0,1.3),mossM,false,false);ms.scale.set(w*.56,.3,.85);ms.position.y=h;inner.add(ms);
+  /* cara de coruja entalhada: olhos redondos, bico, tufinhos — calma, não brava */
+  [-1,1].forEach(function(sd){var ring=mesh(new T.TorusGeometry(.27,.07,6,16),flM.totL,false,false);ring.position.set(sd*w*.24,h*.62,.76);inner.add(ring);
+    var ey=mesh(new T.CircleGeometry(.2,14),flM.dk,false,false);ey.position.set(sd*w*.24,h*.62,.761);inner.add(ey);
+    var sh=mesh(new T.CircleGeometry(.06,8),flM.totL,false,false);sh.position.set(sd*w*.24+.06,h*.62+.07,.765);inner.add(sh);
+    var tf=mesh(new T.ConeGeometry(.16,.5,4),flM.tot,false,false);tf.position.set(sd*w*.38,h+.12,0);tf.rotation.z=-sd*.35;inner.add(tf)});
+  var bk=mesh(new T.ConeGeometry(.13,.36,4),flM.beak,false,false);bk.rotation.x=Math.PI;bk.position.set(0,h*.42,.8);inner.add(bk);
+  for(var k=0;k<3;k++){var ln=mesh(new T.BoxGeometry(w*.7,.05,.04),flM.totL,false,false);ln.position.set(0,h*(.16+k*.07),.76);ln.scale.x=1-k*.2;inner.add(ln)}
+  var vn=mesh(new T.CylinderGeometry(.07,.07,1,5),flM.vine,false,false);vn.position.y=h;g.add(vn);
+  add(g);var y0=d.y+up,so={l:d.x-w/2,r:d.x+w/2,t:y0+h,b:y0,oneway:false,totem:1};solids.push(so);
+  flTot.push({d:d,g:g,inner:inner,vn:vn,so:so,w:w,h:h,y0:y0,y:y0,vy:0,st:'up',t:0})})}
+function totemSet(T0,y){var so=T0.so,on=P.onPlat===so&&P.grounded;T0.y=y;so.b=y;so.t=y+T0.h;if(on)P.y=so.t;
+  T0.g.position.set(T0.d.x,y,-.05);var top=T0.d.vTop||(T0.y0+14);T0.vn.scale.y=Math.max(.1,top-(y+T0.h));T0.vn.position.y=T0.h+T0.vn.scale.y/2}
+function totemUpd(T0,dt){var d=T0.d,so=T0.so,l=so.l,r=so.r;T0.t+=dt;T0.inner.position.x=0;
+  if(T0.st==='up'){totemSet(T0,T0.y);if(T0.t>0&&state==='play'&&!P.warp&&P.x+P.w/2>l-1&&P.x-P.w/2<r+1&&P.y<T0.y-.2&&P.y>d.y-1.5){T0.st='shake';T0.t=0;try{noise(.25,.03,400,'lowpass')}catch(e){}}}
+  else if(T0.st==='shake'){T0.inner.position.x=Math.sin(T0.t*70)*.06;if(T0.t>.38){T0.st='fall';T0.vy=0}}
+  else if(T0.st==='fall'){T0.vy=Math.max(T0.vy-46*dt,-24);var ny=Math.max(d.y,T0.y+T0.vy*dt),ob=T0.y;
+    /* esmagou? empurra o Kuro para o lado mais perto e machuca */
+    if(state==='play'&&P.x+P.w/2>l+.04&&P.x-P.w/2<r-.04&&P.y<ob&&P.y+P.h>ny){var side=P.x<d.x?-1:1;hurt(d.x,1);P.x=side<0?l-P.w/2-.06:r+P.w/2+.06;P.vx=side*5;if(P.onPlat===so)P.onPlat=null}
+    totemSet(T0,ny);
+    if(ny<=d.y){T0.st='down';T0.t=0;emit(dustPool,d.x,d.y+.2,16,3.4,.7,.7,1.3,-.3);emit(dustPool,d.x,d.y+.2,10,2.2,.6,.5,1.1,-.2);
+      if(Math.abs(P.x-d.x)<14)shake=Math.max(shake,.3);try{noise(.35,.07,260,'lowpass');beep(70,.25,'sine',.08,-30)}catch(e){}}}
+  else if(T0.st==='down'){if(T0.t>1.1){T0.st='rise';T0.t=0}}
+  else if(T0.st==='rise'){var ry=Math.min(T0.y0,T0.y+1.7*dt);totemSet(T0,ry);if(ry>=T0.y0){T0.st='up';T0.t=-.5}}
+}
+function fallsReset(){flTot.forEach(function(T0){T0.st='up';T0.t=0;T0.vy=0;totemSet(T0,T0.y0)})}
+function updFalls(dt){if(!flFx)return;
+  flM.rt.offset.x-=dt*.12;
+  flFx.foam.forEach(function(o){var u=(tm*.45+o.ph)%1;o.s.position.set(o.x+(o.ph-.5)*o.w*1.1,o.y+.3+u*1.6,o.z);o.s.material.opacity=.5;o.s.scale.set(1.4+u*1.6,1+u,1)});
+  flTot.forEach(function(T0){totemUpd(T0,dt)});
+  /* respingo ao cair no rio */
+  if(P.y<=flFx.ry&&flFx.py>flFx.ry){splashFx(P.x,flFx.ry,8);try{noise(.3,.05,900,'lowpass')}catch(e){}}flFx.py=P.y}
+/* ---------- Minhocão ---------- */
+var wormG=null;
+function makeWorm(){if(!wormG)wormG={s:new T.SphereGeometry(.3,12,9),e:new T.SphereGeometry(.11,10,8),p:new T.SphereGeometry(.055,8,6),m:new T.SphereGeometry(.42,10,5,0,6.283,0,1.3),lf:new T.SphereGeometry(.14,8,5)};
+  var g=new T.Group(),skin=M(0xc8704a,.75),band=M(0xf2c25a,.7),wh=M(0xfafaf2,.4),dk=M(0x1a1410,.4),dirt=pbr(texDirt,.97,1.2,{color:new T.Color(0x8a6440)});
+  var segs=[];for(var i=0;i<7;i++){var sm=mesh(wormG.s,i%2?band:skin,i<3,false);var sc=i===0?1.2:1-i*.085;sm.scale.setScalar(sc);g.add(sm);segs.push(sm)}
+  var hd=segs[0];[-1,1].forEach(function(sd){var ey=mesh(wormG.e,wh,false,false);ey.position.set(sd*.13,.12,.22);hd.add(ey);var pu=mesh(wormG.p,dk,false,false);pu.position.set(sd*.13,.12,.31);hd.add(pu)});
+  var lf=mesh(wormG.lf,M(0x6ad04a,.6),false,false);lf.scale.set(.5,.25,1.2);lf.position.set(0,.36,0);lf.rotation.x=-.6;hd.add(lf);/* folhinha na cabeça */
+  var hole=[0,1].map(function(){var m=mesh(wormG.m,dirt,false,true);m.scale.set(1.2,.3,.9);add(m);return m});
+  add(g);return {g:g,segs:segs,hole:hole}}
+function wormPath(e,u){/* u: 0..1 no arco; da toca A para a toca B */var a=e.dir>0?e.x0:e.x1,b=e.dir>0?e.x1:e.x0,H=e.hgt||3.2;return {x:a+(b-a)*u,y:e.base+(4*u*(1-u))*H-.35+(u<.08||u>.92?-.3:0)}}
+function wormAI(e,dt){if(e.zz){e.zz=0;e.mt=0;e.out=0;var dA=Math.abs(e.x-e.x0),dB=Math.abs(e.x-e.x1);e.dir=dA<dB?1:-1;emit(dustPool,e.x,e.y+.2,8,2,.5,.55,1.2,-.3)}/* acordou: cava de volta */
+  e.mt+=dt;var wait=e.wait||1.7,air=e.air||1.35,cyc=wait+air;if(e.mt>=cyc){e.mt-=cyc;e.dir=-e.dir}
+  var hole=e.dir>0?e.x0:e.x1;
+  if(e.mt<wait){e.out=0;e.noHit=true;e.safe=true;e.x=hole;e.y=e.base-1.2;
+    if(e.mt>wait-.5&&((e.mt*20)|0)%3===0)emit(dustPool,hole,e.base+.1,1,1.2,.4,.4,1.1,-.3);/* a terra tremendo: vai sair! */
+    if(e.mt>wait-.5&&!e.rum){e.rum=1;try{noise(.2,.03,500,'lowpass')}catch(er){}}}
+  else{var u=(e.mt-wait)/air,p=wormPath(e,u);if(!e.out){e.out=1;e.rum=0;emit(dustPool,hole,e.base+.2,10,2.8,.6,.6,1.2,-.3)}
+    e.u=u;e.x=p.x;e.y=p.y-.35;e.noHit=u<.06||u>.94;e.safe=e.noHit;
+    if(u>.9&&!e.dive){e.dive=1;emit(dustPool,e.dir>0?e.x1:e.x0,e.base+.2,10,2.8,.6,.6,1.2,-.3)}if(u<.5)e.dive=0}}
+function wormVis(e,dt){var v=e.vis,i;v.hole[0].position.set(e.x0,e.base,0);v.hole[1].position.set(e.x1,e.base,0);
+  if(e.slp>0||e.wake){v.g.position.set(e.x,e.y+.3,0);v.g.rotation.set(0,0,0);for(i=0;i<v.segs.length;i++){v.segs[i].visible=true;v.segs[i].position.set((i*.4-1.2)*(e.dir||1)*-1,-.05,0)}return}
+  if(!e.out){v.g.visible=true;v.segs.forEach(function(s){s.visible=false});return}
+  var hp=wormPath(e,e.u);v.g.position.set(hp.x,hp.y,0);v.g.rotation.set(0,0,0);
+  for(i=0;i<v.segs.length;i++){var uu=e.u-i*.045,s=v.segs[i];if(uu<0){s.visible=false;continue}var p=wormPath(e,uu);s.visible=p.y>e.base-.45;s.position.set(p.x-hp.x,p.y-hp.y,0)}
+  var p2=wormPath(e,Math.min(1,e.u+.02));v.segs[0].rotation.set(0,e.dir>0?.6:-.6,-Math.atan2(p2.y-hp.y,(p2.x-hp.x)||.001)*.3)}
+/* ---------- enxame de abelhas ---------- */
+var beeG=null;
+function makeBees(){if(!beeG)beeG={b:new T.SphereGeometry(.13,10,8),r:new T.TorusGeometry(.125,.028,5,12),w:new T.PlaneGeometry(.2,.12),e:new T.SphereGeometry(.035,6,5),s:new T.ConeGeometry(.03,.09,5)};
+  var g=new T.Group(),yel=M(0xf4c430,.55),blk=M(0x241c10,.6),wing=new T.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:.6,roughness:.2,side:T.DoubleSide,depthWrite:false}),bees=[];
+  for(var i=0;i<3;i++){var b=new T.Group(),bd=mesh(beeG.b,yel,true,false);bd.scale.set(1,1,1.35);b.add(bd);
+    [-.05,.06].forEach(function(z){var rg=mesh(beeG.r,blk,false,false);rg.position.z=z;rg.scale.set(1,1,.6);b.add(rg)});
+    [-1,1].forEach(function(sd){var ey=mesh(beeG.e,blk,false,false);ey.position.set(sd*.06,.04,.16);b.add(ey)});
+    var st=mesh(beeG.s,blk,false,false);st.rotation.x=-Math.PI/2;st.position.z=-.2;b.add(st);
+    var ws=[-1,1].map(function(sd){var w=mesh(beeG.w,wing,false,false);w.position.set(sd*.12,.12,0);w.rotation.x=-Math.PI/2;b.add(w);return {p:w,sd:sd}});
+    b.scale.setScalar(1.3);g.add(b);bees.push({b:b,ws:ws,ph:i*2.1})}
+  add(g);return {g:g,bees:bees}}
+function beeAI(e,dt){e.mt=(e.mt||0)+dt;
+  var near=sees(e,7.5,4.5)&&P.x>e.x0-1.5&&P.x<e.x1+1.5;e.ch=clamp((e.ch||0)+(near?dt*1.2:-dt*.6),0,1);
+  e.px=(e.px===undefined?e.x:e.px)+e.dir*e.speed*.8*dt;if(e.px>e.x1){e.px=e.x1;e.dir=-1}else if(e.px<e.x0){e.px=e.x0;e.dir=1}
+  var tx=e.px+(P.x-e.px)*e.ch*.85,ty=e.by+((P.y+.6)-e.by)*e.ch*.6;tx=clamp(tx,e.x0-1.5,e.x1+1.5);ty=clamp(ty,e.by-2.2,e.by+1.5);
+  var sp=2.3*(LV.es||1),dx=tx-e.x;e.x+=clamp(dx,-sp*dt,sp*dt);
+  e.cy=(e.cy===undefined?e.by:e.cy)+clamp(ty-e.cy,-sp*dt,sp*dt);
+  var z=(e.mt*1.6)%2,tri=z<1?z:2-z;e.y=e.cy-.3+(tri-.5)*.7;e.fdir=dx>.05?1:(dx<-.05?-1:(e.fdir||1))}
+function beeVis(e,dt){var v=e.vis,sl=e.slp>0;v.bees.forEach(function(o,i){var a=tm*(sl?1.5:4.2)+o.ph,rx=sl?.32:.38;
+  o.b.position.set(Math.cos(a)*rx,.3+Math.sin(a*1.7)*.16+(sl?-.15:0),Math.sin(a)*.28);o.b.rotation.y=(e.fdir||1)>0?Math.PI/2:-Math.PI/2;
+  o.ws.forEach(function(w){w.p.rotation.z=w.sd*Math.sin(tm*60+i)*(sl?.1:.6)})})}
+
 /*@@parte:40_estado.js*/
 /* ===================== estado do jogo ===================== */
 var P={look:0,flapA:0,cape:false,pm:0,flyT:0,glide:0,spinT:0,spinCd:0,jsq:0,jsnap:false,fire:false,fcd:0,shootT:0,runT:0,x:0,y:0,vx:0,vy:0,w:.6,h:1.35,face:1,grounded:false,onPlat:null,coyote:0,jbuf:0,inv:0,stun:0,prevY:0,phase:0,land:0,airVy:0,yaw:Math.PI/2,stepIdx:0,feather:0,dj:false,noCut:0,cheer:0,nextBlink:2,blink:0,cph:0,climb:null,warp:null,vineCd:0,shield:false,idleT:0,pipeT:0,skid:0,big:false,crouch:false,sz:.78,csq:1,growT:0,sc:[0,0,0,0],inW:false,hd:false,air:1,swimCd:0,tapCd:0,drownT:.4};
@@ -7292,9 +7455,10 @@ function resetState(){
   $('featherStat').hidden=true;$('bossBar').hidden=true;
   coins.forEach(function(c){c.got=false;c.pop=0});
   items.forEach(function(it){it.got=false;it.mesh.visible=true});
-  enemies.forEach(function(e){if(e.bub)bubPop(e,false);if(e.type==='moth'){e.ri=0;e.sit=0}if(e.type==='mole'){e.mt=0;e.pop=0;e.pop0=0;e.moved=false;e.h=.95}if(e.type==='wrob'){e.off=0;e.safe=false}if(e.type==='tguard'){e.wings=true;e.vy=0;e.st='patrol';e.shellT=0}if(e.t0&&e.type!==e.t0){e.type=e.t0;e.nw=false;if(e.vis.wings)e.vis.wings.forEach(function(w){w.p.visible=true})}e.alive=true;e.shat=false;e.fling=null;e.deadT=0;e.ignT=0;e.qT=0;e.wX=undefined;e.x=e.sx;e.base=e.by;e.y=e.base;e.fg=true;e.grounded=false;e.dir=1;e.vy=0;e.vx=0;e.vis.g.visible=true;e.vis.g.rotation.z=0;if(e.vis.inner)e.vis.inner.scale.set(1,1,1);e.st='patrol';e.tmr=0;e.infl=0;e.alertT=0;e.loseT=0;e.cur=e.speed;if(e.alertS)e.alertS.visible=false;e.bones=false;e.rise=0;e.appT=0;e.noHit=false;if(e.trig!==undefined){e.dorm=true;e.noHit=true;e.vis.g.visible=false;e.fireT=1.2;e.charging=false}if(e.type==='skel'&&e.vis.body){e.vis.body.visible=true;e.vis.pile.visible=false;e.vis.body.scale.set(1,1,1)}if(e.type==='witch'){e.vis.g.scale.setScalar(1)}});
+  enemies.forEach(function(e){if(e.bub)bubPop(e,false);if(e.type==='moth'){e.ri=0;e.sit=0}if(e.type==='mole'){e.mt=0;e.pop=0;e.pop0=0;e.moved=false;e.h=.95}if(e.type==='worm'){e.mt=-(e.ph0||0);e.out=0;e.zz=0;e.dir=1;e.x=e.x0}if(e.type==='bee'){e.ch=0;e.cy=e.by;e.px=(e.x0+e.x1)/2;e.x=e.px}if(e.type==='wrob'){e.off=0;e.safe=false}if(e.type==='tguard'){e.wings=true;e.vy=0;e.st='patrol';e.shellT=0}if(e.t0&&e.type!==e.t0){e.type=e.t0;e.nw=false;if(e.vis.wings)e.vis.wings.forEach(function(w){w.p.visible=true})}e.alive=true;e.shat=false;e.fling=null;e.deadT=0;e.ignT=0;e.qT=0;e.wX=undefined;e.x=e.sx;e.base=e.by;e.y=e.base;e.fg=true;e.grounded=false;e.dir=1;e.vy=0;e.vx=0;e.vis.g.visible=true;e.vis.g.rotation.z=0;if(e.vis.inner)e.vis.inner.scale.set(1,1,1);e.st='patrol';e.tmr=0;e.infl=0;e.alertT=0;e.loseT=0;e.cur=e.speed;if(e.alertS)e.alertS.visible=false;e.bones=false;e.rise=0;e.appT=0;e.noHit=false;if(e.trig!==undefined){e.dorm=true;e.noHit=true;e.vis.g.visible=false;e.fireT=1.2;e.charging=false}if(e.type==='skel'&&e.vis.body){e.vis.body.visible=true;e.vis.pile.visible=false;e.vis.body.scale.set(1,1,1)}if(e.type==='witch'){e.vis.g.scale.setScalar(1)}});
   checkpoints.forEach(function(c){c.lit=false;c.mat.emissiveIntensity=0});
   crumbles.forEach(function(c){c.state=0;c.dead=false;c.mesh.position.set(c.cx,c.baseY,0);c.mesh.scale.set(1,1,1)});
+  if(typeof fallsReset==='function'&&curTheme.falls)fallsReset();
   resetBoss();resetDrops();P.swimToast=false;$('airStat').hidden=true;airBubs.forEach(function(b){b.on=true;b.cd=0;b.mesh.visible=true});
   respawn={x:LV.start.x,y:LV.start.y};placeEnemies(respawn.x);
   setHearts();$('coinN').textContent=bank;$('gemN').textContent='0';$('timeN').textContent='0:00';
@@ -8908,6 +9072,8 @@ function updEnemy(e,dt){
   if(t==='turtle'||t==='tchase'||t==='tshell'||t==='tguard'){turtleAI(e,dt);return}
   if(t==='moth'){mothAI(e,dt);return}
   if(t==='mole'){moleAI(e,dt);return}
+  if(t==='worm'){wormAI(e,dt);return}
+  if(t==='bee'){beeAI(e,dt);return}
   if(t==='dfly'){dflyAI(e,dt);return}
   if(t==='wrob'){wrobAI(e,dt);return}
   if(t==='skel'){
@@ -9019,7 +9185,7 @@ function loseWings(e){
 }
 /* pulo normal: inimigo de chão dorme um tempo; voador é derrubado (cai e dorme, depois volta a voar). Pulo giratório (sjump) derrota. */
 function sjTxt(){return 'pulo giratório ('+(coarse?'arraste o Pular para cima':'K')+')'}
-var FLYERS={bat:1,dfly:1,moth:1,turtle:1,tchase:1,witch:1};
+var FLYERS={bat:1,dfly:1,moth:1,turtle:1,tchase:1,witch:1,bee:1};
 function sleepE(e){var fl=!!FLYERS[e.type];if(!(e.slp>0))e.slpY=e.y;e.slp=fl?4:5;e.fly=fl;var g0=floorBelow(e.x,e.y+.1);e.landed=!fl&&g0>-90&&e.y-g0<.06;e.svy=0;e.vx=0;/* todos caem até o que tiver embaixo (sapo no meio do pulo também) */e.wake=0;e.safe=true;e.cur=0;e.st='patrol';e.alertT=0;if(e.type==='moth')e.sit=0;/* mariposa derrubada: a luz da roda volta */
   emit(sparkPool,e.x,e.y+e.h,8,2.2,.4,.3,.2,2);if(!sleepE.told){sleepE.told=true;toast((fl?'Derrubado!':'Dormindo!')+' Use o '+sjTxt()+' para derrotar')}}
 function sleepUpd(e,dt){/* true = está dormindo/voltando (a IA espera) */
@@ -9032,6 +9198,7 @@ function sleepUpd(e,dt){/* true = está dormindo/voltando (a IA espera) */
   if(e.wake){var dy=(e.slpY||e.y)-e.y;if(Math.abs(dy)<.08){e.y=e.slpY;e.wake=0;e.safe=false;return false}e.y+=Math.sign(dy)*Math.min(Math.abs(dy),4*dt);e.safe=true;return true}
   return false}
 function killE(e,how){
+  if(e.type==='worm')e.zz=1;/* Minhocão: quando acordar, cava de volta para a toca */
   if(how==='stomp'&&e.slp>0){sleepE(e);return true}/* pisou de novo: dorme mais */
   if(e.type==='tguard'&&e.wings&&how!=='spin'&&how!=='sjump'){/* 1º golpe: perde as asas e cai; 2º golpe derrota */
     e.wings=false;e.vy=0;e.st='patrol';emit(sparkPool,e.x,e.y+.8,10,3,.5,.3,.2,2);emit(dustPool,e.x,e.y+.8,6,2,.5,.6,1.2,-.3);if(!e.told){e.told=true;toast('A guardiã perdeu as asas! Use o '+sjTxt()+' para derrotar')}return true}
@@ -9640,6 +9807,7 @@ function step(dt){
   else if(curTheme.name==='tower')updTower(dt);
   else if(curTheme.name==='mine')updMine(dt);
   else if(LV&&LV.minePre)updMinePre(dt);
+  else if(curTheme.falls)updFalls(dt);
   if(P.onPlat&&P.onPlat.mover)P.x+=P.onPlat.x-P.onPlat.px;
   var ax=keys.jx!==0?keys.jx:((keys.right?1:0)-(keys.left?1:0));
   if(P.stun>0){P.stun-=dt;ax=0}
@@ -10058,6 +10226,8 @@ function visEnemy(e,dt){
     if(t==='turtle'||t==='tchase'||t==='tshell'||t==='tguard'){turtleVis(e,dt)}
     else if(t==='moth'){mothVis(e,dt)}
     else if(t==='mole'){moleVis(e,dt)}
+    else if(t==='worm'){wormVis(e,dt)}
+    else if(t==='bee'){beeVis(e,dt)}
     else if(t==='dfly'){dflyVis(e,dt)}
     else if(t==='wrob'){wrobVis(e,dt)}
     else if(t==='beetle'||t==='golem'){
