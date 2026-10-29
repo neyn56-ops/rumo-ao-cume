@@ -336,7 +336,7 @@ var THEMES=[
   {name:'trail',sky:['#1f78d0','#5cb4ee','#c4e8f8','#cfeee6'],fog:'#bfe2ee',fd:.0062,sun:0xfff2d6,si:2.35,sunOff:[-14,26,16],hemi:[0xd6f0ff,0x5a4a2a,.26],exp:.84,env:0,lantern:0,snow:false,petal:false,mz:-45,valley:0x2e5a1e},
   {name:'sky',sky:['#3a5ab8','#7a8ae0','#f2b0a0','#ffd8a8'],fog:'#e8c8c8',fd:.0045,sun:0xffe2c0,si:2.2,sunOff:[-16,24,16],hemi:[0xffe8e0,0x6a6a9a,.5],exp:.86,env:0,lantern:0,snow:false,mz:-45,valley:0x5a6a9a},
   {name:'tower',sky:['#04081a','#0a1434','#16244a','#1c2a46'],fog:'#101a30',fd:.009,sun:0xaab8f0,si:1.1,sunOff:[-10,26,14],hemi:[0x8a9ad0,0x1e2418,.85],exp:1.22,env:4,lantern:0,snow:false,mz:-40,valley:0x0a1222},
-  {name:'mine',sky:['#120a06','#1e120a','#2a1a10','#1a100a'],fog:'#24160e',fd:.011,sun:0xffd8a8,si:1.35,sunOff:[-10,24,14],hemi:[0xffd0a0,0x2a1a10,.9],exp:1.16,env:5,lantern:3.6,snow:false,mz:-30,valley:0x1a100a},
+  {name:'mine',sky:['#120a06','#1e120a','#2a1a10','#1a100a'],fog:'#2c1c12',fd:.0095,sun:0xffd8a8,si:1.7,sunOff:[-10,24,14],hemi:[0xffd8b0,0x4a3424,1.3],exp:1.5,env:5,lantern:3.6,snow:false,mz:-30,valley:0x1a100a},
   /* 15: região mineradora seca em cima da mina (Mundo 15, parte 1) — monta como o Vale, mas sem grama: terra, pedra e poeira */
   {name:'valley',dry:1,sky:['#4a7cb4','#8cb2d2','#e8d4b2','#dcc29e'],fog:'#dcc6a2',fd:.0105,sun:0xffe2b4,si:2.3,sunOff:[-14,24,16],hemi:[0xffe6c4,0x6a4a30,.24],exp:.84,env:0,lantern:0,snow:false,mz:-45,valley:0x9a7650}
 ];
@@ -5728,7 +5728,7 @@ function mnMats(){if(mnM)return;
     stripe:new T.MeshStandardMaterial({map:stT,roughness:.6}),red:M(0xd83a2a,.5,.1),white:M(0xf0ece0,.6)};
   mnM.stT=stT}
 /* ---------- trechos da mina com cor própria (dono pediu variar): 0 rocha quente, 1 veio de carvão, 2 galeria de cristais, 3 arena do Toupeirão ---------- */
-var MN_T=[0xffffff,0x8a8a92,0x9cb0ff,0xd2a294];
+var MN_T=[0xffffff,0xb0b0b8,0xb4c4ff,0xe2b6a8];
 function mnZone(x){var xe=(typeof sceneEnd==='function'?sceneEnd():330)-30,b0=LV.boss?LV.boss.arena[0]-4:xe;if(x>=b0)return 3;return x<b0*.33?0:(x<b0*.66?1:2)}
 function mnTint(g,x){g.__c=MN_T[mnZone(x)];return g}
 function mgC(L){return mergeG(L.map(function(g){return {g:g,c:g.__c||0xffffff}}),true)}/* junta guardando a cor de cada pedaço */
@@ -7356,6 +7356,7 @@ function lose(ttl,txt){
   state='dead';sfx.lose();
   /* morreu: perde os poderes trazidos da fase anterior */
   carryNow=null;save.carry=null;save.carryFor=-1;save.hearts=3;/* perdeu tudo: volta para 3 corações */writeSave();
+  if(typeof prePast!=='undefined')prePast[levelIdx]=false;/* mundo com superfície (Mina): perdeu tudo = recomeça lá em cima, no começo da fase */
   showCard({kicker:'Quase lá!',title:ttl||'Kuro caiu',text:txt||'Os inimigos levaram a melhor, mas o Kuro nunca desiste. Vamos de novo?',stats:stats(),primary:{label:'Tentar de novo',fn:retry},secondary:{label:'Mapa',fn:function(){openMap({from:levelIdx})}}});
 }
 function recordLevel(){
