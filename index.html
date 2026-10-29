@@ -1607,7 +1607,7 @@ LEVELS.push({name:'Torre dos Vaga-lumes',cpStrict:1,theme:13,camMin:9,camMax:15,
    rails: trilhos [{pts:[[x,y],..],end}] — 'stop' = para no batente · 'jump' = rampa: o vagonete voa por cima do abismo · 'drop' = trilho quebrado: o vagonete cai
    carts: vagonetes [{rail,x}] — o Kuro pula dentro e ele anda sozinho até o fim do trilho
    mlifts: elevador de mina (gaiola) · beams: vigas baixas sobre o trilho (abaixe-se) · solids com 'tres' = ponte de madeira (cavalete) dos trilhos */
-LEVELS.push({name:'Mina dos Trilhos',theme:14,camMax:330,limit:600,es:1.05,noLift:1,mine:1,pipeIn:1.6,/* cai do cano no chão, ao lado do 1º vagonete (dono) */
+LEVELS.push({name:'Mina dos Trilhos',theme:14,camMax:330,limit:600,es:1.05,noLift:1,mine:1,pipeIn:1.6,noHeartFit:1,/* corações colocados à mão: o automático pôs um em cima do fim do trilho, onde não dava para pegar *//* cai do cano no chão, ao lado do 1º vagonete (dono) */
  solids:[[-3,22,0],[26,58,0],[58,70,0,-14,0,'tres'],[78,104,0,-14,0,'tres'],[104,118,0],[127,132,0],[136,176,6],
   [192,222,2,-14,0,'tres'],[226,250,3.6,-14,0,'tres'],[258,334,3.6]],
  floats:[[10,14,2.8,'plank'],[15.5,19.5,5.2,'plank'],[146,150,9.4,'plank']],
@@ -1625,7 +1625,7 @@ LEVELS.push({name:'Mina dos Trilhos',theme:14,camMax:330,limit:600,es:1.05,noLif
   {t:'bat',x0:194,x1:203,y:5.6,s:1.5},{t:'bat',x0:236,x1:248,y:7.2,s:1.6},
   {t:'beetle',x0:265,x1:276,y:3.6,s:1.6},{t:'mole',x0:283,x1:287,y:3.6,ph:.8},{t:'wrob',x0:288,x1:294,y:3.6,s:1.3}],
  blocks:[{x:6,y:2.6,t:'q',c:'mushroom'},{x:34,y:2.6,t:'brick'},{x:35,y:2.6,t:'q',c:'flower'},{x:36,y:2.6,t:'brick'},{x:52,y:2.6,t:'hid',c:'multi',n:3},
-  {x:108,y:2.6,t:'q',c:'fruit'},{x:142,y:8.6,t:'q',c:'mushroom'},{x:148,y:12,t:'q',c:'multi',n:4},{x:172,y:8.8,t:'q',c:'feather'},{x:268,y:6.2,t:'q',c:'mushroom'},{x:293,y:6.2,t:'q',c:'fruit'}],
+  {x:108,y:2.6,t:'q',c:'fruit'},{x:105.5,y:2.6,t:'q',c:'heart'},{x:142,y:8.6,t:'q',c:'mushroom'},{x:148,y:12,t:'q',c:'multi',n:4},{x:172,y:8.8,t:'q',c:'feather'},{x:268,y:6.2,t:'q',c:'mushroom'},{x:293,y:6.2,t:'q',c:'fruit'},{x:297,y:5.6,t:'q',c:'heart'}],
  coins:[['r',1,9,.9,5],['r',10.5,13.5,3.7,3],['r',16,19,6.1,3],['a',24,.9,2.2,2.4,4],['r',27,33,.9,4],['r',41,45,.9,3],
   ['r',50,69,1.55,8],['a',76.5,2.6,3.6,1.2,4],['r',82,98,1.55,7],['r',105,111,.9,3],['a',122.3,1.4,3.2,1.6,4],['r',127.5,130.5,.9,2],
   ['r',134,134,3.5,1],['r',138,144,6.9,4],['r',146.5,149.5,10.3,3],['r',152,160,6.9,4],
