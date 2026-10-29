@@ -1715,7 +1715,7 @@ LEVELS.push({name:'Vale das Cachoeiras',theme:16,music:11,tall:1,camMax:440,limi
   {t:'turtle',moss:1,x0:339.5,x1:339.5,y:5.2,s:.01,amp:.25},{t:'turtle',moss:1,x0:342.8,x1:342.8,y:5.2,s:.01,amp:.25},{t:'turtle',moss:1,x0:346.1,x1:346.1,y:5.2,s:.01,amp:.25},{t:'turtle',moss:1,x0:349.4,x1:349.4,y:5.2,s:.01,amp:.25},{t:'turtle',moss:1,x0:352.7,x1:352.7,y:5.2,s:.01,amp:.25},
   {t:'owl',x0:358,x1:370,x:364,y:9.4},{t:'jfish',x0:374.6,x1:380,y:0,ph:.6,hgt:6.6},{t:'jfish',x0:379.6,x1:385,y:0,ph:2,hgt:6.6},
   {t:'owl',x0:389,x1:400,x:395,y:9.6},{t:'sprout',x0:412,x1:412,y:6.8,ph:.4},{t:'bee',x0:408,x1:418,y:9.4,s:1.4},{t:'owl',x0:427,x1:438,x:433,y:15.4}],
- wlogs:[{x:310,top:12,bot:-3,sp:1.4,gap:4.6},{x:315,top:12.8,bot:-3,sp:1.9,gap:4.8,w:2},{x:320,top:12.4,bot:-3,sp:1.6,gap:4.4},{x:325,top:13,bot:-3,sp:2.2,gap:5,w:1.8},{x:330,top:12.2,bot:-3,sp:1.5,gap:4.6,w:2.2},{x:335,top:12.8,bot:-3,sp:2,gap:4.8,w:2}],
+ wlogs:[{x:310,top:12,bot:-3,sp:1.4,gap:4.6,dir:-1},{x:315,top:12.8,bot:-3,sp:1.6,gap:4.6,w:2.2,dir:1,off:.5},{x:320,top:12.4,bot:-3,sp:1.6,gap:4.4,dir:-1},{x:325,top:13,bot:-3,sp:1.8,gap:4.8,w:2,dir:1,off:.5},{x:330,top:12.2,bot:-3,sp:1.5,gap:4.6,w:2.2,dir:-1},{x:335,top:12.8,bot:-3,sp:1.7,gap:4.6,w:2.2,dir:1,off:.5}],
  sinks:[[372,374.6,3.2],[377,379.6,3.2],[382,384.6,3.2]],
  gate:{x:444.5,y:10.4,sx:437.6},
  logs:[{x:246,y:5.6,gy:3.2,L:4.4,speed:1.5}],
@@ -2022,6 +2022,7 @@ function buildLevel(idx){
   buildFar(th);
   if(th.name==='trail'){buildTrailDecor(th);buildTrailFar()}
   buildLush(th);
+  if(typeof kuroDry==='function')kuroDry();/* Kuro seco ao começar qualquer fase */
   if(th.falls)buildFalls(th);/* Mundo 16: cachoeiras, rio, castelo lá longe e os Pedrões-totem */
   if(th.name==='ruins')buildRuinsExtra();
   buildHazards();
@@ -7371,7 +7372,7 @@ function fallsReset(){flTot.forEach(function(T0){T0.st='up';T0.t=0;T0.vy=0;totem
 function updFalls(dt){if(!flFx)return;
   flM.rt.offset.x-=dt*.12;
   flFx.foam.forEach(function(o){var u=(tm*.45+o.ph)%1;o.s.position.set(o.x+(o.ph-.5)*o.w*1.1,o.y+.3+u*1.6,o.z);o.s.material.opacity=.5;o.s.scale.set(1.4+u*1.6,1+u,1)});
-  flTot.forEach(function(T0){totemUpd(T0,dt)});logsUpd(dt);wlogsUpd(dt);sinksUpd(dt);seedUpd();
+  flTot.forEach(function(T0){totemUpd(T0,dt)});logsUpd(dt);wlogsUpd(dt);kuroWetUpd(dt);flDropUpd(dt);sinksUpd(dt);seedUpd();
   if(LV.tTip&&!flFx.tTold&&state==='play'&&P.x>LV.tTip&&P.x<LV.tTip+3){flFx.tTold=1;toast('Pule de tartaruga em tartaruga! Segure o pulo para quicar mais alto')}
   /* respingo ao cair no rio */
   if(P.y<=flFx.ry&&flFx.py>flFx.ry){splashFx(P.x,flFx.ry,8);try{noise(.3,.05,900,'lowpass')}catch(e){}}flFx.py=P.y}
@@ -7528,8 +7529,8 @@ function owlVis(e,dt){var v=e.vis,st=e.st2,sl=e.slp>0;v.inner.rotation.y=sl?0:(e
 /* ---------- troncos descendo a cachoeira ---------- */
 function buildWLogs(){flWl=[];var WL=LV.wlogs||[];if(!WL.length)return;
   /* paredão de pedra por cima das colunas: a água e os troncos saem de dentro dele (antes nasciam do nada) */
-  var xa=1e9,xb=-1e9,ty=0;WL.forEach(function(d){xa=Math.min(xa,d.x-(d.w||2.4)/2);xb=Math.max(xb,d.x+(d.w||2.4)/2);ty=Math.max(ty,d.top)});
-  var oy=ty+.6;WL.forEach(function(d){d.top=Math.max(d.top,oy+2.2)});/* o tronco reaparece escondido dentro da pedra */
+  var xa=1e9,xb=-1e9,ty=0;WL.forEach(function(d){if(d.top0===undefined)d.top0=d.top;xa=Math.min(xa,d.x-(d.w||2.4)/2);xb=Math.max(xb,d.x+(d.w||2.4)/2);ty=Math.max(ty,d.top0)});/* top0: a altura original (não cresce a cada recomeço) */
+  var oy=ty+.6;WL.forEach(function(d){d.top=Math.max(d.top0,oy+2.2)});/* o tronco reaparece escondido dentro da pedra */
   var ow=xb-xa+5,oh=7,og=new T.BoxGeometry(ow,oh,4.2,Math.round(ow/1.2),8,3),pa=og.attributes.position,uv=og.attributes.uv;
   for(var k=0;k<pa.count;k++){var vx=pa.getX(k),vy=pa.getY(k),vz=pa.getZ(k),n=Math.sin(vx*1.3)*.22+Math.sin(vx*3.1+vy)*.12;
     if(vy<-oh/2+.01){var notch=0;WL.forEach(function(d){var dd=Math.abs(vx-(d.x-(xa+xb)/2));if(dd<(d.w||2.4)/2+.6)notch=Math.max(notch,.55*(1-dd/((d.w||2.4)/2+.6)))});pa.setY(k,vy+notch+Math.abs(n)*.8)}
@@ -7538,19 +7539,52 @@ function buildWLogs(){flWl=[];var WL=LV.wlogs||[];if(!WL.length)return;
   var ms=mesh(new T.BoxGeometry(ow+.4,.5,4.6),mossM,false,true);ms.position.set((xa+xb)/2,oy+oh+.1,-.5);add(ms);
   var VN=[];for(var v=0;v<Math.round(ow/1.4);v++){var vx2=xa-2+v*1.4+.3,skip=false;WL.forEach(function(d){if(Math.abs(vx2-d.x)<(d.w||2.4)/2+.7)skip=true});if(skip)continue;var ln=.8+((v*7)%5)*.35;VN.push(xf(new T.CylinderGeometry(.04,.03,ln,4),[vx2,oy-ln/2+.3,1.6]))}
   if(VN.length)add(mesh(mgL(VN),flM.vine,false,false));
-  WL.forEach(function(d){var w=d.w||2.4,span=d.top-d.bot,n=Math.max(1,Math.round(span/(d.gap||4.5))),gap=span/n;
-  var cg=new T.PlaneGeometry(w+1.6,span+2,1,1);cg.translate(0,(span+2)/2,0);var cur=new T.Mesh(cg,flM.wm);cur.position.set(d.x,d.bot-1,-1.1);cur.renderOrder=3;add(cur);/* a cachoeira atrás dos troncos */
+  flFx.oy=oy+.3;
+  var wetBark=barkM.clone();wetBark.color=barkM.color.clone().multiplyScalar(.68);wetBark.roughness=.28;wetBark.metalness=.05;/* tronco molhado: mais escuro e brilhante */
+  WL.forEach(function(d,ci){var w=d.w||2.4,span=d.top-d.bot,n=Math.max(1,Math.round(span/(d.gap||4.5))),gap=span/n;d.dir=d.dir||(ci%2?1:-1);
+  /* cortina de água desta coluna: embaixo de cada tronco a água falha (o tronco segura a água) */
+  var LY=[];for(var q=0;q<8;q++)LY.push(-99);
+  var cm=new T.ShaderMaterial({transparent:true,depthWrite:false,side:T.DoubleSide,uniforms:{time:lushU.time,ly:{value:LY},cx:{value:d.x},hw:{value:w/2}},
+    vertexShader:'varying vec2 vU;varying vec2 vW;void main(){vU=uv;vec4 wp=modelMatrix*vec4(position,1.);vW=wp.xy;gl_Position=projectionMatrix*viewMatrix*wp;}',
+    fragmentShader:'uniform float time,cx,hw;uniform float ly[8];varying vec2 vU;varying vec2 vW;float h(vec2 p){return fract(sin(dot(p,vec2(12.9,78.2)))*43758.5);}void main(){float st=0.;for(int i=0;i<3;i++){float fi=float(i);float x=floor(vU.x*(8.+fi*6.));float sp=1.6+h(vec2(x,fi))*1.5;st+=smoothstep(.5,1.,fract(vU.y*(2.+fi)+time*sp+h(vec2(x,fi+3.))))*.45;}float edge=smoothstep(0.,.14,vU.x)*smoothstep(1.,.86,vU.x);float occ=1.;float ax=abs(vW.x-cx);for(int i=0;i<8;i++){float d=ly[i]-vW.y;if(d>0.&&d<3.&&ax<hw-.1){occ=min(occ,mix(.04,1.,smoothstep(.9,3.,d)));}}vec3 c=mix(vec3(.32,.66,.9),vec3(.96,.99,1.),clamp(st,0.,1.));gl_FragColor=vec4(c,(.72+st*.28)*edge*occ);}'});
+  var cg=new T.PlaneGeometry(w+1.6,span+2,1,1);cg.translate(0,(span+2)/2,0);var cur=new T.Mesh(cg,cm);cur.position.set(d.x,d.bot-1,-1.1);cur.renderOrder=3;add(cur);
   for(var k=0;k<(LITE?2:4);k++){var s=new T.Sprite(flM.foam);s.scale.set(2.4,1.6,1);add(s);flFx.foam.push({s:s,x:d.x,y:flFx.ry,z:-.6,w:w,ph:k/4})}
-  for(var i=0;i<n;i++){var g=new T.Group(),lg=mesh(new T.CylinderGeometry(.32,.32,w,10),barkM,true,false);lg.rotation.z=Math.PI/2;lg.position.y=-.32;g.add(lg);
-    [-1,1].forEach(function(sd){var cap=mesh(new T.CircleGeometry(.32,10),M(0xc8a070,.8),false,false);cap.position.set(sd*w/2,-.32,0);cap.rotation.y=sd*Math.PI/2;g.add(cap)});
+  var LS=[];
+  for(var i=0;i<n;i++){var g=new T.Group(),lg=mesh(new T.CylinderGeometry(.32,.32,w,10),wetBark,true,false);lg.rotation.z=Math.PI/2;lg.position.y=-.32;g.add(lg);
+    [-1,1].forEach(function(sd){var cap=mesh(new T.CircleGeometry(.32,10),M(0xa88a5e,.5),false,false);cap.position.set(sd*w/2,-.32,0);cap.rotation.y=sd*Math.PI/2;g.add(cap);
+      /* fiozinho de água escorrendo pela ponta do tronco */
+      var sg=new T.PlaneGeometry(.36,2.2);sg.translate(0,-1.1,0);var sm=new T.Mesh(sg,flM.wm);sm.position.set(sd*(w/2-.08),-.5,.05);sm.renderOrder=3;g.add(sm)});
     var ms=mesh(new T.SphereGeometry(1,8,4,0,6.283,0,1.2),mossM,false,false);ms.scale.set(w*.3,.12,.25);ms.position.set(-.2,-.02,0);g.add(ms);
-    add(g);var y=d.top-i*gap,so={l:d.x-w/2,r:d.x+w/2,t:y,b:y-.64,oneway:false,wlog:1};solids.push(so);flWl.push({d:d,g:g,so:so,y:y,span:span})}})}
+    var fo=[];
+    add(g);var y=d.top-((i+(d.off||0))%n)*gap,so={l:d.x-w/2,r:d.x+w/2,t:y,b:y-.64,oneway:false,wlog:1};solids.push(so);var L={d:d,g:g,so:so,y:y,span:span,fo:fo,cm:cm,k:i};flWl.push(L);LS.push(L)}
+  d.LS=LS})}
 function wlogsUpd(dt){/* tartaruga encostada num tronco: é empurrada para o lado (o tronco não passa por dentro dela) */
   if(flWl.length)for(var i=0;i<enemies.length;i++){var e=enemies[i];if(!e.alive||e.type!=='tchase'||e.slp>0)continue;
     for(var j=0;j<flWl.length;j++){var so=flWl[j].so,hw=e.w+.05;if(e.x+hw>so.l&&e.x-hw<so.r&&e.y+.85>so.b-.05&&e.y<so.t+.05){var gl=e.x+hw-so.l,gr=so.r-(e.x-hw);if(gl<gr)e.x-=gl;else e.x+=gr}}}
-  flWl.forEach(function(L){var d=L.d,so=L.so,on=P.onPlat===so&&P.grounded,ny=L.y-(d.sp||1.5)*dt;
-  if(ny<d.bot){ny+=L.span;if(on){P.onPlat=null;on=false}if(Math.abs(P.x-d.x)<12)splashFx(d.x,flFx.ry,5)}
-  L.y=ny;so.t=ny;so.b=ny-.64;if(on)P.y=ny;L.g.position.set(d.x,ny,0);L.g.rotation.z=Math.sin(tm*1.3+L.span+ny)*.04})}
+  flWl.forEach(function(L){var d=L.d,so=L.so,on=P.onPlat===so&&P.grounded,ny=L.y+d.dir*(d.sp||1.5)*dt;
+  /* coluna que desce: some no rio e volta de dentro da pedra; coluna que sobe: sai do rio e entra na pedra */
+  if(d.dir<0&&ny<d.bot){ny+=L.span;if(on){P.onPlat=null;on=false}if(Math.abs(P.x-d.x)<12)splashFx(d.x,flFx.ry,5)}
+  if(d.dir>0&&ny>d.top){ny-=L.span;if(on){P.onPlat=null;on=false}}
+  if(d.dir>0&&L.y<flFx.ry&&ny>=flFx.ry&&Math.abs(P.x-d.x)<12)splashFx(d.x,flFx.ry,5);
+  /* subindo com o Kuro em cima e chegando na pedra: o Kuro é empurrado para fora (não fica esmagado) */
+  if(on&&d.dir>0&&ny+P.h*(P.big?1:.78)+.15>flFx.oy){var sd=P.x<d.x?-1:1;P.onPlat=null;P.grounded=false;P.x=sd<0?so.l-P.w/2-.08:so.r+P.w/2+.08;P.vy=0;on=false;
+    if(!wlogsUpd.told){wlogsUpd.told=1;toast('O tronco entra na pedra! Pule antes de chegar lá em cima')}}
+  L.y=ny;so.t=ny;so.b=ny-.64;if(on)P.y=ny;L.g.position.set(d.x,ny,0);L.g.rotation.z=Math.sin(tm*1.3+L.span+ny)*.04;
+  /* água batendo em cima do tronco: respingos */
+  if(ny>flFx.ry+.1&&ny<flFx.oy-.2&&Math.abs(P.x-d.x)<14&&Math.random()<.3)flDrop(d.x+(Math.random()-.5)*(d.w||2.4)*.8,ny+.05,(Math.random()-.5)*2.2,1.2+Math.random()*1.4)});
+  (LV.wlogs||[]).forEach(function(d){var a=d.LS[0].cm.uniforms.ly.value;for(var q=0;q<8;q++)a[q]=q<d.LS.length?d.LS[q].y-.64:-99})}
+/* ---------- Kuro molhado: entra na cachoeira, fica escuro e brilhante; ao sair pinga e vai secando (só visual) ---------- */
+var kWet={w:0,mats:null};
+function kuroMats(){var L=[],seen={};rig.root.traverse(function(o){if(!o.isMesh&&!o.isSkinnedMesh)return;(Array.isArray(o.material)?o.material:[o.material]).forEach(function(m){if(!m||seen[m.uuid]||!m.color)return;seen[m.uuid]=1;L.push({m:m,c:m.color.clone(),r:m.roughness})})});return L}
+var WETC=new T.Color(.42,.5,.68),_wc=new T.Color();
+function kuroWetApply(w){if(!kWet.mats)return;kWet.mats.forEach(function(o){_wc.copy(o.c).multiply(WETC);o.m.color.copy(o.c).lerp(_wc,w);if(o.r!==undefined)o.m.roughness=o.r+(.18-o.r)*w})}
+function kuroDry(){if(kWet.mats){kuroWetApply(0);kWet.mats=null}kWet.w=0;flDropClear()}
+function kuroWetUpd(dt){var inF=false;if(state==='play')(LV.wlogs||[]).forEach(function(d){var hw=((d.w||2.4)+1.6)/2;if(Math.abs(P.x-d.x)<hw&&P.y<flFx.oy&&P.y+1>flFx.ry)inF=true});
+  var w0=kWet.w;if(inF){if(!kWet.mats)kWet.mats=kuroMats();kWet.w=Math.min(1,kWet.w+dt*4)}else kWet.w=Math.max(0,kWet.w-dt/5);
+  if(kWet.w!==w0){kuroWetApply(kWet.w);if(kWet.w===0)kWet.mats=null}
+  var sc=P.big?1:.78;
+  if(inF&&Math.random()<.35)flDrop(P.x+(Math.random()-.5)*.5,P.y+1.45*sc,(Math.random()-.5)*2.4,1+Math.random()*1.2);/* água batendo na cabeça */
+  else if(!inF&&kWet.w>0&&Math.random()<kWet.w*.7)flDrop(P.x+(Math.random()-.5)*.45,P.y+(.25+Math.random()*.9)*sc,(Math.random()-.5)*.3,-.2)}/* pingando */
 /* ---------- ilhas que afundam ---------- */
 function buildSinks(){flSk=[];(LV.sinks||[]).forEach(function(q){var w=q[1]-q[0],cx=(q[0]+q[1])/2,g=new T.Group();
   var top=mesh(boxGeo(w,.36,1.8,1),grassM,true,true);top.position.y=-.18;g.add(top);
@@ -7606,6 +7640,13 @@ function farCastle(hm){var X=LV.castleX!==undefined?LV.castleX:22,Z=-58;
   var tr=[],tc=new T.MeshStandardMaterial({color:0x2f6a2c,roughness:1,flatShading:true});for(var t=0;t<14;t++){var a2=t/14*6.283,rr=11+(t%3)*2.5,tx=Math.cos(a2)*rr*1.3,tz=Math.sin(a2)*rr*.6;var ty=-3+26*.42*Math.sqrt(Math.max(0,1-(tx/35)*(tx/35)-(tz/19.5)*(tz/19.5)))-.3;tr.push(xf(new T.ConeGeometry(1.1,3.2,7),[X+tx,ty+1.4,Z+2+tz]))}
   farG.add(new T.Mesh(mgL(tr),tc));
   cs.scale.setScalar(1.05)}
+
+/* gotinhas d'água (respingo nos troncos e o Kuro pingando): bolinhas azul-claras pequenas, poucas e reaproveitadas */
+var flDr=null;
+function flDrop(x,y,vx,vy){if(!flDr){var g=new T.SphereGeometry(.06,6,4),m=new T.MeshStandardMaterial({color:0xcff0ff,emissive:0x5ab8ff,emissiveIntensity:.5,roughness:.1,transparent:true,opacity:.85});flDr={L:[],i:0};for(var k=0;k<40;k++){var o=new T.Mesh(g,m);o.visible=false;o.scale.set(1,1.4,1);scene.add(o);flDr.L.push({m:o,t:0})}}
+  var d=flDr.L[flDr.i++%flDr.L.length];d.x=x;d.y=y;d.vx=vx;d.vy=vy;d.t=.7;d.m.visible=true;d.m.position.set(x,y,.35)}
+function flDropUpd(dt){if(!flDr)return;flDr.L.forEach(function(d){if(d.t<=0)return;d.t-=dt;d.vy-=14*dt;d.x+=d.vx*dt;d.y+=d.vy*dt;d.m.position.set(d.x,d.y,.35);if(d.t<=0)d.m.visible=false})}
+function flDropClear(){if(flDr)flDr.L.forEach(function(d){d.t=0;d.m.visible=false})}
 
 /*@@parte:40_estado.js*/
 /* ===================== estado do jogo ===================== */
