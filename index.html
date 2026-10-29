@@ -1711,7 +1711,7 @@ LEVELS.push({name:'Vale das Cachoeiras',theme:16,music:11,tall:1,camMax:440,limi
   {t:'jfish',x0:226.6,x1:232.6,y:0,ph:.3,hgt:6.4},{t:'jfish',x0:231.8,x1:237.8,y:0,ph:1.9,hgt:6.8},
   {t:'sprout',x0:255,x1:255,y:3.2,ph:.9},{t:'bee',x0:250,x1:260,y:6.2,s:1.4},
   {t:'armad',x0:268,x1:279,x:275,y:3.2},
-  {t:'tchase',moss:1,x0:310,x1:310,y:10.6},{t:'tchase',moss:1,x0:315,x1:315,y:9.4},{t:'tchase',moss:1,x0:320,x1:320,y:10.8},{t:'tchase',moss:1,x0:325,x1:325,y:9.6},{t:'tchase',moss:1,x0:330,x1:330,y:10.6},{t:'tchase',moss:1,x0:335,x1:335,y:9.6},
+  {t:'tchase',moss:1,x0:307.4,x1:307.4,y:10.6},{t:'tchase',moss:1,x0:312.5,x1:312.5,y:9.4},{t:'tchase',moss:1,x0:317.5,x1:317.5,y:10.8},{t:'tchase',moss:1,x0:322.5,x1:322.5,y:9.6},{t:'tchase',moss:1,x0:327.5,x1:327.5,y:10.6},{t:'tchase',moss:1,x0:332.5,x1:332.5,y:9.6},
   {t:'turtle',moss:1,x0:339.5,x1:339.5,y:5.2,s:.01,amp:.25},{t:'turtle',moss:1,x0:342.8,x1:342.8,y:5.2,s:.01,amp:.25},{t:'turtle',moss:1,x0:346.1,x1:346.1,y:5.2,s:.01,amp:.25},{t:'turtle',moss:1,x0:349.4,x1:349.4,y:5.2,s:.01,amp:.25},{t:'turtle',moss:1,x0:352.7,x1:352.7,y:5.2,s:.01,amp:.25},
   {t:'owl',x0:358,x1:370,x:364,y:9.4},{t:'jfish',x0:374.6,x1:380,y:0,ph:.6,hgt:6.6},{t:'jfish',x0:379.6,x1:385,y:0,ph:2,hgt:6.6},
   {t:'owl',x0:389,x1:400,x:395,y:9.6},{t:'sprout',x0:412,x1:412,y:6.8,ph:.4},{t:'bee',x0:408,x1:418,y:9.4,s:1.4},{t:'owl',x0:427,x1:438,x:433,y:15.4}],
@@ -7337,13 +7337,7 @@ function buildFalls(th){flMats();flTot=[];var lite=LITE,r=rnd(1616),xe=sceneEnd(
     [[-60,-120,34],[10,-130,40],[85,-118,30],[150,-128,44]].forEach(function(q,k){H.push(xf(new T.SphereGeometry(q[2],14,7,0,6.283,0,1.57),[q[0],-10,q[1]],0,[1.2,.55,.6]));
       var fg=new T.PlaneGeometry(1.6,q[2]*.5);fg.translate(0,q[2]*.25,0);FW.push({g:xf(fg,[q[0]+q[2]*.3*(k%2?1:-1),-10+q[2]*.05,q[1]+q[2]*.6*.6],0,0)})});
     farG.add(new T.Mesh(mergeG(H.map(function(g){return {g:g}})),hm));var fwm=new T.Mesh(mergeG(FW),flM.wm);farG.add(fwm);
-    var cs=new T.Group(),wall=new T.MeshStandardMaterial({color:0xe8e2d2,roughness:.9}),roofA=new T.MeshStandardMaterial({color:0x3a6ad8,roughness:.6}),roofB=new T.MeshStandardMaterial({color:0xd84a3a,roughness:.6});
-    var C=[],RA=[],RB=[];C.push(xf(new T.BoxGeometry(9,6,5),[0,3,0]));C.push(xf(new T.BoxGeometry(4.2,9,4.2),[0,4.5,-.5]));
-    [[-5,0,1],[5,0,1],[-2.6,-2.6,0],[2.6,-2.6,0]].forEach(function(q,k){C.push(xf(new T.CylinderGeometry(1.2,1.3,8+k%2*2,10),[q[0],4+k%2,q[1]]));(k<2?RA:RB).push(xf(new T.ConeGeometry(1.6,3,10),[q[0],9.5+k%2*2,q[1]]))});
-    RB.push(xf(new T.ConeGeometry(3.2,4,4),[0,11,-.5],[0,Math.PI/4,0]));
-    cs.add(new T.Mesh(mgL(C),wall));cs.add(new T.Mesh(mgL(RA),roofA));cs.add(new T.Mesh(mgL(RB),roofB));
-    cs.position.set(LV.castleX!==undefined?LV.castleX:22,8.6,-66);cs.scale.setScalar(1.15);farG.add(cs);
-    var hill=new T.Mesh(new T.SphereGeometry(22,16,8,0,6.283,0,1.57),hm);hill.scale.set(1.2,.48,.6);hill.position.set(cs.position.x,-2,-64);farG.add(hill)}
+    farCastle(hm)}
   buildTotems();buildLogs();buildWLogs();buildSinks();buildGate()}
 /* ---------- Pedrão-totem ---------- */
 function buildTotems(){(LV.totems||[]).forEach(function(d){var w=d.w||1.7,h=d.h||1.9,up=d.up||3.4,g=new T.Group(),inner=new T.Group();g.add(inner);
@@ -7532,14 +7526,29 @@ function owlVis(e,dt){var v=e.vis,st=e.st2,sl=e.slp>0;v.inner.rotation.y=sl?0:(e
   var fl=st==='rise'||st==='dive'||e.wake;v.wings.forEach(function(w){w.p.rotation.z=w.sd*(st==='dive'?1.25:(fl?.6+Math.sin(tm*18)*.6:.08))});
   v.inner.rotation.x=st==='dive'?.5:0;v.inner.position.y=sl?-.15:0}
 /* ---------- troncos descendo a cachoeira ---------- */
-function buildWLogs(){flWl=[];(LV.wlogs||[]).forEach(function(d){var w=d.w||2.4,span=d.top-d.bot,n=Math.max(1,Math.round(span/(d.gap||4.5))),gap=span/n;
+function buildWLogs(){flWl=[];var WL=LV.wlogs||[];if(!WL.length)return;
+  /* paredão de pedra por cima das colunas: a água e os troncos saem de dentro dele (antes nasciam do nada) */
+  var xa=1e9,xb=-1e9,ty=0;WL.forEach(function(d){xa=Math.min(xa,d.x-(d.w||2.4)/2);xb=Math.max(xb,d.x+(d.w||2.4)/2);ty=Math.max(ty,d.top)});
+  var oy=ty+.6;WL.forEach(function(d){d.top=Math.max(d.top,oy+2.2)});/* o tronco reaparece escondido dentro da pedra */
+  var ow=xb-xa+5,oh=7,og=new T.BoxGeometry(ow,oh,4.2,Math.round(ow/1.2),8,3),pa=og.attributes.position,uv=og.attributes.uv;
+  for(var k=0;k<pa.count;k++){var vx=pa.getX(k),vy=pa.getY(k),vz=pa.getZ(k),n=Math.sin(vx*1.3)*.22+Math.sin(vx*3.1+vy)*.12;
+    if(vy<-oh/2+.01){var notch=0;WL.forEach(function(d){var dd=Math.abs(vx-(d.x-(xa+xb)/2));if(dd<(d.w||2.4)/2+.6)notch=Math.max(notch,.55*(1-dd/((d.w||2.4)/2+.6)))});pa.setY(k,vy+notch+Math.abs(n)*.8)}
+    if(vz>0)pa.setZ(k,vz+n);if(Math.abs(vx)>ow/2-.01)pa.setX(k,vx+n*2);uv.setXY(k,uv.getX(k)*ow/3.5,uv.getY(k)*oh/3.5)}
+  og.computeVertexNormals();solids.push({l:(xa+xb)/2-ow/2,r:(xa+xb)/2+ow/2,t:oy+oh,b:oy+.3,oneway:false,rockTop:1});var ov=mesh(og,flM.rock,true,true);ov.position.set((xa+xb)/2,oy+oh/2,-.5);add(ov);
+  var ms=mesh(new T.BoxGeometry(ow+.4,.5,4.6),mossM,false,true);ms.position.set((xa+xb)/2,oy+oh+.1,-.5);add(ms);
+  var VN=[];for(var v=0;v<Math.round(ow/1.4);v++){var vx2=xa-2+v*1.4+.3,skip=false;WL.forEach(function(d){if(Math.abs(vx2-d.x)<(d.w||2.4)/2+.7)skip=true});if(skip)continue;var ln=.8+((v*7)%5)*.35;VN.push(xf(new T.CylinderGeometry(.04,.03,ln,4),[vx2,oy-ln/2+.3,1.6]))}
+  if(VN.length)add(mesh(mgL(VN),flM.vine,false,false));
+  WL.forEach(function(d){var w=d.w||2.4,span=d.top-d.bot,n=Math.max(1,Math.round(span/(d.gap||4.5))),gap=span/n;
   var cg=new T.PlaneGeometry(w+1.6,span+2,1,1);cg.translate(0,(span+2)/2,0);var cur=new T.Mesh(cg,flM.wm);cur.position.set(d.x,d.bot-1,-1.1);cur.renderOrder=3;add(cur);/* a cachoeira atrás dos troncos */
   for(var k=0;k<(LITE?2:4);k++){var s=new T.Sprite(flM.foam);s.scale.set(2.4,1.6,1);add(s);flFx.foam.push({s:s,x:d.x,y:flFx.ry,z:-.6,w:w,ph:k/4})}
   for(var i=0;i<n;i++){var g=new T.Group(),lg=mesh(new T.CylinderGeometry(.32,.32,w,10),barkM,true,false);lg.rotation.z=Math.PI/2;lg.position.y=-.32;g.add(lg);
     [-1,1].forEach(function(sd){var cap=mesh(new T.CircleGeometry(.32,10),M(0xc8a070,.8),false,false);cap.position.set(sd*w/2,-.32,0);cap.rotation.y=sd*Math.PI/2;g.add(cap)});
     var ms=mesh(new T.SphereGeometry(1,8,4,0,6.283,0,1.2),mossM,false,false);ms.scale.set(w*.3,.12,.25);ms.position.set(-.2,-.02,0);g.add(ms);
     add(g);var y=d.top-i*gap,so={l:d.x-w/2,r:d.x+w/2,t:y,b:y-.64,oneway:false,wlog:1};solids.push(so);flWl.push({d:d,g:g,so:so,y:y,span:span})}})}
-function wlogsUpd(dt){flWl.forEach(function(L){var d=L.d,so=L.so,on=P.onPlat===so&&P.grounded,ny=L.y-(d.sp||1.5)*dt;
+function wlogsUpd(dt){/* tartaruga encostada num tronco: é empurrada para o lado (o tronco não passa por dentro dela) */
+  if(flWl.length)for(var i=0;i<enemies.length;i++){var e=enemies[i];if(!e.alive||e.type!=='tchase'||e.slp>0)continue;
+    for(var j=0;j<flWl.length;j++){var so=flWl[j].so,hw=e.w+.05;if(e.x+hw>so.l&&e.x-hw<so.r&&e.y+.85>so.b-.05&&e.y<so.t+.05){var gl=e.x+hw-so.l,gr=so.r-(e.x-hw);if(gl<gr)e.x-=gl;else e.x+=gr}}}
+  flWl.forEach(function(L){var d=L.d,so=L.so,on=P.onPlat===so&&P.grounded,ny=L.y-(d.sp||1.5)*dt;
   if(ny<d.bot){ny+=L.span;if(on){P.onPlat=null;on=false}if(Math.abs(P.x-d.x)<12)splashFx(d.x,flFx.ry,5)}
   L.y=ny;so.t=ny;so.b=ny-.64;if(on)P.y=ny;L.g.position.set(d.x,ny,0);L.g.rotation.z=Math.sin(tm*1.3+L.span+ny)*.04})}
 /* ---------- ilhas que afundam ---------- */
@@ -7565,6 +7574,38 @@ function buildGate(){var G=LV.gate;if(!G)return;var st=pbr(texStone,.9,.3,{color
   flFx.seed={m:sd2,gl:gl,y:G.y+1.5}}
 function seedUpd(){var S=flFx.seed;if(!S)return;S.m.position.y=S.y+Math.sin(tm*2)*.12;S.m.rotation.y+=.02;S.gl.position.y=S.m.position.y;var p=.7+Math.sin(tm*3)*.15;S.gl.scale.set(3*p,3*p,1);
   if(Math.random()<.05)emit(sparkPool,S.m.position.x,S.m.position.y,1,.8,.8,.25,.2,-.5)}
+
+/* ---------- castelo lá longe, bem assentado no alto do morro (dono: estava flutuando) ---------- */
+function farCastle(hm){var X=LV.castleX!==undefined?LV.castleX:22,Z=-58;
+  /* morro largo, verde mais escuro (a névoa clareia), com paredão de pedra no topo onde o castelo fica */
+  var hill=new T.Mesh(new T.SphereGeometry(26,20,10,0,6.283,0,1.57),new T.MeshStandardMaterial({color:0x3f7a34,roughness:1,flatShading:true}));hill.scale.set(1.35,.42,.75);hill.position.set(X,-3,Z+2);farG.add(hill);
+  var top=-3+26*.42;/* 7,9 */
+  var rockM=new T.MeshStandardMaterial({color:0x9a958a,roughness:1,flatShading:true}),base=new T.Mesh(new T.CylinderGeometry(9.5,11.5,4,10,1),rockM);base.position.set(X,top+.4,Z);farG.add(base);
+  var cap=new T.Mesh(new T.CylinderGeometry(9.6,9.6,.35,10),new T.MeshStandardMaterial({color:0x5a9a44,roughness:1,flatShading:true}));cap.position.set(X,top+2.5,Z);farG.add(cap);
+  var g0=top+2.6,cs=new T.Group();cs.position.set(X,g0,Z);farG.add(cs);
+  var wall=new T.MeshStandardMaterial({color:0xf2ead8,roughness:.9}),wallD=new T.MeshStandardMaterial({color:0xd8cdb4,roughness:.95}),roofA=new T.MeshStandardMaterial({color:0x3a6ad8,roughness:.55}),roofB=new T.MeshStandardMaterial({color:0xd84a3a,roughness:.55}),dk=new T.MeshBasicMaterial({color:0x2a2a38}),gold=new T.MeshStandardMaterial({color:0xf2c230,roughness:.4,metalness:.5,emissive:0x6a4a00,emissiveIntensity:.4});
+  var C=[],CD=[],RA=[],RB=[],DK=[],FL=[];
+  /* muralha com ameias */
+  C.push(xf(new T.BoxGeometry(14,3.4,.9),[0,1.7,3.4]));C.push(xf(new T.BoxGeometry(.9,3.4,7),[-6.6,1.7,0]));C.push(xf(new T.BoxGeometry(.9,3.4,7),[6.6,1.7,0]));
+  for(var k=0;k<9;k++)CD.push(xf(new T.BoxGeometry(.8,.6,1),[-6.4+k*1.6,3.7,3.4]));
+  DK.push(xf(new T.CircleGeometry(1.2,12,0,Math.PI),[0,1.4,3.86]));DK.push(xf(new T.PlaneGeometry(2.4,1.4),[0,.7,3.86]));/* portão */
+  /* torres dos cantos */
+  [[-6.6,3.4],[6.6,3.4],[-6.6,-3.2],[6.6,-3.2]].forEach(function(q,k){var h=5+(k>1?1.2:0);C.push(xf(new T.CylinderGeometry(1.25,1.35,h,12),[q[0],h/2,q[1]]));
+    for(var a=0;a<8;a++){var an=a/8*6.283;CD.push(xf(new T.BoxGeometry(.5,.5,.5),[q[0]+Math.cos(an)*1.2,h+.2,q[1]+Math.sin(an)*1.2]))}
+    (k%2?RB:RA).push(xf(new T.ConeGeometry(1.6,2.8,12),[q[0],h+1.8,q[1]]));DK.push(xf(new T.PlaneGeometry(.35,.7),[q[0],h*.6,q[1]+1.37]));
+    FL.push(xf(new T.PlaneGeometry(.9,.5),[q[0]+.45,h+3.6,q[1]]));C.push(xf(new T.CylinderGeometry(.04,.04,1.2,4),[q[0],h+3.4,q[1]]))});
+  /* castelo do meio e torre alta com a ponta dourada */
+  C.push(xf(new T.BoxGeometry(7,6,4.4),[0,3,-.6]));RB.push(xf(new T.ConeGeometry(4.6,3,4),[0,7.5,-.6],[0,Math.PI/4,0]));
+  for(var w=0;w<3;w++)DK.push(xf(new T.PlaneGeometry(.6,1),[-2.2+w*2.2,4,1.62]));
+  C.push(xf(new T.CylinderGeometry(1.5,1.6,11,12),[0,5.5,-1.6]));RA.push(xf(new T.ConeGeometry(2,4.2,12),[0,13.1,-1.6]));
+  DK.push(xf(new T.PlaneGeometry(.5,.9),[0,8.6,-.05]));
+  cs.add(new T.Mesh(mgL(C),wall));cs.add(new T.Mesh(mgL(CD),wallD));cs.add(new T.Mesh(mgL(RA),roofA));cs.add(new T.Mesh(mgL(RB),roofB));cs.add(new T.Mesh(mgL(DK),dk));
+  var fl=new T.Mesh(mgL(FL),new T.MeshStandardMaterial({color:0xf2c230,side:T.DoubleSide,roughness:.6}));cs.add(fl);
+  var sp=new T.Mesh(new T.SphereGeometry(.45,10,8),gold);sp.position.set(0,15.5,-1.6);cs.add(sp);
+  /* caminho subindo o morro e umas árvores em volta, para o castelo ficar "plantado" */
+  var tr=[],tc=new T.MeshStandardMaterial({color:0x2f6a2c,roughness:1,flatShading:true});for(var t=0;t<14;t++){var a2=t/14*6.283,rr=11+(t%3)*2.5,tx=Math.cos(a2)*rr*1.3,tz=Math.sin(a2)*rr*.6;var ty=-3+26*.42*Math.sqrt(Math.max(0,1-(tx/35)*(tx/35)-(tz/19.5)*(tz/19.5)))-.3;tr.push(xf(new T.ConeGeometry(1.1,3.2,7),[X+tx,ty+1.4,Z+2+tz]))}
+  farG.add(new T.Mesh(mgL(tr),tc));
+  cs.scale.setScalar(1.05)}
 
 /*@@parte:40_estado.js*/
 /* ===================== estado do jogo ===================== */
