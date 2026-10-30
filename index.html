@@ -7866,7 +7866,7 @@ function mzBuild(){var M0=LV.maze,R=M0.rows,H=M0.H,X0=M0.x0||0,mats=mzMats();MZ=
   var dc=[];for(r=0;r<H;r++)for(c=0;c<R[r].length;c++)if(R[r][c]==='D')dc.push([c,r]);
   if(dc.length){var c0=1e9,c1=-1e9,r0=1e9,r1=-1e9;dc.forEach(function(q){c0=Math.min(c0,q[0]);c1=Math.max(c1,q[0]);r0=Math.min(r0,q[1]);r1=Math.max(r1,q[1])});
     var dx0=X0+c0,dx1=X0+c1+1,dy1=H-r0,dy0=H-r1-1,dw=dx1-dx0,dh=dy1-dy0,dg=new T.Group(),wood=M(0x4a2a16,.85),woodD=M(0x24140a,.9),ir2=M(0x2e3036,.45,.85),gm2=M(0xffc63a,.22,.95,{emissive:new T.Color(0x6a4300),emissiveIntensity:.5});
-    var back2=mesh(boxGeo(dw,dh,1.3,1.2),woodD,true,true);dg.add(back2);
+    var back2=mesh(boxGeo(dw,dh,2,1.2),woodD,true,true);dg.add(back2);
     for(var pk=0;pk<3;pk++){var pw=dw/3-.05,pl2=mesh(boxGeo(pw,dh-.06,.12,1),wood,false,false);pl2.position.set(-dw/2+dw/6+pk*dw/3,0,.68);dg.add(pl2);for(var gv=0;gv<2;gv++){var gr2=mesh(new T.BoxGeometry(.025,dh-.2,.02),woodD,false,false);gr2.position.set(-dw/2+dw/6+pk*dw/3+(gv-.5)*pw*.45,0,.75);dg.add(gr2)}}
     [-.34,0,.34].forEach(function(f){var bd=mesh(new T.BoxGeometry(dw-.08,.16,.08),ir2,false,false);bd.position.set(0,f*dh,.77);dg.add(bd);
       for(var sx=0;sx<5;sx++){var st=mesh(new T.SphereGeometry(.045,6,4),ir2,false,false);st.position.set(-dw/2+.2+sx*(dw-.4)/4,f*dh,.82);dg.add(st)}});
@@ -7875,16 +7875,17 @@ function mzBuild(){var M0=LV.maze,R=M0.rows,H=M0.H,X0=M0.x0||0,mats=mzMats();MZ=
     var dem=mesh(new T.ExtrudeGeometry(de,{depth:.05,bevelEnabled:true,bevelThickness:.02,bevelSize:.02,bevelSegments:2}),gm2,false,false);dem.position.set(dw*.3,-.05*dh,.8);dg.add(dem);
     var dho=mesh(new T.PlaneGeometry(.18,.3),mats.dark,false,false);dho.position.set(dw*.3,-.05*dh-.03,.81);dg.add(dho);
     var dgem=mesh(new T.OctahedronGeometry(.09,0),new T.MeshStandardMaterial({color:0xff4040,emissive:new T.Color(0xc01010),emissiveIntensity:1.4,roughness:.2}),false,false);dgem.position.set(dw*.3,-.05*dh+.38,.86);dg.add(dgem);
-    dg.position.set(dx0+dw/2,dy0+dh/2,0);add(dg);var dso={l:dx0,r:dx1,t:dy1,b:dy0,oneway:false,door:1};solids.push(dso);
+    dg.children.forEach(function(o){if(o!==back2)o.position.z+=.35});/* porta ocupa a parede toda (sem buraco escuro atrás) */
+    dg.rotation.y=-Math.PI/2;dg.position.set(dx0+dw/2,dy0+dh/2,-.3);add(dg);/* virada para a sala (de frente para o Kuro), não para a câmera */var dso={l:dx0,r:dx1,t:dy1,b:dy0,oneway:false,door:1};solids.push(dso);
     /* arco de pedra em volta (fica parado; a porta sobe por dentro) */
     var stn=pbr(texStone,.9,.25,{color:new T.Color(0xc8bca4)}),AR=[],cx2=dx0+dw/2;
-    [-1,1].forEach(function(sd){for(var k=0;k<4;k++)AR.push(xf(new T.BoxGeometry(.36,dh/4-.04,.4),[cx2+sd*(dw/2+.16),dy0+(k+.5)*dh/4,.85]))});
-    for(var a=0;a<=8;a++){var an=Math.PI*a/8,rx=(dw/2+.16)*Math.cos(an),ry=(dw/2+.16)*Math.sin(an)*.8;AR.push(xf(new T.BoxGeometry(.4,.34,.4),[cx2+rx,dy1+ry,.85],[0,0,an-Math.PI/2]))}
-    add(mesh(mgL(AR),stn,true,true));
+    [-1,1].forEach(function(sd){for(var k=0;k<4;k++)AR.push(xf(new T.BoxGeometry(.36,dh/4-.04,.4),[sd*(dw/2+.16),-dh/2+(k+.5)*dh/4,1.15]))});
+    for(var a=0;a<=8;a++){var an=Math.PI*a/8,rx=(dw/2+.16)*Math.cos(an),ry=(dw/2+.16)*Math.sin(an)*.8;AR.push(xf(new T.BoxGeometry(.4,.34,.4),[rx,dh/2+ry,1.15],[0,0,an-Math.PI/2]))}
+    var arc=mesh(mgL(AR),stn,true,true);arc.rotation.y=-Math.PI/2;arc.position.set(cx2,dy0+dh/2,-.3);add(arc);
     /* placa SAÍDA */
     var cv=document.createElement('canvas');cv.width=256;cv.height=96;var x2=cv.getContext('2d');x2.fillStyle='#3a2414';x2.fillRect(0,0,256,96);x2.strokeStyle='#ffc63a';x2.lineWidth=8;x2.strokeRect(6,6,244,84);
     x2.fillStyle='#ffe08a';x2.font='bold 52px Arial,sans-serif';x2.textAlign='center';x2.textBaseline='middle';x2.fillText('SAÍDA',128,50);var stx=new T.CanvasTexture(cv);stx.encoding=T.sRGBEncoding;
-    var sg=mesh(new T.PlaneGeometry(1.7,.64),new T.MeshStandardMaterial({map:stx,roughness:.7,emissive:new T.Color(0x3a2a10),emissiveIntensity:.4}),false,false);sg.position.set(cx2,dy1+dw*.4+.75,.9);add(sg);
+    var sg=mesh(new T.PlaneGeometry(1.7,.64),new T.MeshStandardMaterial({map:stx,roughness:.7,emissive:new T.Color(0x3a2a10),emissiveIntensity:.4}),false,false);sg.position.set(cx2-.6,dy1+1.55,.95);add(sg);
     MZ.door={g:dg,so:dso,y0:dy0+dh/2,h:dh,open:0,x:dx0+dw/2,yb:dy0,gem:dgem}}
   /* bandeiras falsas: iguais às de verdade, só menores (cabem nas salas) */
   (M0.flags||[]).forEach(function(f){var g=new T.Group(),pole=mesh(new T.CylinderGeometry(.05,.06,3,8),M(0xc9d1d8,.3,.9),false,false);pole.position.y=1.5;g.add(pole);
