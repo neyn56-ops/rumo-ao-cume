@@ -7326,10 +7326,10 @@ function buildFalls(th){flMats();flTot=[];var lite=LITE,r=rnd(1616),xe=sceneEnd(
   (LV.falls||[]).forEach(function(F){var cx=F.x,top=F.top||15,z=F.z||-11,base=mY(cx,z)-1,w=F.w||2.8,cw=F.cw||11,ch=top-base,cd=3.2;
     var g=new T.BoxGeometry(cw,ch,cd,lite?8:14,lite?8:14,2),pa=g.attributes.position,uv=g.attributes.uv,k;
     for(k=0;k<pa.count;k++){var vx=pa.getX(k),vy=pa.getY(k),vz=pa.getZ(k),ed=Math.abs(vx)/(cw/2),n=Math.sin(vy*.9+cx)*.35+Math.sin(vy*2.3+vx*.7)*.18;
-      pa.setX(k,vx*(1-.1*Math.max(0,vy/ch+.5))+(ed>.95?n*.5:0));pa.setZ(k,vz+(vz>0?n*.8+(ed>.8?-(ed-.8)*3:0):0));uv.setXY(k,uv.getX(k)*cw/3.5,uv.getY(k)*ch/3.5)}
+      pa.setX(k,vx*(1-.1*Math.max(0,vy/ch+.5))+(ed>.95?n*.5:0));var ch2=Math.abs(vx)<w/2+.6;pa.setZ(k,vz+(vz>0?(ch2?-.45:n*.8)+(ed>.8?-(ed-.8)*3:0):0));/* canal liso onde a água desce: a pedra não passa na frente da água */uv.setXY(k,uv.getX(k)*cw/3.5,uv.getY(k)*ch/3.5)}
     g.computeVertexNormals();g.translate(0,ch/2,0);RK.push(xf(g,[cx,base,z-cd/2-.2],0,0));
     GR.push(xf(new T.SphereGeometry(1,14,5,0,6.283,0,1.25),[cx,top-.15,z-cd/2-.2],0,[cw*.52,.75,cd*.62]));
-    var wg=new T.PlaneGeometry(w,ch,1,1);wg.translate(0,ch/2,0);WF.push({g:xf(wg,[cx,base,z+.12],0,0)});
+    var wg=new T.PlaneGeometry(w,ch,1,1);wg.translate(0,ch/2,0);WF.push({g:xf(wg,[cx,base,z+.3],0,0)});
     for(var k2=0;k2<(lite?3:6);k2++){var s=new T.Sprite(flM.foam);s.scale.set(2,1.5,1);add(s);flFx.foam.push({s:s,x:cx,y:mY(cx,z+1),z:z+.9,w:w,ph:k2/(lite?3:6)})}});
   if(RK.length)add(mesh(mgL(RK),flM.rock,false,true));if(GR.length)add(mesh(mgL(GR),mossM,false,true));
   if(WF.length){var wfm=new T.Mesh(mergeG(WF),flM.wm);wfm.renderOrder=3;add(wfm)}
