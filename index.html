@@ -7333,6 +7333,7 @@ function buildFalls(th){flMats();flTot=[];var lite=LITE,r=rnd(1616),xe=sceneEnd(
     for(var k2=0;k2<(lite?3:6);k2++){var s=new T.Sprite(flM.foam);s.scale.set(2,1.5,1);add(s);flFx.foam.push({s:s,x:cx,y:mY(cx,z+1),z:z+.9,w:w,ph:k2/(lite?3:6)})}});
   if(RK.length)add(mesh(mgL(RK),flM.rock,false,true));if(GR.length)add(mesh(mgL(GR),mossM,false,true));
   if(WF.length){var wfm=new T.Mesh(mergeG(WF),flM.wm);wfm.renderOrder=3;add(wfm)}
+  buildStreams();
   /* lá longe: morros com fiozinhos de cachoeira e o castelo no alto do morro */
   if(farG){var hm=new T.MeshStandardMaterial({color:0x5a9a4a,roughness:1,flatShading:true}),H=[],FW=[];
     [[-60,-120,34],[10,-130,40],[85,-118,30],[150,-128,44]].forEach(function(q,k){H.push(xf(new T.SphereGeometry(q[2],14,7,0,6.283,0,1.57),[q[0],-10,q[1]],0,[1.2,.55,.6]));
@@ -7372,7 +7373,7 @@ function fallsReset(){flTot.forEach(function(T0){T0.st='up';T0.t=0;T0.vy=0;totem
 function updFalls(dt){if(!flFx)return;
   flM.rt.offset.x-=dt*.12;
   flFx.foam.forEach(function(o){var u=(tm*.45+o.ph)%1;o.s.position.set(o.x+(o.ph-.5)*o.w*1.1,o.y+.3+u*1.6,o.z);o.s.material.opacity=.5;o.s.scale.set(1.4+u*1.6,1+u,1)});
-  flTot.forEach(function(T0){totemUpd(T0,dt)});logsUpd(dt);wlogsUpd(dt);kuroWetUpd(dt);flDropUpd(dt);sinksUpd(dt);seedUpd();
+  flTot.forEach(function(T0){totemUpd(T0,dt)});logsUpd(dt);wlogsUpd(dt);kuroWetUpd(dt);flDropUpd(dt);streamsUpd(dt);sinksUpd(dt);seedUpd();
   if(LV.tTip&&!flFx.tTold&&state==='play'&&P.x>LV.tTip&&P.x<LV.tTip+3){flFx.tTold=1;toast('Pule de tartaruga em tartaruga! Segure o pulo para quicar mais alto')}
   /* respingo ao cair no rio */
   if(P.y<=flFx.ry&&flFx.py>flFx.ry){splashFx(P.x,flFx.ry,8);try{noise(.3,.05,900,'lowpass')}catch(e){}}flFx.py=P.y}
@@ -7647,6 +7648,47 @@ function flDrop(x,y,vx,vy){if(!flDr){var g=new T.SphereGeometry(.06,6,4),m=new T
   var d=flDr.L[flDr.i++%flDr.L.length];d.x=x;d.y=y;d.vx=vx;d.vy=vy;d.t=.7;d.m.visible=true;d.m.position.set(x,y,.35)}
 function flDropUpd(dt){if(!flDr)return;flDr.L.forEach(function(d){if(d.t<=0)return;d.t-=dt;d.vy-=14*dt;d.x+=d.vx*dt;d.y+=d.vy*dt;d.m.position.set(d.x,d.y,.35);if(d.t<=0)d.m.visible=false})}
 function flDropClear(){if(flDr)flDr.L.forEach(function(d){d.t=0;d.m.visible=false})}
+
+/* ---------- riacho: a água da cachoeira do fundo atravessa o caminho e cai pela beirada da frente; peixinhos pulam para o seco e voltam ---------- */
+var flSt=[];
+function buildStreams(){flSt=[];var lite=LITE,SM=null,FM=null,R=[];
+  (LV.falls||[]).forEach(function(F){var cx=F.x,z=F.z||-11,sw=1.7,top=null;
+    (LV.solids||[]).forEach(function(q){if(q[0]<cx-2.2&&q[1]>cx+2.2&&(q[3]===undefined||q[3]<q[2]-2))top=top===null?q[2]:Math.max(top,q[2])});
+    if(top===null)return;/* sem chão na frente (abismo): sem riacho */
+    if(!SM){SM=new T.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{time:lushU.time},
+      vertexShader:'varying vec2 vU;void main(){vU=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+      fragmentShader:'uniform float time;varying vec2 vU;float h(vec2 p){return fract(sin(dot(p,vec2(12.9,78.2)))*43758.5);}void main(){float st=0.;for(int i=0;i<3;i++){float fi=float(i);float x=floor(vU.x*(5.+fi*4.));st+=smoothstep(.6,1.,fract(vU.y*(3.+fi)-time*(1.4+h(vec2(x,fi))*.8)+h(vec2(x,fi+2.))))*.4;}float edge=smoothstep(0.,.18,vU.x)*smoothstep(1.,.82,vU.x);vec3 c=mix(vec3(.25,.62,.86),vec3(.92,.98,1.),clamp(st,0.,1.));gl_FragColor=vec4(c,(.78+st*.2)*edge);}'})}
+    /* caminho da água: do pé da cachoeira até a frente do chão (z 1,9) */
+    var zs=z+.5,zb=-5,zf=1.92,N=lite?10:18,pos=[],uvs=[],idx=[],k,yb=mY(cx,zb),high=top>yb+.5;
+    function yAt(zz){if(zz>=zb)return top+.04;return high?top+.04:Math.max(mY(cx,zz),top-.6)+.05}
+    for(k=0;k<=N;k++){var zz=zs+(zf-zs)*k/N,yy=yAt(zz),wv=sw*(1+.25*Math.sin(k*1.7+cx));pos.push(cx-wv/2,yy,zz,cx+wv/2,yy,zz);uvs.push(0,k/N*(zf-zs)/2,1,k/N*(zf-zs)/2);if(k<N){var a=k*2;idx.push(a,a+2,a+1,a+1,a+2,a+3)}}
+    var g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uvs,2));g.setIndex(idx);
+    var rib=new T.Mesh(g,SM);rib.renderOrder=3;add(rib);
+    /* chão alto: a água vem por uma calha de pedra saindo do paredão */
+    if(high){var tg=new T.BoxGeometry(sw+.8,top-yb+1,zb-zs+.4);var tr=mesh(tg,flM.rock,true,true);tr.position.set(cx,(top+yb-1)/2,(zs+zb)/2);add(tr);
+      R.push(xf(new T.BoxGeometry(.35,.3,zb-zs),[cx-sw/2-.2,top+.12,(zs+zb)/2]));R.push(xf(new T.BoxGeometry(.35,.3,zb-zs),[cx+sw/2+.2,top+.12,(zs+zb)/2]))}
+    /* a água caindo pela beirada da frente */
+    var fg=new T.PlaneGeometry(sw,1.8,1,1);fg.translate(0,-.9,0);var fc=new T.Mesh(fg,flM.wm);fc.position.set(cx,top+.04,zf+.03);fc.renderOrder=3;add(fc);
+    var fo=[];for(k=0;k<(lite?1:2);k++){var sp=new T.Sprite(flM.foam);sp.scale.set(1.4,.7,1);add(sp);fo.push(sp)}
+    /* peixinhos (só enfeite: não machucam) */
+    var fish=[];if(!FM)FM={b:new T.SphereGeometry(.12,10,8),t:new T.ConeGeometry(.08,.14,4),m:[M(0xff8a3a,.35,.2),M(0xc8d4e0,.25,.5)],e:M(0x111111,.3)};
+    for(k=0;k<2;k++){var fg2=new T.Group(),bd=mesh(FM.b,FM.m[k],false,false);bd.scale.set(.6,.8,1.5);fg2.add(bd);var tl=mesh(FM.t,FM.m[k],false,false);tl.rotation.x=-Math.PI/2;tl.scale.set(.3,1,1);tl.position.z=-.22;fg2.add(tl);
+      [-1,1].forEach(function(sd){var ey=mesh(new T.SphereGeometry(.025,6,4),FM.e,false,false);ey.position.set(sd*.06,.03,.12);fg2.add(ey)});fg2.visible=false;fg2.scale.setScalar(1.7);add(fg2);
+      fish.push({g:fg2,tl:tl,st:'in',t:-(k*1.7+Math.random()*2),side:k?1:-1})}
+    flSt.push({x:cx,top:top,w:sw,zf:zf,fo:fo,fish:fish})});
+  if(R.length)add(mesh(mgL(R),mossM,false,true))}
+function streamsUpd(dt){flSt.forEach(function(S){var near=Math.abs(P.x-S.x)<24;
+  S.fo.forEach(function(f,k){var u=(tm*.8+k*.5)%1;f.position.set(S.x+(k-.5)*.5,S.top-1.4+u*.3,S.zf+.2);f.material.opacity=.5});
+  /* o Kuro pisando no riacho: respingos nos pés */
+  if(state==='play'&&P.grounded&&Math.abs(P.x-S.x)<S.w/2+.1&&Math.abs(P.y-S.top)<.15){if(!S.on){S.on=1;for(var q=0;q<5;q++)flDrop(P.x+(Math.random()-.5)*.4,P.y+.05,(Math.random()-.5)*2.4,1.2+Math.random()*1.2)}else if(Math.abs(P.vx)>1&&Math.random()<.35)flDrop(P.x+(Math.random()-.5)*.3,P.y+.05,(Math.random()-.5)*1.6-P.vx*.1,1+Math.random())}else S.on=0;
+  if(!near)return;
+  S.fish.forEach(function(F){F.t+=dt;var g=F.g,lx=S.x+F.side*(S.w/2+.9),lz=1.45;
+    if(F.st==='in'){g.visible=false;if(F.t>2.2+Math.random()*.02){F.st='out';F.t=0;F.tx=lx+F.side*Math.random()*.6;flDrop(S.x,S.top+.05,0,1.5)}}
+    else if(F.st==='out'||F.st==='back'){var u=Math.min(1,F.t/.55),fx=F.st==='out'?S.x:F.tx,tx=F.st==='out'?F.tx:S.x,x=fx+(tx-fx)*u,y=S.top+.2+Math.sin(u*Math.PI)*1.3;
+      g.visible=true;g.position.set(x,y,lz);g.rotation.set(0,(tx>fx?1:-1)*Math.PI/2,0);g.rotation.z=-(u-.5)*1.6*(tx>fx?1:-1);
+      if(u>=1){if(F.st==='out'){F.st='flop';F.t=0}else{F.st='in';F.t=-Math.random()*2.5;flDrop(S.x,S.top+.05,0,1.4);flDrop(S.x,S.top+.05,.6,1.1)}}}
+    else if(F.st==='flop'){/* no seco: deitado, se debatendo e dando pulinhos */var hop=.12+Math.abs(Math.sin(F.t*6))*.4;g.visible=true;g.position.set(F.tx,S.top+.15+hop,lz);g.rotation.set(0,Math.PI/2,Math.PI/2+Math.sin(F.t*14)*.45);/* deitado de lado, se debatendo */F.tl.rotation.y=Math.sin(F.t*20)*.6;
+      if(F.t>1.6){F.st='back';F.t=0}}})})}
 
 /*@@parte:40_estado.js*/
 /* ===================== estado do jogo ===================== */
