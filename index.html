@@ -1745,7 +1745,7 @@ LEVELS.forEach(function(L,i){if(i===12||i===13)return;blockStd(L);if(L.pre)block
 /* ===== Terra Nova — Mundo 17: Labirinto de Tijolos (ideia do dono, sem chefe) — o mapa é desenhado com letras (ver 33_labirinto.js) ===== */
 LEVELS.push({name:'Labirinto de Tijolos',theme:17,music:13,tall:1,zoom:1.18,keepCp:1,noLift:1,noHeartFit:1,camMin:-4,camMax:68,xMin:-11.6,limit:900,es:1,
  solids:[[-12,0,49],[57,76,1]],floats:[],movers:[],crumbles:[],feathers:[],
- maze:{x0:0,rows:[
+ maze:{x0:0,walls:[[55,57,49,130]],rows:[
   '##BBBBBBBBB##BBBBBBBBB##BBBBBBBBB##BBBBBBBBB##BBBBBBBBB##',
   '##BBBBBBBBB##BBBBBBBBB##BBBBBBBBB##BBBBBBBBB##BBBBBBBBB##',
   '##.........##.........##.........##.........##.........##',
@@ -7832,6 +7832,8 @@ function mzBuild(){var M0=LV.maze,R=M0.rows,H=M0.H,X0=M0.x0||0,mats=mzMats();MZ=
     while(ok){for(var k=0;k<w;k++){var v2=ch(c+k,r+h);if((v2!=='#'&&v2!=='L')||done[(c+k)+','+(r+h)]){ok=false;break}}if(ok)h++}
     for(var a=0;a<w;a++)for(var b=0;b<h;b++)done[(c+a)+','+(r+b)]=1;
     var x0=X0+c,y1=H-r,y0=y1-h;solids.push({l:x0,r:x0+w,t:y1,b:y0,oneway:false,conc:1});var gg=boxGeo(w,h,2.2,1.6);gg.translate(x0+w/2,y0+h/2,-.3);G.push(gg)}
+  /* paredões extras de concreto (LV.maze.walls: [x0,x1,y0,y1]) — o da direita sobe bem alto: não dá para passar a fase por cima do telhado */
+  (M0.walls||[]).forEach(function(w){solids.push({l:w[0],r:w[1],t:w[3],b:w[2],oneway:false,conc:1});var gw=boxGeo(w[1]-w[0],w[3]-w[2],2.2,1.6);gw.translate((w[0]+w[1])/2,(w[2]+w[3])/2,-.3);G.push(gw)});
   add(mesh(mgL(G),mats.con,true,true));
   /* juntas escuras no concreto (de 3 em 3), só no rosto da frente */
   /* chave */
