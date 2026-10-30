@@ -1825,7 +1825,7 @@ maze:{x0:0,noSign:1,rows:[
  enemies:[{t:'beetle',x0:4,x1:17,y:4,s:1.3},{t:'mole',x0:30,x1:34,y:4,ph:.4},{t:'frog',x0:36,x1:42,y:4},{t:'bat',x0:44,x1:56,y:11,s:1.4},
   {t:'beetle',x0:76,x1:87,y:4,s:1.5},{t:'mole',x0:96,x1:100,y:4,ph:1.3},{t:'beetle',x0:101,x1:114,y:4,s:1.6},{t:'bat',x0:104,x1:118,y:8,s:1.5}],
  blocks:[{x:10,y:6.4,t:'q',c:'feather'},{x:15,y:6.4,t:'q',c:'mushroom'}],
- coins:[['r',3,7,4.9,5],['r',21,27,4.9,6],['r',45,55,9.9,8],['r',58,64,7.5,4],['r',76,86,4.9,6],['r',88.5,93.5,4.9,5],['r',101,113,4.9,7]],
+ coins:[['r',3,7,4.9,3],['r',21,27,4.9,3],['r',45.5,54.5,9.9,4],['r',58,64,7.6,2],['r',77,86,4.9,4],['r',89,93,4.9,3],['r',102,114,4.9,4]],/* dono: mais espaçadas */
  checkpoints:[[76,4]],
  pipes:[{x:122,base:4,top:5.6,to:{maze:1}}],
  start:{x:2,y:4}};
@@ -7890,7 +7890,10 @@ function mzBuild(){var M0=LV.maze,R=M0.rows,H=M0.H,X0=M0.x0||0,mats=mzMats();mzT
     /* chave encaixada (aparece ao usar) */
     var kin=new T.Group(),kr=mesh(new T.TorusGeometry(.14,.045,8,16),gm,false,false);kr.position.y=-.02;kin.add(kr);var ks0=mesh(new T.BoxGeometry(.06,.06,.32),gm,false,false);ks0.position.z=-.18;kin.add(ks0);kin.position.set(0,.1,.32);kin.visible=false;lg.add(kin);
     var lgl=new T.Sprite(new T.SpriteMaterial({map:softSprite(),color:0xffc040,transparent:true,blending:T.AdditiveBlending,depthWrite:false,opacity:.45}));lgl.scale.set(2.6,2.6,1);lgl.position.z=.1;lg.add(lgl);
-    lg.position.set(lx,lyy,.82);add(lg);MZ.lock={g:lg,x:lx,y:lyy,gl:lgl,hole:hole,gem:gem,kin:kin,t:0}}
+    function op(v){return v!==''&&'#BDL'.indexOf(v)<0}
+    var sd=op(ch(lc-1,lr))?-1:(op(ch(lc+1,lr))?1:-1),fx=X0+lc+(sd<0?0:1)+sd*.02;/* virada de lado, para onde o Kuro chega */
+    lg.rotation.y=sd*Math.PI/2;lg.position.set(fx,lyy,-.3);add(lg);
+    MZ.lock={g:lg,x:fx+sd*.7,y:lyy,gl:lgl,hole:hole,gem:gem,kin:kin,t:0,sd:sd,fx:fx}}
   /* porta da saída (dono pediu design melhor): arco de pedra, tábuas de madeira com frisos, ferragens com cravos, dobradiças,
      espelho dourado com fechadura, pedrinha vermelha (trancada) que fica verde, e a placa SAÍDA em cima */
   var dc=[];for(r=0;r<H;r++)for(c=0;c<R[r].length;c++)if(R[r][c]==='D')dc.push([c,r]);
@@ -7951,19 +7954,25 @@ function mzDown(s){/* giratório caindo em cima: quebra o(s) tijolo(s) embaixo d
      ou cair em algo que não é tijolo. Dá para ir para os lados enquanto gira. */
   P.sj=true;P.drill=true;P.vy=5.4;P.grounded=false;P.onPlat=null;try{beep(420,.06,'triangle',.03,180)}catch(e){}
   if(!MZ.told.dig){MZ.told.dig=1;toast('Girando e quebrando! Aperte o pulo para parar')}return true}
-function mzReset(){if(!MZ)return;P.drill=false;if(MZ.key&&!MZ.used){MZ.key.got=false;MZ.key.g.visible=true;P.key=false;var ks=$('keyStat');if(ks)ks.hidden=true}}/* morreu: perde a chave */
+function mzReset(){if(!MZ)return;P.drill=false;if(MZ.key&&!MZ.used){var K=MZ.key;K.got=false;K.g.visible=true;K.g.position.set(K.x,K.y,.3);K.g.rotation.set(0,0,0);K.g.scale.setScalar(1);MZ.ins=null;P.key=false;var ks=$('keyStat');if(ks)ks.hidden=true}}/* morreu: perde a chave (volta para o lugar dela) */
 function mzUpd(dt){if(!MZ)return;MZ.t+=dt;mzTorchUpd();var K=MZ.key,D=MZ.door,L0=MZ.lock;
   /* giro automático: para com o pulo normal (apertar de novo), ao pisar em algo que não é tijolo, ou ao ser lançado pela mola */
   var jp=keys.jump&&!MZ.jPrev;MZ.jPrev=keys.jump;
   if(P.drill){if(jp||P.grounded||!P.sj||P.vy>18||state!=='play'){P.drill=false;if(jp||P.vy>18)P.sj=false}}
   if(K&&!K.got){K.g.rotation.y+=dt*2;K.g.position.y=K.y+Math.sin(MZ.t*2.5)*.12;
-    if(state==='play'&&Math.abs(P.x-K.x)<.7&&K.y>P.y-.3&&K.y<P.y+P.h+.3){K.got=true;K.g.visible=false;P.key=true;var ks=$('keyStat');if(ks)ks.hidden=false;
+    if(state==='play'&&Math.abs(P.x-K.x)<.7&&K.y>P.y-.3&&K.y<P.y+P.h+.3){K.got=true;P.key=true;var ks=$('keyStat');if(ks)ks.hidden=false;
       try{sfx.coin();beep(880,.12,'triangle',.05);beep(1320,.2,'triangle',.05,0,.1)}catch(e){}emit(sparkPool,K.x,K.y,16,4,.7,.35,.2,3);toast('Pegou a chave! Agora encontre a fechadura')}}
+  /* o Kuro carrega a chave na mão */
+  if(K&&K.got&&!MZ.used&&!MZ.ins){var sc=P.big?1:.78;K.g.visible=true;K.g.scale.setScalar(.7);K.g.position.set(P.x+P.face*.36,P.y+.95*sc,.45);K.g.rotation.set(0,P.face>0?0:Math.PI,Math.sin(MZ.t*6)*.15-.3)}
+  /* colocando a chave no buraco: voa até a fechadura, entra, e lá dentro gira (clac) */
+  if(MZ.ins&&L0){var I=MZ.ins;I.t+=dt;var hole=L0.g.localToWorld(new T.Vector3(0,.1,.45)),inn=L0.g.localToWorld(new T.Vector3(0,.1,.2));
+    K.g.rotation.set(0,L0.sd<0?0:Math.PI,0);K.g.scale.setScalar(.8);
+    if(I.t<.45){var u=I.t/.45;u=u*u*(3-2*u);K.g.position.lerpVectors(I.from,hole,u);K.g.position.y+=Math.sin(u*Math.PI)*.5}
+    else if(I.t<.7){K.g.position.lerpVectors(hole,inn,(I.t-.45)/.25)}
+    else{K.g.visible=false;MZ.ins=null;mzUnlock()}}
   if(L0){L0.gl.material.opacity=MZ.used?.15:.35+Math.sin(MZ.t*3)*.15;L0.gem.rotation.y+=dt*2;if(L0.turn&&L0.turn<2){L0.turn=Math.min(2,L0.turn+dt*1.6);L0.kin.rotation.z=-(L0.turn-1)*Math.PI/2}
     var nearL=state==='play'&&Math.abs(P.x-L0.x)<1.6&&Math.abs((P.y+.7)-L0.y)<1.6;
-    if(nearL&&!MZ.used){if(K&&K.got){MZ.used=true;P.key=false;var ks2=$('keyStat');if(ks2)ks2.hidden=true;L0.kin.visible=true;L0.turn=1;[L0.gem,D&&D.gem].forEach(function(g){if(g){g.material.color.set(0x40ff70);g.material.emissive.set(0x10a030)}});
-        try{beep(300,.08,'square',.05);beep(500,.1,'square',.05,0,.08);beep(900,.25,'triangle',.05,0,.18)}catch(e){}emit(sparkPool,L0.x,L0.y,20,4,.8,.35,.2,3);
-        if(D){D.so.dead=true;D.opening=1}toast('Clac! A porta da saída destrancou!')}
+    if(nearL&&!MZ.used){if(K&&K.got){if(!MZ.ins){MZ.ins={t:0,from:K.g.position.clone()};try{beep(700,.08,'triangle',.04)}catch(e){}}}
       else if(!MZ.told.lock){MZ.told.lock=1;toast('Uma fechadura... falta a chave')}}
     if(!nearL)MZ.told.lock=0}
   if(D){if(D.opening&&D.open<1){D.open=Math.min(1,D.open+dt/1.4);D.g.position.y=D.y0+D.h*D.open;if(Math.random()<.3)emit(dustPool,D.x,D.yb+.2,2,1.4,.5,.5,1.2,-.3)}
@@ -8004,6 +8013,12 @@ function mzPreDecor(){var r=rnd(1717),lite=LITE,mats=mzMats(),d=new T.Object3D()
   /* lua nascendo */
   if(farG){var mo=new T.Sprite(new T.SpriteMaterial({map:softSprite(),color:0xfff4d8,transparent:true,depthWrite:false,fog:false,opacity:.95}));mo.scale.set(9,9,1);mo.position.set(30,34,-120);farG.add(mo);
     var md=new T.Mesh(new T.CircleGeometry(2.2,24),new T.MeshBasicMaterial({color:0xfff6e0,fog:false}));md.position.set(30,34,-119);farG.add(md)}}
+
+/* a chave entrou e girou: destranca a porta */
+function mzUnlock(){var L0=MZ.lock,D=MZ.door;MZ.used=true;P.key=false;var ks2=$('keyStat');if(ks2)ks2.hidden=true;L0.kin.visible=true;L0.turn=1;
+  [L0.gem,D&&D.gem].forEach(function(g){if(g){g.material.color.set(0x40ff70);g.material.emissive.set(0x10a030)}});
+  try{beep(300,.08,'square',.05);beep(500,.1,'square',.05,0,.08);beep(900,.25,'triangle',.05,0,.18)}catch(e){}emit(sparkPool,L0.fx,L0.y,20,4,.8,.35,.2,3);
+  if(D){D.so.dead=true;D.opening=1}toast(LV.maze&&LV.maze.noSign?'Clac! A porta destrancou!':'Clac! A porta da saída destrancou!')}
 
 /*@@parte:40_estado.js*/
 /* ===================== estado do jogo ===================== */
