@@ -7530,7 +7530,7 @@ function owlVis(e,dt){var v=e.vis,st=e.st2,sl=e.slp>0;v.inner.rotation.y=sl?0:(e
 function buildWLogs(){flWl=[];var WL=LV.wlogs||[];if(!WL.length)return;
   /* paredão de pedra por cima das colunas: a água e os troncos saem de dentro dele (antes nasciam do nada) */
   var xa=1e9,xb=-1e9,ty=0;WL.forEach(function(d){if(d.top0===undefined)d.top0=d.top;xa=Math.min(xa,d.x-(d.w||2.4)/2);xb=Math.max(xb,d.x+(d.w||2.4)/2);ty=Math.max(ty,d.top0)});/* top0: a altura original (não cresce a cada recomeço) */
-  var oy=ty+.6;WL.forEach(function(d){d.top=Math.max(d.top0,oy+2.2)});/* o tronco reaparece escondido dentro da pedra */
+  var oy=ty+4.6;/* dono pediu a pedra mais alta (era +0,6) */WL.forEach(function(d){d.top=Math.max(d.top0,oy+2.2)});/* o tronco reaparece escondido dentro da pedra */
   var ow=xb-xa+5,oh=7,og=new T.BoxGeometry(ow,oh,4.2,Math.round(ow/1.2),8,3),pa=og.attributes.position,uv=og.attributes.uv;
   for(var k=0;k<pa.count;k++){var vx=pa.getX(k),vy=pa.getY(k),vz=pa.getZ(k),n=Math.sin(vx*1.3)*.22+Math.sin(vx*3.1+vy)*.12;
     if(vy<-oh/2+.01){var notch=0;WL.forEach(function(d){var dd=Math.abs(vx-(d.x-(xa+xb)/2));if(dd<(d.w||2.4)/2+.6)notch=Math.max(notch,.55*(1-dd/((d.w||2.4)/2+.6)))});pa.setY(k,vy+notch+Math.abs(n)*.8)}
