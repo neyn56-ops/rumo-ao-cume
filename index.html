@@ -167,6 +167,7 @@ html.touch #stickZone{display:block;pointer-events:auto}
     <div class="stat feather-stat" id="featherStat" hidden>Pena <span id="featherN">0</span>s</div>
     <div class="stat fire-stat" id="fireStat" hidden>Fogo</div>
     <div class="stat cape-stat" id="capeStat" hidden>Capa <span class="pm" id="pmBox"><i id="pmFill"></i></span></div>
+    <div class="stat key-stat" id="keyStat" hidden>🔑 Chave</div>
     <div class="stat air-stat" id="airStat" hidden>Ar <span class="pm" id="airBox"><i id="airFill"></i></span></div>
     <div class="stat"><span id="timeN">5:00</span></div>
     <div class="grow"></div>
@@ -340,7 +341,9 @@ var THEMES=[
   /* 15: região mineradora seca em cima da mina (Mundo 15, parte 1) — monta como o Vale, mas sem grama: terra, pedra e poeira */
   {name:'valley',dry:1,sky:['#4a7cb4','#8cb2d2','#e8d4b2','#dcc29e'],fog:'#dcc6a2',fd:.0105,sun:0xffe2b4,si:2.3,sunOff:[-14,24,16],hemi:[0xffe6c4,0x6a4a30,.24],exp:.84,env:0,lantern:0,snow:false,mz:-45,valley:0x9a7650},
   /* 16: Vale das Cachoeiras (Mundo 16) — meio-dia, céu bem azul, água por todo lado; monta como o Vale (grama, árvores) e ganha cachoeiras, rio e o castelo lá longe */
-  {name:'valley',falls:1,sky:['#2a7fd8','#5cb0ee','#c6ecfa','#d4f0ea'],fog:'#cdeaf2',fd:.0085,sun:0xfff4dc,si:2.4,sunOff:[-12,30,16],hemi:[0xd6f0ff,0x4a5a3a,.26],exp:.84,env:0,lantern:0,snow:false,mz:-45,valley:0x3a6a24}
+  {name:'valley',falls:1,sky:['#2a7fd8','#5cb0ee','#c6ecfa','#d4f0ea'],fog:'#cdeaf2',fd:.0085,sun:0xfff4dc,si:2.4,sunOff:[-12,30,16],hemi:[0xd6f0ff,0x4a5a3a,.26],exp:.84,env:0,lantern:0,snow:false,mz:-45,valley:0x3a6a24},
+  /* 17: Labirinto de Tijolos (Mundo 17) — subterrâneo de tijolos e concreto, luz quente de tochas */
+  {name:'maze',sky:['#1a120c','#2a1c12','#3a2618','#24170e'],fog:'#2a1c12',fd:.006,sun:0xffe2b8,si:1.7,sunOff:[-10,26,16],hemi:[0xffe4c8,0x5a4030,1.25],exp:1.35,env:5,lantern:0,snow:false,mz:-30,valley:0x2a1c12}
 ];
 var curTheme=THEMES[0];
 
@@ -574,6 +577,7 @@ var MATS=[
   {top:pbr(texDirt,.97,1.2,{color:new T.Color(0xc89a6a)}),side:pbr(texStone,.95,.3,{color:new T.Color(0xa07a58)}),slab:pbr(texStone,.9,.2,{color:new T.Color(0xb08a66)}),meadow:pbr(texDirt,.97,1,{color:new T.Color(0xd4ae80)}),cliff:pbr(texStone,.95,.3,{color:new T.Color(0x8a6848)})},
   {top:grassM,side:dirtM,slab:grassM,meadow:meadowM,cliff:dirtM}
 ];
+MATS.push(MATS[4]);/* 17: Labirinto — pedra do castelo na entrada e na saída */
 
 function boxGeo(w,h,d,tile){
   var g=new T.BoxGeometry(w,h,d),uv=g.attributes.uv;
@@ -1738,6 +1742,61 @@ function blockStd(L){var S=(L.solids||[]).filter(function(q){return !(q[3]>.5)})
   B.forEach(function(b,i){if(used[i])return;var row=[b];used[i]=1;var go=true;while(go){go=false;B.forEach(function(c,j){if(used[j]||Math.abs(c.y-b.y)>.01)return;if(row.some(function(r){return Math.abs(r.x-c.x)<=1.05})){row.push(c);used[j]=1;go=true}})}
     var gt=-99;row.forEach(function(r){gt=Math.max(gt,g(r.x,r.y))});if(gt<-50)return;var d=b.y-gt;if(d<1.85||d>2.95)return;var ny=+(gt+2.4).toFixed(2);row.forEach(function(r){r.y=ny})})}
 LEVELS.forEach(function(L,i){if(i===12||i===13)return;blockStd(L);if(L.pre)blockStd(L.pre)});
+/* ===== Terra Nova — Mundo 17: Labirinto de Tijolos (ideia do dono, sem chefe) — o mapa é desenhado com letras (ver 33_labirinto.js) ===== */
+LEVELS.push({name:'Labirinto de Tijolos',theme:17,music:13,tall:1,zoom:1.18,keepCp:1,noLift:1,noHeartFit:1,camMin:-4,camMax:68,xMin:-11.6,limit:900,es:1,
+ solids:[[-12,0,49],[57,76,1]],floats:[],movers:[],crumbles:[],feathers:[],
+ maze:{x0:0,rows:[
+  '##BBBBBBBBB##BBBBBBBBB##BBBBBBBBB##BBBBBBBBB##BBBBBBBBB##',
+  '##BBBBBBBBB##BBBBBBBBB##BBBBBBBBB##BBBBBBBBB##BBBBBBBBB##',
+  '##.........##.........##.........##.........##.........##',
+  '##.........##...M.....##.........##.....v...##.........##',
+  '##.ooo.....##.ooo.....##..ooo....##.ooo.....##.ooo.....##',
+  '##.....e...##.....e...##.........##.........##....e....##',
+  '##BBBBBBBBB##BBBBBBBBB##.........##BBBBBBBBB##BBBBBBBBB##',
+  '##BBBBBBBBB##BBBBBBBBB##.........##BBBBBBBBB##BBBBBBBBB##',
+  '##....................##.........##....................##',
+  '##....................##....P....##.................M..##',
+  '##..ooo...............##.........##...ooo..............##',
+  '##.............^^^....##..e......##.............^^.....##',
+  '###BB########BBBBBBBBB##BBBBBBBBB########BB###BBBBBBBBB##',
+  '###BB########BBBBBBBBB##BBBBBBBBB########BB###BBBBBBBBB##',
+  '##.........##....................##.........##.........##',
+  '##.g.......##................v...##......W..##.........##',
+  '##.........##............ooo...h.##.........##.........##',
+  '##...^^^.f.##..u.................##..e......##......m..##',
+  '##BBBBBBBBB########BB###BBBBBBBBB##BBBBBBBBB###BB########',
+  '##BBBBBBBBB########BB###BBBBBBBBB##BBBBBBBBB###BB########',
+  '##.........##.........##....................##.........##',
+  '##.........##....v....##....................##.........##',
+  '##.........#L.........##....................##..ooo....##',
+  '##.......S.##.........##......S.......^^^.m.##.......S.##',
+  '##BBBBBBBBB##BBBBBBBBB###BB########BBBBBBBBB##BBBBBBBBB##',
+  '##BBBBBBBBB##BBBBBBBBB###BB########BBBBBBBBB##BBBBBBBBB##',
+  '##.........##.........##.........##.........##.........##',
+  '##.........##.........##.........##.........##.......g.##',
+  '##.........##....ooo..##.........##....ooo..##.........##',
+  '##..e......##.S.......##.e..C....##.........##.u.^^^...##',
+  '#########BB##BBBBBBBBB##BBBBBBBBB###BB########BBBBBBBBB##',
+  '#########BB##BBBBBBBBB##BBBBBBBBB###BB########BBBBBBBBB##',
+  '##....................##.........##....................##',
+  '##....v........g......##.........##...t................##',
+  '##......ooo...........##.........##........h...ooo.....##',
+  '##............S...^^^.##..^^^..e.##...............e....##',
+  '##BBBBBBBBB###BB########BBBBBBBBB##BBBBBBBBB########BB###',
+  '##BBBBBBBBB###BB########BBBBBBBBB##BBBBBBBBB########BB###',
+  '##.........##...............................##.........##',
+  '##.........##..........................v....##.........##',
+  '##.........##............ooo..............K.##......ooo##',
+  '##..^^^....##..S...e...........S....S.......##..f......##',
+  '##BBBBBBBBB##BBBBBBBBB#######BB####BBBBBBBBB######BB#####',
+  '##BBBBBBBBB##BBBBBBBBB#######BB####BBBBBBBBB######BB#####',
+  '##.........##.........##.........##.........##.........DD',
+  '##.........##.........##.........##.........##.........DD',
+  '##.........##......ooo##.........##.........##.........DD',
+  '##.S..F.e..##.S..F....##....FSu..##.S..F^^^.##....Se...DD',
+  '#########################################################']},
+ goal:{x:67,top:1},start:{x:-6,y:49}});
+STORY.worlds.push({kicker:'Mundo 17 · Terra Nova',title:'Labirinto de Tijolos',text:'Uma montanha inteira de tijolos, cortada por paredes de concreto! Use o pulo giratório em cima dos tijolos para quebrar e descer, e a cabeçada para quebrar os de cima. Em algum lugar está a chave; em outro, a fechadura que destranca a porta da saída. Cuidado: há bandeiras falsas pelo caminho...',end:'Clac! O Kuro achou a chave, a fechadura e a saída do labirinto! Lá fora, o ar fresco da noite... e um lago congelado brilhando debaixo da aurora.'});
 
 /*@@parte:11_construcao.js*/
 /* ---------- contêineres do mundo atual ---------- */
@@ -2025,6 +2084,7 @@ function buildLevel(idx){
   W=new T.Group();scene.add(W);fox=null;P.mount=false;tuftMesh=null;broMat=null;lushPend=false;lastBro=null;lushG=null;lushSky=null;
   debris=[];popCoins=[];dropCoins=[];solids=[];movers=[];crumbles=[];springs=[];hazards=[];enemies=[];checkpoints=[];coins=[];items=[];blades=[];blocks=[];vines=[];pipes=[];plants=[];drops=[];balls=[];airBubs=[];extraCoins=0;boss=null;flames=[];eShots=[];doorObj=null;castleFx.torches=[];castleFx.bolt=null;vilLan=[];ropes=[];pulleys=[];vdoors=[];hLifts=[];hDrafts=[];hFall=null;hFall2=null;hSkyC=null;volSinks=[];volMovers=[];volMet=null;volEsc=null;volFallT=null;volPortal=null;volOut=null;hBirds=[];hSwans=[];alarmT=0;if(alarmEl)alarmEl.style.opacity=0;if(hidS)hidS.visible=false;
   buildPlatforms(m3);
+  if(LV.maze)mzBuild();/* Mundo 17: tijolos e concreto do labirinto (antes dos inimigos e das moedas) */
   buildBackdrop(th,m3);
   buildDecor(th);
   buildFar(th);
@@ -3418,7 +3478,7 @@ function buildFarCastle(th,r){
 function sceneEnd(){var e=240;(LV.solids||[]).forEach(function(q){if(q[1]+40>e)e=q[1]+40});return e}
 function buildBackdrop(th,m3){
   if(th.name==='forest'){buildBackdropForest(th);return}
-  if(th.name==='volcano'||th.name==='summit'||th.name==='sky'||th.name==='tower'||th.name==='mine')return;/* o cume tem o mar de nuvens; o vulcão tem o rio de lava no lugar do chão de fundo */
+  if(th.name==='volcano'||th.name==='summit'||th.name==='sky'||th.name==='tower'||th.name==='mine'||th.name==='maze')return;/* o cume tem o mar de nuvens; o vulcão tem o rio de lava no lugar do chão de fundo */
   var depth=-5-th.mz;
   var xl=(th.name==='castle'&&LV.outX!==undefined)?LV.outX:(th.name==='trail'?4:-40),xe=sceneEnd(),bw=xe-xl,bc=(xe+xl)/2;
   var g=new T.PlaneGeometry(bw,depth,Math.round(bw/2),Math.max(4,Math.round(depth)));
@@ -3585,6 +3645,7 @@ function buildDecor(th){
   if(th.name==='sky'){buildDecorSky();return}
   if(th.name==='tower'){buildDecorTower(th);return}
   if(th.name==='mine'){buildDecorMine(th);return}
+  if(th.name==='maze'){mzDecor(th);return}
   if(th.name==='castle'){buildDecorCastle(th);return}
   if(th.name==='village'){buildDecorVillage(th);return}
   if(th.name==='heights'){buildDecorHeights(th);return}
@@ -6592,6 +6653,7 @@ function buildRuinsExtra(){
 function buildFar(th){
   farG=new T.Group();scene.add(farG);
   var r=rnd(5+LV.theme),i;
+  if(th.name==='maze')return;/* Labirinto: fundo escuro, sem montanhas */
   if(th.name==='castle'){buildFarCastle(th,r);return}
   if(th.name==='village'){buildFarVillage(th,r);return}
   if(th.name==='heights'){buildFarHeights(th,r);return}
@@ -7713,6 +7775,130 @@ function streamPit(F,cx,z,sw,SM){
   var fo=[];for(k=0;k<(LITE?1:2);k++){var sp=new T.Sprite(flM.foam);sp.scale.set(1.6,.8,1);add(sp);fo.push(sp)}
   flSt.push({x:px,top:-99,w:sw,zf:zb,fo:fo,fish:[],fx:px,fy:flFx.ry,fz:zb+.6,pit:1})}
 
+/*@@parte:33_labirinto.js*/
+/* ===================== Mundo 17: Labirinto de Tijolos =====================
+   Ideia do dono: uma montanha de tijolos para descer quebrando com o pulo giratório; vários caminhos separados por paredes de concreto
+   (com passagens); a chave abre a fechadura (em outro lugar) e a fechadura destranca a porta da saída. Os caminhos errados terminam numa
+   bandeira falsa que leva o Kuro de volta ao começo (a chave e os tijolos quebrados continuam). Morreu: perde a chave (volta ao lugar dela).
+   O mapa é desenhado com letras (LV.maze.rows), uma letra por quadradinho de 1x1:
+     # concreto (nada quebra)   B tijolo   . vazio   K chave   L fechadura   D porta da saída   F bandeira falsa   C bandeirinha
+     S mola   ^ espinhos   o moeda   g cristal   h coração   P/M/W blocos (pena, cogumelo, flor)
+     e besouro   v morcego   f sapo   u ouriço   m toupeira   t tartaruga perseguidora
+   Tijolos: o giratório caindo em cima quebra; a cabeçada por baixo quebra (mesmo pequeno). Assim dá para descer e cavar degraus para voltar. */
+var MZ=null;
+function mzPrep(L){var M0=L.maze,R=M0.rows,H=R.length,X0=M0.x0||0;M0.H=H;
+  function ch(c,r){return r<0||r>=H||c<0||c>=R[r].length?'#':R[r][c]}
+  function solidC(v){return v==='#'||v==='B'||v==='D'||v==='L'}
+  function cx(c){return X0+c}function cy(r){return H-r-1}/* canto de baixo à esquerda do quadradinho */
+  function floorY(c,r){for(var k=r+1;k<H;k++)if(solidC(ch(c,k)))return cy(k-1)/* topo do sólido de baixo */;return 0}
+  function span(c,r,air){var a=c,b=c;while(!solidC(ch(a-1,r))&&(air||solidC(ch(a-1,r+1)))&&ch(a-1,r)!=='^')a--;while(!solidC(ch(b+1,r))&&(air||solidC(ch(b+1,r+1)))&&ch(b+1,r)!=='^')b++;return [cx(a)+.6,cx(b)+.4]}
+  L.enemies=L.enemies||[];L.coins=L.coins||[];L.gems=L.gems||[];L.hearts=L.hearts||[];L.springs=L.springs||[];L.spikes=L.spikes||[];L.checkpoints=L.checkpoints||[];L.blocks=L.blocks||[];
+  M0.flags=[];M0.key=null;M0.lock=null;var ph=0;
+  for(var r=0;r<H;r++){var run=-1;for(var c=0;c<=R[r].length;c++){var v=ch(c,r),x=cx(c),y=cy(r);
+    if(v==='^'){if(run<0)run=c}else if(run>=0){L.spikes.push([cx(run)+.05,cx(c)-.05,floorY(run,r)]);run=-1}
+    if(c>=R[r].length)break;
+    if(v==='o')L.coins.push(['r',x+.5,x+.5,y+.5,1]);
+    else if(v==='g')L.gems.push([x+.5,y+.5]);
+    else if(v==='h')L.hearts.push([x+.5,y+.5]);
+    else if(v==='S')L.springs.push([x+.5,floorY(c,r)]);
+    else if(v==='C')L.checkpoints.push([x+.5,floorY(c,r)]);
+    else if(v==='P'||v==='M'||v==='W')L.blocks.push({x:x+.5,y:+(floorY(c,r)+2.4).toFixed(2),t:'q',c:v==='P'?'feather':(v==='M'?'mushroom':'flower')});
+    else if(v==='K')M0.key=[x+.5,y+.5];
+    else if(v==='L')M0.lock=[c,r];
+    else if(v==='F')M0.flags.push([x+.5,floorY(c,r)]);
+    else if(v==='e'||v==='f'||v==='u'||v==='m'){var sp=span(c,r,false),fy=floorY(c,r);
+      if(v==='e')L.enemies.push({t:'beetle',x0:sp[0],x1:sp[1],y:fy,s:1.4});
+      else if(v==='f')L.enemies.push({t:'frog',x0:sp[0],x1:sp[1],y:fy});
+      else if(v==='u')L.enemies.push({t:'urchin',x0:sp[0],x1:sp[1],y:fy,s:1.5});
+      else L.enemies.push({t:'mole',x0:Math.max(sp[0],x-2),x1:Math.min(sp[1],x+2),y:fy,ph:(ph+=.9)})}
+    else if(v==='v'){var sp2=span(c,r,true);L.enemies.push({t:'bat',x0:sp2[0],x1:sp2[1],y:y,s:1.5})}
+    else if(v==='t')L.enemies.push({t:'tchase',x0:x+.5,x1:x+.5,y:y})}}
+}
+function mzMats(){if(MZ&&MZ.M)return MZ.M;
+  return {con:pbr(texStone,.92,.25,{color:new T.Color(0x8a9098)}),conD:pbr(texStone,.95,.2,{color:new T.Color(0x6e6c66)}),
+    wood:pbr(texWood,.85,1,{color:new T.Color(0x6a4224)}),iron:M(0x4a4e56,.4,.8),gold:M(0xffc63a,.25,.9,{emissive:new T.Color(0x6a4300),emissiveIntensity:.6}),
+    dark:new T.MeshBasicMaterial({color:0x120a06}),back:pbr(texStone,.97,.15,{color:new T.Color(0x4a3a30)})}}
+function mzBuild(){var M0=LV.maze,R=M0.rows,H=M0.H,X0=M0.x0||0,mats=mzMats();MZ={M:mats,cells:{},bricks:[],key:null,used:false,door:null,flags:[],lock:null,t:0,told:{}};
+  function ch(c,r){return r<0||r>=H||c<0||c>=R[r].length?'':R[r][c]}/* fora do mapa: nada (senão o concreto crescia sem fim) */
+  /* tijolos: todos desenhados de uma vez (um desenho só no celular) */
+  var list=[];for(var r=0;r<H;r++)for(var c=0;c<R[r].length;c++)if(R[r][c]==='B')list.push([c,r]);
+  var bg=new T.BoxGeometry(1,1,1.6),im=new T.InstancedMesh(bg,brickM,list.length),d=new T.Object3D();im.castShadow=false;im.receiveShadow=true;
+  list.forEach(function(q,i){var x=X0+q[0],y=H-q[1]-1;d.position.set(x+.5,y+.5,0);d.updateMatrix();im.setMatrixAt(i,d.matrix);
+    var so={l:x,r:x+1,t:y+1,b:y,oneway:false,mz:null};var cell={c:q[0],r:q[1],i:i,so:so,x:x+.5,y:y+.5,brick:1};so.mz=cell;solids.push(so);MZ.bricks.push(cell);MZ.cells[q[0]+','+q[1]]=cell});
+  im.instanceMatrix.needsUpdate=true;add(im);MZ.im=im;
+  /* concreto: junta os quadradinhos em retângulos grandes (menos peças) */
+  var done={},G=[];for(r=0;r<H;r++)for(c=0;c<R[r].length;c++){var v=ch(c,r);if((v!=='#'&&v!=='L')||done[c+','+r])continue;
+    var w=1;while((ch(c+w,r)==='#'||ch(c+w,r)==='L')&&!done[(c+w)+','+r])w++;var h=1,ok=true;
+    while(ok){for(var k=0;k<w;k++){var v2=ch(c+k,r+h);if((v2!=='#'&&v2!=='L')||done[(c+k)+','+(r+h)]){ok=false;break}}if(ok)h++}
+    for(var a=0;a<w;a++)for(var b=0;b<h;b++)done[(c+a)+','+(r+b)]=1;
+    var x0=X0+c,y1=H-r,y0=y1-h;solids.push({l:x0,r:x0+w,t:y1,b:y0,oneway:false,conc:1});var gg=boxGeo(w,h,2.2,1.6);gg.translate(x0+w/2,y0+h/2,-.3);G.push(gg)}
+  add(mesh(mgL(G),mats.con,true,true));
+  /* juntas escuras no concreto (de 3 em 3), só no rosto da frente */
+  /* chave */
+  if(M0.key){var kg=new T.Group();var ring=mesh(new T.TorusGeometry(.18,.06,8,18),mats.gold,false,false);ring.position.x=-.28;kg.add(ring);
+    var sh=mesh(new T.BoxGeometry(.5,.08,.08),mats.gold,false,false);sh.position.x=.08;kg.add(sh);
+    [[.22,-.1],[.32,-.12]].forEach(function(t){var tt=mesh(new T.BoxGeometry(.07,.16,.08),mats.gold,false,false);tt.position.set(t[0],t[1]+.02,0);kg.add(tt)});
+    var kgl=new T.Sprite(new T.SpriteMaterial({map:softSprite(),color:0xffd860,transparent:true,blending:T.AdditiveBlending,depthWrite:false,opacity:.7}));kgl.scale.set(1.8,1.8,1);kg.add(kgl);
+    kg.position.set(M0.key[0],M0.key[1],.3);add(kg);MZ.key={g:kg,x:M0.key[0],y:M0.key[1],got:false}}
+  /* fechadura: placa dourada com buraco de fechadura na frente do concreto (brilha para ser encontrada) */
+  if(M0.lock){var lc=M0.lock[0],lr=M0.lock[1],lx=X0+lc+.5,lyy=H-lr-.5,lg=new T.Group();
+    var pl=mesh(new T.CylinderGeometry(.42,.42,.08,20),mats.gold,false,false);pl.rotation.x=Math.PI/2;lg.add(pl);
+    var hole=mesh(new T.CircleGeometry(.11,12),mats.dark,false,false);hole.position.set(0,.06,.05);lg.add(hole);
+    var slot=mesh(new T.PlaneGeometry(.08,.22),mats.dark,false,false);slot.position.set(0,-.08,.05);lg.add(slot);
+    var lgl=new T.Sprite(new T.SpriteMaterial({map:softSprite(),color:0xffc040,transparent:true,blending:T.AdditiveBlending,depthWrite:false,opacity:.45}));lgl.scale.set(2.4,2.4,1);lg.add(lgl);
+    lg.position.set(lx,lyy,.85);add(lg);MZ.lock={g:lg,x:lx,y:lyy,gl:lgl,hole:hole}}
+  /* porta da saída: os quadradinhos D viram uma porta de madeira com ferragens */
+  var dc=[];for(r=0;r<H;r++)for(c=0;c<R[r].length;c++)if(R[r][c]==='D')dc.push([c,r]);
+  if(dc.length){var c0=1e9,c1=-1e9,r0=1e9,r1=-1e9;dc.forEach(function(q){c0=Math.min(c0,q[0]);c1=Math.max(c1,q[0]);r0=Math.min(r0,q[1]);r1=Math.max(r1,q[1])});
+    var dx0=X0+c0,dx1=X0+c1+1,dy1=H-r0,dy0=H-r1-1,dw=dx1-dx0,dh=dy1-dy0,dg=new T.Group();
+    var pn=mesh(boxGeo(dw,dh,1.4,1.2),mats.wood,true,true);dg.add(pn);
+    [-.32,0,.32].forEach(function(f){var bd=mesh(new T.BoxGeometry(dw+.04,.14,1.44),mats.iron,false,false);bd.position.y=f*dh;dg.add(bd)});
+    var em=mesh(new T.CylinderGeometry(.3,.3,.06,16),mats.gold,false,false);em.rotation.x=Math.PI/2;em.position.set(0,.1*dh,.73);dg.add(em);
+    var eh=mesh(new T.CircleGeometry(.08,10),mats.dark,false,false);eh.position.set(0,.1*dh+.03,.77);dg.add(eh);
+    dg.position.set(dx0+dw/2,dy0+dh/2,0);add(dg);var dso={l:dx0,r:dx1,t:dy1,b:dy0,oneway:false,door:1};solids.push(dso);
+    MZ.door={g:dg,so:dso,y0:dy0+dh/2,h:dh,open:0,x:dx0+dw/2,yb:dy0};if(MZ.used){dso.dead=true;dg.position.y+=dh;MZ.door.open=1}}
+  /* bandeiras falsas: iguais às de verdade, só menores (cabem nas salas) */
+  (M0.flags||[]).forEach(function(f){var g=new T.Group(),pole=mesh(new T.CylinderGeometry(.05,.06,3,8),M(0xc9d1d8,.3,.9),false,false);pole.position.y=1.5;g.add(pole);
+    var fin=mesh(new T.SphereGeometry(.12,10,8),M(0xffc43a,.25,.9,{emissive:new T.Color(0x6a4300),emissiveIntensity:.5}),false,false);fin.position.y=3.05;g.add(fin);
+    var fl=mesh(new T.PlaneGeometry(1.1,.7,6,3),M(0xe0482a,.8,0,{side:T.DoubleSide}),false,false);fl.position.set(.56,2.55,0);g.add(fl);
+    g.position.set(f[0],f[1],-.3);add(g);MZ.flags.push({g:g,fl:fl,x:f[0],y:f[1],cd:0})});
+  if(!mzBuild.hud){mzBuild.hud=1}var ks=$('keyStat');if(ks)ks.hidden=true;
+}
+/* parede do fundo e tochas */
+function mzDecor(th){var M0=LV.maze;if(!M0)return;var mats=mzMats(),H=M0.H,X0=M0.x0||0,Wd=M0.rows[0].length;
+  var bg=boxGeo(Wd+40,H+30,.4,3);var bk=mesh(bg,mats.back,false,true);bk.position.set(X0+Wd/2,H/2-6,-1.9);add(bk);
+  var tm0=new T.MeshStandardMaterial({color:0xffd8a0,emissive:new T.Color(0xff9a30),emissiveIntensity:2.2}),T0=[],S=[];
+  for(var r=3;r<H;r+=6)for(var c=2;c<Wd;c+=11){var x=X0+c+4.5,y=H-r-1.2;T0.push(xf(new T.ConeGeometry(.12,.3,6),[x,y+.35,-1.55],[Math.PI,0,0]));T0.push(xf(new T.CylinderGeometry(.05,.07,.5,6),[x,y,-1.6]));S.push([x,y+.55])}
+  add(mesh(mgL(T0),tm0,false,false));
+  S.forEach(function(q,i){var s=new T.Sprite(new T.SpriteMaterial({map:softSprite(),color:0xffa040,transparent:true,blending:T.AdditiveBlending,depthWrite:false,opacity:.55}));s.scale.set(2.6,2.6,1);s.position.set(q[0],q[1],-1.4);add(s)})}
+/* quebrar tijolo */
+function mzBreak(cell){if(!cell||cell.dead)return;cell.dead=1;cell.so.dead=true;var z=new T.Matrix4().makeScale(0,0,0);MZ.im.setMatrixAt(cell.i,z);MZ.im.instanceMatrix.needsUpdate=true;
+  sfx.brick();emit(dustPool,cell.x,cell.y,8,3,.6,.45,1,3);spawnDebris(cell.x,cell.y);shake=Math.max(shake,.06)}
+function mzHit(cell){if(cell&&cell.brick)mzBreak(cell)}/* cabeçada por baixo: quebra (mesmo pequeno) */
+function mzDown(s){/* giratório caindo em cima: quebra o(s) tijolo(s) embaixo dos pés */
+  var y=s.t,hit=false;for(var i=0;i<MZ.bricks.length;i++){var c=MZ.bricks[i];if(c.dead||c.so.t!==y)continue;if(c.so.r>P.x-.28&&c.so.l<P.x+.28){mzBreak(c);hit=true}}
+  if(!hit)return false;P.sj=false;P.vy=Math.min(P.vy,-1);if(!MZ.told.dig){MZ.told.dig=1}return true}
+function mzReset(){if(!MZ)return;if(MZ.key&&!MZ.used){MZ.key.got=false;MZ.key.g.visible=true;P.key=false;var ks=$('keyStat');if(ks)ks.hidden=true}}/* morreu: perde a chave */
+function mzUpd(dt){if(!MZ)return;MZ.t+=dt;var K=MZ.key,D=MZ.door,L0=MZ.lock;
+  if(K&&!K.got){K.g.rotation.y+=dt*2;K.g.position.y=K.y+Math.sin(MZ.t*2.5)*.12;
+    if(state==='play'&&Math.abs(P.x-K.x)<.7&&K.y>P.y-.3&&K.y<P.y+P.h+.3){K.got=true;K.g.visible=false;P.key=true;var ks=$('keyStat');if(ks)ks.hidden=false;
+      try{sfx.coin();beep(880,.12,'triangle',.05);beep(1320,.2,'triangle',.05,0,.1)}catch(e){}emit(sparkPool,K.x,K.y,16,4,.7,.35,.2,3);toast('Pegou a chave! Agora encontre a fechadura')}}
+  if(L0){L0.gl.material.opacity=MZ.used?.15:.35+Math.sin(MZ.t*3)*.15;
+    var nearL=state==='play'&&Math.abs(P.x-L0.x)<1.6&&Math.abs((P.y+.7)-L0.y)<1.6;
+    if(nearL&&!MZ.used){if(K&&K.got){MZ.used=true;P.key=false;var ks2=$('keyStat');if(ks2)ks2.hidden=true;L0.hole.material=MZ.M.gold;
+        try{beep(300,.08,'square',.05);beep(500,.1,'square',.05,0,.08);beep(900,.25,'triangle',.05,0,.18)}catch(e){}emit(sparkPool,L0.x,L0.y,20,4,.8,.35,.2,3);
+        if(D){D.so.dead=true;D.opening=1}toast('Clac! A porta da saída destrancou!')}
+      else if(!MZ.told.lock){MZ.told.lock=1;toast('Uma fechadura... falta a chave')}}
+    if(!nearL)MZ.told.lock=0}
+  if(D){if(D.opening&&D.open<1){D.open=Math.min(1,D.open+dt/1.4);D.g.position.y=D.y0+D.h*D.open;if(Math.random()<.3)emit(dustPool,D.x,D.yb+.2,2,1.4,.5,.5,1.2,-.3)}
+    if(!MZ.used&&state==='play'&&Math.abs(P.x-(D.so.l-.3))<.5&&P.y<D.so.t&&P.y>=D.so.b-.2){if(!MZ.told.door){MZ.told.door=1;try{sfx.bump()}catch(e){}toast('Trancada! Encontre a chave e a fechadura')}}else if(Math.abs(P.x-D.so.l)>3)MZ.told.door=0}
+  MZ.flags.forEach(function(F){var pa=F.fl.geometry.attributes.position;for(var i=0;i<pa.count;i++){var x=pa.getX(i)+.55;pa.setZ(i,Math.sin(MZ.t*5-x*3)*.08*x)}pa.needsUpdate=true;
+    if(F.cd>0){F.cd-=dt;F.g.visible=F.cd<.2;return}
+    if(state==='play'&&Math.abs(P.x-F.x)<.6&&P.y<F.y+3&&P.y>F.y-.4){F.cd=1.5;F.g.visible=false;emit(dustPool,F.x,F.y+1.5,22,3,.9,.8,1.4,-.2);emit(sparkPool,F.x,F.y+2,10,3,.6,.3,.2,2);
+      try{beep(500,.15,'sawtooth',.04,-300);beep(260,.3,'sawtooth',.04,-120,.12)}catch(e){}
+      toast('Bandeira falsa! Sem a chave não tem saída...');P.x=LV.start.x;P.y=LV.start.y;P.vx=0;P.vy=0;P.sj=false;P.onPlat=null;P.inv=Math.max(P.inv,1);updateCamera(0,true)}})}
+LEVELS.forEach(function(L){if(L.maze)mzPrep(L)});
+
 /*@@parte:40_estado.js*/
 /* ===================== estado do jogo ===================== */
 var P={look:0,flapA:0,cape:false,pm:0,flyT:0,glide:0,spinT:0,spinCd:0,jsq:0,jsnap:false,fire:false,fcd:0,shootT:0,runT:0,x:0,y:0,vx:0,vy:0,w:.6,h:1.35,face:1,grounded:false,onPlat:null,coyote:0,jbuf:0,inv:0,stun:0,prevY:0,phase:0,land:0,airVy:0,yaw:Math.PI/2,stepIdx:0,feather:0,dj:false,noCut:0,cheer:0,nextBlink:2,blink:0,cph:0,climb:null,warp:null,vineCd:0,shield:false,idleT:0,pipeT:0,skid:0,big:false,crouch:false,sz:.78,csq:1,growT:0,sc:[0,0,0,0],inW:false,hd:false,air:1,swimCd:0,tapCd:0,drownT:.4};
@@ -7775,6 +7961,7 @@ function resetState(){
   checkpoints.forEach(function(c){c.lit=false;c.mat.emissiveIntensity=0});
   crumbles.forEach(function(c){c.state=0;c.dead=false;c.mesh.position.set(c.cx,c.baseY,0);c.mesh.scale.set(1,1,1)});
   if(typeof fallsReset==='function'&&curTheme.falls)fallsReset();
+  if(LV&&LV.maze&&typeof mzReset==='function')mzReset();
   resetBoss();resetDrops();P.swimToast=false;$('airStat').hidden=true;airBubs.forEach(function(b){b.on=true;b.cd=0;b.mesh.visible=true});
   respawn={x:LV.start.x,y:LV.start.y};placeEnemies(respawn.x);
   setHearts();$('coinN').textContent=bank;$('gemN').textContent='0';$('timeN').textContent='0:00';
@@ -10126,6 +10313,7 @@ function step(dt){
   else if(curTheme.name==='tower')updTower(dt);
   else if(curTheme.name==='mine')updMine(dt);
   else if(LV&&LV.minePre)updMinePre(dt);
+  else if(LV&&LV.maze)mzUpd(dt);
   else if(curTheme.falls)updFalls(dt);
   if(P.onPlat&&P.onPlat.mover)P.x+=P.onPlat.x-P.onPlat.px;
   var ax=keys.jx!==0?keys.jx:((keys.right?1:0)-(keys.left?1:0));
@@ -10245,12 +10433,13 @@ function step(dt){
     s=solids[i];if(s.dead)continue;
     if(evy<=0?(P.x+.16<=s.l||P.x-.16>=s.r):(pr<=s.l||pl>=s.r))continue;
     if(evy<=0){
+      if(!s.hid&&P.prevY>=s.t-.12&&P.y<s.t&&s.mz&&P.sj&&mzDown(s))continue;/* Labirinto: o pulo giratório quebra o tijolo embaixo */
       if(!s.hid&&P.prevY>=s.t-.12&&P.y<s.t){P.y=s.t;P.vy=0;P.grounded=true;P.onPlat=s}
     }else if(!s.oneway){
       if(P.prevY+P.h<=s.b+.12&&P.y+P.h>s.b){
         var ov=Math.min(pr,s.r)-Math.max(pl,s.l);
-        if(ov<.2&&!s.block&&!s.hid){P.x+=(P.x<(s.l+s.r)/2?-1:1)*(ov+.02)}
-        else{P.y=s.b-P.h;P.vy=0;if(s.block)hitBlock(s.block)}
+        if(ov<.2&&!s.block&&!s.hid&&!s.mz){P.x+=(P.x<(s.l+s.r)/2?-1:1)*(ov+.02)}
+        else{P.y=s.b-P.h;P.vy=0;if(s.block)hitBlock(s.block);else if(s.mz)mzHit(s.mz)}
       }
     }
   }
@@ -11156,7 +11345,7 @@ var MP2=[
  {n:'w14',    x:15, z:10, r:7.4,y:.15, top:'#3a6a4a',side:'#2a3a2e'},
  {n:'w15',    x:7,  z:1.5,r:7.2,y:.4,  top:'#8a6a4a',side:'#4a3a2a'},
  {n:'w16',    x:-6, z:4,  r:7.4,y:.6,  top:'#b8a070',side:'#6a5a40'},
- {n:'w17',    x:-16,z:-5, r:7.4,y:.8,  top:'#dfeefa',side:'#8aa0b8'},
+ {n:'w17',    x:-16,z:-5, r:7.4,y:.8,  top:'#b8603a',side:'#6a3a28'},
  {n:'w18',    x:-4, z:-9, r:7.2,y:.9,  top:'#e8d8a8',side:'#8a7a5a'},
  {n:'w19',    x:10, z:-10,r:7.4,y:1.1, top:'#5a6a8a',side:'#3a4258'},
  {n:'w20',    x:15, z:-22,r:7.4,y:1.3, top:'#e89a5a',side:'#9a5a30'},
