@@ -7654,10 +7654,10 @@ var flSt=[];
 function buildStreams(){flSt=[];var lite=LITE,SM=null,FM=null,R=[];
   (LV.falls||[]).forEach(function(F){var cx=F.x,z=F.z||-11,sw=1.7,top=null;
     (LV.solids||[]).forEach(function(q){if(q[0]<cx-2.2&&q[1]>cx+2.2&&(q[3]===undefined||q[3]<q[2]-2))top=top===null?q[2]:Math.max(top,q[2])});
-    if(top===null)return;/* sem chão na frente (abismo): sem riacho */
     if(!SM){SM=new T.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{time:lushU.time},
       vertexShader:'varying vec2 vU;void main(){vU=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
       fragmentShader:'uniform float time;varying vec2 vU;float h(vec2 p){return fract(sin(dot(p,vec2(12.9,78.2)))*43758.5);}void main(){float st=0.;for(int i=0;i<3;i++){float fi=float(i);float x=floor(vU.x*(5.+fi*4.));st+=smoothstep(.6,1.,fract(vU.y*(3.+fi)-time*(1.4+h(vec2(x,fi))*.8)+h(vec2(x,fi+2.))))*.4;}float edge=smoothstep(0.,.18,vU.x)*smoothstep(1.,.82,vU.x);vec3 c=mix(vec3(.25,.62,.86),vec3(.92,.98,1.),clamp(st,0.,1.));gl_FragColor=vec4(c,(.78+st*.2)*edge);}'})}
+    if(top===null){streamPit(F,cx,z,sw,SM);return}/* sem chão inteiro na frente: a água corre até o buraco e cai nele */
     /* caminho da água: do pé da cachoeira até a frente do chão (z 1,9) */
     var zs=z+.5,zb=-5,zf=1.92,N=lite?10:18,pos=[],uvs=[],idx=[],k,yb=mY(cx,zb),high=top>yb+.5;
     function yAt(zz){if(zz>=zb)return top+.04;return high?top+.04:Math.max(mY(cx,zz),top-.6)+.05}
@@ -7668,17 +7668,19 @@ function buildStreams(){flSt=[];var lite=LITE,SM=null,FM=null,R=[];
     if(high){var tg=new T.BoxGeometry(sw+.8,top-yb+1,zb-zs+.4);var tr=mesh(tg,flM.rock,true,true);tr.position.set(cx,(top+yb-1)/2,(zs+zb)/2);add(tr);
       R.push(xf(new T.BoxGeometry(.35,.3,zb-zs),[cx-sw/2-.2,top+.12,(zs+zb)/2]));R.push(xf(new T.BoxGeometry(.35,.3,zb-zs),[cx+sw/2+.2,top+.12,(zs+zb)/2]))}
     /* a água caindo pela beirada da frente */
-    var fg=new T.PlaneGeometry(sw,1.8,1,1);fg.translate(0,-.9,0);var fc=new T.Mesh(fg,flM.wm);fc.position.set(cx,top+.04,zf+.03);fc.renderOrder=3;add(fc);
+    var fh=top+.04-flFx.ry,fg=new T.PlaneGeometry(sw,fh,1,1);fg.translate(0,-fh/2,0);var fc=new T.Mesh(fg,flM.wm);fc.position.set(cx,top+.04,zf+.03);/* desce até o rio */fc.renderOrder=3;add(fc);
     var fo=[];for(k=0;k<(lite?1:2);k++){var sp=new T.Sprite(flM.foam);sp.scale.set(1.4,.7,1);add(sp);fo.push(sp)}
     /* peixinhos (só enfeite: não machucam) */
     var fish=[];if(!FM)FM={b:new T.SphereGeometry(.12,10,8),t:new T.ConeGeometry(.08,.14,4),m:[M(0xff8a3a,.35,.2),M(0xc8d4e0,.25,.5)],e:M(0x111111,.3)};
     for(k=0;k<2;k++){var fg2=new T.Group(),bd=mesh(FM.b,FM.m[k],false,false);bd.scale.set(.6,.8,1.5);fg2.add(bd);var tl=mesh(FM.t,FM.m[k],false,false);tl.rotation.x=-Math.PI/2;tl.scale.set(.3,1,1);tl.position.z=-.22;fg2.add(tl);
       [-1,1].forEach(function(sd){var ey=mesh(new T.SphereGeometry(.025,6,4),FM.e,false,false);ey.position.set(sd*.06,.03,.12);fg2.add(ey)});fg2.visible=false;fg2.scale.setScalar(1.7);add(fg2);
       fish.push({g:fg2,tl:tl,st:'in',t:-(k*1.7+Math.random()*2),side:k?1:-1})}
-    flSt.push({x:cx,top:top,w:sw,zf:zf,fo:fo,fish:fish})});
+    flSt.push({x:cx,top:top,w:sw,zf:zf,fo:fo,fish:fish,fx:cx,fy:flFx.ry,fz:zf+.35})});
   if(R.length)add(mesh(mgL(R),mossM,false,true))}
 function streamsUpd(dt){flSt.forEach(function(S){var near=Math.abs(P.x-S.x)<24;
-  S.fo.forEach(function(f,k){var u=(tm*.8+k*.5)%1;f.position.set(S.x+(k-.5)*.5,S.top-1.4+u*.3,S.zf+.2);f.material.opacity=.5});
+  S.fo.forEach(function(f,k){var u=(tm*.8+k*.5)%1;f.position.set(S.fx+(k-.5)*.6,S.fy+.15+u*.35,S.fz);f.material.opacity=.5});/* espuma onde a água bate no rio */
+  if(Math.abs(P.x-S.fx)<14&&Math.random()<.25)flDrop(S.fx+(Math.random()-.5)*S.w,S.fy+.05,(Math.random()-.5)*2,1+Math.random()*1.3);
+  if(S.pit)return;
   /* o Kuro pisando no riacho: respingos nos pés */
   if(state==='play'&&P.grounded&&Math.abs(P.x-S.x)<S.w/2+.1&&Math.abs(P.y-S.top)<.15){if(!S.on){S.on=1;for(var q=0;q<5;q++)flDrop(P.x+(Math.random()-.5)*.4,P.y+.05,(Math.random()-.5)*2.4,1.2+Math.random()*1.2)}else if(Math.abs(P.vx)>1&&Math.random()<.35)flDrop(P.x+(Math.random()-.5)*.3,P.y+.05,(Math.random()-.5)*1.6-P.vx*.1,1+Math.random())}else S.on=0;
   if(!near)return;
@@ -7689,6 +7691,19 @@ function streamsUpd(dt){flSt.forEach(function(S){var near=Math.abs(P.x-S.x)<24;
       if(u>=1){if(F.st==='out'){F.st='flop';F.t=0}else{F.st='in';F.t=-Math.random()*2.5;flDrop(S.x,S.top+.05,0,1.4);flDrop(S.x,S.top+.05,.6,1.1)}}}
     else if(F.st==='flop'){/* no seco: deitado, se debatendo e dando pulinhos */var hop=.12+Math.abs(Math.sin(F.t*6))*.4;g.visible=true;g.position.set(F.tx,S.top+.15+hop,lz);g.rotation.set(0,Math.PI/2,Math.PI/2+Math.sin(F.t*14)*.45);/* deitado de lado, se debatendo */F.tl.rotation.y=Math.sin(F.t*20)*.6;
       if(F.t>1.6){F.st='back';F.t=0}}})})}
+
+/* cachoeira com buraco na frente: o riacho corre pelo gramado até o buraco e despenca lá dentro até o rio */
+function streamPit(F,cx,z,sw,SM){
+  function cov(x){return (LV.solids||[]).some(function(q){return q[0]<=x&&q[1]>=x&&(q[3]===undefined||q[3]<q[2]-2)})}
+  var px=null;for(var d=0;d<=4.6&&px===null;d+=.1)[1,-1].forEach(function(sg){var x=cx+sg*d;if(px===null&&!cov(x-sw/2-.15)&&!cov(x)&&!cov(x+sw/2+.15))px=x});
+  if(px===null)return;
+  var zs=z+.5,zb=-4.95,N=LITE?8:14,pos=[],uvs=[],idx=[],k;
+  for(k=0;k<=N;k++){var u=k/N,zz=zs+(zb-zs)*u,xx=cx+(px-cx)*u*u,yy=mY(xx,zz)+.05,wv=sw*(1+.2*Math.sin(k*1.9+cx));pos.push(xx-wv/2,yy,zz,xx+wv/2,yy,zz);uvs.push(0,u*(zb-zs)/2,1,u*(zb-zs)/2);if(k<N){var a=k*2;idx.push(a,a+2,a+1,a+1,a+2,a+3)}}
+  var g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uvs,2));g.setIndex(idx);
+  var rib=new T.Mesh(g,SM);rib.renderOrder=3;add(rib);
+  var y0=mY(px,zb)+.05,fh=y0-flFx.ry,fg=new T.PlaneGeometry(sw,fh,1,1);fg.translate(0,-fh/2,0);var fc=new T.Mesh(fg,flM.wm);fc.position.set(px,y0,zb+.02);fc.renderOrder=3;add(fc);
+  var fo=[];for(k=0;k<(LITE?1:2);k++){var sp=new T.Sprite(flM.foam);sp.scale.set(1.6,.8,1);add(sp);fo.push(sp)}
+  flSt.push({x:px,top:-99,w:sw,zf:zb,fo:fo,fish:[],fx:px,fy:flFx.ry,fz:zb+.6,pit:1})}
 
 /*@@parte:40_estado.js*/
 /* ===================== estado do jogo ===================== */
