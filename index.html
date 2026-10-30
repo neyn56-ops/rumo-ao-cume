@@ -7880,9 +7880,16 @@ function mzBreak(cell){if(!cell||cell.dead)return;cell.dead=1;cell.so.dead=true;
 function mzHit(cell){if(cell&&cell.brick)mzBreak(cell)}/* cabeçada por baixo: quebra (mesmo pequeno) */
 function mzDown(s){/* giratório caindo em cima: quebra o(s) tijolo(s) embaixo dos pés */
   var y=s.t,hit=false;for(var i=0;i<MZ.bricks.length;i++){var c=MZ.bricks[i];if(c.dead||c.so.t!==y)continue;if(c.so.r>P.x-.28&&c.so.l<P.x+.28){mzBreak(c);hit=true}}
-  if(!hit)return false;P.sj=false;P.vy=Math.min(P.vy,-1);if(!MZ.told.dig){MZ.told.dig=1}return true}
-function mzReset(){if(!MZ)return;if(MZ.key&&!MZ.used){MZ.key.got=false;MZ.key.g.visible=true;P.key=false;var ks=$('keyStat');if(ks)ks.hidden=true}}/* morreu: perde a chave */
+  if(!hit)return false;
+  /* giro automático (dono): depois de quebrar, o Kuro continua girando sozinho — pulinho, cai, quebra o próximo — até apertar o pulo normal
+     ou cair em algo que não é tijolo. Dá para ir para os lados enquanto gira. */
+  P.sj=true;P.drill=true;P.vy=5.4;P.grounded=false;P.onPlat=null;try{beep(420,.06,'triangle',.03,180)}catch(e){}
+  if(!MZ.told.dig){MZ.told.dig=1;toast('Girando e quebrando! Aperte o pulo para parar')}return true}
+function mzReset(){if(!MZ)return;P.drill=false;if(MZ.key&&!MZ.used){MZ.key.got=false;MZ.key.g.visible=true;P.key=false;var ks=$('keyStat');if(ks)ks.hidden=true}}/* morreu: perde a chave */
 function mzUpd(dt){if(!MZ)return;MZ.t+=dt;var K=MZ.key,D=MZ.door,L0=MZ.lock;
+  /* giro automático: para com o pulo normal (apertar de novo), ao pisar em algo que não é tijolo, ou ao ser lançado pela mola */
+  var jp=keys.jump&&!MZ.jPrev;MZ.jPrev=keys.jump;
+  if(P.drill){if(jp||P.grounded||!P.sj||P.vy>18||state!=='play'){P.drill=false;if(jp||P.vy>18)P.sj=false}}
   if(K&&!K.got){K.g.rotation.y+=dt*2;K.g.position.y=K.y+Math.sin(MZ.t*2.5)*.12;
     if(state==='play'&&Math.abs(P.x-K.x)<.7&&K.y>P.y-.3&&K.y<P.y+P.h+.3){K.got=true;K.g.visible=false;P.key=true;var ks=$('keyStat');if(ks)ks.hidden=false;
       try{sfx.coin();beep(880,.12,'triangle',.05);beep(1320,.2,'triangle',.05,0,.1)}catch(e){}emit(sparkPool,K.x,K.y,16,4,.7,.35,.2,3);toast('Pegou a chave! Agora encontre a fechadura')}}
@@ -7899,7 +7906,7 @@ function mzUpd(dt){if(!MZ)return;MZ.t+=dt;var K=MZ.key,D=MZ.door,L0=MZ.lock;
     if(F.cd>0){F.cd-=dt;F.g.visible=F.cd<.2;return}
     if(state==='play'&&Math.abs(P.x-F.x)<.6&&P.y<F.y+3&&P.y>F.y-.4){F.cd=1.5;F.g.visible=false;emit(dustPool,F.x,F.y+1.5,22,3,.9,.8,1.4,-.2);emit(sparkPool,F.x,F.y+2,10,3,.6,.3,.2,2);
       try{beep(500,.15,'sawtooth',.04,-300);beep(260,.3,'sawtooth',.04,-120,.12)}catch(e){}
-      toast('Bandeira falsa! Sem a chave não tem saída...');P.x=LV.start.x;P.y=LV.start.y;P.vx=0;P.vy=0;P.sj=false;P.onPlat=null;P.inv=Math.max(P.inv,1);updateCamera(0,true)}})}
+      toast('Bandeira falsa! Sem a chave não tem saída...');P.x=LV.start.x;P.y=LV.start.y;P.vx=0;P.vy=0;P.sj=false;P.drill=false;P.onPlat=null;P.inv=Math.max(P.inv,1);updateCamera(0,true)}})}
 LEVELS.forEach(function(L){if(L.maze)mzPrep(L)});
 
 /*@@parte:40_estado.js*/
