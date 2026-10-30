@@ -1730,6 +1730,14 @@ LEVELS.push({name:'Vale das Cachoeiras',theme:16,music:11,tall:1,camMax:440,limi
  springs:[],gems:[[25,4.4],[86,9.1],[120.5,5.4]],feathers:[],
  checkpoints:[[71,2.4],[95,0],[124,0],[187.5,4.8],[239,3.2],[388,3.2],[407,6.8]],goal:{x:440,top:10.4},start:{x:2,y:0}});
 STORY.worlds.push({kicker:'Mundo 16 · Terra Nova',title:'Vale das Cachoeiras',text:'Um vale cheio de água: cachoeiras por todo lado e um rio lá embaixo. Pule de ilha em ilha, fuja do Minhocão que salta da terra, das abelhas que voam em bando e da coruja que mergulha lá do alto. Cuidado com os Pedrões-totem: quando o Kuro passa embaixo, eles despencam! Lá no alto do morro, o castelo guarda a Semente de Luz.',end:'O Kuro subiu até o portão do castelo e encontrou a Semente de Luz! Ela brilhou tão forte que as cachoeiras do vale ficaram douradas. Agora o Kuro sabe: a Terra Nova inteira está esperando por essa luz...'});
+/* altura padrão dos blocos (dono, 29/10): todos a 2,4 acima do chão, como no Mundo 1. Fileiras mudam juntas (usam o chão mais alto da fileira).
+   As torres (Mundos 13 e 14) ficam como estão: lá a altura de cada bloco faz parte da escalada. */
+function blockStd(L){var S=(L.solids||[]).filter(function(q){return !(q[3]>.5)}).map(function(q){return [q[0],q[1],q[2]]}).concat((L.floats||[]).map(function(q){return [q[0],q[1],q[2]]})).concat((L.crumbles||[]).map(function(q){return [q[0],q[1],q[2]]}));
+  function g(x,y){var t=-99;S.forEach(function(q){if(x>=q[0]-.01&&x<=q[1]+.01&&q[2]<=y-.5&&q[2]>t)t=q[2]});return t}
+  var B=(L.blocks||[]).slice().sort(function(a,b){return a.y-b.y||a.x-b.x}),used={};
+  B.forEach(function(b,i){if(used[i])return;var row=[b];used[i]=1;var go=true;while(go){go=false;B.forEach(function(c,j){if(used[j]||Math.abs(c.y-b.y)>.01)return;if(row.some(function(r){return Math.abs(r.x-c.x)<=1.05})){row.push(c);used[j]=1;go=true}})}
+    var gt=-99;row.forEach(function(r){gt=Math.max(gt,g(r.x,r.y))});if(gt<-50)return;var d=b.y-gt;if(d<1.85||d>2.95)return;var ny=+(gt+2.4).toFixed(2);row.forEach(function(r){r.y=ny})})}
+LEVELS.forEach(function(L,i){if(i===12||i===13)return;blockStd(L);if(L.pre)blockStd(L.pre)});
 
 /*@@parte:11_construcao.js*/
 /* ---------- contêineres do mundo atual ---------- */
