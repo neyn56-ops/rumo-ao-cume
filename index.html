@@ -1839,7 +1839,7 @@ maze:{x0:0,noSign:1,rows:[
  start:{x:2,y:4}};
 /* ===== Terra Nova — Mundo 18: Lago da Aurora (sem chefe). Parte 1: margem + patinação (gelo liso, gelo que trinca, pinguins, focas) =====
    Chão do lago: [x0,x1,0,-.6,1] = placa de gelo liso boiando (o 5º número liga o escorregão). Água em LV.lake: [x0,x1,altura]. */
-LEVELS.push({name:'Lago da Aurora',theme:19,music:15,tall:1,camMax:470,limit:720,es:1.05,noLift:1,skate:1,lake:[24,480,-.75],riverY:-.75,slideIn:[-11,6.5,3],
+LEVELS.push({name:'Lago da Aurora',theme:19,music:15,tall:1,camMax:470,limit:720,es:1.05,noLift:1,skate:1,lake:[24,480,-.75],riverY:-.75,
  solids:[[-14,12,0],[12,24,1.2],
   [24,40,0,-.6,1],[40,44,2.4,-3],[44,58,0,-.6,1],[61,79,0,-.6,1],[88,112,0,-.6,1],
   [115,121,1.2,-3],[121,128,2.6,-3],
@@ -1905,6 +1905,17 @@ LEVELS[LEVELS.length-1].pre={name:'Lago da Aurora',theme:19,music:15,tall:1,camM
  gems:[[15,2.4],[65,16.6],[90,3.4]],
  checkpoints:[[39,4],[64,12.4]],start:{x:0,y:4}};
 blockStd(LEVELS[LEVELS.length-1].pre);
+/* sem corte (dono, 31/10): a vila e o lago viram UMA fase só. A vila fica à esquerda (deslocada 138 para trás) e a calha do tobogã termina na margem do começo do lago. */
+(function(L,D){var V=L.pre;delete L.pre;function xs(a,ks){return a.map(function(q){q=q.slice();ks.forEach(function(k){q[k]+=D});return q})}
+  L.solids=xs(V.solids,[0,1]).concat(L.solids);L.floats=xs(V.floats,[0,1]).concat(L.floats);
+  L.enemies=V.enemies.map(function(e){e=Object.assign({},e);e.x0+=D;e.x1+=D;if(e.x!==undefined)e.x+=D;return e}).concat(L.enemies);
+  L.blocks=V.blocks.map(function(b){b=Object.assign({},b);b.x+=D;return b}).concat(L.blocks);
+  L.coins=V.coins.map(function(c){c=c.slice();c[1]+=D;if(c[0]==='r')c[2]+=D;return c}).concat(L.coins);
+  L.gems=xs(V.gems,[0]).concat(L.gems);L.checkpoints=xs(V.checkpoints,[0]).concat(L.checkpoints);
+  var W=V.vila;L.vila={planks:xs(W.planks,[0,1]),ladders:xs(W.ladders,[0]),houses:xs(W.houses,[0]),lamps:xs(W.lamps,[0]),
+    lifts:W.lifts.map(function(q){q=Object.assign({},q);q.x+=D;return q}),slide:{x:W.slide.x+D,y:W.slide.y},end:W.slide.x+D+28};
+  L.start={x:V.start.x+D,y:V.start.y};L.lake=[V.lake[0]+D,L.lake[1]];L.xMin=V.lake[0]+D+2;L.camMin=V.lake[0]+D+8;L.coinN=100;L.limit=900;L.tall=1;
+})(LEVELS[LEVELS.length-1],-138);
 
 /*@@parte:11_construcao.js*/
 /* ---------- contêineres do mundo atual ---------- */
@@ -7202,7 +7213,7 @@ function buildCollectibles(){
     return true;
   }
   coins=coins.filter(function(c){return !pastEnd(c)});
-  fitCoins(50);
+  fitCoins(LV.coinN||50);
   coins.forEach(function(c){if(pastEnd(c)){c.x=endX-.6-Math.random()*.01}});
   var cg=new T.CylinderGeometry(.32,.32,.07,24);cg.rotateX(Math.PI/2);
   coinMesh=inst(cg,M(0xffc43a,.22,.95,{emissive:new T.Color(0x6a4300),emissiveIntensity:.6}),Math.max(1,coins.length),true);
@@ -8163,7 +8174,7 @@ function auroraBuild(th){A0=auMats();
   for(var px=-14;px<xe+20;px+=1.6+r()*2.2){var inL=LV.lake&&px>LV.lake[0]-1&&px<LV.lake[1]+1;
     if(!inL){var zz=-6-r()*16;pine(px,mY(px,zz),zz,.8+r()*.8)}
     var zb=-50-r()*10;pine(px+r(),mY(px,zb),zb,1.3+r()*1.1)}
-  if(!LV.vila)(LV.solids||[]).forEach(function(q){if(q[4]||q[1]-q[0]>40||q[0]<0)return;for(var k2=0;k2<4;k2++){var x4=q[0]+1+r()*(q[1]-q[0]-2);pine(x4,q[2],-4.6-r()*2,.6+r()*.4)}});
+  (LV.solids||[]).forEach(function(q){if(q[4]||q[1]-q[0]>40||q[0]<0)return;for(var k2=0;k2<4;k2++){var x4=q[0]+1+r()*(q[1]-q[0]-2);pine(x4,q[2],-4.6-r()*2,.6+r()*.4)}});
   if(PT.length){var tr=new T.CylinderGeometry(.12,.16,.8,6);tr.translate(0,.4,0);var cg=[];for(var t=0;t<3;t++){var c=new T.ConeGeometry(1.05-t*.27,1.3,8);c.translate(0,1.1+t*.78,0);cg.push(c)}
     var sn=[];for(t=0;t<3;t++){var c2=new T.ConeGeometry(.62-t*.17,.5,8);c2.translate(0,1.62+t*.78,0);sn.push(c2)}
     var tm1=inst(tr,M(0x3a2618,.9),PT.length,true),tm2=inst(mgL(cg),M(0x1c4a3a,.85,0,{flatShading:true}),PT.length,true),tm3=inst(mgL(sn),M(0xe8f2ff,.7,0,{flatShading:true}),PT.length,false),dd=new T.Object3D();
@@ -8269,7 +8280,7 @@ function auBallUpd(dt){for(var i=AU.balls.length-1;i>=0;i--){var b=AU.balls[i],p
   if(hit||b.t>4){emit(dustPool,b.x,b.y,8,2.4,.45,.4,1.2,-.3);emit(sparkPool,b.x,b.y,5,2,.3,.25,.2,2);if(b.m.parent)b.m.parent.remove(b.m);AU.balls.splice(i,1);try{noise(.09,.03,1800,'highpass')}catch(er){}}}}
 /* ---- atualização ---- */
 function auUpd(dt){if(!AU)return;AU.t+=dt;auVilaUpd(dt);auIcUpd(dt);auBridgeUpd(dt);auLightUpd(dt);
-  if(!LV.vila)(AU.smoke||[]).forEach(function(s){s.t+=dt;var u=(s.t%3.6)/3.6;s.s.position.set(s.x+u*.8,s.y+u*2.4,s.z);var sc=.4+u*1.4;s.s.scale.set(sc,sc,1);s.s.material.opacity=Math.sin(u*Math.PI)*.35});
+  if(false)(AU.smoke||[]).forEach(function(s){s.t+=dt;var u=(s.t%3.6)/3.6;s.s.position.set(s.x+u*.8,s.y+u*2.4,s.z);var sc=.4+u*1.4;s.s.scale.set(sc,sc,1);s.s.material.opacity=Math.sin(u*Math.PI)*.35});
   /* chegada do tobogã: a tela clareia enquanto o Kuro ainda desce a calha e entra na cena */
   if(AU.sin){var si=AU.sin;si.t+=dt;var u=Math.min(1,si.t/1.3),p=AU.slideIn.getPointAt(u*u*.3+u*.7);P.x=p.x;P.y=p.y-.45;P.vx=6;P.vy=0;P.grounded=false;P.crouch=true;P.face=1;
     if(!si.cut)$('fade').style.opacity=Math.max(0,1-si.t/.35);if(((tm*30)|0)%2===0)emit(sparkPool,p.x,p.y,1,1.5,.3,.25,.2,2);
@@ -8314,7 +8325,7 @@ function auMats(){if(auMat)return auMat;
   return auMat}
 /* bloco/pilar de gelo com tampa de neve e "gotas" de neve escorrendo pela frente */
 var A0=null;
-function auSolid(s,m3){var A=auMats(),x0=s[0],x1=s[1],top=s[2],bot=s[3]!==undefined?s[3]:-14,w=x1-x0,cx=(x0+x1)/2,vl=!!LV.vila,D=vl?3.2:6.8,Z=vl?-.5:-1.6,r=rnd((x0*73+top*31)|0);
+function auSolid(s,m3){var A=auMats(),x0=s[0],x1=s[1],top=s[2],bot=s[3]!==undefined?s[3]:-14,w=x1-x0,cx=(x0+x1)/2,vl=!!LV.vila&&x1<=LV.vila.end,D=vl?3.2:6.8,Z=vl?-.5:-1.6,r=rnd((x0*73+top*31)|0);
   var vb=bot;LV.solids.forEach(function(o){if(o!==s&&o[0]<=x0+.01&&o[1]>=x1-.01&&o[2]<top-.3&&o[2]-.32>vb)vb=o[2]-.32});
   var body=mesh(boxGeo(w,top-.32-vb,D,1),A.ice,true,true);body.position.set(cx,(top-.32+vb)/2,Z);add(body);
   var cap=mesh(boxGeo(w+.2,.4,D+.2,1),A.snow,true,true);cap.position.set(cx,top-.2,Z);add(cap);
@@ -8403,25 +8414,15 @@ function auVilaUpd(dt){if(!LV.vila)return;var V=LV.vila;
   AU.floes.forEach(function(f,i){f.position.y+=Math.sin(tm*1.4+i)*.0008});
   /* tobogã */
   if(V.slide){var S=V.slide;
-    if(!AU.sl&&state==='play'&&P.x>S.x-.4&&Math.abs(P.y-S.y)<1.6){AU.sl={t:0};P.vx=0;P.vy=0;try{beep(600,.5,'sine',.04,-300)}catch(er){}toast('Tobogã de gelo!');AU.cm0=LV.camMax;LV.camMax=S.x+30}
+    if(!AU.sl&&state==='play'&&P.x>S.x-.4&&P.x<S.x+1.5&&Math.abs(P.y-S.y)<1.6){AU.sl={t:0};P.vx=0;P.vy=0;try{beep(600,.5,'sine',.04,-300)}catch(er){}toast('Tobogã de gelo!')}
     if(AU.sl){var sl=AU.sl;sl.t+=dt;var u=Math.min(1,sl.t/1.9),p=AU.slideC.getPointAt(u*u*.3+u*.7);P.x=p.x;P.y=p.y-.45;P.vx=6;P.vy=0;P.grounded=false;P.crouch=true;P.face=1;sl.z=p.z;/* sentado no fundo do tubo */
       if(((tm*30)|0)%2===0)emit(sparkPool,p.x,p.y,1,1.5,.3,.25,.2,2);
-      if(u>.5&&!sl.hold){sl.hold=1;LV.camMax=cam.x}/* a câmera para e o Kuro sai deslizando pela direita da tela (sem escurecer) */
-      if(u>=1){AU.sl=null;P.crouch=false;LV.camMax=AU.cm0;auEnter(1)}}}}
-/* sai da vila e chega ao lago (como o cano do Mundo 17) */
-function auEnter(cut){
-  var keep={coins:coinsGot,gems:gemsGot,t:timeT,hearts:hearts,bank:bank,big:!!P.big,fire:!!P.fire,cape:!!P.cape,shield:!!P.shield,tot:coins.length+extraCoins};
-  $('fade').style.opacity=cut?0:1;prePast[levelIdx]=true;var cn=carryNow;carryNow=null;
-  buildLevel(levelIdx);resetState();carryNow=cn;
-  coinsGot=keep.coins;gemsGot=keep.gems;timeT=keep.t;hearts=keep.hearts;bank=keep.bank;extraCoins+=keep.tot;
-  P.big=keep.big;if(keep.cape)setCape(true);else if(keep.fire)setFire(true);P.shield=keep.shield;
-  setHearts();$('coinN').textContent=bank;$('gemN').textContent=String(gemsGot);
-  P.x=LV.start.x;P.y=LV.start.y;P.vx=7;P.vy=0;P.grounded=false;P.onPlat=null;P.face=1;
-  if(AU&&AU.slideIn){AU.sin={t:0,cut:cut};var p0=AU.slideIn.getPointAt(0);P.x=p0.x;P.y=p0.y-.45;P.vx=0}else setTimeout(function(){$('fade').style.opacity=0},60);
-  updateCamera(0,true);toast('Kuro chegou ao Lago da Aurora!')}
+      if(u>=1){AU.sl=null;P.crouch=false;P.vx=7;P.y=Math.max(P.y,floorBelow(P.x,P.y+1));emit(dustPool,P.x,P.y+.1,10,2.4,.5,.5,1.2,-.3);if(!AU.toldL){AU.toldL=1;toast('Kuro chegou ao Lago da Aurora!')}}}}}/* sem corte: a calha termina na margem do lago (mesma fase) */
+/* (testes e fotos) leva o Kuro direto ao começo do lago */
+function auEnter(){P.x=4;P.y=0;P.vx=0;P.vy=0;P.grounded=false;P.onPlat=null;P.face=1;P.warp=null;AU.sl=null;updateCamera(0,true)}
 /* gelo e pilares de gelo lá no fundo (com neve em cima e pinheirinhos), e uma cachoeira congelada */
 function auBack(){var A=auMats(),r=rnd(909),xe=sceneEnd(),G=[],S=[],PN=[];
-  for(var x=-20;x<xe+30;x+=3+r()*5){var z=-14-r()*22,w=2.5+r()*4,h=2+r()*(LV.vila?16:9),y0=mY(x,z)-.5;
+  for(var x=-20;x<xe+30;x+=3+r()*5){var z=-14-r()*22,w=2.5+r()*4,h=2+r()*(LV.vila&&x<LV.vila.end?16:9),y0=mY(x,z)-.5;
     var g=new T.BoxGeometry(w,h,w*.8);g.rotateY((r()-.5)*.4);g.translate(x,y0+h/2,z);G.push(g);
     var c=new T.BoxGeometry(w+.25,.45,w*.8+.25);c.rotateY((r()-.5)*.2);c.translate(x,y0+h+.1,z);S.push(c);
     for(var k=0;k<4;k++){var d=new T.SphereGeometry(.2+r()*.15,6,5);d.scale(1,1.6,.8);d.translate(x-w/2+r()*w,y0+h-.25,z+w*.4);S.push(d)}
@@ -8430,7 +8431,7 @@ function auBack(){var A=auMats(),r=rnd(909),xe=sceneEnd(),G=[],S=[],PN=[];
   if(PN.length){var cg=[];for(var t=0;t<3;t++){var c2=new T.ConeGeometry(1.05-t*.27,1.3,8);c2.translate(0,1.1+t*.78,0);cg.push(c2)}var im=inst(mgL(cg),M(0x1c4a3a,.85,0,{flatShading:true}),PN.length,false),dd=new T.Object3D();
     PN.forEach(function(q,j){dd.position.set(q[0],q[1],q[2]);dd.scale.setScalar(q[3]);dd.updateMatrix();im.setMatrixAt(j,dd.matrix)});add(im)}
   /* cachoeira congelada */
-  [[LV.vila?60:100,-22,12]].forEach(function(f){var fx=f[0],fz=f[1],fh=f[2],fy=mY(fx,fz);var wf=mesh(new T.PlaneGeometry(2.6,fh,1,1),new T.MeshStandardMaterial({color:0xe0f6ff,roughness:.1,emissive:new T.Color(0x5ab0e0),emissiveIntensity:.5,transparent:true,opacity:.85}),false,false);wf.position.set(fx,fy+fh/2,fz+2.1);add(wf)})}
+  [[100,-22,12],[LV.vila?LV.vila.end-60:-90,-22,12]].forEach(function(f){var fx=f[0],fz=f[1],fh=f[2],fy=mY(fx,fz);var wf=mesh(new T.PlaneGeometry(2.6,fh,1,1),new T.MeshStandardMaterial({color:0xe0f6ff,roughness:.1,emissive:new T.Color(0x5ab0e0),emissiveIntensity:.5,transparent:true,opacity:.85}),false,false);wf.position.set(fx,fy+fh/2,fz+2.1);add(wf)})}
 
 function auIcUpd(dt){(AU.ics||[]).forEach(function(c){
   if(c.st===0){if(state==='play'&&Math.abs(P.x-c.x)<1.7&&P.y<c.y0&&P.y>c.y0-7){c.st=1;c.t=0;try{noise(.25,.03,3000,'highpass')}catch(er){}}}
@@ -8482,7 +8483,7 @@ function auBridgeBuild(){AU.br=[];var A=auMats();
 function auBridgeState(b,t){var per=b.per||4.2,u=(((t+(b.ph||0))%per)+per)%per;return u<2.6?'on':(u<3.2?'blink':'off')}
 function auBridgeUpd(dt){(AU.br||[]).forEach(function(B){var st=auBridgeState(B.b,AU.t),on=st!=='off';
   if(on!==B.on){B.on=on;if(!on&&P.grounded&&B.pl.some(function(p){return P.onPlat===p.so})){P.grounded=false;P.onPlat=null}
-    try{if(on)beep(880,.12,'sine',.02);else beep(440,.12,'sine',.02)}catch(er){}if(!AU.toldB&&!on){AU.toldB=1;toast('As pontes de aurora somem e voltam no ritmo da luz! Espere ela acender')}}
+    try{if(on)beep(880,.12,'sine',.02);else beep(440,.12,'sine',.02)}catch(er){}if(!AU.toldB&&!on&&P.x>B.b.x0-12&&P.x<B.b.x1+4){AU.toldB=1;toast('As pontes de aurora somem e voltam no ritmo da luz! Espere ela acender')}}
   B.pl.forEach(function(p,i){p.so.dead=!on;p.m.visible=on&&!(st==='blink'&&((AU.t*10+i*.0)|0)%2===0);p.m.material.opacity=.7+Math.sin(AU.t*4+i*.6)*.25})})}
 /* o farol: torre listrada vermelha e branca no alto do penhasco, com degraus em volta; lá em cima o Kuro acende a Luz da Aurora */
 function auLightBuild(){var F=LV.lighthouse;if(!F)return;var A=auMats(),g=new T.Group(),H=F.top-F.y,R0=2.4,R1=1.8,red=M(0xc8302a,.6),wh=M(0xf4f2ee,.6);
