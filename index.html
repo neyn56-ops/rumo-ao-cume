@@ -1880,7 +1880,7 @@ LEVELS.push({name:'Lago da Aurora',theme:19,music:15,tall:1,camMax:470,limit:720
   ['r',320.6,322.4,3.7,2],['r',326.6,328.4,4.9,2],['r',332.6,334.4,3.7,2],['r',338.6,340.4,4.9,2],['r',347,370,2.1,9],['r',389,392,4.1,3],['r',395,403,4.4,5],['r',406,409,4.1,3],['r',412,420,4.4,5],['r',423,427,5.3,3],['r',431.6,433,6.5,2],['r',436.6,438,7.7,2],['r',443,450,8.9,5],
   ['r',449.5,450.5,11.3,2],['r',455,456,13.5,2],['r',460.5,461.5,15.7,2],['r',464.5,465.5,17.9,2]],
  gems:[[83.5,3.6],[124.5,6.2],[161.5,3.4]],
- checkpoints:[[92,0],[146,0],[208,1.2],[264,0],[306,1.2],[372,1.2],[443,8]],goal:{x:455.4,top:19.2},start:{x:2,y:0}});
+ checkpoints:[[92,0],[146,0],[208,1.2],[264,0],[306,1.2],[372,1.2],[443,8]],goal:{x:458,top:19.2},crystalGoal:1,/* sem bandeira: a fase termina ao acender o farol */start:{x:2,y:0}});
 blockStd(LEVELS[LEVELS.length-1]);
 STORY.worlds.push({kicker:'Mundo 18 · Terra Nova',title:'Lago da Aurora',text:'Uma noite de inverno sob a aurora boreal! O lago congelou: no gelo liso o Kuro patina rápido e demora a frear. Cuidado com o gelo fino — ele trinca na primeira pisada e quebra na segunda. Os pinguins descem de barriga e as focas saem dos buracos jogando bolas de neve.'});
 /* Mundo 18 — área de fora: Vila dos Pescadores suspensa (ideia do dono, 31/10). Casinhas em pilares de gelo e estacas sobre o lago, em 3 andares:
@@ -8306,7 +8306,7 @@ function auUpd(dt){if(!AU)return;AU.t+=dt;auVilaUpd(dt);auIcUpd(dt);auBridgeUpd(
   /* caiu na água do lago */
   if(LV.lake&&P.x>LV.lake[0]&&P.x<LV.lake[1]&&P.y<LV.lake[2]&&(AU.pky===undefined||AU.pky>=LV.lake[2])&&state==='play'){splashFx(P.x,LV.lake[2],16);try{sfx.splash()}catch(er){}}
   AU.pky=P.y}
-function aurReset(){if(!AU)return;AU.sin=null;AU.climb=0;(AU.ics||[]).forEach(function(c){c.st=0;c.y=c.y0;c.g.visible=true;c.g.position.set(c.x,c.y0,0);c.g.scale.set(1,1,1)});
+function aurReset(){if(!AU)return;if(AU.lh&&!AU.lh.won){AU.lh.lit=false;AU.lh.beam.material.opacity=0;AU.lh.halo.material.opacity=.15;AU.lh.halo.scale.setScalar(5)}AU.sin=null;AU.climb=0;(AU.ics||[]).forEach(function(c){c.st=0;c.y=c.y0;c.g.visible=true;c.g.position.set(c.x,c.y0,0);c.g.scale.set(1,1,1)});
   AU.balls.forEach(function(b){if(b.m.parent)b.m.parent.remove(b.m)});AU.balls=[];AU.py=null;
   AU.cracks.forEach(function(c){c.n=0;c.brk=0;c.fall=0;c.so.dead=false;c.g.visible=true;c.g.position.set((c.c[0]+c.c[1])/2,c.t0,0);c.g.rotation.z=0;c.ov.material.opacity=0;c.fr.material.opacity=0})}
 /* ===================== estilo "bloco de gelo com neve escorrendo" (Mundo 18 todo) ===================== */
@@ -8517,8 +8517,8 @@ function auLightBuild(){var F=LV.lighthouse;if(!F)return;var A=auMats(),g=new T.
   solids.push({l:F.x-3,r:F.x+3.3,t:F.top,b:F.top-.25,oneway:false,flt:true});
   AU.lh={g:g,gl:gl,beam:beam,piv:piv,halo:halo,lit:false,F:F}}
 function auLightUpd(dt){var L=AU.lh;if(!L)return;
-  if(!L.lit&&state==='play'&&P.y>L.F.top-.3&&Math.abs(P.x-L.F.x)<3.5){L.lit=true;L.t=0;toast('Você acendeu a Luz da Aurora!');try{beep(523,.2,'triangle',.05);beep(659,.2,'triangle',.05,0,.15);beep(784,.4,'triangle',.05,0,.3)}catch(er){}emit(sparkPool,L.F.x,L.F.top+1.5,30,5,1,.4,.2,3)}
-  if(L.lit){L.t+=dt;var k=Math.min(1,L.t/.8);L.beam.material.opacity=.22*k;L.halo.material.opacity=.15+.75*k;L.halo.scale.setScalar(5+9*k);L.gl.material.emissiveIntensity=.4+2.6*k;L.piv.rotation.y+=dt*.9}}
+  if(!L.lit&&state==='play'&&P.grounded&&P.y>L.F.top-.3&&Math.abs(P.x-L.F.x)<3.5){/* em pé na galeria do farol */L.lit=true;L.t=0;toast('Você acendeu a Luz da Aurora!');try{beep(523,.2,'triangle',.05);beep(659,.2,'triangle',.05,0,.15);beep(784,.4,'triangle',.05,0,.3)}catch(er){}emit(sparkPool,L.F.x,L.F.top+1.5,30,5,1,.4,.2,3)}
+  if(L.lit){L.t+=dt;var k=Math.min(1,L.t/.8);L.beam.material.opacity=.22*k;L.halo.material.opacity=.15+.75*k;L.halo.scale.setScalar(5+9*k);L.gl.material.emissiveIntensity=.4+2.6*k;L.piv.rotation.y+=dt*.9;if(L.t>2.2&&!L.won&&state==='play'){L.won=1;winLevel()}}}/* o feixe acende e gira um pouco; aí a fase termina */
 
 /*@@parte:40_estado.js*/
 /* ===================== estado do jogo ===================== */
