@@ -1887,8 +1887,8 @@ STORY.worlds.push({kicker:'Mundo 18 · Terra Nova',title:'Lago da Aurora',text:'
    embaixo placas de gelo boiando, no meio passarelas e pontes de corda, em cima telhados e torres. Escadas e cestos-elevador ligam os andares.
    Cair do andar de cima = parar no de baixo (só a água mata). No fim, o tobogã de gelo desce até o começo do lago. */
 LEVELS[LEVELS.length-1].pre={name:'Lago da Aurora',theme:19,music:15,tall:1,camMax:112,limit:420,es:1.05,noLift:1,auPre:1,lake:[-14,140,-.75],
- vila:{planks:[[8,20,4],[20,28,4,1],[48,55,10],[55,62,10,1],[86,94,7,1]],
-  ladders:[[7.5,.3,3.7],[27.5,.3,6.1],[93.5,.3,6.7]],
+ vila:{planks:[[8.75,20,4],[20,27.25,4,1],[48,55,10],[55,62,10,1],[86,93.25,7,1]],
+  ladders:[[8.3,.3,3.7],[27.7,.3,6.1],[93.7,.3,6.7]],/* encostadas na parede do bloco de gelo (dono) */
   lifts:[{x:46.2,w:2.2,y0:4,y1:10,sp:.6}, {x:102.3,w:2.2,y0:7,y1:13,sp:.6,ph:1.5}],
   houses:[[1,4,3.4,2.6],[31,6.4,3,2.4],[65,12.4,3.6,2.8],[73,9.4,3,2.2],[82.5,7,3.2,2.6],[97,7,3,2.4],[110,13,3.4,2.6]],
   lamps:[[12,4],[24,4],[51,10],[58,10],[89,7]],
@@ -8388,8 +8388,8 @@ function auVila(){if(!LV.vila)return;var A=auMats(),r=rnd(2626),V=LV.vila;AU.lif
   (V.ladders||[]).forEach(function(l){var x=l[0],y0=l[1],len=l[2],g=new T.Group(),L=[];
     [-.28,.28].forEach(function(dx){var s=new T.BoxGeometry(.08,len+.4,.08);s.translate(dx,len/2,0);L.push(s)});
     for(var k=.35;k<len;k+=.42){var d=new T.BoxGeometry(.56,.06,.07);d.translate(0,k,0);L.push(d)}
-    g.add(mesh(mgL(L),A.wood,true,false));g.position.set(x,y0,.15);add(g);
-    vines.push({x:x,y0:y0,top:y0+len,len:len,max:len,g:g,stem:new T.Object3D(),leaves:[]})});
+    g.add(mesh(mgL(L),A.wood,true,false));g.position.set(x,y0,.9);add(g);/* na frente da parede do bloco */
+    vines.push({x:x,y0:y0,top:y0+len,len:len,max:len,g:g,stem:new T.Object3D(),leaves:[],ladder:1,dir:l[3]||1})});
   /* cestos de pesca no guincho: sobem e descem (elevador) */
   (V.lifts||[]).forEach(function(q){var A2=A,g=new T.Group(),bw=q.w;
     var bk=mesh(boxGeo(bw,.5,1.4,1),A2.wood,true,true);bk.position.y=-.25;g.add(bk);
@@ -9393,6 +9393,11 @@ function spawnVine(b){
   sfx.vine();toast('O pé de feijão está crescendo! Segure pular ao lado dele.');
 }
 function tryGrab(){
+  /* escada: em pé perto dela, apertar para baixo agarra e desce (dono, 31/10) */
+  if(P.vineCd<=0&&P.grounded&&(keys.down||keys.jy<-.55)&&P.stun<=0)for(var j=0;j<vines.length;j++){var w=vines[j];if(!w.ladder)continue;
+    if(Math.abs(P.x-w.x)<.75&&P.y>w.y0+.3&&P.y<=w.y0+w.len+.15){P.climb=w;P.x=w.x;P.y=Math.min(P.y,w.y0+w.len)-.25;P.vx=0;P.vy=0;P.grounded=false;P.onPlat=null;P.crouch=false;P.climbDn=1;return}}
+  if(P.vineCd<=0&&P.grounded&&(keys.up||keys.jy>.55)&&P.stun<=0)for(var j2=0;j2<vines.length;j2++){var w2=vines[j2];if(!w2.ladder)continue;
+    if(Math.abs(P.x-w2.x)<.75&&P.y>=w2.y0-.3&&P.y<w2.y0+w2.len-.5){P.climb=w2;P.x=w2.x;P.y=Math.max(P.y,w2.y0)+.05;P.vx=0;P.vy=0;P.grounded=false;P.onPlat=null;return}}/* embaixo da escada: para cima sobe */
   if(P.vineCd>0||!(keys.jump||keys.up)||P.grounded||P.stun>0)return;
   for(var i=0;i<vines.length;i++){
     var v=vines[i];
