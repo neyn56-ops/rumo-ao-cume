@@ -346,7 +346,9 @@ var THEMES=[
   /* 17: Labirinto de Tijolos (Mundo 17) — subterrâneo de tijolos e concreto, luz quente de tochas */
   {name:'maze',sky:['#1a120c','#2a1c12','#3a2618','#24170e'],fog:'#2a1c12',fd:.006,sun:0xffe2b8,si:1.7,sunOff:[-10,26,16],hemi:[0xffe4c8,0x5a4030,1.25],exp:1.35,env:5,lantern:0,snow:false,mz:-30,valley:0x2a1c12},
   /* 18: Ruínas de Tijolos (área de fora do Mundo 17) — fim de tarde virando noite */
-  {name:'valley',dusk:1,sky:['#1e1640','#5a2e66','#e0785a','#ffb070'],fog:'#c88070',fd:.0095,sun:0xffa860,si:1.7,sunOff:[-22,10,12],hemi:[0xffc8a8,0x3a2a48,.42],exp:.92,env:0,lantern:0,snow:false,mz:-45,valley:0x3a3a28}
+  {name:'valley',dusk:1,sky:['#1e1640','#5a2e66','#e0785a','#ffb070'],fog:'#c88070',fd:.0095,sun:0xffa860,si:1.7,sunOff:[-22,10,12],hemi:[0xffc8a8,0x3a2a48,.42],exp:.92,env:0,lantern:0,snow:false,mz:-45,valley:0x3a3a28},
+  /* 19: Lago da Aurora (Mundo 18) — noite de inverno, aurora boreal; monta como a Montanha Gelada (neve, pinheiros) */
+  {name:'peaks',aurora:1,sky:['#02040e','#050c22','#0a1e3a','#123048'],fog:'#0e2238',fd:.0085,sun:0x9ab8ff,si:.95,sunOff:[-14,26,14],hemi:[0x5a8ab8,0x0c1426,.5],exp:.62,env:0,lantern:0,snow:true,mz:-45,valley:0x1a2a40}
 ];
 var curTheme=THEMES[0];
 
@@ -582,6 +584,7 @@ var MATS=[
 ];
 MATS.push(MATS[4]);/* 17: Labirinto — pedra do castelo na entrada e na saída */
 MATS.push(MATS[0]);/* 18: Ruínas de Tijolos — grama e terra */
+MATS.push(MATS[5]);/* 19: Lago da Aurora — neve e gelo */
 
 function boxGeo(w,h,d,tile){
   var g=new T.BoxGeometry(w,h,d),uv=g.attributes.uv;
@@ -966,6 +969,10 @@ var MUSIC=[
  {bpm:136,lead:'square',lv:.026,drums:2,bassT:2,
   mel:[69,0,72,74,0,76,0,74, 72,0,69,0,72,0,74,0, 77,0,76,74,0,72,0,74, 76,0,0,79,0,76,0,0],
   roots:[33,38,36,40],ch:[[57,60,64],[57,62,65],[55,60,64],[56,59,64]]},
+ /* 15: Lago da Aurora (noite gelada, calma e brilhante, como um sino de vidro) */
+ {bpm:88,lead:'sine',lv:.05,drums:1,bassT:1,
+  mel:[79,0,83,0,86,0,83,0, 81,0,0,79,0,76,0,0, 78,0,81,0,85,0,81,0, 83,0,0,0,79,0,76,0],
+  roots:[43,40,38,45],ch:[[67,71,74],[64,67,71],[62,66,69],[64,69,73]]},
  /* tema do mapa (viagem alegre, tranquila) */
  {bpm:104,lead:'triangle',lv:.05,drums:1,bassT:0,
   mel:[72,0,76,0,79,0,76,79, 81,0,79,0,76,0,72,76, 77,0,81,0,84,0,81,77, 79,0,74,0,71,0,74,79],
@@ -1830,6 +1837,30 @@ maze:{x0:0,noSign:1,rows:[
  checkpoints:[[76,4]],
  pipes:[{x:122,base:4,top:5.6,to:{maze:1}}],
  start:{x:2,y:4}};
+/* ===== Terra Nova — Mundo 18: Lago da Aurora (sem chefe). Parte 1: margem + patinação (gelo liso, gelo que trinca, pinguins, focas) =====
+   Chão do lago: [x0,x1,0,-.6,1] = placa de gelo liso boiando (o 5º número liga o escorregão). Água em LV.lake: [x0,x1,altura]. */
+LEVELS.push({name:'Lago da Aurora',theme:19,music:15,camMax:210,limit:420,es:1.05,noLift:1,skate:1,lake:[24,186,-.75],
+ solids:[[-14,24,0],
+  [24,58,0,-.6,1],[61,79,0,-.6,1],[88,112,0,-.6,1],
+  [115,128,1.2],
+  [145,160,0,-.6,1],[163,182,0,-.6,1],
+  [185.5,220,0]],
+ floats:[],movers:[],crumbles:[],feathers:[],spikes:[],springs:[],
+ cracks:[[79,82,0],[82,85,0],[85,88,0],[131,134.5,0],[136.5,140,0],[142,145,0]],
+ enemies:[{t:'beetle',x0:7,x1:20,y:0,s:1.3},
+  {t:'peng',x0:30,x1:56,y:0,ph:0},{t:'seal',x0:70,x1:70,y:0,ph:0},
+  {t:'peng',x0:94,x1:110,y:0,ph:1.4},{t:'seal',x0:103,x1:103,y:0,ph:2.1},{t:'bat',x0:107,x1:121,y:4,s:1.3},
+  {t:'peng',x0:147,x1:159,y:0,ph:.7},{t:'seal',x0:170,x1:170,y:0,ph:.9},{t:'peng',x0:165,x1:181,y:0,ph:2.6},
+  {t:'beetle',x0:192,x1:202,y:0,s:1.4}],
+ blocks:[{x:5,y:2.4,t:'q',c:'mushroom'},{x:14,y:2.4,t:'brick'},{x:15,y:2.4,t:'q',c:'coin'},{x:16,y:2.4,t:'brick'},
+  {x:44,y:2.4,t:'q',c:'flower'},{x:98,y:2.4,t:'brick'},{x:99,y:2.4,t:'q',c:'coin'},{x:100,y:2.4,t:'brick'},
+  {x:121.5,y:3.6,t:'q',c:'feather'},{x:150,y:2.4,t:'q',c:'fruit'},{x:196,y:2.4,t:'q',c:'mushroom'}],
+ coins:[['r',2,10,.9,5],['r',27,37,.9,6],['r',41,55,.9,8],['r',58.6,60.4,1.9,2],['r',63,77,.9,8],['r',80,87,1.9,5],['r',90,110,.9,10],['r',112.6,114.4,2.2,2],['r',116,127,2.1,7],
+  ['r',131.8,133.8,1.4,2],['r',137.3,139.3,1.4,2],['r',142.6,144.4,1.4,2],['r',147,159,.9,7],['r',160.6,162.4,1.9,2],['r',165,181,.9,9],['r',187,200,.9,7]],
+ gems:[[83.5,3.6],[121.5,7.4],[161.5,3.4]],
+ checkpoints:[[92,0],[146,0]],goal:{x:206,top:0},start:{x:2,y:0}});
+blockStd(LEVELS[LEVELS.length-1]);
+STORY.worlds.push({kicker:'Mundo 18 · Terra Nova',title:'Lago da Aurora',text:'Uma noite de inverno sob a aurora boreal! O lago congelou: no gelo liso o Kuro patina rápido e demora a frear. Cuidado com o gelo fino — ele trinca na primeira pisada e quebra na segunda. Os pinguins descem de barriga e as focas saem dos buracos jogando bolas de neve.'});
 
 /*@@parte:11_construcao.js*/
 /* ---------- contêineres do mundo atual ---------- */
@@ -1871,6 +1902,9 @@ function applyTheme(th){
   }else if(th.name==='trail'){/* campo verde que desce até o mar perto da praia */
     mY=function(x,z){var d=clamp((-z-5)/40,0,1),n=Math.sin(x*.07+z*.11)*.5+Math.sin(x*.13-z*.05+1.7)*.3+Math.sin(x*.031+z*.17+.5)*.2;
       return 3.4*Math.pow(d,1.3)+n*1.2*(.12+d)-clamp((16-x)/9,0,1)*2.4};
+  }else if(th.aurora&&LV.lake){/* Lago da Aurora: o terreno fica baixo embaixo do lago congelado e só sobe na margem lá do fundo */
+    var LK=LV.lake;mY=function(x,z){var d=clamp((-z-5)/40,0,1),n=Math.sin(x*.07+z*.11)*.5+Math.sin(x*.13-z*.05+1.7)*.3+Math.sin(x*.031+z*.17+.5)*.2,b=3.4*Math.pow(d,1.3)+n*1.2*(.12+d);
+      var e=Math.min(clamp((x-LK[0]+3)/5,0,1),clamp((LK[1]+3-x)/5,0,1))*(1-clamp((-z-38)/9,0,1));return b*(1-e)-1.3*e};
   }else if(th.name==='cave'){
     mY=function(x,z){return -.55+(Math.sin(x*.21+z*.13)*.5+Math.sin(x*.07-z*.31)*.5)*.35+(-5-z)*.02};
   }else{
@@ -2125,6 +2159,7 @@ function buildLevel(idx){
   if(th.name==='trail'){buildTrailDecor(th);buildTrailFar()}
   buildLush(th);
   if(typeof kuroDry==='function')kuroDry();/* Kuro seco ao começar qualquer fase */
+  if(th.aurora)auroraBuild(th);/* Mundo 18: aurora, estrelas, lago, gelo que trinca */
   if(th.falls)buildFalls(th);/* Mundo 16: cachoeiras, rio, castelo lá longe e os Pedrões-totem */
   if(th.name==='ruins')buildRuinsExtra();
   buildHazards();
@@ -2213,9 +2248,10 @@ function buildPlatforms(m3){
     var out=s[5]==='out';if(out&&!castleOutDirtM)castleOutDirtM=M(0x4e443c,.97,0,{map:texStone.map});
     /* bloco em cima de outro: a parte de baixo fica escondida dentro do de baixo; corta para as frentes não piscarem */
     var vb=bot;LV.solids.forEach(function(o){if(o!==s&&o[0]<=x0+.01&&o[1]>=x1-.01&&o[2]<top-.3&&o[2]-.32>vb)vb=o[2]-.32});
-    var body=mesh(boxGeo(w,top-.3-vb,6.8,2.6),out?castleOutDirtM:m3.side);body.position.set(cx,(top-.3+vb)/2,-1.6);add(body);
+    var lk=s[4]&&curTheme.aurora;/* Lago da Aurora: o chão liso é uma placa de gelo boiando */
+    var body=mesh(boxGeo(w,top-.3-vb,6.8,2.6),lk?iceSlabM:(out?castleOutDirtM:m3.side));body.position.set(cx,(top-.3+vb)/2,-1.6);add(body);
     if(out&&!castlePathM)castlePathM=M(0xd6c4a6,.96,0,{map:texStone.map});
-    var lip=mesh(boxGeo(w+(out?0:.14),.34,6.94,2.2),out?castlePathM:m3.top);lip.position.set(cx,top-.17,-1.6);add(lip);
+    var lip=mesh(boxGeo(w+(out?0:.14),.34,6.94,2.2),lk?iceSlabM:(out?castlePathM:m3.top));lip.position.set(cx,top-.17,-1.6);add(lip);
     if(s[4]&&curTheme.name==='peaks'){var io=mesh(boxGeo(w+.16,.1,6.96,2.2),iceTopM);io.position.set(cx,top-.03,-1.6);add(io)}
     solids.push({l:x0,r:x1,t:top,b:bot,oneway:false,slip:!!s[4]});
   });
@@ -3651,10 +3687,11 @@ function buildCaveDecor(th,r,dummy,col){
 function buildDecorPeaks(th){
   var r=rnd(3517),d=new T.Object3D(),col=new T.Color(),xe=sceneEnd(),i,k;
   var lowQ=(+effCfg().lush||0)<.6,K=lowQ?.6:1;
+  var lk=th.aurora&&LV.lake?function(x,z){return x>LV.lake[0]-3&&x<LV.lake[1]+3&&z>-46}:function(){return false};/* Lago da Aurora: nada de pedra em cima do lago congelado */
   /* afloramentos de rocha marrom serrilhada, com neve nos topos */
   var rk=[],cap=[];
   for(i=0;i<Math.round(30*K);i++){
-    var x=-16+r()*(xe+10),z=-10-r()*26,base=mY(x,z),n=3+Math.floor(r()*5),sc=1.6+r()*3.4;
+    var x=-16+r()*(xe+10),z=-10-r()*26,base=mY(x,z),n=3+Math.floor(r()*5),sc=1.6+r()*3.4;if(lk(x,z))continue;
     for(k=0;k<n;k++){var px=x+(k-n/2)*sc*.7+(r()-.5)*sc*.5,pz=z+(r()-.5)*sc*.6,h=sc*(.5+r()*.9)*(1-Math.abs(k-n/2)/n*.8),w=sc*(.5+r()*.45);
       rk.push([px,base-.3,pz,w,h,w*(.6+r()*.5),r()*6,(r()-.5)*.5]);}
     cap.push([x,base-.25,z,sc*n*.42,sc*.28,sc*.9]);/* neve acumulada na base */
@@ -3668,8 +3705,8 @@ function buildDecorPeaks(th){
     cap.forEach(function(q,j){d.position.set(q[0],q[1],q[2]);d.rotation.set(0,r()*6,0);d.scale.set(q[3],q[4],q[5]);d.updateMatrix();cm.setMatrixAt(j,d.matrix);cm.setColorAt(j,hsl(col,.6,.2,.93))});add(cm)}
   /* pedras soltas: no fundo e na beira de trás das plataformas */
   var st=[],G=lushGround();
-  for(i=0;i<Math.round(90*K);i++){var x2=-12+r()*(xe+5),z2=-5.5-r()*22;st.push([x2,mY(x2,z2),z2,.25+r()*.9])}
-  G.list.forEach(function(sd){var n2=Math.round(sd.w*(lowQ?.35:.6));for(var j=0;j<n2;j++){var x3=sd.l+.3+r()*(sd.w-.6);st.push([x3,sd.t,-3.6-r()*1.4,.15+r()*.35])}});
+  for(i=0;i<Math.round(90*K);i++){var x2=-12+r()*(xe+5),z2=-5.5-r()*22;if(!lk(x2,z2))st.push([x2,mY(x2,z2),z2,.25+r()*.9])}
+  G.list.forEach(function(sd){if(lk(sd.l+sd.w/2,-4))return;var n2=Math.round(sd.w*(lowQ?.35:.6));for(var j=0;j<n2;j++){var x3=sd.l+.3+r()*(sd.w-.6);st.push([x3,sd.t,-3.6-r()*1.4,.15+r()*.35])}});
   var sm=inst(new T.DodecahedronGeometry(1,0),M(0xffffff,.92,0,{flatShading:true}),st.length,true);
   st.forEach(function(q,j){d.position.set(q[0],q[1]+q[3]*.2,q[2]);d.rotation.set(r()*3,r()*6,r()*3);d.scale.set(q[3]*(1+r()*.5),q[3]*(.55+r()*.35),q[3]*(1+r()*.4));d.updateMatrix();sm.setMatrixAt(j,d.matrix);sm.setColorAt(j,hsl(col,.06+r()*.04,.28+r()*.14,.24+r()*.16))});
   add(sm);
@@ -7301,6 +7338,8 @@ function buildEnemies(){
     else if(t==='owl'){o.vis=makeOwl();o.w=.42;o.h=.75;o.hx=e.x!==undefined?e.x:(e.x0+e.x1)/2;o.hy=e.y;o.x=o.hx;o.st2='perch';o.speed=0;o.cool=0}
     else if(t==='bee'){o.vis=makeBees();o.w=.5;o.h=.6;o.speed=(e.s||1.4);o.mt=e.ph||0;o.by=e.y;o.cy=e.y;o.px=(e.x0+e.x1)/2;o.x=o.px}
     else if(t==='mole'){o.vis=makeMole();o.w=.45;o.h=.95;o.speed=.9;o.pop=0;o.mt=0}
+    else if(t==='peng'){o.vis=makePeng();o.w=.42;o.h=.95;o.speed=1.1;o.slide=0;o.mt=e.ph||0;o.x=(e.x0+e.x1)/2}
+    else if(t==='seal'){o.vis=makeSeal();o.w=.42;o.h=.95;o.speed=0;o.x=e.x0;o.hx=e.x0;o.pop=0;o.mt=0;o.ph=e.ph||0;o.noHit=true;o.safe=true}
     else if(t==='moth'){o.vis=makeMoth();o.w=.5;o.h=.5;o.route=e.route;o.ri=0;o.sit=0;o.speed=(e.s||1.5)}
     else if(t==='wbeetle'){o.vis=makeWBeetle();o.w=.5;o.h=.85;o.amp=e.amp||.55}
     else if(t==='jelly'){o.vis=makeJelly();o.stomp=false;o.w=.5;o.h=.95;o.amp=e.amp||1.4}
@@ -8033,6 +8072,156 @@ function mzHoldKey(K){var hs=rig.hands,h=hs[0],w=new T.Vector3(),w2=new T.Vector
   var gl=K.g.children[K.g.children.length-1];if(gl&&gl.isSprite)gl.visible=false}
 function mzFreeKey(K){if(K.home&&K.g.parent!==K.home){K.home.attach(K.g)}var gl=K.g.children[K.g.children.length-1];if(gl&&gl.isSprite)gl.visible=true}
 
+/*@@parte:34_aurora.js*/
+/* ===================== Mundo 18 — Lago da Aurora =====================
+   Noite de inverno: aurora boreal ondulando no céu, estrelas, lago congelado.
+   Parte 1: margem + patinação (gelo liso, gelo que trinca, pinguim-tobogã, foca que joga bola de neve).
+   O tema monta como a Montanha Gelada (name 'peaks', pinheiros e neve) e ganha a aurora por cima. */
+var AU=null;
+function auroraBuild(th){
+  AU={t:0,cracks:[],balls:[],g:null,mats:[],py:0,holes:[]};
+  var lite=LITE;
+  /* ---- céu: estrelas e faixas da aurora (seguem a câmera, bem lá no fundo) ---- */
+  var g=new T.Group();scene.add(g);AU.g=g;
+  var sp=[],r=rnd(1818);
+  for(var i=0;i<(lite?220:420);i++){var a=r()*Math.PI*2,e=.12+r()*1.2,R=300;sp.push(Math.cos(a)*Math.cos(e)*R*1.4,Math.sin(e)*R*.55+10,-Math.abs(Math.sin(a))*R*.7-60)}
+  var sg=new T.BufferGeometry();sg.setAttribute('position',new T.Float32BufferAttribute(sp,3));
+  var st=new T.Points(sg,new T.PointsMaterial({color:0xeaf2ff,size:1.6,sizeAttenuation:false,transparent:true,opacity:.85,fog:false,depthWrite:false}));g.add(st);
+  var vs='uniform float uT;varying vec2 vU;void main(){vU=uv;vec3 p=position;p.z+=sin(p.x*.022+uT*.18)*14.+sin(p.x*.061-uT*.31)*5.;p.y+=sin(p.x*.035+uT*.22)*3.;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}';
+  var fs='uniform float uT,uI;uniform vec3 cA,cB;varying vec2 vU;void main(){float x=vU.x*7.;'+
+    'float w=sin(x*1.3+uT*.25)*.5+sin(x*3.1-uT*.4)*.25+sin(x*6.7+uT*.6)*.12;'+
+    'float rays=.45+.55*pow(.5+.5*sin(x*26.+sin(x*2.3+uT*.35)*5.+uT*.6),2.);'+
+    'float b=.12+w*.08;float y=vU.y;float a=smoothstep(b,b+.06,y)*(1.-smoothstep(b+.04,1.,y));'+
+    'a*=rays*(.75+.25*sin(x*.9-uT*.5));a*=smoothstep(0.,.12,vU.x)*smoothstep(1.,.88,vU.x);'+
+    'vec3 c=mix(cA,cB,smoothstep(b+.05,.95,y));gl_FragColor=vec4(c*a*uI,1.);}';
+  [[-120,34,0x3dffa0,0x7a3cff,1.15],[-150,42,0x40ffd8,0xff4ab8,.8],[-100,28,0x8affb0,0x3a7aff,.6]].forEach(function(q,k){
+    var m=new T.ShaderMaterial({vertexShader:vs,fragmentShader:fs,uniforms:{uT:{value:k*7},uI:{value:q[4]},cA:{value:new T.Color(q[2])},cB:{value:new T.Color(q[3])}},transparent:true,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide,fog:false});
+    var pl=new T.Mesh(new T.PlaneGeometry(520,58,lite?60:120,1),m);pl.position.set(k*40-40,q[1],q[0]);pl.renderOrder=-5;g.add(pl);AU.mats.push(m)});
+  /* lua fininha */
+  var mo=new T.Mesh(new T.CircleGeometry(4,28),new T.MeshBasicMaterial({color:0xf4f6ff,fog:false}));mo.position.set(110,70,-230);g.add(mo);
+  var mh=new T.Sprite(new T.SpriteMaterial({map:softSprite(),color:0xb8d0ff,transparent:true,depthWrite:false,fog:false,opacity:.6,blending:T.AdditiveBlending}));mh.scale.set(30,30,1);mh.position.set(110,70,-231);g.add(mh);
+  /* ---- o lago: água escura embaixo do gelo, com o brilho da aurora refletido ---- */
+  if(LV.lake){var L=LV.lake,wm=new T.MeshStandardMaterial({color:0x08182c,roughness:.12,metalness:.3,emissive:new T.Color(0x0a3a3a),emissiveIntensity:.35});
+    var wp=new T.Mesh(new T.PlaneGeometry(L[1]-L[0],40),wm);wp.rotation.x=-Math.PI/2;wp.position.set((L[0]+L[1])/2,L[2],-14);add(wp);AU.water=wm;
+    /* frente do lago (a água vista de lado no corte da tela) */
+    /* a superfície congelada do lago atrás do caminho (gelo escuro e liso, com o brilho da aurora) */
+    var itx=iceTopM.map?iceTopM.map.clone():null;if(itx){itx.wrapS=itx.wrapT=T.RepeatWrapping;itx.repeat.set((L[1]-L[0]+6)/3,50/3);itx.needsUpdate=true}
+    var im=new T.MeshStandardMaterial({color:0x5a8cb4,roughness:.12,metalness:.3,emissive:new T.Color(0x0e3a40),emissiveIntensity:.45,map:itx});
+    var ip=new T.Mesh(new T.PlaneGeometry(L[1]-L[0]+6,50),im);ip.rotation.x=-Math.PI/2;ip.position.set((L[0]+L[1])/2,-.04,-26.2);ip.receiveShadow=true;add(ip);AU.ice=im;
+    var wf=new T.Mesh(new T.PlaneGeometry(L[1]-L[0],8),new T.MeshStandardMaterial({color:0x061424,roughness:.3,emissive:new T.Color(0x05202a),emissiveIntensity:.4}));wf.position.set((L[0]+L[1])/2,L[2]-4,6);add(wf)}
+  /* ---- pinheiros com neve: nas margens, na ilha e uma fileira do outro lado do lago ---- */
+  var PT=[],xe=sceneEnd();function pine(x,y,z,s){PT.push([x,y,z,s])}
+  for(var px=-14;px<xe+20;px+=1.6+r()*2.2){var inL=LV.lake&&px>LV.lake[0]-1&&px<LV.lake[1]+1;
+    if(!inL){var zz=-6-r()*16;pine(px,mY(px,zz),zz,.8+r()*.8)}
+    var zb=-50-r()*10;pine(px+r(),mY(px,zb),zb,1.3+r()*1.1)}
+  (LV.solids||[]).forEach(function(q){if(q[4]||q[1]-q[0]>40||q[0]<0)return;for(var k2=0;k2<4;k2++){var x4=q[0]+1+r()*(q[1]-q[0]-2);pine(x4,q[2],-4.6-r()*2,.6+r()*.4)}});
+  if(PT.length){var tr=new T.CylinderGeometry(.12,.16,.8,6);tr.translate(0,.4,0);var cg=[];for(var t=0;t<3;t++){var c=new T.ConeGeometry(1.05-t*.27,1.3,8);c.translate(0,1.1+t*.78,0);cg.push(c)}
+    var sn=[];for(t=0;t<3;t++){var c2=new T.ConeGeometry(.62-t*.17,.5,8);c2.translate(0,1.62+t*.78,0);sn.push(c2)}
+    var tm1=inst(tr,M(0x3a2618,.9),PT.length,true),tm2=inst(mgL(cg),M(0x1c4a3a,.85,0,{flatShading:true}),PT.length,true),tm3=inst(mgL(sn),M(0xe8f2ff,.7,0,{flatShading:true}),PT.length,false),dd=new T.Object3D();
+    PT.forEach(function(q,j){dd.position.set(q[0],q[1]-.05,q[2]);dd.rotation.set(0,r()*6,0);dd.scale.set(q[3],q[3]*(1+r()*.2),q[3]);dd.updateMatrix();tm1.setMatrixAt(j,dd.matrix);tm2.setMatrixAt(j,dd.matrix);tm3.setMatrixAt(j,dd.matrix)});
+    add(tm1);add(tm2);add(tm3)}
+  /* ---- gelo que trinca: 1ª pisada racha, 2ª quebra ---- */
+  var cc=document.createElement('canvas');cc.width=256;cc.height=64;var cx=cc.getContext('2d');cx.strokeStyle='rgba(255,255,255,.95)';cx.lineWidth=2.2;
+  for(var k=0;k<7;k++){var x0=20+k*34+r()*10,y0=32;cx.beginPath();cx.moveTo(x0,y0);for(var s=0;s<5;s++){x0+=(r()-.5)*30;y0+=(r()-.5)*26;cx.lineTo(x0,Math.max(2,Math.min(62,y0)))}cx.stroke()}
+  var ctex=new T.CanvasTexture(cc);
+  var cIce=M(0xbfe8ff,.08,.1,{transparent:true,opacity:.82,emissive:new T.Color(0x2a6a8a),emissiveIntensity:.25});
+  (LV.cracks||[]).forEach(function(c){var w=c[1]-c[0],gg=new T.Group();
+    var sl=mesh(boxGeo(w-.05,.38,2.6,1),cIce,false,true);sl.position.y=-.19;gg.add(sl);
+    var ov=new T.Mesh(new T.PlaneGeometry(w-.1,2.5),new T.MeshBasicMaterial({map:ctex,transparent:true,opacity:0,depthWrite:false}));ov.rotation.x=-Math.PI/2;ov.position.y=.012;gg.add(ov);
+    var fr=new T.Mesh(new T.PlaneGeometry(w-.1,.36),new T.MeshBasicMaterial({map:ctex,transparent:true,opacity:0,depthWrite:false}));fr.position.set(0,-.19,1.31);gg.add(fr);
+    gg.position.set((c[0]+c[1])/2,c[2],0);add(gg);
+    var so={l:c[0],r:c[1],t:c[2],b:c[2]-.38,oneway:false,flt:true,slip:false};/* gelo novo e áspero: não escorrega */solids.push(so);
+    AU.cracks.push({c:c,g:gg,ov:ov,fr:fr,so:so,n:0,brk:0,fall:0,t0:c[2]})});
+  /* ---- buracos no gelo (onde a foca mora) ---- */
+  enemies.forEach(function(e){if(e.type!=='seal')return;var h=new T.Group();
+    var hl=new T.Mesh(new T.CircleGeometry(.62,20),new T.MeshBasicMaterial({color:0x061a2c}));hl.rotation.x=-Math.PI/2;hl.scale.set(1.25,.8,1);hl.position.y=.02;h.add(hl);
+    for(var q=0;q<9;q++){var a=q/9*Math.PI*2,ch=mesh(new T.DodecahedronGeometry(.13+r()*.08,0),iceSlabM,false,false);ch.position.set(Math.cos(a)*.8,.05,Math.sin(a)*.52);ch.rotation.set(r()*3,r()*3,0);h.add(ch)}
+    h.position.set(e.hx,e.y,0);add(h)});
+}
+/* ---- bichos: Pinguim-tobogã ---- */
+function makePeng(){var g=new T.Group(),inner=new T.Group(),tilt=new T.Group();g.add(inner);inner.add(tilt);
+  var bk=M(0x1c2230,.55),wh=M(0xf4f6fa,.6),or=M(0xffa42a,.45);
+  var bd=mesh(new T.SphereGeometry(.36,16,12),bk,true,false);bd.scale.set(1,1.35,.95);bd.position.y=.5;tilt.add(bd);
+  var be=mesh(new T.SphereGeometry(.3,14,10),wh,false,false);be.scale.set(.95,1.25,.7);be.position.set(0,.47,.14);tilt.add(be);
+  var hd=mesh(new T.SphereGeometry(.24,14,10),bk,true,false);hd.position.set(0,1.0,.02);tilt.add(hd);
+  [-1,1].forEach(function(sd){var f=mesh(new T.SphereGeometry(.09,10,8),wh,false,false);f.scale.set(1,1.1,.6);f.position.set(sd*.09,1.02,.17);tilt.add(f);
+    var ey=mesh(new T.SphereGeometry(.035,8,6),M(0x101010,.3),false,false);ey.position.set(sd*.09,1.03,.22);tilt.add(ey)});
+  var bkk=mesh(new T.ConeGeometry(.06,.2,8),or,false,false);bkk.rotation.x=Math.PI/2;bkk.position.set(0,.96,.3);tilt.add(bkk);
+  var fl=[];[-1,1].forEach(function(sd){var p=new T.Group();p.position.set(sd*.33,.7,0);tilt.add(p);var w=mesh(new T.SphereGeometry(.14,10,8),bk,false,false);w.scale.set(.35,1.3,.75);w.position.y=-.16;p.add(w);fl.push(p)});
+  var ft=[];[-1,1].forEach(function(sd){var f=mesh(new T.SphereGeometry(.1,10,6),or,false,false);f.scale.set(1,.35,1.5);f.position.set(sd*.13,.03,.08);tilt.add(f);ft.push(f)});
+  var sc=mesh(new T.TorusGeometry(.25,.05,6,16),M(0xe0402a,.7),false,false);sc.rotation.x=Math.PI/2;sc.position.y=.82;tilt.add(sc);/* cachecol */
+  add(g);return {g:g,inner:inner,tilt:tilt,fl:fl,ft:ft}}
+function pengAI(e,dt){e.mt=(e.mt||0)+dt;var cyc=4.2,u=e.mt%cyc;
+  var sl=u>2.4;if(sl&&!e.sl0){/* começa a deslizar: vira para o Kuro se ele estiver perto (dentro do trecho) */
+    if(Math.abs(P.x-e.x)<8&&Math.abs(P.y-e.y)<2&&P.x>e.x0-1&&P.x<e.x1+1)e.dir=P.x>e.x?1:-1;
+    emit(dustPool,e.x,e.y+.1,5,2,.4,.4,1.2,-.3)}
+  e.sl0=sl;e.slide+=((sl?1:0)-(e.slide||0))*Math.min(1,dt*8);
+  e.cur=sl?4.6:1.1;var nx=e.x+e.dir*e.cur*dt;if(nx<e.x0||nx>e.x1){e.dir=-e.dir}else e.x=nx;
+  e.h=.95-.45*e.slide;if(sl&&((tm*30)|0)%4===0)emit(dustPool,e.x-e.dir*.4,e.y+.05,1,1.2,.3,.35,1.2,-.2)}
+function pengVis(e,dt){var v=e.vis,s=e.slide||0;v.g.rotation.y=0;
+  v.inner.rotation.y=e.dir>0?Math.PI/2-.45:-(Math.PI/2-.45);
+  v.tilt.rotation.x=s*1.35;v.tilt.position.y=s*.36;
+  var wd=(1-s)*Math.sin(tm*12+e.ph);v.tilt.rotation.z=wd*.12;
+  v.fl.forEach(function(f,i){f.rotation.z=(i?-1:1)*(.15+(1-s)*Math.abs(wd)*.4+s*.9)});
+  v.ft.forEach(function(f,i){f.position.y=.03+Math.max(0,(i?1:-1)*wd)*.06})}
+/* ---- bichos: Foca (sai do buraco e joga bola de neve em arco) ---- */
+function makeSeal(){var g=new T.Group(),inner=new T.Group();g.add(inner);
+  var gr=M(0x8a9cb0,.5),lt=M(0xc8d4e0,.6),dk=M(0x141a22,.3);
+  var bd=mesh(new T.SphereGeometry(.38,16,12),gr,true,false);bd.scale.set(1,1.5,.9);bd.position.y=.3;inner.add(bd);
+  var be=mesh(new T.SphereGeometry(.3,12,10),lt,false,false);be.scale.set(.9,1.3,.6);be.position.set(0,.32,.16);inner.add(be);
+  var hd=mesh(new T.SphereGeometry(.27,14,10),gr,true,false);hd.position.set(0,.86,.06);inner.add(hd);
+  var mz=mesh(new T.SphereGeometry(.13,10,8),lt,false,false);mz.scale.set(1.3,.85,1);mz.position.set(0,.8,.28);inner.add(mz);
+  var ns=mesh(new T.SphereGeometry(.05,8,6),dk,false,false);ns.position.set(0,.85,.4);inner.add(ns);
+  [-1,1].forEach(function(sd){var ey=mesh(new T.SphereGeometry(.05,8,6),dk,false,false);ey.position.set(sd*.11,.93,.26);inner.add(ey);
+    for(var q=0;q<2;q++){var wk=mesh(new T.CylinderGeometry(.006,.006,.22,3),lt,false,false);wk.rotation.z=Math.PI/2+sd*(q?.15:-.1);wk.position.set(sd*.2,.79+q*.03,.33);inner.add(wk)}});
+  var fl=[];[-1,1].forEach(function(sd){var p=new T.Group();p.position.set(sd*.34,.45,.05);inner.add(p);var f=mesh(new T.SphereGeometry(.13,10,8),gr,false,false);f.scale.set(.4,1.2,.8);f.position.y=-.12;p.add(f);fl.push(p)});
+  var ball=mesh(new T.IcosahedronGeometry(.17,1),M(0xffffff,.8),false,false);ball.position.set(.32,.6,.12);inner.add(ball);
+  add(g);return {g:g,inner:inner,fl:fl,ball:ball}}
+function sealAI(e,dt){e.mt=(e.mt||0)+dt;var cyc=4.6,u=((e.mt+(e.ph||0))%cyc+cyc)%cyc,pop;
+  if(u<1.5)pop=0;else if(u<1.8)pop=(u-1.5)/.3;else if(u<4.0)pop=1;else if(u<4.3)pop=1-(u-4.0)/.3;else pop=0;
+  e.dir=P.x>e.x?1:-1;
+  if(pop>=1&&u>2.35&&!e.thr){e.thr=1;var dx=P.x-e.x;if(Math.abs(dx)<11&&Math.abs(P.y-e.y)<5&&state==='play')auThrow(e)}
+  if(u<1.5)e.thr=0;
+  if(e.pop0<.5&&pop>=.5){splashFx(e.x,e.y+.1,6);try{sfx.splash()}catch(er){}}
+  e.pop0=pop;e.pop=pop;e.noHit=pop<.55;e.safe=pop<.55;e.h=.95*Math.max(.2,pop)}
+function sealVis(e,dt){var v=e.vis,pop=e.slp>0||e.wake?1:(e.pop||0);v.g.rotation.y=0;v.inner.rotation.y=e.dir>0?.55:-.55;
+  v.inner.position.y=-1.05*(1-pop);v.inner.visible=pop>.02;
+  var u=((e.mt+(e.ph||0))%4.6+4.6)%4.6,wind=u>1.9&&u<2.35?(u-1.9)/.45:0;
+  v.fl.forEach(function(f,i){f.rotation.z=(i?-1:1)*(.3+Math.sin(tm*6+e.ph)*.12)-(i?0:wind*2.2)});
+  v.ball.visible=pop>.6&&!e.thr&&!(e.slp>0);}
+function auThrow(e){var x=e.x+e.dir*.35,y=e.y+.95,T0=1.05,g=14,tx=P.x+P.vx*.35,vx=clamp((tx-x)/T0,-7.5,7.5),vy=(P.y+.6-y+.5*g*T0*T0)/T0;
+  var m=mesh(new T.IcosahedronGeometry(.2,1),M(0xffffff,.75,0,{emissive:new T.Color(0x334455),emissiveIntensity:.3}),true,false);m.position.set(x,y,0);add(m);
+  AU.balls.push({m:m,x:x,y:y,vx:vx,vy:Math.min(vy,13),t:0});try{beep(420,.08,'triangle',.04,200)}catch(er){}}
+function auBallUpd(dt){for(var i=AU.balls.length-1;i>=0;i--){var b=AU.balls[i],py=b.y;b.t+=dt;b.vy-=14*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.m.position.set(b.x,b.y,0);b.m.rotation.x+=dt*8;b.m.rotation.z+=dt*6;
+  var hit=false;
+  if(state==='play'&&Math.abs(P.x-b.x)<P.w/2+.2&&b.y>P.y-.1&&b.y<P.y+P.h+.1){if(P.spinT>0){hit=true}else{hurt(b.x);hit=true}}
+  if(!hit)for(var k=0;k<solids.length;k++){var q=solids[k];if(q.dead||q.hid)continue;if(b.x>q.l&&b.x<q.r&&b.y<q.t&&py>=q.t-.05){hit=true;break}}
+  if(!hit&&LV.lake&&b.y<LV.lake[2]){splashFx(b.x,LV.lake[2],4);hit=true}
+  if(hit||b.t>4){emit(dustPool,b.x,b.y,8,2.4,.45,.4,1.2,-.3);emit(sparkPool,b.x,b.y,5,2,.3,.25,.2,2);if(b.m.parent)b.m.parent.remove(b.m);AU.balls.splice(i,1);try{noise(.09,.03,1800,'highpass')}catch(er){}}}}
+/* ---- atualização ---- */
+function auUpd(dt){if(!AU)return;AU.t+=dt;
+  AU.g.position.x=camera.position.x*.92;AU.g.position.y=camera.position.y*.5;
+  AU.mats.forEach(function(m){m.uniforms.uT.value+=dt});
+  if(AU.water)AU.water.emissiveIntensity=.3+Math.sin(AU.t*.6)*.08;
+  auBallUpd(dt);
+  /* gelo que trinca */
+  var on=P.grounded?P.onPlat:null;
+  AU.cracks.forEach(function(c){
+    if(on===c.so&&AU.py!==c.so&&!c.brk&&!c.so.dead){c.n++;
+      if(c.n===1){c.ov.material.opacity=.9;c.fr.material.opacity=.9;try{noise(.12,.06,2600,'highpass');beep(1400,.05,'square',.02)}catch(er){}emit(sparkPool,P.x,c.so.t+.05,6,2,.3,.25,.2,2);if(!AU.toldC){AU.toldC=1;toast('O gelo trincou! Na próxima pisada ele quebra')}}
+      else{c.brk=.32;try{noise(.2,.08,1500,'highpass')}catch(er){}}}
+    if(c.brk>0){c.brk-=dt;c.g.position.x=(c.c[0]+c.c[1])/2+Math.sin(AU.t*80)*.05;
+      if(c.brk<=0){c.brk=-1;c.so.dead=true;c.fall=.01;if(P.onPlat===c.so){P.grounded=false;P.onPlat=null}
+        for(var k=0;k<6;k++)emit(sparkPool,c.so.l+Math.random()*(c.so.r-c.so.l),c.so.t,3,2.5,.4,.3,.2,2);splashFx((c.so.l+c.so.r)/2,c.so.t-.4,10);try{sfx.splash()}catch(er){}}}
+    if(c.fall>0){c.fall+=dt;c.g.position.y=c.t0-c.fall*c.fall*3;c.g.rotation.z=c.fall*.4;if(c.fall>1.2)c.g.visible=false}});
+  AU.py=on;
+  /* caiu na água do lago */
+  if(LV.lake&&P.x>LV.lake[0]&&P.x<LV.lake[1]&&P.y<LV.lake[2]&&(AU.pky===undefined||AU.pky>=LV.lake[2])&&state==='play'){splashFx(P.x,LV.lake[2],16);try{sfx.splash()}catch(er){}}
+  AU.pky=P.y}
+function aurReset(){if(!AU)return;
+  AU.balls.forEach(function(b){if(b.m.parent)b.m.parent.remove(b.m)});AU.balls=[];AU.py=null;
+  AU.cracks.forEach(function(c){c.n=0;c.brk=0;c.fall=0;c.so.dead=false;c.g.visible=true;c.g.position.set((c.c[0]+c.c[1])/2,c.t0,0);c.g.rotation.z=0;c.ov.material.opacity=0;c.fr.material.opacity=0})}
+
 /*@@parte:40_estado.js*/
 /* ===================== estado do jogo ===================== */
 var P={look:0,flapA:0,cape:false,pm:0,flyT:0,glide:0,spinT:0,spinCd:0,jsq:0,jsnap:false,fire:false,fcd:0,shootT:0,runT:0,x:0,y:0,vx:0,vy:0,w:.6,h:1.35,face:1,grounded:false,onPlat:null,coyote:0,jbuf:0,inv:0,stun:0,prevY:0,phase:0,land:0,airVy:0,yaw:Math.PI/2,stepIdx:0,feather:0,dj:false,noCut:0,cheer:0,nextBlink:2,blink:0,cph:0,climb:null,warp:null,vineCd:0,shield:false,idleT:0,pipeT:0,skid:0,big:false,crouch:false,sz:.78,csq:1,growT:0,sc:[0,0,0,0],inW:false,hd:false,air:1,swimCd:0,tapCd:0,drownT:.4};
@@ -8091,11 +8280,12 @@ function resetState(){
   $('featherStat').hidden=true;$('bossBar').hidden=true;
   coins.forEach(function(c){c.got=false;c.pop=0});
   items.forEach(function(it){it.got=false;it.mesh.visible=true});
-  enemies.forEach(function(e){if(e.bub)bubPop(e,false);if(e.type==='moth'){e.ri=0;e.sit=0}if(e.type==='mole'){e.mt=0;e.pop=0;e.pop0=0;e.moved=false;e.h=.95}if(e.type==='owl'){e.st2='perch';e.x=e.hx;e.y=e.hy;e.cool=0;e.zz=0}if(e.type==='armad'){e.st2='bur';e.at=0;e.x=e.hx0}if(e.type==='sprout'){e.pr=e.ph;e.len=0}if(e.type==='worm'||e.type==='jfish'){e.mt=-(e.ph0||0);e.out=0;e.zz=0;e.dir=1;e.x=e.x0}if(e.type==='bee'){e.ch=0;e.cy=e.by;e.px=(e.x0+e.x1)/2;e.x=e.px}if(e.type==='wrob'){e.off=0;e.safe=false}if(e.type==='tguard'){e.wings=true;e.vy=0;e.st='patrol';e.shellT=0}if(e.t0&&e.type!==e.t0){e.type=e.t0;e.nw=false;if(e.vis.wings)e.vis.wings.forEach(function(w){w.p.visible=true})}e.alive=true;e.shat=false;e.fling=null;e.deadT=0;e.ignT=0;e.qT=0;e.wX=undefined;e.x=e.sx;e.base=e.by;e.y=e.base;e.fg=true;e.grounded=false;e.dir=1;e.vy=0;e.vx=0;e.vis.g.visible=true;e.vis.g.rotation.z=0;if(e.vis.inner)e.vis.inner.scale.set(1,1,1);e.st='patrol';e.tmr=0;e.infl=0;e.alertT=0;e.loseT=0;e.cur=e.speed;if(e.alertS)e.alertS.visible=false;e.bones=false;e.rise=0;e.appT=0;e.noHit=false;if(e.trig!==undefined){e.dorm=true;e.noHit=true;e.vis.g.visible=false;e.fireT=1.2;e.charging=false}if(e.type==='skel'&&e.vis.body){e.vis.body.visible=true;e.vis.pile.visible=false;e.vis.body.scale.set(1,1,1)}if(e.type==='witch'){e.vis.g.scale.setScalar(1)}});
+  enemies.forEach(function(e){if(e.bub)bubPop(e,false);if(e.type==='moth'){e.ri=0;e.sit=0}if(e.type==='peng'||e.type==='seal'){e.mt=0;e.pop=0;e.slide=0;e.thr=0}if(e.type==='mole'){e.mt=0;e.pop=0;e.pop0=0;e.moved=false;e.h=.95}if(e.type==='owl'){e.st2='perch';e.x=e.hx;e.y=e.hy;e.cool=0;e.zz=0}if(e.type==='armad'){e.st2='bur';e.at=0;e.x=e.hx0}if(e.type==='sprout'){e.pr=e.ph;e.len=0}if(e.type==='worm'||e.type==='jfish'){e.mt=-(e.ph0||0);e.out=0;e.zz=0;e.dir=1;e.x=e.x0}if(e.type==='bee'){e.ch=0;e.cy=e.by;e.px=(e.x0+e.x1)/2;e.x=e.px}if(e.type==='wrob'){e.off=0;e.safe=false}if(e.type==='tguard'){e.wings=true;e.vy=0;e.st='patrol';e.shellT=0}if(e.t0&&e.type!==e.t0){e.type=e.t0;e.nw=false;if(e.vis.wings)e.vis.wings.forEach(function(w){w.p.visible=true})}e.alive=true;e.shat=false;e.fling=null;e.deadT=0;e.ignT=0;e.qT=0;e.wX=undefined;e.x=e.sx;e.base=e.by;e.y=e.base;e.fg=true;e.grounded=false;e.dir=1;e.vy=0;e.vx=0;e.vis.g.visible=true;e.vis.g.rotation.z=0;if(e.vis.inner)e.vis.inner.scale.set(1,1,1);e.st='patrol';e.tmr=0;e.infl=0;e.alertT=0;e.loseT=0;e.cur=e.speed;if(e.alertS)e.alertS.visible=false;e.bones=false;e.rise=0;e.appT=0;e.noHit=false;if(e.trig!==undefined){e.dorm=true;e.noHit=true;e.vis.g.visible=false;e.fireT=1.2;e.charging=false}if(e.type==='skel'&&e.vis.body){e.vis.body.visible=true;e.vis.pile.visible=false;e.vis.body.scale.set(1,1,1)}if(e.type==='witch'){e.vis.g.scale.setScalar(1)}});
   checkpoints.forEach(function(c){c.lit=false;c.mat.emissiveIntensity=0});
   crumbles.forEach(function(c){c.state=0;c.dead=false;c.mesh.position.set(c.cx,c.baseY,0);c.mesh.scale.set(1,1,1)});
   if(typeof fallsReset==='function'&&curTheme.falls)fallsReset();
   if(LV&&LV.maze&&typeof mzReset==='function')mzReset();
+  if(curTheme.aurora&&typeof aurReset==='function')aurReset();
   resetBoss();resetDrops();P.swimToast=false;$('airStat').hidden=true;airBubs.forEach(function(b){b.on=true;b.cd=0;b.mesh.visible=true});
   respawn={x:LV.start.x,y:LV.start.y};placeEnemies(respawn.x);
   setHearts();$('coinN').textContent=bank;$('gemN').textContent='0';$('timeN').textContent='0:00';
@@ -9711,6 +9901,8 @@ function updEnemy(e,dt){
   if(t==='turtle'||t==='tchase'||t==='tshell'||t==='tguard'){turtleAI(e,dt);return}
   if(t==='moth'){mothAI(e,dt);return}
   if(t==='mole'){moleAI(e,dt);return}
+  if(t==='peng'){pengAI(e,dt);return}
+  if(t==='seal'){sealAI(e,dt);return}
   if(t==='worm'||t==='jfish'){wormAI(e,dt);return}
   if(t==='armad'){armadAI(e,dt);return}
   if(t==='owl'){owlAI(e,dt);return}
@@ -10451,6 +10643,7 @@ function step(dt){
   else if(LV&&LV.minePre)updMinePre(dt);
   else if(LV&&LV.maze)mzUpd(dt);
   else if(curTheme.falls)updFalls(dt);
+  else if(curTheme.aurora)auUpd(dt);
   if(P.onPlat&&P.onPlat.mover)P.x+=P.onPlat.x-P.onPlat.px;
   var ax=keys.jx!==0?keys.jx:((keys.right?1:0)-(keys.left?1:0));
   if(P.stun>0){P.stun-=dt;ax=0}
@@ -10477,6 +10670,7 @@ function step(dt){
   if(P.qs)tgt*=.55;
   if(P.wpush)tgt+=P.wpush*(P.grounded?.55:1);
   var slip=P.grounded&&P.onPlat&&P.onPlat.slip;
+  if(slip&&LV.skate&&ax!==0&&!P.crouch)tgt*=1.3;/* patinação: no gelo do lago o Kuro desliza mais rápido */
   var turning=ax!==0&&P.vx*ax<-.5;
   var acc=ax===0?(P.grounded?(slip?7:70):7):(P.grounded?(slip?16:(turning?140:(Math.abs(P.vx)>WALK+.2&&!turning?30:95))):(turning?50:38));
   if(P.inW)acc=P.grounded?45:16;
@@ -10870,6 +11064,8 @@ function visEnemy(e,dt){
     if(t==='turtle'||t==='tchase'||t==='tshell'||t==='tguard'){turtleVis(e,dt)}
     else if(t==='moth'){mothVis(e,dt)}
     else if(t==='mole'){moleVis(e,dt)}
+    else if(t==='peng'){pengVis(e,dt)}
+    else if(t==='seal'){sealVis(e,dt)}
     else if(t==='worm'){wormVis(e,dt)}
     else if(t==='jfish'){jfishVis(e,dt)}
     else if(t==='armad'){armadVis(e,dt)}
@@ -11486,7 +11682,7 @@ var MP2=[
  {n:'w15',    x:7,  z:1.5,r:7.2,y:.4,  top:'#8a6a4a',side:'#4a3a2a'},
  {n:'w16',    x:-6, z:4,  r:7.4,y:.6,  top:'#b8a070',side:'#6a5a40'},
  {n:'w17',    x:-16,z:-5, r:7.4,y:.8,  top:'#b8603a',side:'#6a3a28'},
- {n:'w18',    x:-4, z:-9, r:7.2,y:.9,  top:'#e8d8a8',side:'#8a7a5a'},
+ {n:'w18',    x:-4, z:-9, r:7.2,y:.9,  top:'#e8f2fa',side:'#6a7e98'},/* Lago da Aurora: neve e gelo */
  {n:'w19',    x:10, z:-10,r:7.4,y:1.1, top:'#5a6a8a',side:'#3a4258'},
  {n:'w20',    x:15, z:-22,r:7.4,y:1.3, top:'#e89a5a',side:'#9a5a30'},
  {n:'w21',    x:2,  z:-24,r:7.4,y:1.5, top:'#2e5a3a',side:'#1e3424'},
