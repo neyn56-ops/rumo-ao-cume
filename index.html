@@ -7115,9 +7115,10 @@ function fitHearts(){
   LV.blocks=(LV.blocks||[]).slice();
   var targets=[L*.35,L*.85],used=[];
   function support(hx,hy){
+    if(vines.some(function(v){return Math.abs(v.x-hx)<1.4}))return null;/* longe de escada/cipó (o Kuro subindo bateria a cabeça) */
     /* chão firme e plano embaixo de todo o bloco, sem degrau encostado */
     var cand=[];
-    for(var k=0;k<solids.length;k++){var so=solids[k];if(so.oneway||so.wall||so.dead||so.mover||so.crumble)continue;
+    for(var k=0;k<solids.length;k++){var so=solids[k];if(so.oneway||so.wall||so.dead||so.mover||so.crumble||so.lift||so.crk)continue;/* nem cesto-elevador nem gelo que trinca */
       if(so.l<hx+.5&&so.r>hx-.5&&so.t<=hy+.5)cand.push(so)}
     var bestT=null;
     cand.forEach(function(so){if(so.l<=hx-.5+.05&&so.r>=hx+.5-.05&&(bestT===null||so.t>bestT))bestT=so.t});
@@ -8156,7 +8157,7 @@ function auroraBuild(th){
     var ov=new T.Mesh(new T.PlaneGeometry(w-.1,2.5),new T.MeshBasicMaterial({map:ctex,transparent:true,opacity:0,depthWrite:false}));ov.rotation.x=-Math.PI/2;ov.position.y=.012;gg.add(ov);
     var fr=new T.Mesh(new T.PlaneGeometry(w-.1,.36),new T.MeshBasicMaterial({map:ctex,transparent:true,opacity:0,depthWrite:false}));fr.position.set(0,-.19,1.31);gg.add(fr);
     gg.position.set((c[0]+c[1])/2,c[2],0);add(gg);
-    var so={l:c[0],r:c[1],t:c[2],b:c[2]-.38,oneway:false,flt:true,slip:false};/* gelo novo e áspero: não escorrega */solids.push(so);
+    var so={l:c[0],r:c[1],t:c[2],b:c[2]-.38,oneway:false,flt:true,slip:false,crk:1};/* gelo novo e áspero: não escorrega */solids.push(so);
     AU.cracks.push({c:c,g:gg,ov:ov,fr:fr,so:so,n:0,brk:0,fall:0,t0:c[2]})});
   /* ---- buracos no gelo (onde a foca mora) ---- */
   enemies.forEach(function(e){if(e.type!=='seal')return;var h=new T.Group();
