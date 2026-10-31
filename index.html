@@ -3743,7 +3743,7 @@ function buildDecor(th){
   var rocks=[],k2;
   for(k2=0;k2<(th.dry?110:46);k2++){
     var rx=-10+r()*210,rz=-3.5-r()*3,tt2=topAt(rx);
-    if(k2%2===0&&tt2>-90)rocks.push({x:rx,y:tt2,z:rz,s:.25+r()*.5});
+    if(k2%2===0&&tt2>-90){if(!solids.some(function(q){return q.mz&&!q.dead&&rx>q.l-.6&&rx<q.r+.6&&q.t>=tt2-.01}))rocks.push({x:rx,y:tt2,z:rz,s:.25+r()*.5})}/* nada em cima de tijolo que quebra (ficava flutuando) */
     else{var mz=-8-r()*24;rocks.push({x:rx,y:mY(rx,mz),z:mz,s:.5+r()*1.2})}
   }
   var rm=inst(new T.IcosahedronGeometry(1,0),M(0xffffff,.9,0,{flatShading:true}),rocks.length,true);
