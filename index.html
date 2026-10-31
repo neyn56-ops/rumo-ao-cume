@@ -11371,7 +11371,8 @@ function pose(dt){
   rig.root.scale.set(sxz*zs*fw,sy*P.csq*zs,sxz*zs*fw);
   rig.torso.scale.set(tw,1,tw);rig.head.scale.setScalar(1.18);rig.head.scale.x=1.18/tw;rig.head.scale.z=1.18/tw;
   rig.root.position.set(P.x-(P.mount?P.face*.08:0),P.y-(P.sink||0)*.8+(P.mount?seatY():0),0);
-  if(typeof AU!=='undefined'&&AU&&AU.sl){rig.root.position.z=0}/* tobogã: o Kuro vai sentado dentro do tubo */
+  if(typeof AU!=='undefined'&&AU&&AU.sl){rig.root.position.z=0}
+  if(typeof AU!=='undefined'&&AU&&AU.lh){var F2=AU.lh.F,onG=P.y>F2.top-.4&&Math.abs(P.x-F2.x)<3.6;P.gz=(P.gz||0)+((onG?-1.3:0)-(P.gz||0))*(1-Math.exp(-dt*8));rig.root.position.z=P.gz}/* na galeria do farol o Kuro anda mais para dentro (não fica na beirada) *//* tobogã: o Kuro vai sentado dentro do tubo */
   if(P.mountT>0){var mk2=1-P.mountT/.8,ak=clamp((mk2-.1)/.72,0,1);rig.root.position.y+=Math.sin(ak*Math.PI)*1.7-(mk2<.1?(1-mk2/.1)*seatY()*0:0);rig.root.position.x-=P.face*(1-ak)*.8}/* salto até a sela */
   foxVisUpd(dt);
   if(typeof AU!=='undefined'&&AU&&(AU.sl||AU.sin)){rig.hipL.rotation.x=rig.hipR.rotation.x=-1.45;rig.kneeL.rotation.x=rig.kneeR.rotation.x=.25;rig.root.position.y-=.05}/* tobogã: sentado, pernas para a frente */
