@@ -8218,13 +8218,14 @@ function shatterEnemy(e){
 function updDebris(dt){
   for(var i=debris.length-1;i>=0;i--){
     var d=debris[i];d.t+=dt;
+    if(d.rest&&d.on&&(d.on.dead||d.on.hid))d.rest=false;/* o apoio quebrou (tijolo): o pedaço volta a cair */
     if(!d.rest){
       d.vy-=32*dt;var py=d.y;d.x+=d.vx*dt;d.y+=d.vy*dt;
       for(var k=0;k<solids.length;k++){
         var q=solids[k];if(q.dead||q.hid||q.wall)continue;
         if(d.x>q.l&&d.x<q.r&&d.vy<=0&&py>=q.t+.05&&d.y<q.t+.09){
           d.y=q.t+.09;
-          if(d.vy<-2.5){d.vy=-d.vy*.32;d.vx*=.6;d.rx*=.6;d.rz*=.6}else{d.vy=0;d.vx=0;d.rest=true;d.rz=0;d.rx=0}
+          if(d.vy<-2.5){d.vy=-d.vy*.32;d.vx*=.6;d.rx*=.6;d.rz*=.6}else{d.vy=0;d.vx=0;d.rest=true;d.on=q;d.rz=0;d.rx=0}
           break;
         }
       }
