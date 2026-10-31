@@ -148,6 +148,7 @@ html.touch #stickZone{display:block;pointer-events:auto}
 #mapUI{position:absolute;inset:0;z-index:40;pointer-events:none}
 #mapUI[hidden]{display:none}
 #mapBack{position:absolute;left:max(14px,env(safe-area-inset-left,0px));top:12px;pointer-events:auto}
+#mapCfg{position:absolute;right:max(14px,env(safe-area-inset-right,0px));top:12px;pointer-events:auto;font-size:18px;min-width:44px}
 #mapHint{position:absolute;left:50%;top:14px;transform:translateX(-50%);padding:6px 12px;border-radius:10px;background:var(--glass);border:1px solid var(--line);font-size:12px;color:#d6e4ea;white-space:nowrap;max-width:calc(100% - 200px);overflow:hidden;text-overflow:ellipsis}
 #mapPanel{position:absolute;right:max(16px,env(safe-area-inset-right,0px));bottom:16px;pointer-events:auto;min-width:210px;padding:14px 16px;border-radius:14px;background:rgba(12,17,21,.86);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 #mapPanel[hidden]{display:none}
@@ -183,13 +184,13 @@ html.touch #stickZone{display:block;pointer-events:auto}
 <div id="toast" role="status"></div>
 <div id="fpsBox" hidden>0 FPS</div>
 <div id="mapUI" hidden>
-  <button class="tbtn" id="mapBack" type="button">← Menu</button>
+  <button class="tbtn" id="mapBack" type="button">← Início</button><button class="tbtn" id="mapCfg" type="button" aria-label="Configurações">⚙</button>
   <div id="mapHint">Toque numa fase para o Kuro ir até ela · arraste para olhar as ilhas</div>
   <div id="mapPanel" hidden><small id="mpW"></small><b id="mpN"></b><div id="mpG"></div><button class="btn" id="mpPlay" type="button">Jogar</button></div>
 </div>
 <div id="cmp" hidden><img id="cmpImg" alt=""><div id="cmpBar"><i></i></div><span class="cmpL">Baixo</span><span class="cmpR" id="cmpR"></span></div>
 <button id="pauseBtn" type="button" aria-label="Pausar" hidden>❚❚</button>
-<div id="cfg" hidden><div id="cfgBox"><h2>Configurações</h2><div id="cfgRows"></div><div class="actions"><button class="btn" id="cfgClose" type="button">Voltar</button><button class="btn ghost" id="pauseRestart" type="button" hidden>Reiniciar fase</button><button class="btn ghost" id="pauseMenu" type="button" hidden>Menu</button></div></div></div>
+<div id="cfg" hidden><div id="cfgBox"><h2>Configurações</h2><div id="cfgRows"></div><div class="actions"><button class="btn" id="cfgClose" type="button">Voltar</button><button class="btn ghost" id="pauseRestart" type="button" hidden>Reiniciar fase</button><button class="btn ghost" id="pauseMenu" type="button" hidden>Mapa</button></div></div></div>
 <div id="fade"></div>
 <div id="card">
   <p id="cardKicker"></p>
@@ -11424,14 +11425,18 @@ soundOn=cfg.snd!==false;musicOn=cfg.mus!==false;
   window.__pause=pauseGame;window.__resume=resumeGame;
   $('pauseBtn').addEventListener('click',function(e){e.preventDefault();pauseGame()});
   $('pauseRestart').addEventListener('click',function(){if(bench)return;var i=levelIdx;leavePause();startLevel(i)});
-  $('pauseMenu').addEventListener('click',function(){if(bench)return;if(needReload){location.reload();return}leavePause();buildLevel(0);resetState();layout();updateCamera(0,true);showMenu()});
+  $('pauseMenu').addEventListener('click',function(){if(bench)return;if(needReload){location.reload();return}leavePause();buildLevel(0);resetState();layout();updateCamera(0,true);openMap()});/* pausa → mapa */
   function closeCfg(){
     if(paused){resumeGame();return}
     if(bench)return;
     $('cfg').hidden=true;cmp.hidden=true;cfgView=null;cmpBase=null;$('cmpImg').removeAttribute('src');
-    $('hud').style.visibility='';card.hidden=false;
+    $('hud').style.visibility='';
     buildLevel(0);resetState();layout();updateCamera(0,true);
+    if(cfgFromMap){cfgFromMap=false;openMap()}else card.hidden=false;
   }
+  var cfgFromMap=false;
+  $('mapCfg').addEventListener('click',function(){leaveMap();cfgFromMap=true;openCfg()});/* engrenagem do mapa: configurações e volta para o mapa */
+  window.__cfgFromMap=function(){cfgFromMap=true};
   $('cfgBtn').addEventListener('click',openCfg);window.__openCfg=openCfg;
   $('cfgClose').addEventListener('click',closeCfg);
   var _rf=window.__cfgRefresh;
@@ -12007,9 +12012,9 @@ applyGfx();
 buildLevel(0);
 resetState();
 updateCamera(0,true);
-showMenu();
+openMap();/* o jogo abre direto no mapa (o título fica no botão Início) */
 /* depois de recarregar por troca de qualidade: volta direto para as configurações com a prévia */
-try{if(sessionStorage.getItem('rac-reopen')==='cfg'){sessionStorage.removeItem('rac-reopen');setTimeout(function(){if(window.__openCfg)window.__openCfg()},60)}}catch(e){}
+try{if(sessionStorage.getItem('rac-reopen')==='cfg'){sessionStorage.removeItem('rac-reopen');setTimeout(function(){if(window.__openCfg){leaveMap();if(window.__cfgFromMap)window.__cfgFromMap();window.__openCfg()}},60)}}catch(e){}
 requestAnimationFrame(frame);
 })();
 </script>
