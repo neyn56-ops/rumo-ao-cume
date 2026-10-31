@@ -8640,7 +8640,15 @@ function wkShip(S){var A=wkMats(),g=new T.Group(),r=rnd(4141),D=4.4,Z0=-3.0;
   /* escada de corda (vai do convés ao cesto) */
   var lx=S.ladder,L=[];[-.28,.28].forEach(function(dx){var c=new T.CylinderGeometry(.03,.03,nt-S.deck,4);c.translate(lx+dx,(nt+S.deck)/2,-.35);L.push(c)});
   for(var y=S.deck+.4;y<nt;y+=.45){var d=new T.CylinderGeometry(.03,.03,.6,4);d.rotateZ(Math.PI/2);d.translate(lx,y,-.35);L.push(d)}
-  g.add(mesh(mgL(L),A.rope,false,false));vines.push({x:lx,y0:S.deck,top:nt,len:nt-S.deck,max:nt-S.deck,g:new T.Object3D(),stem:new T.Object3D(),leaves:[],ladder:1});
+  /* em cima: as cordas da escada sobem até a borda do cesto e são amarradas nela; embaixo: argolas presas no convés */
+  var rimX=mx-nr+.05;[-.28,.28].forEach(function(dx){var a1=new T.Vector3(lx+dx,nt-.02,-.35),b1=new T.Vector3(rimX,nt+.7,-.35+dx*.9),cc=new T.CylinderGeometry(.03,.03,a1.distanceTo(b1),4);
+    var m3=new T.Mesh(cc);m3.position.copy(a1).add(b1).multiplyScalar(.5);m3.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),b1.clone().sub(a1).normalize());m3.updateMatrix();cc.applyMatrix4(m3.matrix);L.push(cc);
+    var kn=new T.SphereGeometry(.07,6,5);kn.translate(rimX,nt+.7,-.35+dx*.9);L.push(kn)});
+  var tb=new T.CylinderGeometry(.045,.045,.75,5);tb.rotateZ(Math.PI/2);tb.translate((lx+rimX)/2,nt-.08,-.35);L.push(tb);/* tábua que liga o topo da escada ao cesto */
+  g.add(mesh(mgL(L),A.rope,false,false));
+  [-.28,.28].forEach(function(dx){var ri=mesh(new T.TorusGeometry(.09,.03,5,10),A.iron,false,false);ri.rotation.x=Math.PI/2;ri.position.set(lx+dx,S.deck+.03,-.35);g.add(ri)});
+  var bm2=mesh(new T.BoxGeometry(.8,.12,.12),A.dark,true,false);bm2.position.set((lx+rimX)/2,nt-.18,-.35);g.add(bm2);/* viga de madeira que segura a escada no cesto */
+  vines.push({x:lx,y0:S.deck,top:nt,len:nt-S.deck,max:nt-S.deck,g:new T.Object3D(),stem:new T.Object3D(),leaves:[],ladder:1});
   /* cordame: cordas do topo do mastro até as bordas */
   [[S.x0+2,S.fc+.9],[S.fx+4,S.deck+.9],[j-1,S.deck+.9],[j-6,S.deck+.9]].forEach(function(q){var a=new T.Vector3(mx,mt-.4,mz),b=new T.Vector3(q[0],q[1],Z0+.2),c=new T.CylinderGeometry(.025,.025,a.distanceTo(b),4),m2=mesh(c,A.rope,false,false);m2.position.copy(a).add(b).multiplyScalar(.5);m2.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),b.clone().sub(a).normalize());g.add(m2)});
   /* toco do segundo mastro, quebrado, com a vela rasgada pendurada */
