@@ -1938,8 +1938,8 @@ LEVELS.push({name:'O Naufrágio',theme:20,music:16,camMax:96,limit:600,es:1.05,n
   {x:46,y:6.6,t:'q',c:'feather'},{x:62,y:6.6,t:'q',c:'flower'},{x:84,y:2.4,t:'q',c:'fruit'}],
  coins:[['r',2,8,.9,4],['r',19,24,.9,3],['r',26.5,26.5,2.3,1],['r',28.5,28.5,3.7,1],['r',33,39,6.5,4],['r',42,48,5.1,4],['r',55,68,5.1,6],
   ['r',51,53,11.3,3],['r',71.2,71.2,3.7,1],['r',73.7,73.7,2.3,1],['r',77,92,.9,7]],
- gems:[[52,12.6],[72.4,1],[15,4.9]],
- checkpoints:[[60,4.2]],goal:{x:88,top:0},start:{x:0,y:0}});
+ gems:[[52,12.6],[71.4,5.2],[15,4.9]],
+ checkpoints:[[79,0]],goal:{x:90,top:0},start:{x:0,y:0}});
 blockStd(LEVELS[LEVELS.length-1]);
 STORY.worlds.push({kicker:'Mundo 19 · Terra Nova',title:'O Naufrágio',text:'Uma tempestade partiu um navio pirata ao meio: a proa encalhou na praia e a popa ficou boiando no mar. Suba pelos caixotes e pelo convés, escale o mastro até o cesto da gávea, fuja dos caranguejos e das gaivotas — e cuidado com os raios!'});
 
@@ -8608,7 +8608,7 @@ function wkShip(S){var A=wkMats(),g=new T.Group(),r=rnd(4141),D=4.4,Z0=-3.0;
   /* perfil do casco (de lado): proa à esquerda subindo, convés, ponta quebrada à direita */
   var p=new T.Shape(),j=S.br,pts=[[S.x0-.4,S.fc+.9],[S.x0+.6,S.fc],[S.fx,S.fc],[S.fx,S.deck],[j,S.deck],
     [j+.6,S.deck-.6],[j+.2,S.deck-1.1],[j+1.1,S.deck-1.5],[j+.7,S.deck-2.1],[j+1.6,S.deck-2.6],[j+1.2,S.deck-3.2],[j+2.1,S.deck-3.8],[j+2.1,-.8],
-    [S.x0+18,-1],[S.x0+8,-.6],[S.x0+3,.6],[S.x0+.6,2.6],[S.x0-.6,4.8]];
+    [S.x0+18,-1],[S.x0+6,-.9],[S.x0+1.2,-.8],[S.x0+.2,1.2],[S.x0-.4,3.6]];/* a proa encosta na areia (não fica suspensa) */
   p.moveTo(pts[0][0],pts[0][1]);for(var i=1;i<pts.length;i++)p.lineTo(pts[i][0],pts[i][1]);p.closePath();
   var hg=new T.ExtrudeGeometry(p,{depth:D,bevelEnabled:false,steps:1});hg.translate(0,0,Z0);
   var hull=mesh(hg,A.hull,true,true);g.add(hull);
