@@ -8706,12 +8706,21 @@ function wkSeaH(x,z,t){var A=WK.amp||.7,sh=LV.shore||1e9,f=x<sh?clamp((-z-9)/10,
   var h=(.30*Math.sin(x*.21+z*.05+t*1.5)+.20*Math.sin(x*.11-z*.17-t*1.0)+.12*Math.sin(x*.37+z*.29+t*2.1)+.07*Math.sin(x*.63-z*.41+t*2.8))*A*f;
   var B=WK.big;if(B&&B.on){var d=(x-B.c)/7;h+=B.h*Math.exp(-d*d)*clamp(1-(-z-2)/30,0,1)}return h}
 function wkSea(){var wn=auWaveTex(),xe=sceneEnd(),W=xe+260,cx=xe/2,lt=LITE;
-  var wm=new T.MeshStandardMaterial({vertexColors:true,roughness:.42,metalness:.05,normalMap:wn[0],normalScale:new T.Vector2(.22,.22),transparent:true,opacity:.95,side:T.DoubleSide});
+  var wm=new T.MeshStandardMaterial({color:0xffffff,roughness:.42,metalness:.05,normalMap:wn[0],normalScale:new T.Vector2(.22,.22),transparent:true,opacity:.95,side:T.DoubleSide});
+  /* as ondas são calculadas na placa de vídeo (antes era no processador, ponto por ponto, e o FPS caía) */
+  var U={uT:{value:0},uA:{value:.7},uSh:{value:LV.shore||1e9},uBc:{value:0},uBh:{value:0},
+    cD:{value:new T.Color(0x0c2c48).convertSRGBToLinear()},cM:{value:new T.Color(0x1a5a86).convertSRGBToLinear()},cTp:{value:new T.Color(0x3d8cae).convertSRGBToLinear()},cF:{value:new T.Color(0xd8e8ee).convertSRGBToLinear()}};WK.U=U;
+  wm.onBeforeCompile=function(sh){for(var k in U)sh.uniforms[k]=U[k];
+    var fn='uniform float uT,uA,uSh,uBc,uBh;varying float vH;varying float vS;\n'+
+      'float seaH(float x,float z){float f=x<uSh?clamp((-z-9.)/10.,.15,1.):clamp((x-uSh)/6.,.35,1.);'+
+      'float h=(.30*sin(x*.21+z*.05+uT*1.5)+.20*sin(x*.11-z*.17-uT*1.0)+.12*sin(x*.37+z*.29+uT*2.1)+.07*sin(x*.63-z*.41+uT*2.8))*uA*f;'+
+      'float d=(x-uBc)/7.;h+=uBh*exp(-d*d)*clamp(1.-(-z-2.)/30.,0.,1.);return h;}\n';
+    sh.vertexShader=fn+sh.vertexShader.replace('#include <beginnormal_vertex>','float sx=position.x,sz=position.z;float h0=seaH(sx,sz),hx=(seaH(sx+.3,sz)-h0)/.3,hz=(seaH(sx,sz+.3)-h0)/.3;vec3 objectNormal=normalize(vec3(-hx,1.,-hz));vH=h0/(uA*.7);vS=length(vec2(hx,hz));')
+      .replace('#include <begin_vertex>','vec3 transformed=vec3(position.x,h0,position.z);');
+    sh.fragmentShader='uniform vec3 cD,cM,cTp,cF;varying float vH;varying float vS;\n'+sh.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\nfloat u=clamp(vH*.5+.5,0.,1.);vec3 wc=u<.55?mix(cD,cM,u/.55):mix(cM,cTp,(u-.55)/.45);if(u>.82&&vS>.25)wc=mix(wc,cF,clamp((u-.82)*4.,0.,.75));diffuseColor.rgb*=wc;')};
   /* mar lá atrás (atrás da praia) e, depois da praia, também na frente (mais detalhado perto do caminho) */
-  var g=new T.PlaneGeometry(W,120,Math.round(W/(lt?3:2)),lt?24:36);g.rotateX(-Math.PI/2);g.translate(cx,0,-68);
+  var g=new T.PlaneGeometry(W,120,Math.round(W/(lt?3:2)),lt?20:30);g.rotateX(-Math.PI/2);g.translate(cx,0,-68);
   var sh=LV.shore||xe;if(sh<xe){var g2=new T.PlaneGeometry(xe+60-sh,18,Math.round((xe+60-sh)/(lt?1.5:1)),lt?8:12);g2.rotateX(-Math.PI/2);g2.translate(sh+(xe+60-sh)/2,0,1);g=mgL([g,g2])}
-  g.deleteAttribute('normal');g.setAttribute('normal',new T.BufferAttribute(new Float32Array(g.attributes.position.count*3),3));
-  g.setAttribute('color',new T.BufferAttribute(new Float32Array(g.attributes.position.count*3),3));
   var sea=new T.Mesh(g,wm);sea.position.y=-.35;sea.receiveShadow=true;sea.frustumCulled=false;add(sea);
   wn[0].repeat.set(1/9,1/9);WK.sea={m:sea,base:g.attributes.position.array.slice(),wave:wn};
   (function(){var uv=g.attributes.uv,pp=g.attributes.position;for(var i=0;i<uv.count;i++)uv.setXY(i,pp.getX(i),pp.getZ(i))})();/* textura pelas coordenadas do mundo */
@@ -8742,14 +8751,9 @@ function wkUpd(dt){if(!WK)return;WK.t+=dt;var t=WK.t;wkPart2Upd(dt);
   var I=.55+.45*Math.sin(t*.09)*Math.sin(t*.031+1);WK.I=I;
   /* ondas: o mar sobe e desce (vértices) e a textura anda */
   WK.amp=.55+I*.35;
-  if(WK.sea){var G=WK.sea.m.geometry,a=G.attributes.position,b=WK.sea.base,nn=G.attributes.normal.array,cc=G.attributes.color.array,c=new T.Color(),cxm=cam.x;
-    for(var i=0;i<a.count;i++){var x=b[i*3],z=b[i*3+2];if(z<-40&&Math.abs(x-cxm)>140)continue;var h=wkSeaH(x,z,t);a.array[i*3+1]=h;
-      var hx=(wkSeaH(x+.3,z,t)-h)/.3,hz=(wkSeaH(x,z+.3,t)-h)/.3,l=Math.sqrt(hx*hx+hz*hz+1);nn[i*3]=-hx/l;nn[i*3+1]=1/l;nn[i*3+2]=-hz/l;
-      var u=clamp(h/(WK.amp*.7)*.5+.5,0,1);if(u<.55)c.copy(WK.cDeep).lerp(WK.cMid,u/.55);else c.copy(WK.cMid).lerp(WK.cTop,(u-.55)/.45);
-      var st=Math.sqrt(hx*hx+hz*hz);if(u>.82&&st>.25)c.lerp(WK.cFoam,clamp((u-.82)*4,0,.75));/* espuma no alto das ondas mais inclinadas */
-      cc[i*3]=c.r;cc[i*3+1]=c.g;cc[i*3+2]=c.b}
-    a.needsUpdate=true;G.attributes.normal.needsUpdate=true;G.attributes.color.needsUpdate=true;
-    WK.sea.wave[0].offset.set(t*.04,t*.06)}
+  if(WK.U){var U=WK.U,B=WK.big;U.uT.value=t;U.uA.value=WK.amp;U.uBc.value=B&&B.on?B.c:-1e4;U.uBh.value=B&&B.on?B.h:0}
+  if(WK.lastTm===tm)return;WK.lastTm=tm;var i;dt=WK.vT===undefined?dt:Math.min(.1,t-WK.vT);WK.vT=t;/* tempo desde o último quadro desenhado *//* daqui para baixo é só visual: uma vez por quadro (a física roda 90 vezes por segundo) */
+  if(WK.sea)WK.sea.wave[0].offset.set(t*.04,t*.06);
   if(WK.foam){WK.foam.material.opacity=.3+Math.sin(t*1.1)*.15;WK.foam.position.z=-11+Math.sin(t*1.1)*.6}
   (WK.far||[]).forEach(function(f){f.o.position.y=-.45+wkSeaH(f.x,f.z,t);f.o.rotation.z=Math.sin(t+f.ph)*.15;f.o.rotation.x=Math.cos(t*.8+f.ph)*.1});
   if(WK.stern)WK.stern.rotation.z=.12+Math.sin(t*.7)*.04;
