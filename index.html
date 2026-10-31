@@ -8161,14 +8161,20 @@ function auroraBuild(th){A0=auMats();
   var mo=new T.Mesh(new T.CircleGeometry(9,32),new T.MeshBasicMaterial({color:0xffe0a0,fog:false}));mo.position.set(-70,24,-230);g.add(mo);/* o sol se pondo */
   var mh=new T.Sprite(new T.SpriteMaterial({map:softSprite(),color:0xffa050,transparent:true,depthWrite:false,fog:false,opacity:.85,blending:T.AdditiveBlending}));mh.scale.set(80,80,1);mh.position.set(-70,24,-231);g.add(mh);
   /* ---- o lago: água escura embaixo do gelo, com o brilho da aurora refletido ---- */
-  if(LV.lake){var L=LV.lake,wm=new T.MeshStandardMaterial({color:0x08182c,roughness:.12,metalness:.3,emissive:new T.Color(0x0a3a3a),emissiveIntensity:.35});
-    var wp=new T.Mesh(new T.PlaneGeometry(L[1]-L[0],40),wm);wp.rotation.x=-Math.PI/2;wp.position.set((L[0]+L[1])/2,L[2],-14);add(wp);AU.water=wm;
-    /* frente do lago (a água vista de lado no corte da tela) */
-    /* a superfície congelada do lago atrás do caminho (gelo escuro e liso, com o brilho da aurora) */
-    var itx=iceTopM.map?iceTopM.map.clone():null;if(itx){itx.wrapS=itx.wrapT=T.RepeatWrapping;itx.repeat.set((L[1]-L[0]+6)/3,50/3);itx.needsUpdate=true}
+  if(LV.lake){var L=LV.lake;
+    /* água com ondas (dono, 31/10): mapa de relevo de ondas feito no canvas (repete sem emenda), em duas camadas que andam em direções diferentes */
+    var wn=auWaveTex(),wm=new T.MeshStandardMaterial({color:0x5878a0,roughness:.3,metalness:.2,normalMap:wn[0],normalScale:new T.Vector2(.38,.38),emissive:new T.Color(0x0c2236),emissiveIntensity:.3});
+    var wm2=wm.clone();wm2.normalMap=wn[1];wm2.transparent=true;wm2.opacity=.35;wm2.depthWrite=false;
+    var W=L[1]-L[0]+60,cx=(L[0]+L[1])/2;
+    var wp=new T.Mesh(new T.PlaneGeometry(W,60),wm);wp.rotation.x=-Math.PI/2;wp.position.set(cx,-.3,-26);wp.receiveShadow=true;add(wp);
+    var wp2=new T.Mesh(new T.PlaneGeometry(W,60),wm2);wp2.rotation.x=-Math.PI/2;wp2.position.set(cx,-.28,-26);add(wp2);
+    [wn[0],wn[1]].forEach(function(t,k){t.repeat.set(W/(k?4.5:3.2),60/(k?4.5:3.2))});AU.water=wm;AU.wave=wn;
+    /* o lago congelado (patinação) só no trecho da parte 1; no resto a água fica aberta, com ondas */
+    var fz=LV.frozen||[24,200];
+    var itx=iceTopM.map?iceTopM.map.clone():null;if(itx){itx.wrapS=itx.wrapT=T.RepeatWrapping;itx.repeat.set((fz[1]-fz[0])/3,40/3);itx.needsUpdate=true}
     var im=new T.MeshStandardMaterial({color:0x5a8cb4,roughness:.12,metalness:.3,emissive:new T.Color(0x0e3a40),emissiveIntensity:.45,map:itx});
-    var ip=new T.Mesh(new T.PlaneGeometry(L[1]-L[0]+6,50),im);ip.rotation.x=-Math.PI/2;ip.position.set((L[0]+L[1])/2,-.04,-26.2);ip.receiveShadow=true;add(ip);AU.ice=im;
-    var wf=new T.Mesh(new T.PlaneGeometry(L[1]-L[0],8),new T.MeshStandardMaterial({color:0x061424,roughness:.3,emissive:new T.Color(0x05202a),emissiveIntensity:.4}));wf.position.set((L[0]+L[1])/2,L[2]-4,6);add(wf)}
+    var ip=new T.Mesh(new T.ShapeGeometry(auIceShape(fz[0],fz[1],40)),im);ip.rotation.x=-Math.PI/2;ip.position.set(0,-.04,-6.2);ip.receiveShadow=true;add(ip);AU.ice=im;
+    var wf=new T.Mesh(new T.PlaneGeometry(W,8),new T.MeshStandardMaterial({color:0x061424,roughness:.3,emissive:new T.Color(0x05202a),emissiveIntensity:.4}));wf.position.set(cx,-4.3,6);add(wf)}
   /* ---- pinheiros com neve: nas margens, na ilha e uma fileira do outro lado do lago ---- */
   var PT=[],xe=sceneEnd();function pine(x,y,z,s){PT.push([x,y,z,s])}
   for(var px=-14;px<xe+20;px+=1.6+r()*2.2){var inL=LV.lake&&px>LV.lake[0]-1&&px<LV.lake[1]+1;
@@ -8290,7 +8296,7 @@ function auUpd(dt){if(!AU)return;AU.t+=dt;auVilaUpd(dt);auIcUpd(dt);auBridgeUpd(
     m.t=m.top0-m.sk+bob;m.b=m.t-.45;m.mesh.position.y=m.t-.225;m.mesh.rotation.z=Math.sin(AU.t*1.1+i)*.02;if(on)P.y=m.t});
   AU.g.position.x=camera.position.x*.92;AU.g.position.y=camera.position.y*.5;
   AU.mats.forEach(function(m){m.uniforms.uT.value+=dt});
-  if(AU.water)AU.water.emissiveIntensity=.3+Math.sin(AU.t*.6)*.08;
+  if(AU.wave){AU.wave[0].offset.set(AU.t*.018,AU.t*.03);AU.wave[1].offset.set(-AU.t*.025,AU.t*.012)}/* as ondas andam */
   auBallUpd(dt);
   /* gelo que trinca */
   var on=P.grounded?P.onPlat:null;
@@ -8519,6 +8525,16 @@ function auLightBuild(){var F=LV.lighthouse;if(!F)return;var A=auMats(),g=new T.
 function auLightUpd(dt){var L=AU.lh;if(!L)return;
   if(!L.lit&&state==='play'&&P.grounded&&P.y>L.F.top-.3&&Math.abs(P.x-L.F.x)<3.5){/* em pé na galeria do farol */L.lit=true;L.t=0;toast('Você acendeu a Luz da Aurora!');try{beep(523,.2,'triangle',.05);beep(659,.2,'triangle',.05,0,.15);beep(784,.4,'triangle',.05,0,.3)}catch(er){}emit(sparkPool,L.F.x,L.F.top+1.5,30,5,1,.4,.2,3)}
   if(L.lit){L.t+=dt;var k=Math.min(1,L.t/.8);L.beam.material.opacity=.22*k;L.halo.material.opacity=.15+.75*k;L.halo.scale.setScalar(5+9*k);L.gl.material.emissiveIntensity=.4+2.6*k;L.piv.rotation.y+=dt*.9;if(L.t>2.2&&!L.won&&state==='play'){L.won=1;winLevel()}}}/* o feixe acende e gira um pouco; aí a fase termina */
+
+/* mapa de relevo das ondas (normal map), 2 variações, repetem sem emenda */
+function auWaveTex(){var out=[];[[3,5,7,11],[4,6,9,13]].forEach(function(fq,k){var N=256,c=document.createElement('canvas');c.width=c.height=N;var x=c.getContext('2d'),im=x.createImageData(N,N),r=rnd(77+k),W=[];
+  for(var i=0;i<9;i++){var a=r()*Math.PI*2,f=fq[i%4]+(i>3?fq[(i+1)%4]:0);W.push([Math.round(Math.cos(a)*f),Math.round(Math.sin(a)*f*.6)||1,r()*6.28,1/(1+i*.45)])}
+  function h(u,v){var s=0;for(var i=0;i<W.length;i++){var w=W[i];s+=Math.sin((u*w[0]+v*w[1])*2*Math.PI/N+w[2])*w[3]}return s}
+  for(var v=0;v<N;v++)for(var u=0;u<N;u++){var dx=h(u+1,v)-h(u-1,v),dy=h(u,v+1)-h(u,v-1),nx=-dx*3,ny=-dy*3,nz=1,l=Math.hypot(nx,ny,nz),o=(v*N+u)*4;
+    im.data[o]=(nx/l*.5+.5)*255;im.data[o+1]=(ny/l*.5+.5)*255;im.data[o+2]=(nz/l*.5+.5)*255;im.data[o+3]=255}
+  x.putImageData(im,0,0);var t=new T.CanvasTexture(c);t.wrapS=t.wrapT=T.RepeatWrapping;out.push(t)});return out}
+/* placa do lago congelado com a borda irregular (gelo quebrado), de x0 a x1 */
+function auIceShape(x0,x1,d){var s=new T.Shape(),r=rnd(55);s.moveTo(x0,0);s.lineTo(x1,0);for(var z=0;z<=d;z+=2)s.lineTo(x1+(r()-.5)*3+Math.sin(z*.4)*2,z);for(var x=x1;x>=x0;x-=3)s.lineTo(x,d+(r()-.5)*2);for(z=d;z>=0;z-=2)s.lineTo(x0+(r()-.5)*3,z);return s}
 
 /*@@parte:40_estado.js*/
 /* ===================== estado do jogo ===================== */
