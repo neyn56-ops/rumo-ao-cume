@@ -8306,7 +8306,7 @@ function auUpd(dt){if(!AU)return;AU.t+=dt;auVilaUpd(dt);auIcUpd(dt);auBridgeUpd(
   /* caiu na água do lago */
   if(LV.lake&&P.x>LV.lake[0]&&P.x<LV.lake[1]&&P.y<LV.lake[2]&&(AU.pky===undefined||AU.pky>=LV.lake[2])&&state==='play'){splashFx(P.x,LV.lake[2],16);try{sfx.splash()}catch(er){}}
   AU.pky=P.y}
-function aurReset(){if(!AU)return;AU.sin=null;(AU.ics||[]).forEach(function(c){c.st=0;c.y=c.y0;c.g.visible=true;c.g.position.set(c.x,c.y0,0);c.g.scale.set(1,1,1)});
+function aurReset(){if(!AU)return;AU.sin=null;AU.climb=0;(AU.ics||[]).forEach(function(c){c.st=0;c.y=c.y0;c.g.visible=true;c.g.position.set(c.x,c.y0,0);c.g.scale.set(1,1,1)});
   AU.balls.forEach(function(b){if(b.m.parent)b.m.parent.remove(b.m)});AU.balls=[];AU.py=null;
   AU.cracks.forEach(function(c){c.n=0;c.brk=0;c.fall=0;c.so.dead=false;c.g.visible=true;c.g.position.set((c.c[0]+c.c[1])/2,c.t0,0);c.g.rotation.z=0;c.ov.material.opacity=0;c.fr.material.opacity=0})}
 /* ===================== estilo "bloco de gelo com neve escorrendo" (Mundo 18 todo) ===================== */
@@ -8414,7 +8414,18 @@ function auVilaUpd(dt){if(!LV.vila)return;var V=LV.vila;
   AU.floes.forEach(function(f,i){f.position.y+=Math.sin(tm*1.4+i)*.0008});
   /* tobogã */
   if(V.slide){var S=V.slide;
-    if(!AU.sl&&state==='play'&&P.x>S.x-.4&&P.x<S.x+1.5&&Math.abs(P.y-S.y)<1.6){AU.sl={t:0};P.vx=0;P.vy=0;try{beep(600,.5,'sine',.04,-300)}catch(er){}toast('Tobogã de gelo!')}
+    /* voltar subindo o tobogã: dá, mas o gelo escorrega — a calha puxa o Kuro de volta para baixo */
+    var cu=(P.x-S.x)/28;AU.chOn=false;
+    if(!AU.sl&&state==='play'&&cu>.03&&cu<1.02){var cc=clamp(cu,0,1),ys=S.y+.5-cc*cc*(3-2*cc)*(S.y-.2),sl2=(S.y-.2)*6*cc*(1-cc)/28;
+      if(!AU.chSo){AU.chSo={l:0,r:0,t:0,b:0,oneway:false,flt:true,slip:true,chute:true};solids.push(AU.chSo)}
+      if(P.y>ys-.75&&P.y<ys+2.5){AU.chSo.l=P.x-.45;AU.chSo.r=P.x+.45;AU.chSo.t=ys;AU.chSo.b=ys-.3;AU.chSo.dead=false;
+        if(P.grounded&&P.y<ys&&ys-P.y<.75){P.y=ys;P.onPlat=AU.chSo}
+        if(P.grounded&&P.onPlat===AU.chSo){AU.chOn=true;P.y=ys;P.vx+=15*sl2*dt;/* a ladeira empurra para baixo (direita) */
+          if(P.vx<-.5&&sl2>.15){AU.slipT=(AU.slipT||0)+dt;if(AU.slipT>1.1+Math.random()*.8){AU.slipT=0;P.stun=.3;P.vx=1.6+sl2*1.5;emit(sparkPool,P.x,P.y+.1,6,2,.3,.25,.2,2);try{beep(300,.12,'sine',.03,-120)}catch(er){}if(!AU.toldS){AU.toldS=1;toast('A calha é escorregadia! Continue subindo')}}}/* escorregões no meio da subida */
+          if(P.vx>.5&&((tm*20)|0)%3===0)emit(dustPool,P.x,P.y+.05,1,1.2,.3,.35,1.2,-.2)}}else AU.chSo.dead=true}
+    else if(AU.chSo)AU.chSo.dead=true;
+    if(AU.chOn&&P.vx<0)AU.climb=1;if(P.x>S.x+28)AU.climb=0;
+    if(!AU.sl&&state==='play'&&P.x>S.x-.4&&P.x<S.x+1.5&&Math.abs(P.y-S.y)<1.6&&!(AU.climb&&P.vx<=.5)){AU.climb=0;AU.sl={t:0};P.vx=0;P.vy=0;try{beep(600,.5,'sine',.04,-300)}catch(er){}toast('Tobogã de gelo!')}
     if(AU.sl){var sl=AU.sl;sl.t+=dt;var u=Math.min(1,sl.t/1.9),p=AU.slideC.getPointAt(u*u*.3+u*.7);P.x=p.x;P.y=p.y-.45;P.vx=6;P.vy=0;P.grounded=false;P.crouch=true;P.face=1;sl.z=p.z;/* sentado no fundo do tubo */
       if(((tm*30)|0)%2===0)emit(sparkPool,p.x,p.y,1,1.5,.3,.25,.2,2);
       if(u>=1){AU.sl=null;P.crouch=false;P.vx=7;P.y=Math.max(P.y,floorBelow(P.x,P.y+1));emit(dustPool,P.x,P.y+.1,10,2.4,.5,.5,1.2,-.3);if(!AU.toldL){AU.toldL=1;toast('Kuro chegou ao Lago da Aurora!')}}}}}/* sem corte: a calha termina na margem do lago (mesma fase) */
