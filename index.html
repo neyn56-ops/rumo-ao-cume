@@ -3607,7 +3607,7 @@ function buildBackdrop(th,m3){
   if(th.name==='forest'){buildBackdropForest(th);return}
   if(th.name==='volcano'||th.name==='summit'||th.name==='sky'||th.name==='tower'||th.name==='mine'||th.name==='maze')return;/* o cume tem o mar de nuvens; o vulcão tem o rio de lava no lugar do chão de fundo */
   var depth=-5-th.mz;
-  var xl=(th.name==='castle'&&LV.outX!==undefined)?LV.outX:(th.name==='trail'?4:-40),xe=sceneEnd(),bw=xe-xl,bc=(xe+xl)/2;
+  var xl=(th.name==='castle'&&LV.outX!==undefined)?LV.outX:(th.name==='trail'?4:(th.aurora&&LV.lake?Math.min(-40,LV.lake[0]-60):-40)),/* Mundo 18: o terreno vai até antes da vila */xe=sceneEnd(),bw=xe-xl,bc=(xe+xl)/2;
   var g=new T.PlaneGeometry(bw,depth,Math.round(bw/2),Math.max(4,Math.round(depth)));
   g.rotateX(-Math.PI/2);g.translate(bc,0,(-5+th.mz)/2);
   var p=g.attributes.position,uv=g.attributes.uv;
@@ -8165,10 +8165,10 @@ function auroraBuild(th){A0=auMats();
     /* água com ondas (dono, 31/10): mapa de relevo de ondas feito no canvas (repete sem emenda), em duas camadas que andam em direções diferentes */
     var wn=auWaveTex(),wm=new T.MeshStandardMaterial({color:0x5878a0,roughness:.3,metalness:.2,normalMap:wn[0],normalScale:new T.Vector2(.38,.38),emissive:new T.Color(0x0c2236),emissiveIntensity:.3});
     wm.side=T.DoubleSide;var wm2=wm.clone();wm2.normalMap=wn[1];wm2.transparent=true;wm2.opacity=.35;wm2.depthWrite=false;
-    var W=L[1]-L[0]+60,cx=(L[0]+L[1])/2;
-    var wp=new T.Mesh(new T.PlaneGeometry(W,60),wm);wp.rotation.x=-Math.PI/2;wp.position.set(cx,-.3,-26);wp.receiveShadow=true;add(wp);
-    var wp2=new T.Mesh(new T.PlaneGeometry(W,60),wm2);wp2.rotation.x=-Math.PI/2;wp2.position.set(cx,-.28,-26);add(wp2);
-    [wn[0],wn[1]].forEach(function(t,k){t.repeat.set(W/(k?4.5:3.2),60/(k?4.5:3.2))});AU.water=wm;AU.wave=wn;
+    var W=L[1]-L[0]+200,cx=(L[0]+L[1])/2;
+    var wp=new T.Mesh(new T.PlaneGeometry(W,90),wm);wp.rotation.x=-Math.PI/2;wp.position.set(cx,-.3,-41);/* vai até a margem lá do fundo */wp.receiveShadow=true;add(wp);
+    var wp2=new T.Mesh(new T.PlaneGeometry(W,90),wm2);wp2.rotation.x=-Math.PI/2;wp2.position.set(cx,-.28,-41);add(wp2);
+    [wn[0],wn[1]].forEach(function(t,k){t.repeat.set(W/(k?4.5:3.2),90/(k?4.5:3.2))});AU.water=wm;AU.wave=wn;
     /* o lago congelado (patinação) só no trecho da parte 1; no resto a água fica aberta, com ondas */
     var fz=LV.frozen||[24,200];
     var itx=iceTopM.map?iceTopM.map.clone():null;if(itx){itx.wrapS=itx.wrapT=T.RepeatWrapping;itx.repeat.set((fz[1]-fz[0])/3,40/3);itx.needsUpdate=true}
@@ -8442,7 +8442,7 @@ function auVilaUpd(dt){if(!LV.vila)return;var V=LV.vila;
 function auEnter(){P.x=4;P.y=0;P.vx=0;P.vy=0;P.grounded=false;P.onPlat=null;P.face=1;P.warp=null;AU.sl=null;updateCamera(0,true)}
 /* gelo e pilares de gelo lá no fundo (com neve em cima e pinheirinhos), e uma cachoeira congelada */
 function auBack(){var A=auMats(),r=rnd(909),xe=sceneEnd(),G=[],S=[],PN=[];
-  for(var x=-20;x<xe+30;x+=3+r()*5){var z=-14-r()*22,w=2.5+r()*4,h=2+r()*(LV.vila&&x<LV.vila.end?16:9),y0=mY(x,z)-.5;
+  for(var x=-20;x<xe+30;x+=3+r()*5){var z=-14-r()*22,w=2.5+r()*4,h=2+r()*(LV.vila&&x<LV.vila.end?16:9),y0=Math.min(mY(x,z),-.3)-.6;/* pilar nasce dentro d'água (antes podia ficar acima dela, flutuando) */
     var g=new T.BoxGeometry(w,h,w*.8);g.rotateY((r()-.5)*.4);g.translate(x,y0+h/2,z);G.push(g);
     var c=new T.BoxGeometry(w+.25,.45,w*.8+.25);c.rotateY((r()-.5)*.2);c.translate(x,y0+h+.1,z);S.push(c);
     for(var k=0;k<4;k++){var d=new T.SphereGeometry(.2+r()*.15,6,5);d.scale(1,1.6,.8);d.translate(x-w/2+r()*w,y0+h-.25,z+w*.4);S.push(d)}
