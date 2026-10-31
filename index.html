@@ -8344,9 +8344,9 @@ function auVila(){if(!LV.vila)return;var A=auMats(),r=rnd(2626),V=LV.vila;AU.lif
     var lb=mesh(new T.SphereGeometry(.14,10,8),A.win,false,false);lb.position.set(q[0],q[1]+1.45,-.75);add(lb);
     var gl=new T.Sprite(new T.SpriteMaterial({map:softSprite(),color:0xffa040,transparent:true,depthWrite:false,blending:T.AdditiveBlending,opacity:.6}));gl.scale.set(2,2,1);gl.position.set(q[0],q[1]+1.45,-.7);add(gl)});
   /* o tobogã de gelo: sai da última torre e desce até o lago */
-  if(V.slide){var S=V.slide,pts=[];for(var k=0;k<=20;k++){var u=k/20;pts.push(new T.Vector3(S.x+u*26,S.y+.4-u*u*(S.y+1.6)*1.02+Math.sin(u*Math.PI)*1.2,-u*10))}
+  if(V.slide){var S=V.slide,pts=[];for(var k=0;k<=20;k++){var u=k/20;var su=u*u*(3-2*u);pts.push(new T.Vector3(S.x+u*28,S.y+.75-su*(S.y-.2),0))}/* desce para a direita, na frente da cena (o Kuro aparece dentro) */
     var cv=new T.CatmullRomCurve3(pts);AU.slideC=cv;
-    var tg=new T.TubeGeometry(cv,80,.75,12,false);var tm2=mesh(tg,new T.MeshStandardMaterial({color:0xcfefff,roughness:.1,metalness:.15,emissive:new T.Color(0x2a6a9a),emissiveIntensity:.4,transparent:true,opacity:.75,side:T.DoubleSide}),false,false);add(tm2);
+    var tg=new T.TubeGeometry(cv,80,.75,12,false);var tm2=mesh(tg,new T.MeshStandardMaterial({color:0xcfefff,roughness:.1,metalness:.15,emissive:new T.Color(0x2a6a9a),emissiveIntensity:.4,transparent:true,opacity:.42,depthWrite:false,side:T.DoubleSide}),false,false);add(tm2);
     var ar=mesh(new T.TorusGeometry(1.1,.18,8,20,Math.PI),A.snow,false,false);ar.position.set(S.x,S.y,0);add(ar);
   }}
 function auVilaUpd(dt){if(!LV.vila)return;var V=LV.vila;
@@ -8358,11 +8358,11 @@ function auVilaUpd(dt){if(!LV.vila)return;var V=LV.vila;
   AU.floes.forEach(function(f,i){f.position.y+=Math.sin(tm*1.4+i)*.0008});
   /* tobogã */
   if(V.slide){var S=V.slide;
-    if(!AU.sl&&state==='play'&&P.x>S.x-.4&&Math.abs(P.y-S.y)<1.6){AU.sl={t:0};P.vx=0;P.vy=0;try{beep(600,.5,'sine',.04,-300)}catch(er){}toast('Tobogã de gelo!')}
-    if(AU.sl){var sl=AU.sl;sl.t+=dt;var u=Math.min(1,sl.t/1.9),p=AU.slideC.getPointAt(u*u*.3+u*.7);P.x=p.x;P.y=p.y-.2;P.vx=6;P.vy=0;P.grounded=false;P.crouch=true;P.face=1;rig.root.position.z=p.z;
+    if(!AU.sl&&state==='play'&&P.x>S.x-.4&&Math.abs(P.y-S.y)<1.6){AU.sl={t:0};P.vx=0;P.vy=0;try{beep(600,.5,'sine',.04,-300)}catch(er){}toast('Tobogã de gelo!');AU.cm0=LV.camMax;LV.camMax=S.x+30}
+    if(AU.sl){var sl=AU.sl;sl.t+=dt;var u=Math.min(1,sl.t/1.9),p=AU.slideC.getPointAt(u*u*.3+u*.7);P.x=p.x;P.y=p.y-.6;P.vx=6;P.vy=0;P.grounded=false;P.crouch=true;P.face=1;sl.z=p.z;/* sentado no fundo do tubo */
       if(((tm*30)|0)%2===0)emit(sparkPool,p.x,p.y,1,1.5,.3,.25,.2,2);
       if(u>.85)$('fade').style.opacity=(u-.85)/.15;
-      if(u>=1){AU.sl=null;P.crouch=false;rig.root.position.z=0;auEnter()}}}}
+      if(u>=1){AU.sl=null;P.crouch=false;LV.camMax=AU.cm0;auEnter()}}}}
 /* sai da vila e chega ao lago (como o cano do Mundo 17) */
 function auEnter(){
   var keep={coins:coinsGot,gems:gemsGot,t:timeT,hearts:hearts,bank:bank,big:!!P.big,fire:!!P.fire,cape:!!P.cape,shield:!!P.shield,tot:coins.length+extraCoins};
@@ -11213,6 +11213,7 @@ function pose(dt){
   rig.root.scale.set(sxz*zs*fw,sy*P.csq*zs,sxz*zs*fw);
   rig.torso.scale.set(tw,1,tw);rig.head.scale.setScalar(1.18);rig.head.scale.x=1.18/tw;rig.head.scale.z=1.18/tw;
   rig.root.position.set(P.x-(P.mount?P.face*.08:0),P.y-(P.sink||0)*.8+(P.mount?seatY():0),0);
+  if(typeof AU!=='undefined'&&AU&&AU.sl){rig.root.position.z=0}/* tobogã: o Kuro vai sentado dentro do tubo */
   if(P.mountT>0){var mk2=1-P.mountT/.8,ak=clamp((mk2-.1)/.72,0,1);rig.root.position.y+=Math.sin(ak*Math.PI)*1.7-(mk2<.1?(1-mk2/.1)*seatY()*0:0);rig.root.position.x-=P.face*(1-ak)*.8}/* salto até a sela */
   foxVisUpd(dt);
   rig.root.visible=!(P.inv>0&&Math.floor(P.inv*14)%2===0&&state==='play');
