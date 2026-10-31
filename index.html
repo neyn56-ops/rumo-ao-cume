@@ -12490,7 +12490,7 @@ function frame(now){
   if(state==='play'){
     if(hitStop>0){hitStop-=dt}/* congela a ação por um instante quando o golpe acerta */
     else{acc+=dt;
-    while(acc>=STEP){step(STEP);acc-=STEP;if(state!=='play'){acc=0;break}}}
+    while(acc>=STEP){P.ix=P.x;P.iy=P.y;step(STEP);acc-=STEP;if(state!=='play'){acc=0;break}}}
     var tlc=Math.max(0,Math.ceil(timeLeft));$('timeN').textContent=fmt(tlc);$('timeN').parentNode.classList.toggle('low',tlc<=60);
     if(tlc<=60&&!lowWarn){lowWarn=true;toast('Pouco tempo! Menos de 1 minuto');sfx.alert()}
     if(P.feather>0)$('featherN').textContent=Math.ceil(P.feather);
@@ -12500,7 +12500,12 @@ function frame(now){
     if(P.cape){var pv=P.flyT>0?P.flyT/FLYMAX:P.pm;$('pmFill').style.width=(pv*100)+'%';$('pmBox').classList.toggle('full',pv>=.98||P.flyT>0)}
     perfTick(raw);/* resolução dinâmica e Automático */
   }else moveMovers(dt);
+  /* interpolação (dono, 31/10): a física roda a 90 por segundo e a tela a 60/120; desenha o Kuro (e a câmera que o segue)
+     no ponto certo entre os dois últimos cálculos, senão ele anda aos trancos (1 passo, 2 passos...) e parece borrado ao correr */
+  var ia=state==='play'&&!hitStop&&P.ix!==undefined&&Math.abs(P.x-P.ix)<1.5&&Math.abs(P.y-P.iy)<1.5&&!P.warp,rx=P.x,ry=P.y,qx=0,qy=0;
+  if(ia){var al=clamp(acc/STEP,0,1);qx=P.ix+(rx-P.ix)*al;qy=P.iy+(ry-P.iy)*al;P.x=qx;P.y=qy}
   animate(dt);
+  if(ia){P.x=rx+(P.x-qx);P.y=ry+(P.y-qy)}/* volta à posição da física (mantém qualquer ajuste feito durante o desenho) */
   render();
 }
 
