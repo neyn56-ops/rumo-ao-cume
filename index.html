@@ -8272,7 +8272,7 @@ function auUpd(dt){if(!AU)return;AU.t+=dt;auVilaUpd(dt);auIcUpd(dt);auBridgeUpd(
   if(!LV.vila)(AU.smoke||[]).forEach(function(s){s.t+=dt;var u=(s.t%3.6)/3.6;s.s.position.set(s.x+u*.8,s.y+u*2.4,s.z);var sc=.4+u*1.4;s.s.scale.set(sc,sc,1);s.s.material.opacity=Math.sin(u*Math.PI)*.35});
   /* chegada do tobogã: a tela clareia enquanto o Kuro ainda desce a calha e entra na cena */
   if(AU.sin){var si=AU.sin;si.t+=dt;var u=Math.min(1,si.t/1.3),p=AU.slideIn.getPointAt(u*u*.3+u*.7);P.x=p.x;P.y=p.y-.45;P.vx=6;P.vy=0;P.grounded=false;P.crouch=true;P.face=1;
-    $('fade').style.opacity=Math.max(0,1-si.t/.35);if(((tm*30)|0)%2===0)emit(sparkPool,p.x,p.y,1,1.5,.3,.25,.2,2);
+    if(!si.cut)$('fade').style.opacity=Math.max(0,1-si.t/.35);if(((tm*30)|0)%2===0)emit(sparkPool,p.x,p.y,1,1.5,.3,.25,.2,2);
     if(u>=1){AU.sin=null;P.crouch=false;P.vx=7;emit(dustPool,P.x,P.y+.1,10,2.4,.5,.5,1.2,-.3)}}
   /* blocos de gelo que andam na água: afundam um pouco quando o Kuro pisa */
   movers.forEach(function(m,i){if(m.top0===undefined){m.top0=m.t;m.sk=0}var on=P.grounded&&P.onPlat===m;m.sk+=((on?.2:0)-m.sk)*Math.min(1,dt*5);var bob=Math.sin(AU.t*1.5+i)*.04;
@@ -8406,18 +8406,18 @@ function auVilaUpd(dt){if(!LV.vila)return;var V=LV.vila;
     if(!AU.sl&&state==='play'&&P.x>S.x-.4&&Math.abs(P.y-S.y)<1.6){AU.sl={t:0};P.vx=0;P.vy=0;try{beep(600,.5,'sine',.04,-300)}catch(er){}toast('Tobogã de gelo!');AU.cm0=LV.camMax;LV.camMax=S.x+30}
     if(AU.sl){var sl=AU.sl;sl.t+=dt;var u=Math.min(1,sl.t/1.9),p=AU.slideC.getPointAt(u*u*.3+u*.7);P.x=p.x;P.y=p.y-.45;P.vx=6;P.vy=0;P.grounded=false;P.crouch=true;P.face=1;sl.z=p.z;/* sentado no fundo do tubo */
       if(((tm*30)|0)%2===0)emit(sparkPool,p.x,p.y,1,1.5,.3,.25,.2,2);
-      if(u>.85)$('fade').style.opacity=(u-.85)/.15;
-      if(u>=1){AU.sl=null;P.crouch=false;LV.camMax=AU.cm0;auEnter()}}}}
+      if(u>.5&&!sl.hold){sl.hold=1;LV.camMax=cam.x}/* a câmera para e o Kuro sai deslizando pela direita da tela (sem escurecer) */
+      if(u>=1){AU.sl=null;P.crouch=false;LV.camMax=AU.cm0;auEnter(1)}}}}
 /* sai da vila e chega ao lago (como o cano do Mundo 17) */
-function auEnter(){
+function auEnter(cut){
   var keep={coins:coinsGot,gems:gemsGot,t:timeT,hearts:hearts,bank:bank,big:!!P.big,fire:!!P.fire,cape:!!P.cape,shield:!!P.shield,tot:coins.length+extraCoins};
-  $('fade').style.opacity=1;prePast[levelIdx]=true;var cn=carryNow;carryNow=null;
+  $('fade').style.opacity=cut?0:1;prePast[levelIdx]=true;var cn=carryNow;carryNow=null;
   buildLevel(levelIdx);resetState();carryNow=cn;
   coinsGot=keep.coins;gemsGot=keep.gems;timeT=keep.t;hearts=keep.hearts;bank=keep.bank;extraCoins+=keep.tot;
   P.big=keep.big;if(keep.cape)setCape(true);else if(keep.fire)setFire(true);P.shield=keep.shield;
   setHearts();$('coinN').textContent=bank;$('gemN').textContent=String(gemsGot);
   P.x=LV.start.x;P.y=LV.start.y;P.vx=7;P.vy=0;P.grounded=false;P.onPlat=null;P.face=1;
-  if(AU&&AU.slideIn){AU.sin={t:0};var p0=AU.slideIn.getPointAt(0);P.x=p0.x;P.y=p0.y-.45;P.vx=0}else setTimeout(function(){$('fade').style.opacity=0},60);
+  if(AU&&AU.slideIn){AU.sin={t:0,cut:cut};var p0=AU.slideIn.getPointAt(0);P.x=p0.x;P.y=p0.y-.45;P.vx=0}else setTimeout(function(){$('fade').style.opacity=0},60);
   updateCamera(0,true);toast('Kuro chegou ao Lago da Aurora!')}
 /* gelo e pilares de gelo lá no fundo (com neve em cima e pinheirinhos), e uma cachoeira congelada */
 function auBack(){var A=auMats(),r=rnd(909),xe=sceneEnd(),G=[],S=[],PN=[];
