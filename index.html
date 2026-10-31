@@ -1880,7 +1880,7 @@ LEVELS.push({name:'Lago da Aurora',theme:19,music:15,tall:1,camMax:470,limit:720
   ['r',320.6,322.4,3.7,2],['r',326.6,328.4,4.9,2],['r',332.6,334.4,3.7,2],['r',338.6,340.4,4.9,2],['r',347,370,2.1,9],['r',389,392,4.1,3],['r',395,403,4.4,5],['r',406,409,4.1,3],['r',412,420,4.4,5],['r',423,427,5.3,3],['r',431.6,433,6.5,2],['r',436.6,438,7.7,2],['r',443,450,8.9,5],
   ['r',449.5,450.5,11.3,2],['r',455,456,13.5,2],['r',460.5,461.5,15.7,2],['r',464.5,465.5,17.9,2]],
  gems:[[83.5,3.6],[124.5,6.2],[161.5,3.4]],
- checkpoints:[[92,0],[146,0],[208,1.2],[264,0],[306,1.2],[372,1.2],[443,8]],goal:{x:457,top:19.2},crystalGoal:1,goalFlag:1,/* bandeira em cima da galeria do farol; a fase termina ao acender a luz *//* sem bandeira: a fase termina ao acender o farol */start:{x:2,y:0}});
+ checkpoints:[[92,0],[146,0],[208,1.2],[264,0],[306,1.2],[372,1.2],[443,8]],goal:{x:456.4,top:19.2,z:-1.7},crystalGoal:1,goalFlag:1,/* bandeira em cima da galeria do farol; a fase termina ao acender a luz *//* sem bandeira: a fase termina ao acender o farol */start:{x:2,y:0}});
 blockStd(LEVELS[LEVELS.length-1]);
 STORY.worlds.push({kicker:'Mundo 18 · Terra Nova',title:'Lago da Aurora',text:'Uma noite de inverno sob a aurora boreal! O lago congelou: no gelo liso o Kuro patina rápido e demora a frear. Cuidado com o gelo fino — ele trinca na primeira pisada e quebra na segunda. Os pinguins descem de barriga e as focas saem dos buracos jogando bolas de neve.'});
 /* Mundo 18 — área de fora: Vila dos Pescadores suspensa (ideia do dono, 31/10). Casinhas em pilares de gelo e estacas sobre o lago, em 3 andares:
@@ -7342,12 +7342,12 @@ function buildMarks(){
     checkpoints.push({x:c[0],y:c[1],lit:false,mat:lampMat});
   });
   if(LV.goal&&(!LV.crystalGoal||LV.goalFlag)){/* goalFlag: bandeira só de enfeite (a fase termina de outro jeito) */
-    var gx=LV.goal.x,gt=LV.goal.top;
-    var pole=mesh(new T.CylinderGeometry(.07,.09,6,10),M(0xc9d1d8,.3,.9));pole.position.set(gx,gt+3,-.4);add(pole);
-    var fin=mesh(new T.SphereGeometry(.18,16,12),M(0xffc43a,.25,.9,{emissive:new T.Color(0x6a4300),emissiveIntensity:.5}));fin.position.set(gx,gt+6.1,-.4);add(fin);
+    var gx=LV.goal.x,gt=LV.goal.top,gz=LV.goal.z!==undefined?LV.goal.z:-.4;
+    var pole=mesh(new T.CylinderGeometry(.07,.09,6,10),M(0xc9d1d8,.3,.9));pole.position.set(gx,gt+3,gz);add(pole);
+    var fin=mesh(new T.SphereGeometry(.18,16,12),M(0xffc43a,.25,.9,{emissive:new T.Color(0x6a4300),emissiveIntensity:.5}));fin.position.set(gx,gt+6.1,gz);add(fin);
     var fg=new T.PlaneGeometry(2.1,1.3,16,8);
     flag.geo=fg;flag.base=fg.attributes.position.array.slice();
-    var fm=mesh(fg,M(0xe0482a,.8,0,{side:T.DoubleSide}));fm.position.set(gx+1.05,gt+5.2,-.4);add(fm);
+    var fm=mesh(fg,M(0xe0482a,.8,0,{side:T.DoubleSide}));fm.position.set(gx+1.05,gt+5.2,gz);add(fm);
     flag.mesh=fm;flag.parts=[pole,fin,fm];
   }
 }
