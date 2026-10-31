@@ -1924,22 +1924,36 @@ blockStd(LEVELS[LEVELS.length-1].pre);
     lifts:W.lifts.map(function(q){q=Object.assign({},q);q.x+=D;return q}),slide:{x:W.slide.x+D,y:W.slide.y},end:W.slide.x+D+28};
   L.start={x:V.start.x+D,y:V.start.y};L.lake=[V.lake[0]+D,L.lake[1]];L.xMin=V.lake[0]+D+2;L.camMin=V.lake[0]+D+8;L.coinN=100;L.limit=900;L.tall=1;
 })(LEVELS[LEVELS.length-1],-138);
+/* Mundo 19 parte 2: destroços boiando entre a praia e a popa. Todos andam juntos na corrente (mesma velocidade e alcance), então os vãos não mudam.
+   [tipo, x0, x1, topo]: 'plank' tábuas amarradas, 'crate' caixote, 'door' porta, 'barrel' barril que rola */
+var WK_DEB=[['plank',95.5,98.5,.3],['crate',100.5,102.3,.9],['barrel',111.2,112.6,.55],['plank',114.4,117.4,.3],['door',118.8,121.4,.25],
+  ['plank',131.8,134.8,.3],['barrel',136.5,137.9,.55],['crate',139.6,141.4,.9],['plank',143,146,.3],
+  ['door',154.6,157.2,.25],['barrel',158.9,160.3,.55],['plank',162,165,.3],
+  ['crate',175.6,177.4,.9],['plank',179.6,182.6,.3],['barrel',184.4,185.8,.55],['door',187.4,190,.25],['plank',191.2,194.2,.3],
+  ['plank',203.8,206.8,.3],['crate',208.6,210.4,.9],['barrel',212.2,213.6,.55],['plank',215,218,.3]
+].map(function(q){return {kind:q[0],cx:(q[1]+q[2])/2,w:q[2]-q[1],top:q[3],range:.9,speed:.55}});
 /* ===== Terra Nova — Mundo 19: O Naufrágio (ideia do dono, 31/10; chefe Capitão Corvo-Pirata no fim). Parte 1: a praia e a metade do navio encalhada ===== */
-LEVELS.push({name:'O Naufrágio',theme:20,music:16,camMax:96,limit:600,es:1.05,noLift:1,shore:94,
+LEVELS.push({name:'O Naufrágio',theme:20,music:16,camMax:236,limit:720,es:1.05,noLift:1,shore:94,part2:95,riverY:-.6,coinN:100,
  ship:{x0:31,fc:5.6,fx:40,deck:4.2,br:70,mast:{x:52,top:10.4},ladder:49.9,stump:64,anchor:20},
  solids:[[-14,94,0],
   [25.5,27.5,1.4,0,0,'crate'],[27.5,29.5,2.8,0,0,'crate'],
   [31,40,5.6,-3,0,'ship'],[40,70,4.2,-3,0,'ship'],[50.65,53.35,10.4,10.1,0,'ship'],
   [70,72.5,2.8,2.45,0,'plank'],[72.5,75,1.4,1.05,0,'plank']],
- floats:[],movers:[],crumbles:[],feathers:[],spikes:[],springs:[],
+ floats:[],movers:WK_DEB,hullp:[[104,110,1.6],[123,130,2],[148,153,1.4],[167,174,2.2],[196,202,1.6],[220,240,2]],crumbles:[],feathers:[],spikes:[],springs:[],
  enemies:[{t:'beetle',x0:6,x1:20,y:0,s:1.2},{t:'beetle',x0:42,x1:48,y:4.2,s:1.1},{t:'bat',x0:34,x1:62,y:9.2,s:1.3},
-  {t:'beetle',x0:78,x1:90,y:0,s:1.3},{t:'bat',x0:80,x1:94,y:5.6,s:1.4}],
+  {t:'beetle',x0:78,x1:90,y:0,s:1.3},{t:'bat',x0:80,x1:94,y:5.6,s:1.4},
+  {t:'beetle',x0:105,x1:109,y:1.6,s:1},{t:'jfish',x0:111,x1:114,y:0,ph:.5,hgt:5},{t:'bat',x0:132,x1:146,y:5.4,s:1.4},{t:'beetle',x0:149,x1:152,y:1.4,s:1},
+  {t:'jfish',x0:158,x1:161,y:0,ph:1.6,hgt:5.2},{t:'bat',x0:176,x1:192,y:5.6,s:1.5},{t:'beetle',x0:197,x1:201,y:1.6,s:1.1},{t:'jfish',x0:211,x1:214,y:0,ph:.9,hgt:5.4},
+  {t:'bat',x0:205,x1:218,y:6,s:1.5},{t:'beetle',x0:226,x1:236,y:2,s:1.3}],
  blocks:[{x:10,y:2.4,t:'q',c:'mushroom'},{x:14,y:2.4,t:'brick'},{x:15,y:2.4,t:'q',c:'coin'},{x:16,y:2.4,t:'brick'},
-  {x:46,y:6.6,t:'q',c:'feather'},{x:62,y:6.6,t:'q',c:'flower'},{x:84,y:2.4,t:'q',c:'fruit'}],
+  {x:46,y:6.6,t:'q',c:'feather'},{x:62,y:6.6,t:'q',c:'flower'},{x:84,y:2.4,t:'q',c:'fruit'},{x:126.5,y:4.4,t:'q',c:'mushroom'},{x:170.5,y:4.6,t:'q',c:'flower'},{x:228,y:4.4,t:'brick'},{x:229,y:4.4,t:'q',c:'coin'},{x:230,y:4.4,t:'brick'}],
  coins:[['r',2,8,.9,4],['r',19,24,.9,3],['r',26.5,26.5,2.3,1],['r',28.5,28.5,3.7,1],['r',33,39,6.5,4],['r',42,48,5.1,4],['r',55,68,5.1,6],
-  ['r',51,53,11.3,3],['r',71.2,71.2,3.7,1],['r',73.7,73.7,2.3,1],['r',77,92,.9,7]],
+  ['r',51,53,11.3,3],['r',71.2,71.2,3.7,1],['r',73.7,73.7,2.3,1],['r',77,92,.9,7],
+  ['r',96.5,98.5,1.4,2],['r',105,109,2.5,3],['r',115,117,1.4,2],['r',124,129,2.9,4],['r',133,135,1.6,2],['r',143.5,145.5,1.6,2],['r',149,152,2.3,2],
+  ['r',162.5,164.5,1.6,2],['r',168,173,3.1,4],['r',180.5,182.5,1.6,2],['r',191.5,193.5,1.6,2],['r',197,201,2.5,3],['r',204.5,206.5,1.6,2],['r',215.5,217.5,1.6,2],['r',222,236,2.9,7],
+  ['a',139,3.2,1.2,1.4,3],['a',187,3.2,1.2,1.4,3]],
  gems:[[52,12.6],[71.4,5.2],[15,4.9]],
- checkpoints:[[79,0]],goal:{x:90,top:0},start:{x:0,y:0}});
+ checkpoints:[[79,0],[125,2],[169,2.2],[198,1.6]],goal:{x:236,top:2},start:{x:0,y:0}});
 blockStd(LEVELS[LEVELS.length-1]);
 STORY.worlds.push({kicker:'Mundo 19 · Terra Nova',title:'O Naufrágio',text:'Uma tempestade partiu um navio pirata ao meio: a proa encalhou na praia e a popa ficou boiando no mar. Suba pelos caixotes e pelo convés, escale o mastro até o cesto da gávea, fuja dos caranguejos e das gaivotas — e cuidado com os raios!'});
 
@@ -7090,9 +7104,10 @@ function buildMovers(){
     }else if(curTheme.name==='trail'){/* Terra Nova: plataforma de tábuas pendurada por cipós */
       trMats();m=new T.Group();for(var px=-d.w/2+.21;px<d.w/2;px+=.42){var pl=mesh(new T.BoxGeometry(.38,.14,2.1),trPlankM,true,true);pl.position.set(px,.12,0);m.add(pl)}
       [-.8,.8].forEach(function(z){var bm=mesh(new T.BoxGeometry(d.w,.14,.14),trBarkM,true,false);bm.position.set(0,-.02,z);m.add(bm);[-1,1].forEach(function(sd){var v=mesh(new T.CylinderGeometry(.03,.03,14,4),vineM,false,false);v.position.set(sd*(d.w/2-.15),7,z);m.add(v)})});add(m);
-    }else if(curTheme.aurora&&typeof auFloeMesh==='function'){m=auFloeMesh(d.w);add(m)}/* Mundo 18: bloco de gelo boiando que anda */
+    }else if(curTheme.aurora&&typeof auFloeMesh==='function'){m=auFloeMesh(d.w);add(m)}
+    else if(curTheme.wreck&&typeof wkDebrisMesh==='function'){m=wkDebrisMesh(d.w,d.kind);add(m)}/* Mundo 19: destroços boiando *//* Mundo 18: bloco de gelo boiando que anda */
     else{m=mesh(boxGeo(d.w,.45,3.2,1.2),woodM);add(m)}
-    var o={cx:d.cx,range:d.range,speed:d.speed,w:d.w,t:d.top,b:d.top-.45,oneway:false,flt:true,mover:true,x:d.cx,px:d.cx,l:d.cx-d.w/2,r:d.cx+d.w/2,mesh:m};
+    var o={kind:d.kind,cx:d.cx,range:d.range,speed:d.speed,w:d.w,t:d.top,b:d.top-.45,oneway:false,flt:true,mover:true,x:d.cx,px:d.cx,l:d.cx-d.w/2,r:d.cx+d.w/2,mesh:m};
     m.position.set(d.cx,d.top-.225,0);
     solids.push(o);movers.push(o);
   });
@@ -8687,7 +8702,7 @@ function wkDecor(th){var A=wkMats(),r=rnd(1919),xe=sceneEnd(),RK=[],SW=[],SH=[],
   for(var i=0;i<8;i++){var bx=-8+r()*((LV.shore||90)+4);if(LV.ship&&bx>LV.ship.x0-1&&bx<LV.ship.br+3)continue;if(r()<.5)wkBarrel(null,bx,mY(bx,-4.5)-.05,-4.5-r()*2,.9+r()*.3);else{var cb=mesh(boxGeo(1,1,1,1),A.crate,true,true);cb.position.set(bx,mY(bx,-5)+.45,-5-r()*2);cb.rotation.set(0,r()*3,(r()-.5)*.3);add(cb)}}}
 /* ---- mar com ondas grandes (mais agitado que o lago) + destroços boiando ao longe ---- */
 function wkSea(){var wn=auWaveTex(),xe=sceneEnd(),W=xe+260,cx=xe/2;
-  var wm=new T.MeshStandardMaterial({color:0x2e4a5e,roughness:.35,metalness:.25,normalMap:wn[0],normalScale:new T.Vector2(.8,.8),emissive:new T.Color(0x08141c),emissiveIntensity:.4,side:T.DoubleSide});
+  var wm=new T.MeshStandardMaterial({color:0x2a4658,roughness:.55,metalness:.15,normalMap:wn[0],normalScale:new T.Vector2(.5,.5),emissive:new T.Color(0x08141c),emissiveIntensity:.4,side:T.DoubleSide});
   /* mar lá atrás (atrás da praia) e, depois da praia, também na frente */
   var g=new T.PlaneGeometry(W,120,Math.round(W/3),30);g.rotateX(-Math.PI/2);g.translate(cx,0,-68);
   var sh=LV.shore||xe;if(sh<xe){var g2=new T.PlaneGeometry(xe+60-sh,18,Math.round((xe+60-sh)/3),6);g2.rotateX(-Math.PI/2);g2.translate(sh+(xe+60-sh)/2,0,1);g=mgL([g,g2])}
@@ -8714,8 +8729,8 @@ function wkStorm(){var n=LITE?260:520,pos=new Float32Array(n*6);WK.rainN=n;
 function wkBolt(){var g=WK.bolt;while(g.children.length){var c=g.children.pop();c.geometry.dispose()}
   var x=cam.x+(Math.random()-.5)*60,z=-70-Math.random()*40,y=50,pts=[];while(y>-1){pts.push(new T.Vector3(x,y,z));x+=(Math.random()-.5)*7;y-=3+Math.random()*4}pts.push(new T.Vector3(x,-.4,z));
   for(var i=0;i<pts.length-1;i++){var a=pts[i],b=pts[i+1],c2=new T.CylinderGeometry(.35,.35,a.distanceTo(b),4),m=new T.Mesh(c2,WK.boltM);m.position.copy(a).add(b).multiplyScalar(.5);m.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),b.clone().sub(a).normalize());g.add(m)}}
-function wkBuild(th){WK={t:0};wkMats();if(LV.ship)wkShip(LV.ship);wkSea();wkStorm()}
-function wkUpd(dt){if(!WK)return;WK.t+=dt;var t=WK.t;
+function wkBuild(th){WK={t:0,hulls:[]};wkMats();if(LV.ship)wkShip(LV.ship);wkSea();wkStorm();wkPart2Build()}
+function wkUpd(dt){if(!WK)return;WK.t+=dt;var t=WK.t;wkPart2Upd(dt);
   /* intensidade da tempestade: vai e volta ao longo da fase */
   var I=.55+.45*Math.sin(t*.09)*Math.sin(t*.031+1);WK.I=I;
   /* ondas: o mar sobe e desce (vértices) e a textura anda */
@@ -8731,7 +8746,7 @@ function wkUpd(dt){if(!WK)return;WK.t+=dt;var t=WK.t;
   /* raios: mais frequentes quando a tempestade aperta */
   WK.next-=dt;if(WK.next<=0){WK.next=(4+Math.random()*7)*(1.6-I);WK.flash=1;wkBolt();var dly=.25+Math.random()*1.2;setTimeout(function(){try{noise(1.4,.09*(.5+I*.5),180,'lowpass');noise(.4,.06,500,'lowpass')}catch(er){}},dly*1000)}
   if(WK.flash>0){WK.flash=Math.max(0,WK.flash-dt*2.6);var f=WK.flash,fl=f>.6?1:(f>.4?.3:(f>.25?.9:f));hemi.intensity=WK.hemi0*(1+fl*1.8);WK.boltM.opacity=fl}else{hemi.intensity=WK.hemi0;WK.boltM.opacity=0}}
-function wkReset(){}
+function wkReset(){if(!WK)return;WK.push=0;if(WK.strike){WK.strike.st=0;WK.strike.t=4}if(WK.gust){WK.gust.on=0;WK.gust.warn=0;WK.gust.t=6}}
 /* ---- bichos: caranguejo e gaivota ---- */
 function makeCrab(){var g=new T.Group(),inner=new T.Group();g.add(inner);var sh=M(0xd0502a,.5,.1),dk=M(0x8a2a14,.6),wh=M(0xffffff,.3),bl=M(0x111111,.3);
   var bd=mesh(new T.SphereGeometry(.42,16,10),sh,true,false);bd.scale.set(1.25,.6,.9);bd.position.y=.42;inner.add(bd);
@@ -8750,6 +8765,64 @@ function makeGull(){var g=new T.Group(),inner=new T.Group();g.add(inner);var wh=
   var tl=mesh(new T.ConeGeometry(.1,.25,4),gy,false,false);tl.rotation.x=-Math.PI/2;tl.position.z=-.42;inner.add(tl);
   var wings=[];[-1,1].forEach(function(sd){var p=new T.Group();p.position.set(sd*.15,.08,0);inner.add(p);var w=mesh(new T.BoxGeometry(.8,.04,.34),gy,false,false);w.position.x=sd*.4;p.add(w);var tp=mesh(new T.BoxGeometry(.3,.045,.3),bl,false,false);tp.position.x=sd*.78;p.add(tp);wings.push({p:p,sd:sd})});
   add(g);return {g:g,inner:inner,wings:wings}}
+/* ===================== parte 2: mar aberto — destroços levados pelas ondas, barris que rolam, vento, raios com aviso, onda gigante ===================== */
+/* desenho de cada destroço (as plataformas que boiam são movers; as grandes, do casco, ficam paradas) */
+function wkDebrisMesh(w,kind){var A=wkMats(),g=new T.Group();
+  if(kind==='barrel'){var b=new T.Group();g.add(b);var bd=mesh(new T.CylinderGeometry(.62,.62,1.5,14),A.wood,true,true);bd.rotation.x=Math.PI/2;b.add(bd);
+    [-.5,.5].forEach(function(z){var hp=mesh(new T.TorusGeometry(.63,.045,4,18),A.iron,false,false);hp.position.z=z;b.add(hp)});
+    b.position.y=-.62;g.userData.roll=b;return g}
+  if(kind==='crate'){var c=mesh(boxGeo(w,w*.85,1.7,1.4),A.crate,true,true);c.position.y=-w*.42;g.add(c);
+    var st=mesh(new T.BoxGeometry(w-.1,.1,.06),A.dark,false,false);st.position.set(0,-.1,.86);g.add(st);var dg=mesh(new T.BoxGeometry(Math.hypot(w,w*.85)*.9,.09,.06),A.dark,false,false);dg.rotation.z=Math.atan2(w*.85,w);dg.position.set(0,-w*.42,.86);g.add(dg);return g}
+  if(kind==='door'){var d=mesh(boxGeo(w,.22,1.6,1),A.hull,true,true);d.position.y=-.11;g.add(d);[-1,1].forEach(function(sd){var hg=mesh(new T.BoxGeometry(.5,.05,.12),A.iron,false,false);hg.position.set(sd*(w/2-.4),.01,.55);g.add(hg)});
+    var rg=mesh(new T.TorusGeometry(.12,.03,5,10),A.iron,false,false);rg.rotation.x=Math.PI/2;rg.position.set(0,.03,-.2);g.add(rg);return g}
+  /* tábuas amarradas */
+  var n=Math.max(2,Math.round(w/.55));for(var i=0;i<n;i++){var pl=mesh(boxGeo(w/n-.05,.2,1.9-((i*7)%3)*.2,1),A.deck,true,true);pl.position.set(-w/2+(i+.5)*w/n,-.1,((i*5)%3-1)*.06);g.add(pl)}
+  [-.55,.55].forEach(function(z){var tr=mesh(new T.BoxGeometry(w+.1,.1,.18),A.dark,false,false);tr.position.set(0,-.24,z);g.add(tr)});return g}
+/* pedaço grande do casco saindo da água (parado: dá para ficar em pé com calma) */
+function wkHullPiece(s){var A=wkMats(),x0=s[0],x1=s[1],top=s[2],w=x1-x0,cx=(x0+x1)/2,g=new T.Group(),r=rnd((x0*13)|0);
+  var h=top+2.2,b=mesh(boxGeo(w,h,3.2,1),A.hull,true,true);b.position.set(0,top-h/2,-.6);g.add(b);
+  var dk=mesh(boxGeo(w-.1,.1,3.1,1),A.deck,false,true);dk.position.set(0,top+.02,-.6);g.add(dk);
+  for(var i=0;i<4;i++){var lc=mesh(new T.BoxGeometry(.4+r()*.6,.1,.3),A.deck,false,false);lc.position.set(-w/2+r()*w,top-.2-r()*1.2,1.05);lc.rotation.z=(r()-.5)*1.4;g.add(lc)}
+  var rb=mesh(new T.BoxGeometry(.18,1.6,.18),A.dark,true,false);rb.position.set(w/2-.3,top+.5,-1.8);rb.rotation.z=-.3;g.add(rb);
+  for(var x=-w/2+.4;x<w/2;x+=2.4){var pst=mesh(new T.BoxGeometry(.14,.5,.14),A.dark,false,false);pst.position.set(x,top+.25,.95);g.add(pst)}
+  if(w>5)wkBarrel(g,-w/2+1.2,top,-1.6,.9);
+  g.position.set(cx,0,0);add(g);WK.hulls.push({g:g,ph:r()*6});solids.push({l:x0,r:x1,t:top,b:-14,oneway:false})}
+function wkPart2Build(){WK.hulls=[];WK.warn=[];
+  (LV.hullp||[]).forEach(wkHullPiece);
+  movers.forEach(function(m,i){m.top0=m.t;m.lift=0;m.k=m.kind||'plank';if(m.k==='barrel')m.slip=true});
+  /* marca do raio (círculo brilhando onde vai cair) */
+  var rm=new T.Mesh(new T.RingGeometry(.5,.95,24),new T.MeshBasicMaterial({color:0xfff2a0,transparent:true,opacity:0,depthWrite:false,side:T.DoubleSide}));rm.rotation.x=-Math.PI/2;add(rm);WK.mark=rm;
+  var mk=new T.Mesh(new T.CylinderGeometry(.06,.06,14,6),new T.MeshBasicMaterial({color:0xfff6c0,transparent:true,opacity:0,depthWrite:false,blending:T.AdditiveBlending}));mk.geometry.translate(0,7,0);add(mk);WK.mbeam=mk;
+  /* setas de vento (aviso) */
+  var wc=document.createElement('canvas');wc.width=128;wc.height=64;var x=wc.getContext('2d');x.strokeStyle='#fff';x.lineWidth=7;x.lineCap='round';
+  [[16,20,100],[30,44,112],[10,8+60,70]].forEach(function(q,k){x.beginPath();x.moveTo(q[2],q[1]-(k===2?52:0));x.quadraticCurveTo(q[0]+40,q[1]-12-(k===2?52:0),q[0],q[1]-(k===2?52:0));x.stroke()});
+  var wt=new T.CanvasTexture(wc);WK.wind=[];for(var i=0;i<6;i++){var sp=new T.Sprite(new T.SpriteMaterial({map:wt,transparent:true,opacity:0,depthWrite:false}));sp.scale.set(2.4,1.2,1);add(sp);WK.wind.push({s:sp,o:Math.random()*30,y:Math.random()*6})}
+  WK.gust={t:6,on:0,warn:0};WK.strike={t:5,st:0};WK.big={t:20,a:0}}
+function wkWaveY(x,t){return (Math.sin(x*.16+t*1.3)*.35+Math.sin(x*.07-t*.8)*.25)*(.6+(WK.I||.5)*.6)}
+function wkPart2Upd(dt){var t=WK.t,P2=LV.part2||1e9,inP2=P.x>P2-4;
+  if(state==='play'&&P.x>(LV.shore||1e9)&&P.y<-.45&&(WK.py===undefined||WK.py>=-.45)){splashFx(P.x,-.35,16);try{sfx.splash()}catch(er){}}WK.py=P.y;/* caiu no mar */
+  /* onda gigante: de vez em quando todos os destroços sobem juntos (aviso antes) */
+  var B=WK.big;B.t-=dt;if(B.t<=0&&!B.on){B.on=1;B.u=0;if(inP2){toast('Onda gigante! Os destroços sobem');try{noise(1.6,.08,250,'lowpass')}catch(er){}}}
+  if(B.on){B.u+=dt/5;B.a=Math.sin(Math.min(1,B.u)*Math.PI)*1.5;if(B.u>=1){B.on=0;B.a=0;B.t=22+Math.random()*10}}
+  /* destroços: sobem e descem com as ondas, a corrente leva (movers), afundam um pouco com o peso do Kuro */
+  movers.forEach(function(m,i){if(m.top0===undefined){m.top0=m.t;m.k=m.kind||'plank';if(m.k==='barrel')m.slip=true}var on=P.grounded&&P.onPlat===m;m.sk=(m.sk||0)+((on?.15:0)-(m.sk||0))*Math.min(1,dt*5);
+    var y=m.top0+wkWaveY(m.x,t)*.6+B.a-m.sk;m.t=y;m.b=y-.45;m.mesh.position.y=y;m.mesh.rotation.z=Math.cos(m.x*.16+t*1.3)*.06;
+    if(m.k==='barrel'){var r=m.mesh.userData.roll;if(r){if(on){P.x+=Math.sin(t*2.3+i)*1.4*dt;r.rotation.z-=Math.cos(t*2.3+i)*1.4*dt/.62}else r.rotation.z+=dt*.3}}
+    if(on)P.y=y});
+  WK.hulls.forEach(function(h){h.g.rotation.z=Math.sin(t*.6+h.ph)*.006});
+  /* rajadas de vento (empurram o Kuro para trás) */
+  var G=WK.gust;G.t-=dt;WK.push=0;
+  if(G.t<=0){if(G.on){G.on=0;G.warn=0;G.t=7+Math.random()*4}else if(G.warn){G.on=1;G.t=2.6}else{G.warn=1;G.t=1.3;if(inP2&&!WK.toldW){WK.toldW=1;toast('Ventania! Quando as setas aparecerem, segure firme')}}}
+  if(G.on&&inP2&&state==='play')WK.push=-3.2;
+  WK.wind.forEach(function(w,k){var vis=inP2&&(G.warn||G.on);w.o-=dt*(G.on?18:6);if(w.o<-14)w.o+=28;w.s.position.set(cam.x+w.o,cam.y-2+w.y,1.5);w.s.material.opacity+=((vis?(G.on?.7:.45):0)-w.s.material.opacity)*Math.min(1,dt*6)});
+  /* raio com aviso: um círculo brilha no destroço onde vai cair; 1 s depois cai */
+  var S=WK.strike;S.t-=dt;
+  if(S.st===0&&S.t<=0&&inP2&&state==='play'){var c=null,bd=1e9;movers.forEach(function(m){var d=m.x-P.x;if(d>-1&&d<9&&Math.abs(d-3)<bd){bd=Math.abs(d-3);c=m}});if(c){S.st=1;S.t=1.1;S.m=c}else S.t=1}
+  if(S.st===1){var m=S.m;WK.mark.position.set(m.x,m.t+.05,0);WK.mark.material.opacity=.4+.5*Math.abs(Math.sin(t*14));WK.mbeam.position.set(m.x,m.t,0);WK.mbeam.material.opacity=.15;
+    if(S.t<=0){S.st=2;S.t=.25;WK.flash=1;try{noise(.8,.12,300,'lowpass');beep(90,.3,'sawtooth',.05)}catch(er){}emit(sparkPool,m.x,m.t+.3,26,6,.8,.35,.2,3);
+      if(state==='play'&&Math.abs(P.x-m.x)<1.3&&Math.abs(P.y-m.t)<1.6)hurt(m.x)}}
+  if(S.st===2){WK.mbeam.material.opacity=Math.max(0,S.t*4);WK.mbeam.scale.set(4,1,4);WK.mark.material.opacity=0;if(S.t<=0){S.st=0;S.t=4+Math.random()*4;WK.mbeam.scale.set(1,1,1);WK.mbeam.material.opacity=0}}
+  else if(S.st===0){WK.mark.material.opacity=0;WK.mbeam.material.opacity=0}}
 
 /*@@parte:40_estado.js*/
 /* ===================== estado do jogo ===================== */
@@ -11191,6 +11264,7 @@ function step(dt){
   if(!P.climb)tryGrab();
   updCrouch();
   updSandSys(dt);
+  if(curTheme.wreck&&WK&&WK.push)P.wpush+=WK.push;/* Mundo 19: ventania do mar */
   var wasW=P.inW;P.inW=!!LV.water&&!P.climb&&inWater(P.x,P.y+P.h*.45);
   if(P.inW!==wasW){
     if(P.inW){P.flyT=0;P.pm=0;P.swimCd=0;P.tapCd=0;P.vy*=.45;splashFx(P.x,wTop(P.x)+surfWave(P.x),12);sfx.splash();if(!P.swimToast){P.swimToast=true;toast('Toque em Pular para nadar. Segure para subir devagar')}}
