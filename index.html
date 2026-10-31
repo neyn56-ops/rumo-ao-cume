@@ -1859,7 +1859,7 @@ LEVELS.push({name:'Lago da Aurora',theme:19,music:15,tall:1,camMax:470,limit:720
  crystals:[[214,1.2,.9],[250,2.4,1],[270,0,.8],[289,0,.8],[312,1.2,.9],[352,1.2,1.2],[391,3.2,.8],[425,4.4,.9],[468,8,1.2]],
  signs:[[188.5,0],[347.5,1.2],[383,1.2]],
  cracks:[[79,82,0],[82,85,0],[85,88,0],[131,134.5,0],[136.5,140,0],[142,145,0]],
- enemies:[{t:'beetle',x0:1,x1:11,y:0,s:1.3},
+ enemies:[{t:'beetle',x0:13.5,x1:23,y:1.2,s:1.3},/* lobo longe da saída do tobogã */
   {t:'peng',x0:45,x1:57,y:0,ph:0},{t:'sbird',x0:26,x1:38,y:5.2,ph:0},{t:'seal',x0:70,x1:70,y:0,ph:0},
   {t:'peng',x0:94,x1:110,y:0,ph:1.4},{t:'seal',x0:103,x1:103,y:0,ph:2.1},{t:'sbird',x0:100,x1:114,y:5.6,ph:.8},
   {t:'peng',x0:147,x1:159,y:0,ph:.7},{t:'seal',x0:170,x1:170,y:0,ph:.9},{t:'peng',x0:165,x1:181,y:0,ph:2.6},{t:'sbird',x0:148,x1:160,y:5.2,ph:1.6},
@@ -1880,7 +1880,7 @@ LEVELS.push({name:'Lago da Aurora',theme:19,music:15,tall:1,camMax:470,limit:720
   ['r',320.6,322.4,3.7,2],['r',326.6,328.4,4.9,2],['r',332.6,334.4,3.7,2],['r',338.6,340.4,4.9,2],['r',347,370,2.1,9],['r',389,392,4.1,3],['r',395,403,4.4,5],['r',406,409,4.1,3],['r',412,420,4.4,5],['r',423,427,5.3,3],['r',431.6,433,6.5,2],['r',436.6,438,7.7,2],['r',443,450,8.9,5],
   ['r',449.5,450.5,11.3,2],['r',455,456,13.5,2],['r',460.5,461.5,15.7,2],['r',464.5,465.5,17.9,2]],
  gems:[[83.5,3.6],[124.5,6.2],[161.5,3.4]],
- checkpoints:[[92,0],[146,0],[208,1.2],[264,0],[306,1.2],[372,1.2],[443,8]],goal:{x:458,top:19.2},crystalGoal:1,/* sem bandeira: a fase termina ao acender o farol */start:{x:2,y:0}});
+ checkpoints:[[92,0],[146,0],[208,1.2],[264,0],[306,1.2],[372,1.2],[443,8]],goal:{x:457,top:19.2},crystalGoal:1,goalFlag:1,/* bandeira em cima da galeria do farol; a fase termina ao acender a luz *//* sem bandeira: a fase termina ao acender o farol */start:{x:2,y:0}});
 blockStd(LEVELS[LEVELS.length-1]);
 STORY.worlds.push({kicker:'Mundo 18 · Terra Nova',title:'Lago da Aurora',text:'Uma noite de inverno sob a aurora boreal! O lago congelou: no gelo liso o Kuro patina rápido e demora a frear. Cuidado com o gelo fino — ele trinca na primeira pisada e quebra na segunda. Os pinguins descem de barriga e as focas saem dos buracos jogando bolas de neve.'});
 /* Mundo 18 — área de fora: Vila dos Pescadores suspensa (ideia do dono, 31/10). Casinhas em pilares de gelo e estacas sobre o lago, em 3 andares:
@@ -7341,7 +7341,7 @@ function buildMarks(){
     g.position.set(c[0],c[1],-.6);add(g);
     checkpoints.push({x:c[0],y:c[1],lit:false,mat:lampMat});
   });
-  if(LV.goal&&!LV.crystalGoal){
+  if(LV.goal&&(!LV.crystalGoal||LV.goalFlag)){/* goalFlag: bandeira só de enfeite (a fase termina de outro jeito) */
     var gx=LV.goal.x,gt=LV.goal.top;
     var pole=mesh(new T.CylinderGeometry(.07,.09,6,10),M(0xc9d1d8,.3,.9));pole.position.set(gx,gt+3,-.4);add(pole);
     var fin=mesh(new T.SphereGeometry(.18,16,12),M(0xffc43a,.25,.9,{emissive:new T.Color(0x6a4300),emissiveIntensity:.5}));fin.position.set(gx,gt+6.1,-.4);add(fin);
