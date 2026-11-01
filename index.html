@@ -8903,9 +8903,12 @@ function wkStern(S){var A=wkMats(),g=new T.Group(),x0=S.x0,x1=S.x1,w=x1-x0,cx=(x
   var low=mesh(boxGeo(S.wall-x0,.55,.25,1),A.hull,true,false);low.position.set((x0+S.wall)/2,S.floor+.27,Zc+D/2-.12);g.add(low);/* murinho da frente (baixo) */
   for(var x=x0+2;x<S.wall;x+=3.4){var po=mesh(new T.BoxGeometry(.25,S.deck-S.floor,.25),A.dark,true,false);po.position.set(x,(S.deck+S.floor)/2,Zc+D/2-.12);g.add(po)}/* colunas da frente */
   /* convés (tampa) e a parede de baixo do lado direito (parte da luta) */
-  var dk=mesh(boxGeo(w,.4,D,1),A.deck,true,true);dk.position.set(cx,S.deck-.2,Zc);g.add(dk);
+  /* convés com o buraco do alçapão aberto de verdade (dá para ver o porão lá embaixo) */
+  [[x0,S.hatch[0]],[S.hatch[1],x1]].forEach(function(q){var dk=mesh(boxGeo(q[1]-q[0],.4,D,1),A.deck,true,true);dk.position.set((q[0]+q[1])/2,S.deck-.2,Zc);g.add(dk)});
+  [-1,1].forEach(function(sd){var sdk=mesh(boxGeo(S.hatch[1]-S.hatch[0],.4,.9,1),A.deck,true,true);sdk.position.set((S.hatch[0]+S.hatch[1])/2,S.deck-.2,Zc+sd*(D/2-.45));g.add(sdk)});
+  [S.hatch[0],S.hatch[1]].forEach(function(hx){var fr=mesh(new T.BoxGeometry(.18,.16,D-1.6),A.dark,false,false);fr.position.set(hx,S.deck+.05,Zc);g.add(fr)});/* moldura do alçapão */
   var rw=mesh(boxGeo(x1-S.wall,S.deck-S.floor,D,1),A.hull,true,true);rw.position.set((S.wall+x1)/2,(S.deck+S.floor)/2,Zc);g.add(rw);
-  var hh=mesh(new T.BoxGeometry(S.hatch[1]-S.hatch[0],.42,D-.6),M(0x0c0a08,.9),false,false);hh.position.set((S.hatch[0]+S.hatch[1])/2,S.deck-.2,Zc);g.add(hh);/* alçapão aberto */
+
   /* amurada de trás e postinhos na frente do convés */
   var bw=mesh(boxGeo(w,.9,.2,1),A.hull,true,false);bw.position.set(cx,S.deck+.45,Zc-D/2+.1);g.add(bw);
   for(x=x0+.5;x<x1;x+=2.2){var ps=mesh(new T.BoxGeometry(.14,.5,.14),A.dark,false,false);ps.position.set(x,S.deck+.25,Zc+D/2-.1);g.add(ps)}
