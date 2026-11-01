@@ -9006,7 +9006,7 @@ function wkPart3Build(){if(LV.stern)wkStern(LV.stern);wkBossBuild();wkIsland();(
     for(var y=y0+.4;y<y0+len;y+=.42){var d=new T.BoxGeometry(.56,.06,.08);d.translate(x,y,-.6);L.push(d)}add(mesh(mgL(L),A.wood,true,false));
     vines.push({x:x,y0:y0,top:y0+len,len:len,max:len,g:new T.Object3D(),stem:new T.Object3D(),leaves:[],ladder:1})})}
 function wkPart3Upd(dt){var t=WK.t;
-  if(WK.sternG){WK.sternG.position.y=Math.sin(t*.9)*.04;WK.sternG.rotation.z=(WK.tilt||0)*.012}
+  if(WK.sternG){WK.sternG.position.y=Math.sin(t*.9)*.02;WK.sternG.rotation.z=0}/* o desenho da popa fica alinhado ao chão de verdade (girar em volta do x=0 do mundo deslocava o navio metros para baixo) */
   if(WK.cap)wkBossUpd(dt);
   /* a tempestade passa perto da ilha */
   var I=LV.island;if(I){var k=clamp((P.x-(I.x0-40))/40,0,1);WK.calm=k;if(k>.5)WK.next=Math.max(WK.next,2)}}
