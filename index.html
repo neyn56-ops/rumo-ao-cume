@@ -9005,11 +9005,11 @@ function wkBossFish(){var c=WK.cap,n=c.hp===1?3:2;for(var k=0;k<n;k++){var x=cla
   c.fish.push({m:m,x:x,t:-.7-k*.15,h:3.6+Math.random()*1.4});splashFx(x,-.35,8)}if(!WK.toldF){WK.toldF=1;toast('Cuidado: os peixes estão saltando por cima do navio!')}}
 function wkBossHit(){var c=WK.cap;c.hp--;wkBossBar();c.st='stun';c.t=2.4;sfx.stomp();try{sfx.crunch()}catch(e){}shake=Math.max(shake,.35);emit(sparkPool,c.x,c.y+2,18,4,.6,.35,.2,3);
   c.bar.forEach(function(b){b.dead=1;if(b.m.parent)b.m.parent.remove(b.m)});c.bar=[];
-  if(c.hp<=0){c.st='dead';c.t=0;sfx.win();$('bossBar').hidden=true;c.w1.dead=true;emit(sparkPool,c.x,c.y+2,40,7,1.2,.6,.5,4);WK.camLock=null;WK.tilt=0;
+  if(c.hp<=0){c.st='dead';c.t=0;sfx.win();$('bossBar').hidden=true;c.w1.dead=true;c.w0.dead=true;/* as duas paredes abrem: dá para ir e voltar */emit(sparkPool,c.x,c.y+2,40,7,1.2,.6,.5,4);WK.camLock=null;WK.tilt=0;
     if(c.ball&&c.ball.m&&c.ball.m.parent)c.ball.m.parent.remove(c.ball.m);c.ball=null;WK.mark.material.opacity=0;
     for(var k=0;k<8;k++)dropCoins&&dropCoins.push&&0;toast('Você venceu o Capitão Corvo-Pirata! Siga até a ilha')}
   else toast(c.hp===2?'Acertou! O navio balança mais — e vêm peixes!':'Mais uma! Ele está quase caindo!')}
-function wkBossReset(){var c=WK&&WK.cap;if(!c)return;if(c.st==='dead')return;c.st='wait';c.hp=c.max;c.x=LV.captain.x;c.y=LV.captain.y;c.w0.dead=true;c.v.g.visible=true;c.v.stars.visible=false;
+function wkBossReset(){var c=WK&&WK.cap;if(!c)return;if(c.st==='dead'){c.w0.dead=true;c.w1.dead=true;WK.camLock=null;$('bossBar').hidden=true;return}/* já vencido: continua aberto depois de morrer */c.st='wait';c.hp=c.max;c.x=LV.captain.x;c.y=LV.captain.y;c.w0.dead=true;c.v.g.visible=true;c.v.stars.visible=false;
   c.bar.forEach(function(b){if(b.m.parent)b.m.parent.remove(b.m)});c.bar=[];if(c.ball&&c.ball.m&&c.ball.m.parent)c.ball.m.parent.remove(c.ball.m);c.ball=null;
   c.fish.forEach(function(f){if(f.m.parent)f.m.parent.remove(f.m)});c.fish=[];WK.camLock=null;WK.tilt=0;if(WK.mark)WK.mark.material.opacity=0}
 /* ilha: palmeiras, poças, árvores caídas, pedras na água */
