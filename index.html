@@ -1935,10 +1935,10 @@ var WK_DEB=[['plank',95.5,98.5,.3],['crate',100.5,102.3,.9],['barrel',111.2,112.
 ].map(function(q){return {kind:q[0],cx:(q[1]+q[2])/2,w:q[2]-q[1],top:q[3],range:.9,speed:.55}});
 /* ===== Terra Nova — Mundo 19: O Naufrágio (ideia do dono, 31/10; chefe Capitão Corvo-Pirata no fim). Parte 1: a praia e a metade do navio encalhada ===== */
 LEVELS.push({name:'O Naufrágio',theme:20,music:16,camMax:416,limit:900,es:1.05,noLift:1,shore:94,part2:95,riverY:-.6,coinN:100,
- ship:{x0:31,fc:5.6,fx:40,deck:4.2,br:70,mast:{x:52,top:10.4},ladder:50.3,stump:64,anchor:20},
+ ship:{x0:31,fc:5.6,fx:40,deck:4.2,br:70,mast:{x:52,top:10.4},ladder:51.2,stump:64,anchor:20},
  solids:[[-14,94,0],
   [25.5,27.5,1.4,0,0,'crate'],[27.5,29.5,2.8,0,0,'crate'],
-  [31,40,5.6,-3,0,'ship'],[40,70,4.2,-3,0,'ship'],[50.65,53.35,10.4,10.1,0,'ship'],
+  [31,40,5.6,-3,0,'ship'],[40,70,4.2,-3,0,'ship'],[50.65,53.35,10.4,10.1,0,'ship','up'],
   [70,72.5,2.8,2.45,0,'plank'],[72.5,75,1.4,1.05,0,'plank']],
  floats:[],movers:WK_DEB,hullp:[[104,110,1.6],[123,130,2],[148,153,1.4],[167,174,2.2],[196,202,1.6],[220,240,2]],
  /* parte 3: a popa boiando (porão alagado, convés da luta, tombadilho do capitão), pedras e a ilha */
@@ -8636,7 +8636,7 @@ function wkSolid(s){var A=wkMats(),x0=s[0],x1=s[1],top=s[2],w=x1-x0,cx=(x0+x1)/2
       var dg=mesh(new T.BoxGeometry(Math.hypot(w,hh)*.9,.09,.06),A.dark,false,false);dg.rotation.z=Math.atan2(hh,w);dg.position.set(cx,bot+hh*(i+.5),.72);add(dg)}}
   else if(s[5]==='plank'){var pb=mesh(boxGeo(w,.35,2.2,1),A.deck,true,true);pb.position.set(cx,top-.17,-.4);pb.rotation.z=(s[6]||0);add(pb);
     for(var k=0;k<3;k++){var po=mesh(new T.CylinderGeometry(.09,.11,top+.4,6),A.dark,false,false);po.position.set(x0+.3+k*(w-.6)/2,(top-.4)/2,-.4+(k-1)*.6);add(po)}}
-  solids.push({l:x0,r:x1,t:top,b:s[3]!==undefined?s[3]:-14,oneway:false})}
+  solids.push({l:x0,r:x1,t:top,b:s[3]!==undefined?s[3]:-14,oneway:s[6]==='up'})}/* 'up': dá para passar por baixo (subindo a escada pelo buraco do cesto) e pisar em cima */
 /* ---- a metade do navio encalhada na areia ---- */
 function wkShip(S){var A=wkMats(),g=new T.Group(),r=rnd(4141),D=4.4,Z0=-3.0;
   /* perfil do casco (de lado): proa à esquerda subindo, convés, ponta quebrada à direita */
@@ -8665,26 +8665,20 @@ function wkShip(S){var A=wkMats(),g=new T.Group(),r=rnd(4141),D=4.4,Z0=-3.0;
   /* mastro principal com o cesto da gávea (plataforma) e a escada de corda */
   var mx=S.mast.x,mz=-1.1,mt=S.mast.top+4;
   var ms=mesh(new T.CylinderGeometry(.17,.24,mt-S.deck,10),A.wood,true,false);ms.position.set(mx,(mt+S.deck)/2,mz);g.add(ms);
-  var yd=mesh(new T.CylinderGeometry(.09,.09,4.4,8),A.wood,true,false);yd.rotation.z=Math.PI/2;yd.position.set(mx+.6,S.mast.top+2.4,mz+.25);g.add(yd);
-  var sl=new T.Mesh(new T.PlaneGeometry(3.6,3.2,8,4),A.sail);var sa=sl.geometry.attributes.position;for(i=0;i<sa.count;i++)sa.setZ(i,Math.sin(sa.getX(i)*.8)*.12+(sa.getY(i)<0?(.15-sa.getY(i)*.08):0));/* vela menor, na frente do mastro: longe da escada e das cordas (ficam atrás) */sl.geometry.computeVertexNormals();
-  sl.position.set(mx+.6,S.mast.top+.7,mz+.3);g.add(sl);WK.sail=sl;
+  var yd=mesh(new T.CylinderGeometry(.09,.09,4.4,8),A.wood,true,false);yd.rotation.z=Math.PI/2;yd.position.set(mx+.6,mt-.35,mz+.25);g.add(yd);
+  var sl=new T.Mesh(new T.PlaneGeometry(3.6,2.5,8,4),A.sail);var sa=sl.geometry.attributes.position;for(i=0;i<sa.count;i++)sa.setZ(i,Math.sin(sa.getX(i)*.8)*.12+(sa.getY(i)<0?(.15-sa.getY(i)*.08):0));/* vela menor, na frente do mastro: longe da escada e das cordas (ficam atrás) */sl.geometry.computeVertexNormals();
+  sl.position.set(mx+.6,mt-.35-1.3,mz+.3);/* pendurada na verga, no topo do mastro (acaba acima do cesto) */g.add(sl);WK.sail=sl;
   var nt=S.mast.top,nr=1.35;var nb=mesh(new T.CylinderGeometry(nr,nr*.85,.2,18),A.dark,true,true);nb.position.set(mx,nt-.1,mz);g.add(nb);
   for(i=0;i<14;i++){var an=i/14*Math.PI*2;if(Math.sin(an)>.55)continue;var sl2=mesh(new T.BoxGeometry(.1,.75,.1),A.wood,false,false);sl2.position.set(mx+Math.cos(an)*nr,nt+.37,mz+Math.sin(an)*nr);g.add(sl2)}/* ripas do cesto (a frente aberta) */
   var rg=mesh(new T.TorusGeometry(nr,.05,4,24,Math.PI*1.3),A.wood,false,false);rg.rotation.x=Math.PI/2;rg.rotation.z=Math.PI*.85;rg.position.set(mx,nt+.75,mz);g.add(rg);
-  /* escada de corda: sobe reta encostada no cesto e as duas cordas passam por cima da borda dele (ganchos) */
-  var lx=S.ladder,L=[],ltop=nt+.85;[-.28,.28].forEach(function(dx){var c=new T.CylinderGeometry(.035,.035,ltop-S.deck,4);c.translate(lx+dx,(ltop+S.deck)/2,-.35);L.push(c);
-    var hk=new T.TorusGeometry(.14,.035,4,8,Math.PI);hk.translate(lx+dx+.14,ltop,-.35);L.push(hk)});/* gancho sobre a borda do cesto */
-  for(var y=S.deck+.4;y<nt+.6;y+=.45){var d=new T.CylinderGeometry(.03,.03,.6,4);d.rotateZ(Math.PI/2);d.translate(lx,y,-.35);L.push(d)}
+  /* escada: sobe reta do convés até o fundo do cesto (passa pelo buraco do cesto) e fica presa nele por duas braçadeiras de ferro */
+  var lx=S.ladder,L=[],ltop=nt-.18;[-.28,.28].forEach(function(dx){var c=new T.CylinderGeometry(.035,.035,ltop-S.deck,4);c.translate(lx+dx,(ltop+S.deck)/2,-.35);L.push(c)});
+  for(var y=S.deck+.4;y<ltop;y+=.45){var d=new T.CylinderGeometry(.03,.03,.6,4);d.rotateZ(Math.PI/2);d.translate(lx,y,-.35);L.push(d)}
   g.add(mesh(mgL(L),A.rope,false,false));
-  [-.28,.28].forEach(function(dx){var ri=mesh(new T.TorusGeometry(.09,.03,5,10),A.iron,false,false);ri.rotation.x=Math.PI/2;ri.position.set(lx+dx,S.deck+.03,-.35);g.add(ri)});
+  [-.28,.28].forEach(function(dx){var ri=mesh(new T.TorusGeometry(.09,.03,5,10),A.iron,false,false);ri.rotation.x=Math.PI/2;ri.position.set(lx+dx,S.deck+.03,-.35);g.add(ri);
+    var br=mesh(new T.BoxGeometry(.12,.3,.5),A.iron,false,false);br.position.set(lx+dx,nt-.25,-.6);g.add(br)});
   vines.push({x:lx,y0:S.deck,top:nt,len:nt-S.deck,max:nt-S.deck,g:new T.Object3D(),stem:new T.Object3D(),leaves:[],ladder:1});
-  /* bandeira pirata no topo do mastro (balança com o vento) */
-  var fc=document.createElement('canvas');fc.width=128;fc.height=80;var fx=fc.getContext('2d');fx.fillStyle='#14161c';fx.fillRect(0,0,128,80);fx.fillStyle='#e8e4d8';
-  fx.beginPath();fx.arc(64,34,15,0,6.3);fx.fill();fx.fillRect(56,42,16,10);fx.fillStyle='#14161c';fx.beginPath();fx.arc(58,33,4.5,0,6.3);fx.arc(70,33,4.5,0,6.3);fx.fill();
-  fx.strokeStyle='#e8e4d8';fx.lineWidth=6;fx.lineCap='round';fx.beginPath();fx.moveTo(38,58);fx.lineTo(90,72);fx.moveTo(90,58);fx.lineTo(38,72);fx.stroke();
-  var ft=new T.CanvasTexture(fc);ft.encoding=T.sRGBEncoding;var fg=new T.PlaneGeometry(1.8,1.1,10,4);fg.translate(.9,0,0);
-  var fl=new T.Mesh(fg,new T.MeshStandardMaterial({map:ft,roughness:.9,side:T.DoubleSide}));fl.position.set(mx,mt-.15,mz);g.add(fl);WK.jolly={m:fl,base:fg.attributes.position.array.slice()};
-  var bl=mesh(new T.SphereGeometry(.14,8,6),A.iron,false,false);bl.position.set(mx,mt+.32,mz);g.add(bl);
+  var bl=mesh(new T.SphereGeometry(.16,8,6),A.wood,false,false);bl.position.set(mx,mt+.05,mz);g.add(bl);/* pomo no topo do mastro */
   /* cordame: cordas do topo do mastro até as bordas */
   [[S.x0+2,S.fc+.9],[S.fx+4,S.deck+.9],[j-1,S.deck+.9],[j-6,S.deck+.9]].forEach(function(q){var a=new T.Vector3(mx,mt-.4,mz),b=new T.Vector3(q[0],q[1],Z0+.2),c=new T.CylinderGeometry(.025,.025,a.distanceTo(b),4),m2=mesh(c,A.rope,false,false);m2.position.copy(a).add(b).multiplyScalar(.5);m2.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),b.clone().sub(a).normalize());g.add(m2)});
   /* toco do segundo mastro, quebrado, com a vela rasgada pendurada */
