@@ -7853,7 +7853,7 @@ var kWet={w:0,mats:null};
 function kuroMats(){var L=[],seen={};rig.root.traverse(function(o){if(!o.isMesh&&!o.isSkinnedMesh)return;(Array.isArray(o.material)?o.material:[o.material]).forEach(function(m){if(!m||seen[m.uuid]||!m.color)return;seen[m.uuid]=1;L.push({m:m,c:m.color.clone(),r:m.roughness})})});return L}
 var WETC=new T.Color(.42,.5,.68),_wc=new T.Color();
 function kuroWetApply(w){if(!kWet.mats)return;kWet.mats.forEach(function(o){_wc.copy(o.c).multiply(WETC);o.m.color.copy(o.c).lerp(_wc,w);if(o.r!==undefined)o.m.roughness=o.r+(.18-o.r)*w})}
-function kuroDry(){if(kWet.mats){kuroWetApply(0);kWet.mats=null}kWet.w=0;flDropClear()}
+function kuroDry(){if(kWet.mats){kuroWetApply(0);kWet.mats=null}kWet.w=0;flDr=null}/* fase nova: as gotas são recriadas dentro dela */
 function kuroWetUpd(dt,rain){var inF=false;if(rain){/* chuva (Mundo 19): molha aos poucos e pinga */var w1=kWet.w;if(!kWet.mats)kWet.mats=kuroMats();kWet.w=clamp(kWet.w+(rain>0?dt*rain*.5:-dt/6),0,1);if(kWet.w!==w1){kuroWetApply(kWet.w);if(kWet.w===0)kWet.mats=null}var sc0=P.big?1:.78;if(kWet.w>.15&&Math.random()<kWet.w*.1)flDrop(P.x+(Math.random()-.5)*.45,P.y+(.25+Math.random()*.9)*sc0,(Math.random()-.5)*.3,-.2);flDropUpd(dt);return}
   if(state==='play')(LV.wlogs||[]).forEach(function(d){var hw=((d.w||2.4)+1.6)/2;if(Math.abs(P.x-d.x)<hw&&P.y<flFx.oy&&P.y+1>flFx.ry)inF=true});
   var w0=kWet.w;if(inF){if(!kWet.mats)kWet.mats=kuroMats();kWet.w=Math.min(1,kWet.w+dt*4)}else kWet.w=Math.max(0,kWet.w-dt/5);
