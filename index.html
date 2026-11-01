@@ -7854,13 +7854,13 @@ function kuroMats(){var L=[],seen={};rig.root.traverse(function(o){if(!o.isMesh&
 var WETC=new T.Color(.42,.5,.68),_wc=new T.Color();
 function kuroWetApply(w){if(!kWet.mats)return;kWet.mats.forEach(function(o){_wc.copy(o.c).multiply(WETC);o.m.color.copy(o.c).lerp(_wc,w);if(o.r!==undefined)o.m.roughness=o.r+(.18-o.r)*w})}
 function kuroDry(){if(kWet.mats){kuroWetApply(0);kWet.mats=null}kWet.w=0;flDropClear()}
-function kuroWetUpd(dt,rain){var inF=false;if(rain){/* chuva (Mundo 19): molha aos poucos e pinga */var w1=kWet.w;if(!kWet.mats)kWet.mats=kuroMats();kWet.w=clamp(kWet.w+(rain>0?dt*rain*.5:-dt/6),0,1);if(kWet.w!==w1){kuroWetApply(kWet.w);if(kWet.w===0)kWet.mats=null}var sc0=P.big?1:.78;if(kWet.w>.15&&Math.random()<kWet.w*.5)flDrop(P.x+(Math.random()-.5)*.45,P.y+(.25+Math.random()*.9)*sc0,(Math.random()-.5)*.3,-.2);flDropUpd(dt);return}
+function kuroWetUpd(dt,rain){var inF=false;if(rain){/* chuva (Mundo 19): molha aos poucos e pinga */var w1=kWet.w;if(!kWet.mats)kWet.mats=kuroMats();kWet.w=clamp(kWet.w+(rain>0?dt*rain*.5:-dt/6),0,1);if(kWet.w!==w1){kuroWetApply(kWet.w);if(kWet.w===0)kWet.mats=null}var sc0=P.big?1:.78;if(kWet.w>.15&&Math.random()<kWet.w*.1)flDrop(P.x+(Math.random()-.5)*.45,P.y+(.25+Math.random()*.9)*sc0,(Math.random()-.5)*.3,-.2);flDropUpd(dt);return}
   if(state==='play')(LV.wlogs||[]).forEach(function(d){var hw=((d.w||2.4)+1.6)/2;if(Math.abs(P.x-d.x)<hw&&P.y<flFx.oy&&P.y+1>flFx.ry)inF=true});
   var w0=kWet.w;if(inF){if(!kWet.mats)kWet.mats=kuroMats();kWet.w=Math.min(1,kWet.w+dt*4)}else kWet.w=Math.max(0,kWet.w-dt/5);
   if(kWet.w!==w0){kuroWetApply(kWet.w);if(kWet.w===0)kWet.mats=null}
   var sc=P.big?1:.78;
   if(inF&&Math.random()<.35)flDrop(P.x+(Math.random()-.5)*.5,P.y+1.45*sc,(Math.random()-.5)*2.4,1+Math.random()*1.2);/* água batendo na cabeça */
-  else if(!inF&&kWet.w>0&&Math.random()<kWet.w*.7)flDrop(P.x+(Math.random()-.5)*.45,P.y+(.25+Math.random()*.9)*sc,(Math.random()-.5)*.3,-.2)}/* pingando */
+  else if(!inF&&kWet.w>0&&Math.random()<kWet.w*.2)flDrop(P.x+(Math.random()-.5)*.45,P.y+(.25+Math.random()*.9)*sc,(Math.random()-.5)*.3,-.2)}/* pingando */
 /* ---------- ilhas que afundam ---------- */
 function buildSinks(){flSk=[];(LV.sinks||[]).forEach(function(q){var w=q[1]-q[0],cx=(q[0]+q[1])/2,g=new T.Group();
   var top=mesh(boxGeo(w,.36,1.8,1),grassM,true,true);top.position.y=-.18;g.add(top);
@@ -7919,9 +7919,15 @@ function farCastle(hm){var X=LV.castleX!==undefined?LV.castleX:22,Z=-58;
 
 /* gotinhas d'água (respingo nos troncos e o Kuro pingando): bolinhas azul-claras pequenas, poucas e reaproveitadas */
 var flDr=null;
-function flDrop(x,y,vx,vy){if(!flDr){var g=new T.SphereGeometry(.06,6,4),m=new T.MeshStandardMaterial({color:0xcff0ff,emissive:0x5ab8ff,emissiveIntensity:.5,roughness:.1,transparent:true,opacity:.85});flDr={L:[],i:0};for(var k=0;k<40;k++){var o=new T.Mesh(g,m);o.visible=false;o.scale.set(1,1.4,1);scene.add(o);flDr.L.push({m:o,t:0})}}
-  var d=flDr.L[flDr.i++%flDr.L.length];d.x=x;d.y=y;d.vx=vx;d.vy=vy;d.t=.7;d.m.visible=true;d.m.position.set(x,y,.35)}
-function flDropUpd(dt){if(!flDr)return;flDr.L.forEach(function(d){if(d.t<=0)return;d.t-=dt;d.vy-=14*dt;d.x+=d.vx*dt;d.y+=d.vy*dt;d.m.position.set(d.x,d.y,.35);if(d.t<=0)d.m.visible=false})}
+/* gotinha em forma de lágrima, transparente e brilhante: primeiro escorre um pouco pelo corpo do Kuro, depois cai, estica com a velocidade e some */
+function flDrop(x,y,vx,vy){if(!flDr){var top=new T.ConeGeometry(.026,.07,8,1,true);top.translate(0,.035,0);var bot=new T.SphereGeometry(.026,8,6,0,Math.PI*2,Math.PI/2,Math.PI/2);var g=mgL([top,bot]);
+    var m=new T.MeshPhysicalMaterial({color:0xe8f6ff,roughness:.05,metalness:0,transmission:0,transparent:true,opacity:.7,clearcoat:1,clearcoatRoughness:.05,emissive:0x2a5a7a,emissiveIntensity:.25});
+    flDr={L:[],i:0};for(var k=0;k<40;k++){var o=new T.Mesh(g,m.clone());o.visible=false;add(o);flDr.L.push({m:o,t:0})}}
+  var d=flDr.L[flDr.i++%flDr.L.length];d.x=x;d.y=y;d.vx=vx;d.vy=vy;d.t=.8;d.sl=vy<0?.22+Math.random()*.2:0;d.ox=x-P.x;d.oy=y-P.y;d.m.visible=true;d.m.scale.setScalar(.7+Math.random()*.5);d.m.position.set(x,y,.38);d.m.material.opacity=.75}
+function flDropUpd(dt){if(!flDr)return;flDr.L.forEach(function(d){if(d.t<=0)return;d.t-=dt;
+  if(d.sl>0){d.sl-=dt;d.oy-=dt*.6;d.x=P.x+d.ox;d.y=P.y+d.oy;d.vx=P.vx*.3;d.vy=-.5;d.m.scale.y=d.m.scale.x*1.1}/* escorrendo grudada no Kuro */
+  else{d.vy-=14*dt;d.x+=d.vx*dt;d.y+=d.vy*dt;d.m.scale.y=d.m.scale.x*(1+Math.min(1.6,Math.abs(d.vy)*.12))}/* caindo: estica */
+  d.m.position.set(d.x,d.y,.38);d.m.material.opacity=Math.min(.75,d.t*2.2);if(d.t<=0||d.y<P.y-1.2&&d.sl<=0&&d.t<.5)d.m.visible=false})}
 function flDropClear(){if(flDr)flDr.L.forEach(function(d){d.t=0;d.m.visible=false})}
 
 /* ---------- riacho: a água da cachoeira do fundo atravessa o caminho e cai pela beirada da frente; peixinhos pulam para o seco e voltam ---------- */
