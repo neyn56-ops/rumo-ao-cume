@@ -2020,7 +2020,7 @@ function applyTheme(th){
     var LK=LV.lake;mY=function(x,z){var d=clamp((-z-5)/40,0,1),n=Math.sin(x*.07+z*.11)*.5+Math.sin(x*.13-z*.05+1.7)*.3+Math.sin(x*.031+z*.17+.5)*.2,b=3.4*Math.pow(d,1.3)+n*1.2*(.12+d);
       var e=Math.min(clamp((x-LK[0]+3)/5,0,1),clamp((LK[1]+3-x)/5,0,1))*(1-clamp((-z-38)/9,0,1));return b*(1-e)-1.3*e};
   }else if(th.name==='wreck'){/* Naufrágio: areia perto do caminho que desce para o mar lá atrás (e para a direita, depois da praia) */
-    mY=function(x,z){var zz=-z-4+Math.sin(x*.13)*2.5+Math.sin(x*.37)*.8,d=clamp(zz/12,0,1),e=LV.shore!==undefined?clamp((x-LV.shore)/8,0,1):0;return .03-(d*d*2.4+e*2.4)+Math.sin(x*.5+z*.7)*.03*(1-d)};
+    mY=function(x,z){var zz=-z-4+Math.sin(x*.13)*2.5+Math.sin(x*.37)*.8,d=clamp(zz/12,0,1),e=LV.shore!==undefined?clamp((x-LV.shore)/8,0,1):0;var base=.03-(d*d*2.4+e*2.4)+Math.sin(x*.5+z*.7)*.03*(1-d),I=LV.island;if(I){var ix=clamp(Math.min(x-I.x0+3,I.x1+3-x)/5,0,1),iz=clamp((-z-11+Math.sin(x*.3)*1.5)/5,0,1),hi=.78-iz*iz*3;base=Math.max(base,base+(hi-base)*ix*(1-iz*.0))}return base};/* a ilha continua para trás (chão firme até o fundo, depois desce no mar) */
   }else if(th.name==='cave'){
     mY=function(x,z){return -.55+(Math.sin(x*.21+z*.13)*.5+Math.sin(x*.07-z*.31)*.5)*.35+(-5-z)*.02};
   }else{
@@ -8702,8 +8702,16 @@ function wkShip(S){var A=wkMats(),g=new T.Group(),r=rnd(4141),D=4.4,Z0=-3.0;
   [-1,1].forEach(function(sd){var fl=mesh(new T.ConeGeometry(.16,.4,4),A.rust,false,false);fl.position.set(sd*.75,.75,0);fl.rotation.z=sd*.6;an.add(fl)});
   var ri=mesh(new T.TorusGeometry(.2,.06,6,12),A.rust,false,false);ri.position.y=2;an.add(ri);var st2=mesh(new T.CylinderGeometry(.06,.06,1.1,6),A.rust,false,false);st2.rotation.z=Math.PI/2;st2.position.y=1.7;an.add(st2);
   an.position.set(S.anchor,.02,1.0);an.rotation.set(-1.35,.2,.3);add(an);
-  var ch=[];for(i=0;i<22;i++){var u=i/21,cx=S.anchor+.3+(S.x0+.2-S.anchor-.3)*u,cy=.15+Math.pow(u,2.4)*2.6,lk=new T.TorusGeometry(.12,.035,4,8);lk.rotateY(i%2?Math.PI/2:0);lk.translate(cx,cy,.8-u*.6);ch.push(lk)}
-  add(mesh(mgL(ch),A.iron,false,false))}
+  /* corrente: sai da argola da âncora, fica deitada na areia e sobe até o buraco na frente da proa */
+  an.updateMatrixWorld(true);var ra=new T.Vector3(0,2,0).applyMatrix4(an.matrixWorld),hp=new T.Vector3(S.x0+.7,2.5,Z0+D+.05),ch=[],P0=[];
+  var hw=mesh(new T.TorusGeometry(.22,.08,6,12),A.iron,false,false);hw.position.copy(hp);g.add(hw);var hh=mesh(new T.CircleGeometry(.16,10),M(0x050505,.9),false,false);hh.position.set(hp.x,hp.y,hp.z+.01);g.add(hh);
+  var gx=hp.x-1.6;/* até aqui a corrente fica no chão; depois sobe */
+  function cp(u){var x=ra.x+(hp.x-ra.x)*u,z=ra.z+(hp.z-ra.z)*u,y;if(x<gx)y=.07+Math.max(0,ra.y-.07)*Math.max(0,1-(x-ra.x)/.8);else{var k=(x-gx)/(hp.x-gx);y=.07+(hp.y-.07)*k*k}return new T.Vector3(x,y,z)}
+  var L2=0,prev=cp(0);for(var q=1;q<=200;q++){var c2=cp(q/200);L2+=c2.distanceTo(prev);prev=c2}var N=Math.round(L2/.2);
+  var pts=[cp(0)];for(q=1;q<=N;q++){var tgt=q*L2/N,acc=0,pv=cp(0),u=0;for(var z2=1;z2<=200;z2++){var cc=cp(z2/200);acc+=cc.distanceTo(pv);pv=cc;if(acc>=tgt){u=z2/200;break}}pts.push(cp(u||1))}
+  for(i=0;i<pts.length-1;i++){var a2=pts[i],b2=pts[i+1],lk=new T.TorusGeometry(.11,.032,4,8);lk.scale(1.45,1,1);if(i%2)lk.rotateX(Math.PI/2);
+    var m4=new T.Mesh(lk),dv=b2.clone().sub(a2);m4.position.copy(a2).add(b2).multiplyScalar(.5);m4.quaternion.setFromUnitVectors(new T.Vector3(1,0,0),dv.normalize());m4.updateMatrix();lk.applyMatrix4(m4.matrix);ch.push(lk)}
+  add(mesh(mgL(ch),A.iron,true,false))}
 function wkBarrel(g,x,y,z,s){var A=wkMats(),b=new T.Group();s=s||1;var bd=mesh(new T.CylinderGeometry(.38*s,.38*s,.95*s,12),A.wood,true,true);bd.position.y=.48*s;b.add(bd);
   [.15,.8].forEach(function(h){var hp=mesh(new T.TorusGeometry(.39*s,.035,4,16),A.iron,false,false);hp.rotation.x=Math.PI/2;hp.position.y=h*s;b.add(hp)});b.position.set(x,y,z);(g||W).add(b);return b}
 /* ---- praia: pedras, algas, conchas, madeira trazida pelo mar, poças ---- */
@@ -8983,7 +8991,7 @@ function wkIsland(){var I=LV.island;if(!I)return;var A=wkMats(),r=rnd(6161),PL=[
       var c=new T.CylinderGeometry(.13*s*(1-u*.3),.17*s*(1-u*.3),Math.hypot(nx-px,ny-py)+.05,7),m3=new T.Mesh(c);m3.position.set((px+nx)/2,(py+ny)/2,z);m3.rotation.z=-Math.atan2(nx-px,ny-py);m3.updateMatrix();c.applyMatrix4(m3.matrix);PL.push(c);px=nx;py=ny}
     for(k=0;k<7;k++){var an=k/7*Math.PI*2+r()*.4,lf=new T.ConeGeometry(.28*s,2.4*s,4,1);lf.translate(0,1.2*s,0);lf.scale(1,1,.25);lf.rotateZ(-Math.PI/2+.5+r()*.3);lf.rotateY(an);lf.translate(px,py,z);LF.push(lf)}
     for(k=0;k<3;k++){var co=new T.SphereGeometry(.16*s,8,6);co.translate(px+(r()-.5)*.3,py-.2,z+(r()-.5)*.3);CO.push(co)}}
-  for(var x=I.x0+2;x<I.x1;x+=3+r()*4)palm(x,I.top,-3.2-r()*4,.8+r()*.5);
+  for(var x=I.x0+2;x<I.x1;x+=3+r()*4){var pz=-3.2-r()*4;palm(x,Math.max(I.top,mY(x,pz))-.05,pz,.8+r()*.5)}/* em cima do chão da ilha */
   palm(I.x1-4,I.top,-1.9,1.15);/* (nenhuma palmeira na frente do caminho: tapava o Kuro) */
   add(mesh(mgL(PL),M(0x8a6a44,.85),true,false));add(mesh(mgL(LF),M(0x3a8a3a,.7,0,{side:T.DoubleSide,flatShading:true}),true,false));add(mesh(mgL(CO),M(0x5a3a1a,.7),false,false));
   /* poças (chão alagado) */
@@ -8995,7 +9003,7 @@ function wkIsland(){var I=LV.island;if(!I)return;var A=wkMats(),r=rnd(6161),PL=[
     for(var k2=0;k2<3;k2++){var br=mesh(new T.CylinderGeometry(.06,.1,1.4,5),M(0x6a5034,.9),false,false);br.position.set(q[0]+1+k2*w/3,I.top+1,(q[4]||0)-.2);br.rotation.set(.6,0,(k2-1)*.6);add(br)}
     if(j<(I.logs||[]).length)solids.push({l:q[0],r:q[1],t:I.top+.84,b:I.top,oneway:false})});
   /* pedras e mato */
-  var RK=[];for(k=0;k<20;k++){x=I.x0+r()*(I.x1-I.x0);RK.push(xf(new T.DodecahedronGeometry(.3+r()*.6,0),[x,I.top,-4-r()*4],[r()*3,r()*3,r()*3],[1.3,.7,1]))}add(mesh(mgL(RK),M(0x6a6660,.9,0,{flatShading:true}),true,true))}
+  var RK=[];for(k=0;k<20;k++){x=I.x0+r()*(I.x1-I.x0);var rz=-4-r()*4;RK.push(xf(new T.DodecahedronGeometry(.3+r()*.6,0),[x,Math.max(I.top,mY(x,rz)),rz],[r()*3,r()*3,r()*3],[1.3,.7,1]))}add(mesh(mgL(RK),M(0x6a6660,.9,0,{flatShading:true}),true,true))}
 function wkRock(s){var x0=s[0],x1=s[1],top=s[2],w=x1-x0,g=new T.Group(),r=rnd((x0*7)|0);
   var b=mesh(new T.DodecahedronGeometry(1,1),M(0x5a5e66,.9,0,{flatShading:true}),true,true);b.scale.set(w*.6,top+2,1.6);b.position.set(0,top-(top+2)+.05,-.3);g.add(b);
   var tp=mesh(boxGeo(w,.3,2,1),M(0x6a6e76,.9,0,{flatShading:true}),true,true);tp.position.set(0,top-.15,-.3);g.add(tp);
