@@ -8703,7 +8703,7 @@ function wkShip(S){var A=wkMats(),g=new T.Group(),r=rnd(4141),D=4.4,Z0=-3.0;
   var ri=mesh(new T.TorusGeometry(.2,.06,6,12),A.rust,false,false);ri.position.y=2;an.add(ri);var st2=mesh(new T.CylinderGeometry(.06,.06,1.1,6),A.rust,false,false);st2.rotation.z=Math.PI/2;st2.position.y=1.7;an.add(st2);
   an.position.set(S.anchor,.02,1.0);an.rotation.set(-1.35,.2,.3);add(an);
   /* corrente: sai da argola da âncora, fica deitada na areia e sobe até o buraco na frente da proa */
-  an.position.z=.2;an.updateMatrixWorld(true);var abx=new T.Box3().setFromObject(an);solids.push({l:abx.min.x+.15,r:abx.max.x-.15,t:Math.max(.35,abx.max.y-.1),b:0,oneway:false,anchor:1});/* a âncora é um obstáculo de verdade: o Kuro sobe nela ou pula */
+  an.position.z=.2;an.updateMatrixWorld(true);var abx=new T.Box3().setFromObject(an);solids.push({l:abx.min.x+.2,r:abx.max.x-.2,t:.45,b:0,oneway:true,anchor:1});/* a âncora é um degrau baixinho (como um bicho dormindo): o Kuro sobe andando */
   var ra=new T.Vector3(0,2,0).applyMatrix4(an.matrixWorld),hp=new T.Vector3(S.x0+.7,2.5,Z0+D+.05),ch=[],P0=[];
   var hw=mesh(new T.TorusGeometry(.22,.08,6,12),A.iron,false,false);hw.position.copy(hp);g.add(hw);var hh=mesh(new T.CircleGeometry(.16,10),M(0x050505,.9),false,false);hh.position.set(hp.x,hp.y,hp.z+.01);g.add(hh);
   var gx=hp.x-1.6;/* até aqui a corrente fica no chão; depois sobe */
@@ -9017,6 +9017,7 @@ function wkPart3Build(){if(LV.stern)wkStern(LV.stern);wkBossBuild();wkIsland();(
 function wkPart3Upd(dt){var t=WK.t;
   /* caranguejos não atravessam a âncora: batem nela e voltam */
   if(!WK.anc)WK.anc=solids.find(function(q){return q.anchor})||0;var an=WK.anc;
+  if(an&&state==='play'&&P.grounded&&P.onPlat!==an&&P.x>an.l&&P.x<an.r&&P.y<an.t&&P.y>an.t-.6){P.y=an.t;P.onPlat=an}/* andando, sobe no degrau */
   if(an)enemies.forEach(function(e){if(!e.alive||e.type!=='beetle'||e.y>an.t)return;var h=.45;if(e.x+h>an.l&&e.x-h<an.r){if(e.x<(an.l+an.r)/2){e.x=an.l-h;e.tr=Math.min(e.tr,an.l-h)}else{e.x=an.r+h;e.tl=Math.max(e.tl,an.r+h)}e.dir=-e.dir}});
   if(WK.sternG){WK.sternG.position.y=Math.sin(t*.9)*.02;WK.sternG.rotation.z=0}/* o desenho da popa fica alinhado ao chão de verdade (girar em volta do x=0 do mundo deslocava o navio metros para baixo) */
   if(WK.cap)wkBossUpd(dt);
