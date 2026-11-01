@@ -1935,7 +1935,7 @@ var WK_DEB=[['plank',95.5,98.5,.3],['crate',100.5,102.3,.9],['barrel',111.2,112.
 ].map(function(q){return {kind:q[0],cx:(q[1]+q[2])/2,w:q[2]-q[1],top:q[3],range:.9,speed:.55}});
 /* ===== Terra Nova — Mundo 19: O Naufrágio (ideia do dono, 31/10; chefe Capitão Corvo-Pirata no fim). Parte 1: a praia e a metade do navio encalhada ===== */
 LEVELS.push({name:'O Naufrágio',theme:20,music:16,camMax:416,limit:900,es:1.05,noLift:1,shore:94,part2:95,riverY:-.6,coinN:100,
- ship:{x0:31,fc:5.6,fx:40,deck:4.2,br:70,mast:{x:52,top:10.4},ladder:49.9,stump:64,anchor:20},
+ ship:{x0:31,fc:5.6,fx:40,deck:4.2,br:70,mast:{x:52,top:10.4},ladder:50.3,stump:64,anchor:20},
  solids:[[-14,94,0],
   [25.5,27.5,1.4,0,0,'crate'],[27.5,29.5,2.8,0,0,'crate'],
   [31,40,5.6,-3,0,'ship'],[40,70,4.2,-3,0,'ship'],[50.65,53.35,10.4,10.1,0,'ship'],
@@ -8671,18 +8671,20 @@ function wkShip(S){var A=wkMats(),g=new T.Group(),r=rnd(4141),D=4.4,Z0=-3.0;
   var nt=S.mast.top,nr=1.35;var nb=mesh(new T.CylinderGeometry(nr,nr*.85,.2,18),A.dark,true,true);nb.position.set(mx,nt-.1,mz);g.add(nb);
   for(i=0;i<14;i++){var an=i/14*Math.PI*2;if(Math.sin(an)>.55)continue;var sl2=mesh(new T.BoxGeometry(.1,.75,.1),A.wood,false,false);sl2.position.set(mx+Math.cos(an)*nr,nt+.37,mz+Math.sin(an)*nr);g.add(sl2)}/* ripas do cesto (a frente aberta) */
   var rg=mesh(new T.TorusGeometry(nr,.05,4,24,Math.PI*1.3),A.wood,false,false);rg.rotation.x=Math.PI/2;rg.rotation.z=Math.PI*.85;rg.position.set(mx,nt+.75,mz);g.add(rg);
-  /* escada de corda (vai do convés ao cesto) */
-  var lx=S.ladder,L=[];[-.28,.28].forEach(function(dx){var c=new T.CylinderGeometry(.03,.03,nt-S.deck,4);c.translate(lx+dx,(nt+S.deck)/2,-.35);L.push(c)});
-  for(var y=S.deck+.4;y<nt;y+=.45){var d=new T.CylinderGeometry(.03,.03,.6,4);d.rotateZ(Math.PI/2);d.translate(lx,y,-.35);L.push(d)}
-  /* em cima: as cordas da escada sobem até a borda do cesto e são amarradas nela; embaixo: argolas presas no convés */
-  var rimX=mx-nr+.05;[-.28,.28].forEach(function(dx){var a1=new T.Vector3(lx+dx,nt-.02,-.35),b1=new T.Vector3(rimX,nt+.7,-.35+dx*.9),cc=new T.CylinderGeometry(.03,.03,a1.distanceTo(b1),4);
-    var m3=new T.Mesh(cc);m3.position.copy(a1).add(b1).multiplyScalar(.5);m3.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),b1.clone().sub(a1).normalize());m3.updateMatrix();cc.applyMatrix4(m3.matrix);L.push(cc);
-    var kn=new T.SphereGeometry(.07,6,5);kn.translate(rimX,nt+.7,-.35+dx*.9);L.push(kn)});
-  var tb=new T.CylinderGeometry(.045,.045,.75,5);tb.rotateZ(Math.PI/2);tb.translate((lx+rimX)/2,nt-.08,-.35);L.push(tb);/* tábua que liga o topo da escada ao cesto */
+  /* escada de corda: sobe reta encostada no cesto e as duas cordas passam por cima da borda dele (ganchos) */
+  var lx=S.ladder,L=[],ltop=nt+.85;[-.28,.28].forEach(function(dx){var c=new T.CylinderGeometry(.035,.035,ltop-S.deck,4);c.translate(lx+dx,(ltop+S.deck)/2,-.35);L.push(c);
+    var hk=new T.TorusGeometry(.14,.035,4,8,Math.PI);hk.translate(lx+dx+.14,ltop,-.35);L.push(hk)});/* gancho sobre a borda do cesto */
+  for(var y=S.deck+.4;y<nt+.6;y+=.45){var d=new T.CylinderGeometry(.03,.03,.6,4);d.rotateZ(Math.PI/2);d.translate(lx,y,-.35);L.push(d)}
   g.add(mesh(mgL(L),A.rope,false,false));
   [-.28,.28].forEach(function(dx){var ri=mesh(new T.TorusGeometry(.09,.03,5,10),A.iron,false,false);ri.rotation.x=Math.PI/2;ri.position.set(lx+dx,S.deck+.03,-.35);g.add(ri)});
-  var bm2=mesh(new T.BoxGeometry(.8,.12,.12),A.dark,true,false);bm2.position.set((lx+rimX)/2,nt-.18,-.35);g.add(bm2);/* viga de madeira que segura a escada no cesto */
   vines.push({x:lx,y0:S.deck,top:nt,len:nt-S.deck,max:nt-S.deck,g:new T.Object3D(),stem:new T.Object3D(),leaves:[],ladder:1});
+  /* bandeira pirata no topo do mastro (balança com o vento) */
+  var fc=document.createElement('canvas');fc.width=128;fc.height=80;var fx=fc.getContext('2d');fx.fillStyle='#14161c';fx.fillRect(0,0,128,80);fx.fillStyle='#e8e4d8';
+  fx.beginPath();fx.arc(64,34,15,0,6.3);fx.fill();fx.fillRect(56,42,16,10);fx.fillStyle='#14161c';fx.beginPath();fx.arc(58,33,4.5,0,6.3);fx.arc(70,33,4.5,0,6.3);fx.fill();
+  fx.strokeStyle='#e8e4d8';fx.lineWidth=6;fx.lineCap='round';fx.beginPath();fx.moveTo(38,58);fx.lineTo(90,72);fx.moveTo(90,58);fx.lineTo(38,72);fx.stroke();
+  var ft=new T.CanvasTexture(fc);ft.encoding=T.sRGBEncoding;var fg=new T.PlaneGeometry(1.8,1.1,10,4);fg.translate(.9,0,0);
+  var fl=new T.Mesh(fg,new T.MeshStandardMaterial({map:ft,roughness:.9,side:T.DoubleSide}));fl.position.set(mx,mt-.15,mz);g.add(fl);WK.jolly={m:fl,base:fg.attributes.position.array.slice()};
+  var bl=mesh(new T.SphereGeometry(.14,8,6),A.iron,false,false);bl.position.set(mx,mt+.32,mz);g.add(bl);
   /* cordame: cordas do topo do mastro até as bordas */
   [[S.x0+2,S.fc+.9],[S.fx+4,S.deck+.9],[j-1,S.deck+.9],[j-6,S.deck+.9]].forEach(function(q){var a=new T.Vector3(mx,mt-.4,mz),b=new T.Vector3(q[0],q[1],Z0+.2),c=new T.CylinderGeometry(.025,.025,a.distanceTo(b),4),m2=mesh(c,A.rope,false,false);m2.position.copy(a).add(b).multiplyScalar(.5);m2.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),b.clone().sub(a).normalize());g.add(m2)});
   /* toco do segundo mastro, quebrado, com a vela rasgada pendurada */
@@ -8785,6 +8787,7 @@ function wkUpd(dt){if(!WK)return;WK.t+=dt;var t=WK.t;wkPart2Upd(dt);wkPart3Upd(d
   if(WK.foam){WK.foam.material.opacity=.3+Math.sin(t*1.1)*.15;WK.foam.position.z=-11+Math.sin(t*1.1)*.6}
   (WK.far||[]).forEach(function(f){f.o.position.y=-.45+wkSeaH(f.x,f.z,t);f.o.rotation.z=Math.sin(t+f.ph)*.15;f.o.rotation.x=Math.cos(t*.8+f.ph)*.1});
   if(WK.stern)WK.stern.rotation.z=.12+Math.sin(t*.7)*.04;
+  if(WK.jolly){var J=WK.jolly,pa=J.m.geometry.attributes.position,bs=J.base;for(var q=0;q<pa.count;q++){var xx=bs[q*3];pa.array[q*3+2]=Math.sin(xx*2.6-t*7)*.16*xx/1.8;pa.array[q*3+1]=bs[q*3+1]-xx*xx*.04}pa.needsUpdate=true;J.m.rotation.y=-.3+Math.sin(t*.8)*.15}
   if(WK.sail){WK.sail.rotation.x=-(.03+(.5+.5*Math.sin(t*2.2))*.07*I)}/* a vela estufa com o vento (sem girar para dentro das cordas) */
   /* chuva inclinada pelo vento, segue a câmera */
   var rn=WK.rain;if(rn){var p=rn.geometry.attributes.position.array,sp=26*dt,wx=-(5+I*5)*dt;for(i=0;i<p.length;i+=6){p[i+1]-=sp;p[i+4]-=sp;p[i]+=wx;p[i+3]+=wx;if(p[i+1]<-7){var nx=(Math.random()-.5)*50,ny=19+Math.random()*4;p[i]=nx;p[i+1]=ny;p[i+3]=nx-.25-I*.3;p[i+4]=ny-1.1}}
