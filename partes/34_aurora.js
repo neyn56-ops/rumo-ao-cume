@@ -46,7 +46,7 @@ function auroraBuild(th){A0=auMats();
     var uf=new T.Mesh(new T.PlaneGeometry(W,60),new T.MeshBasicMaterial({color:0x0a2238,fog:false}));uf.rotation.x=-Math.PI/2;uf.position.set(cx,-14,-26);add(uf)}
   /* ---- pinheiros com neve: nas margens, na ilha e uma fileira do outro lado do lago ---- */
   var PT=[],xe=sceneEnd();function pine(x,y,z,s){PT.push([x,y,z,s])}
-  for(var px=-14;px<xe+20;px+=1.6+r()*2.2){var inL=LV.lake&&px>LV.lake[0]-1&&px<LV.lake[1]+1;
+  for(var px=-14;px<xe+20;px+=1.6+r()*2.2){var inL=LV.lake&&px>LV.lake[0]-101&&px<LV.lake[1]+101;/* a água do lago vai 100 além de cada ponta: ali também não tem chão */
     if(!inL){var zz=-6-r()*16;pine(px,mY(px,zz),zz,.8+r()*.8)}
     var zb=-50-r()*10;pine(px+r(),mY(px,zb),zb,1.3+r()*1.1)}
   (LV.solids||[]).forEach(function(q){if(q[4]||q[1]-q[0]>40||q[0]<0)return;var vl4=!!LV.vila&&q[1]<=LV.vila.end;if(vl4)return;for(var k2=0;k2<4;k2++){var x4=q[0]+1+r()*(q[1]-q[0]-2);pine(x4,q[2],-3.1-r()*1.2,.55+r()*.35)}/* em cima do bloco de gelo (antes ficavam atrás dele, em cima da água) */});
@@ -312,7 +312,7 @@ function auBack(){var A=auMats(),r=rnd(909),xe=sceneEnd(),G=[],S=[],PN=[];
     var g=new T.BoxGeometry(w,h,w*.8);g.rotateY((r()-.5)*.4);g.translate(x,y0+h/2,z);G.push(g);
     var c=new T.BoxGeometry(w+.25,.45,w*.8+.25);c.rotateY((r()-.5)*.2);c.translate(x,y0+h+.1,z);S.push(c);
     for(var k=0;k<4;k++){var d=new T.SphereGeometry(.2+r()*.15,6,5);d.scale(1,1.6,.8);d.translate(x-w/2+r()*w,y0+h-.25,z+w*.4);S.push(d)}
-    if(r()<.45)PN.push([x+(r()-.5)*w*.5,y0+h+.3,z,.5+r()*.4])}
+    if(r()<.45)r();}/* pinheirinho em cima do pilar saiu: atrás de outro pilar parecia flutuar */
   if(G.length){add(mesh(mgL(G),A.ice,false,true));add(mesh(mgL(S),A.snow,false,false))}
   if(PN.length){var cg=[];for(var t=0;t<3;t++){var c2=new T.ConeGeometry(1.05-t*.27,1.3,8);c2.translate(0,1.1+t*.78,0);cg.push(c2)}var im=inst(mgL(cg),M(0x1c4a3a,.85,0,{flatShading:true}),PN.length,false),dd=new T.Object3D();
     PN.forEach(function(q,j){dd.position.set(q[0],q[1],q[2]);dd.scale.setScalar(q[3]);dd.updateMatrix();im.setMatrixAt(j,dd.matrix)});add(im)}
