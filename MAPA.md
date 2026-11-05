@@ -2,7 +2,7 @@
 
 Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp partes/ARQ`.
 
-## 00_inicio.html  (212 linhas) 
+## 00_inicio.html  (229 linhas) 
 
 ## 01_motor.js  (959 linhas) /*@@parte:01_motor.js*/
 - fail :6
@@ -918,6 +918,20 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - viewLeft :432 — borda esquerda que a câmera mostra quando está no começo da fase (na altura do chão)
 - updateCamera :433
 
+## 65_carregando.js  (122 linhas) /*@@parte:65_carregando.js*/
+- ldSkyTex :11
+- ldGlowTex :14
+- ldFallTex :16
+- ldScenery :19 — cenário parado: tudo numa malha só, cada peça com sua cor
+- P :19
+- ldStart :54
+- ldTip :77
+- ldPose :78
+- ldFrame :96
+- ldBoot :108 — monta o jogo em etapas; entre uma e outra a cena anda. fim(): começa o laço do jogo
+- next :112
+- finish :119
+
 ## 70_entrada.js  (347 linhas) /*@@parte:70_entrada.js*/
 - dblTap :4
 - press :14
@@ -957,7 +971,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - resumeGame :316
 - closeCfg :321
 
-## 71_laco_e_mapa.js  (570 linhas) /*@@parte:71_laco_e_mapa.js*/
+## 71_laco_e_mapa.js  (569 linhas) /*@@parte:71_laco_e_mapa.js*/
 - render :4
 - onSea :44
 - mapHeight :46

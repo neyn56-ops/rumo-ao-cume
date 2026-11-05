@@ -529,3 +529,11 @@ A área de trabalho do Claude é temporária. Para recomeçar:
 - **Arco de pedra de verdade** (cnArch): passarela reta na frente (onde o Kuro anda por baixo) e arco curvo atrás, pernas entrando no abismo, pedrinhas de luz dourada pela curva de dentro.
 - Teto não faz sombra no chão (o chão das gargantas ficava escuro).
 - Mundo 19: corrigido travamento na luta do Capitão (lista de barris esvaziava no meio da conta quando o Kuro caía).
+
+### Tela de carregamento (05/11)
+- Parte nova `65_carregando.js` + HTML/CSS `#ld` em 00_inicio.html. Inspirada numa imagem do dono (só inspiração): o Kuro (o mesmo modelo do jogo) e a raposinha na beira de um penhasco de grama, placa de madeira com montanha, cogumelo, moitas; ao fundo o Cume nevado com estrela dourada brilhando, ilhas flutuantes com castelinhos, casinha, árvores e cachoeiras, ponte de corda, nuvens passando e mar de nuvens. Câmera chega perto devagar.
+- Por cima (HTML): placa de pedra com "RUMO AO CUME" dourado e "Explore • Pule • Conquiste", "Grandes aventuras te esperam!", "Carregando..." com barra amarela e % real, dicas verdadeiras do jogo trocando a cada 3,2 s.
+- O jogo agora se monta em etapas (`ldBoot` no fim de 71_laco_e_mapa.js: gráficos → fase → estado → mapa → shaders); a cena anda entre elas. Mínimo de 2,6 s na tela; no fim o Kuro e a raposinha pulam, clarão e abre o mapa. Durante o carregamento o resto da interface fica escondido (body.ldg).
+- Leve: cenário parado em 1 malha só (cores por vértice), sem sombras. Antes do 3D aparecer, o fundo já é o céu em degradê (não mais preto); a cor da abertura do app (manifest) também virou azul-céu.
+- Testes: `window.__noLoad` (copia_teste.py) monta direto, sem a tela. Fotos da tela: `node testes/ldf.js '["LD.t=0"]'` (window.__ldHold segura a tela).
+- Obs. testes: a bateria completa às vezes derruba a página no teste 62 por falta de memória (acumula ~60 testes na mesma página); rodando `node testes/so.js 62 63` passam.

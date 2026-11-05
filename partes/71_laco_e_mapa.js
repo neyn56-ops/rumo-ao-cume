@@ -557,14 +557,13 @@ function frame(now){
 }
 
 /*DEBUG_HOOK*/
-setHearts();
-applyGfx();
-buildLevel(0);
-resetState();
-updateCamera(0,true);
-openMap();/* o jogo abre direto no mapa (o título fica no botão Início) */
-/* depois de recarregar por troca de qualidade: volta direto para as configurações com a prévia */
-try{if(sessionStorage.getItem('rac-reopen')==='cfg'){sessionStorage.removeItem('rac-reopen');setTimeout(function(){if(window.__openCfg){leaveMap();if(window.__cfgFromMap)window.__cfgFromMap();window.__openCfg()}},60)}}catch(e){}
-requestAnimationFrame(frame);
+/* montagem em etapas com a tela de carregamento (65_carregando.js) */
+ldBoot([function(){setHearts();applyGfx()},function(){buildLevel(0)},function(){resetState();updateCamera(0,true)},
+  function(){openMap()/* o jogo abre direto no mapa (o título fica no botão Início) */},
+  function(){try{renderer.compile(mapScene,camera)}catch(e){}}],
+ function(){
+  /* depois de recarregar por troca de qualidade: volta direto para as configurações com a prévia */
+  try{if(sessionStorage.getItem('rac-reopen')==='cfg'){sessionStorage.removeItem('rac-reopen');setTimeout(function(){if(window.__openCfg){leaveMap();if(window.__cfgFromMap)window.__cfgFromMap();window.__openCfg()}},60)}}catch(e){}
+  requestAnimationFrame(frame)});
 })();
 </script>

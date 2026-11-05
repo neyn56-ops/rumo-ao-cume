@@ -157,9 +157,26 @@ html.touch #stickZone{display:block;pointer-events:auto}
 #mpG{display:flex;gap:14px;font-size:14px;color:#cfe3ee;font-weight:600}
 #mapPanel .btn{margin-top:4px}
 @media (max-height:430px){#mapPanel{padding:10px 12px;bottom:10px}#mapPanel b{font-size:23px}#mapHint{font-size:11px}}
+/* tela de carregamento (65_carregando.js): textos e barra por cima da cena 3D */
+#ld{position:fixed;inset:0;z-index:999;pointer-events:none;background:linear-gradient(#1d63d8,#4f9cf0 45%,#a8d6ff 72%,#ffe9c4 88%,#fff6e2);transition:background .35s,opacity .6s;font-family:var(--display);color:#fff}
+body.ldg>*:not(#stage):not(#ld):not(script){visibility:hidden!important}/* carregando: esconde a tela do mapa por baixo */
+#ld.on3d{background:transparent}#ld.flash{background:#fff8e8}#ld.sai{opacity:0}
+#ldLogo{position:absolute;left:max(18px,env(safe-area-inset-left));top:14px;padding:10px 26px 14px;border-radius:22px;background:linear-gradient(#a08a72,#6e5a48);border:4px solid #4f3e30;box-shadow:inset 0 3px 0 rgba(255,255,255,.25),inset 0 -6px 0 rgba(0,0,0,.25),0 6px 16px rgba(0,0,0,.35),0 -5px 0 -1px #5fa83a;transform:rotate(-3deg);text-align:center}
+#ldLogo b{display:block;font-style:italic;font-weight:700;line-height:.86;text-transform:uppercase;background:linear-gradient(#fff3b0,#ffc61a 55%,#e88a00);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:2px #5a3208;filter:drop-shadow(0 3px 0 #3a2208)}
+#ldLogo .l1{font-size:clamp(24px,5.4vw,46px)}#ldLogo .l2{font-size:clamp(46px,10.5vw,92px)}
+#ldLogo i{display:inline-block;margin-top:6px;padding:3px 14px;border-radius:6px;background:linear-gradient(#b07a44,#7a4e28);border:2px solid #4a2e16;font-family:var(--body);font-style:normal;font-weight:600;font-size:clamp(11px,1.8vw,16px);color:#ffe9b0;letter-spacing:.04em}
+#ldSlo{position:absolute;right:max(18px,env(safe-area-inset-right));top:18px;font-style:italic;font-weight:700;font-size:clamp(17px,3vw,30px);line-height:1;text-align:right;transform:rotate(-6deg);text-shadow:0 2px 6px rgba(0,40,110,.6)}
+#ldBox{position:absolute;left:max(22px,env(safe-area-inset-left));bottom:14px;width:min(56vw,520px)}
+#ldBox p{margin:0 0 6px;font-style:italic;font-weight:700;font-size:clamp(16px,2.6vw,24px);text-shadow:0 2px 4px rgba(0,0,0,.6)}
+#ldBar{position:relative;height:16px;border-radius:9px;background:rgba(20,16,12,.75);border:2px solid #f0c040}
+#ldFill{position:absolute;left:0;top:0;bottom:0;width:4%;background:linear-gradient(#fff6a0,#ffd21a 50%,#f0a800);border-radius:7px;box-shadow:0 0 10px #ffd21a}
+#ldPct{position:absolute;right:-58px;top:-6px;font-weight:700;font-size:20px;text-shadow:0 2px 4px rgba(0,0,0,.6)}
+#ldTip{margin-top:6px;min-height:1.2em;font-family:var(--body);font-weight:600;font-size:clamp(11px,1.7vw,14px);text-shadow:0 1px 3px rgba(0,0,0,.8)}
+#ldTip:before{content:'\1F4A1  Dica: '}
 </style>
 
 <div id="stage"></div>
+<div id="ld"><div id="ldLogo"><b class="l1">Rumo ao</b><b class="l2">Cume</b><i>Explore • Pule • Conquiste</i></div><div id="ldSlo">Grandes aventuras<br>te esperam!</div><div id="ldBox"><p>Carregando...</p><div id="ldBar"><div id="ldFill"></div><span id="ldPct">0%</span></div><div id="ldTip">Pule em cima dos inimigos para derrotá-los</div></div></div>
 <div id="hud">
   <div class="top">
     <div class="stat" id="hearts" aria-label="Vidas"></div>

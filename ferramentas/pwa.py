@@ -37,7 +37,7 @@ def icon(n,mask=False):
 for n in (192,512):icon(n).save(O+f'/icons/icon-{n}.png')
 icon(512,True).save(O+'/icons/maskable-512.png')
 json.dump({"name":"Rumo ao Cume","short_name":"Rumo ao Cume","description":"As aventuras do ninja Kuro","start_url":"./","scope":"./","display":"fullscreen","orientation":"landscape",
- "background_color":"#16202a","theme_color":"#16202a","lang":"pt-BR",
+ "background_color":"#4f9cf0","theme_color":"#16202a","lang":"pt-BR",
  "icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png"},{"src":"icons/maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]},
  open(O+'/manifest.webmanifest','w'),ensure_ascii=False,indent=1)
 ver=hashlib.md5(open(O+'/index.html','rb').read()+open(O+'/manifest.webmanifest','rb').read()).hexdigest()[:8]  # versão do cache = conteúdo final (muda sozinha)
