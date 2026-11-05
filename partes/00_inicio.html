@@ -1,0 +1,212 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Rumo ao Cume</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700&family=Barlow:wght@500;600&display=swap">
+<style>
+/* Layout: palco 3D em tela cheia, HUD no topo, botões de toque nos cantos de baixo, cartão central para história, mapa e fim de fase */
+:root{
+  --ink:#12171b; --moss:#7aa84a; --gold:#ffc233; --ember:#ff6a3d; --mist:#e6eef2; --ice:#8fd8ff;
+  --glass:rgba(14,19,23,.58); --line:rgba(255,255,255,.14);
+  --display:"Barlow Condensed","Arial Narrow",Impact,sans-serif;
+  --body:"Barlow","Helvetica Neue",Arial,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{position:relative;margin:0;background:var(--ink);color:var(--mist);font-family:var(--body);font-weight:500;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+#stage{position:absolute;inset:0;background:var(--ink)}
+#stage canvas{display:block;width:100%;height:100%}
+#hud{position:absolute;inset:0;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.stat,.tbtn{display:flex;align-items:center;gap:7px;min-height:34px;padding:0 12px;box-sizing:border-box;background:var(--glass);border:1px solid var(--line);border-radius:10px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font-family:var(--display);font-style:italic;font-weight:700;font-size:20px;letter-spacing:.04em;text-transform:uppercase;color:var(--mist);font-variant-numeric:tabular-nums}
+.stat .of{font-size:15px;opacity:.6}
+.stat.low{color:#ff6b5e;border-color:rgba(255,107,94,.8);animation:lowT .8s ease-in-out infinite}
+@keyframes lowT{50%{background:rgba(255,80,60,.35)}}
+.grow{flex:1}
+.tbtn{pointer-events:auto;cursor:pointer;font-size:14px;font-style:normal;font-family:var(--body);font-weight:600;letter-spacing:.02em;text-transform:none}
+.tbtn:focus-visible,.btn:focus-visible,.pad-btn:focus-visible,.wbtn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.nocur,.nocur *{cursor:none!important}
+.kfocus{outline:3px solid #fff!important;outline-offset:3px;box-shadow:0 0 0 6px rgba(255,210,74,.55)!important;position:relative;z-index:1}/* destaque do teclado/controle */
+input[type=range].kfocus{outline-offset:6px}
+.heart{width:22px;height:22px;fill:var(--ember)}
+.hplus{font-weight:800;font-size:16px;color:#fff;margin-left:4px;align-self:center;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.heart.off{fill:none;stroke:var(--ember);stroke-width:2;opacity:.4}
+.coin-ico{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff1b0,var(--gold) 55%,#b57a00)}
+.gem-ico{width:18px;height:18px;fill:var(--ice)}
+.feather-stat{color:#bff3ff}
+#bossBar{position:absolute;left:50%;top:54px;transform:translateX(-50%);width:min(320px,60%);display:flex;flex-direction:column;gap:4px;align-items:stretch;pointer-events:none}
+#bossBar span{font-family:var(--display);font-style:italic;font-weight:700;font-size:16px;letter-spacing:.1em;text-transform:uppercase;text-align:center;color:var(--gold);text-shadow:0 1px 3px rgba(0,0,0,.7)}
+#bossBar .bar{height:12px;border-radius:7px;background:rgba(0,0,0,.5);border:1px solid var(--line);overflow:hidden}
+#bossFill{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--ember),var(--gold));transition:width .3s}
+#pad{display:none;justify-content:flex-end;align-items:flex-end;gap:16px}
+html.touch #pad{display:flex}
+#stickZone{position:absolute;left:0;top:56px;width:56%;bottom:0;display:none;touch-action:none}
+html.touch #stickZone{display:block;pointer-events:auto}
+#stickBase{position:absolute;left:max(26px,env(safe-area-inset-left,0px));bottom:42px;width:128px;height:128px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.05),rgba(255,255,255,.15));border:2px solid rgba(255,255,255,.3);opacity:.5;pointer-events:none;transition:opacity .15s}
+#stickBase.on{opacity:.95}
+#stickKnob{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--gold) 70%);box-shadow:0 2px 10px rgba(0,0,0,.45)}
+.pad-btn{pointer-events:auto;width:92px;height:92px;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:radial-gradient(circle at 35% 30%,#ffd86b,var(--gold) 60%,#c58a00);color:var(--ink);font-family:var(--display);font-style:italic;font-weight:700;font-size:20px;letter-spacing:.05em;text-transform:uppercase;touch-action:none;cursor:pointer}
+.pad-btn.on{transform:scale(.94);filter:brightness(1.1)}
+.pad-btn.sj{transform:translateY(-10px) rotate(25deg) scale(.94)}
+.pad-btn[hidden],.stat[hidden]{display:none}
+.pad-btn.star{position:absolute;right:22px;bottom:150px;width:62px;height:62px;font-size:11px;background:radial-gradient(circle at 35% 30%,#cfe0ff,#5a78c8 60%,#2a3a80);color:#fff}
+.pad-btn.fire{background:radial-gradient(circle at 35% 30%,#ffd08a,#ff7a2a 60%,#c4300a);color:#fff;width:80px;height:80px;margin-left:-96px}
+#bJump{margin-bottom:40px;margin-right:96px}/* guarda o lugar do botão Fogo, para o Pular não mudar de posição ao pegar um poder */
+.fire-stat{color:#ffb15a}
+.cape-stat{color:#ffe08a}
+.air-stat{color:#a6ecff;position:absolute;left:max(16px,env(safe-area-inset-left,0px));top:54px}
+#airBox i{background:linear-gradient(90deg,#7fe9ff,#3b9bff)}
+#airBox.low i{background:linear-gradient(90deg,#ff9a8a,#ff4a3a)}
+.pm{display:inline-block;width:58px;height:10px;border-radius:6px;background:rgba(255,255,255,.2);overflow:hidden}
+.pm i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffcf5a,#ff7a2a)}
+.pm.full i{background:linear-gradient(90deg,#8dffb5,#3bd47a);box-shadow:0 0 8px #7dffb0}
+#stickBase.run{border-color:rgba(255,150,60,.85)}
+#stickBase.run #stickKnob{background:radial-gradient(circle at 35% 30%,#fff,#ff8a2a 70%)}
+#card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(580px,calc(100% - 32px));box-sizing:border-box;padding:22px;background:rgba(12,17,21,.84);border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;flex-direction:column;gap:12px;max-height:calc(100% - 20px);overflow:auto}
+#cardKicker{margin:0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--moss);font-weight:600}
+#cardTitle{margin:0;font-family:var(--display);font-style:italic;font-weight:700;font-size:clamp(38px,9vw,60px);line-height:.95;text-transform:uppercase;color:var(--gold);text-wrap:balance}
+#cardText{margin:0;font-size:16px;line-height:1.45;color:#cfdce3;max-width:60ch}
+#cardStats{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0;padding:0;list-style:none;font-family:var(--display);font-style:italic;font-weight:700;font-size:22px;letter-spacing:.03em;text-transform:uppercase;font-variant-numeric:tabular-nums}
+#cardStats small{display:block;font-family:var(--body);font-style:normal;font-weight:600;font-size:11px;letter-spacing:.12em;color:#8fa3ae}
+#worlds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.wbtn{display:flex;flex-direction:column;gap:2px;align-items:flex-start;padding:9px 10px;min-width:0;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;color:var(--mist);font-family:var(--body);text-align:left;cursor:pointer}
+.wbtn small{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8fa3ae;font-weight:600}
+.wbtn b{font-family:var(--display);font-style:italic;font-size:17px;line-height:1.05;text-transform:uppercase;color:var(--gold)}
+.wbtn span{font-size:12px;color:#9fd8ee}
+.wbtn:disabled{opacity:.45;cursor:default}
+.wbtn:not(:disabled):hover{background:rgba(255,255,255,.12)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{min-height:48px;padding:0 26px;border:0;border-radius:10px;background:var(--gold);color:var(--ink);font-family:var(--display);font-style:italic;font-weight:700;font-size:24px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--mist);border:1px solid var(--line);font-size:20px}
+.btn:active{transform:translateY(1px)}
+#hint{margin:0;font-size:13px;color:#8fa3ae;line-height:1.4}
+#toast{position:absolute;left:50%;top:60px;transform:translateX(-50%);padding:8px 14px;background:var(--glass);border:1px solid var(--line);border-radius:10px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;max-width:calc(100% - 32px);overflow:hidden;text-overflow:ellipsis}
+#toast.show{opacity:1}
+#fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+@media (max-height:430px){
+  #card{padding:14px;gap:8px}
+  .wbtn{padding:7px 8px}.wbtn b{font-size:15px}
+  #cardTitle{font-size:34px}
+  #cardText{font-size:14px;line-height:1.35}
+  .stat,.tbtn{min-height:30px}
+  #stickBase{width:108px;height:108px}
+  .pad-btn{width:80px;height:80px}
+  .btn{min-height:42px;font-size:21px}
+  #bossBar{top:46px}
+}
+@media (prefers-reduced-motion:reduce){#bossFill{transition:none}}
+
+#pauseBtn{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:10px;z-index:30;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--glass);color:var(--mist);font:700 14px var(--body);letter-spacing:-2px;padding:0;touch-action:manipulation;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#pauseBtn[hidden]{display:none}
+#cfg.pausing #cfgBox h2{order:-2}
+#cfg.pausing #cfgBox .actions{order:-1;flex-wrap:wrap;gap:8px}
+#cfg.pausing #cfgBox .actions .btn{font-size:16px;min-height:42px;padding-block:6px}
+#fsBtn{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:54px;z-index:30;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--glass);color:var(--mist);font:600 13px var(--body);letter-spacing:.04em;touch-action:manipulation;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#rotHint{position:fixed;inset:0;z-index:99;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(10,14,18,.94);color:var(--mist);font:italic 700 26px var(--display);text-align:center;padding:24px}
+#rotHint i{font-style:normal;font-size:54px;display:block;animation:rotp 1.6s ease-in-out infinite}
+@keyframes rotp{0%,30%{transform:rotate(0)}70%,100%{transform:rotate(-90deg)}}
+@media (orientation:portrait) and (pointer:coarse){#rotHint{display:flex}}
+
+#fpsBox{position:absolute;left:50%;top:6px;transform:translateX(-50%);z-index:35;padding:2px 9px;border-radius:8px;background:rgba(0,0,0,.5);color:#bff59a;font:700 12px var(--body);pointer-events:none;font-variant-numeric:tabular-nums}
+#cfg{position:absolute;inset:0;z-index:60;background:rgba(6,9,12,.82);display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box;touch-action:pan-y}
+#cfg[hidden]{display:none}
+#cfgBox{width:min(760px,100%);max-height:100%;overflow-y:auto;box-sizing:border-box;padding:18px 20px;background:rgba(12,17,21,.96);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;gap:12px;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+#cfgBox h2{margin:0;font-family:var(--display);font-style:italic;font-size:32px;color:var(--gold);text-transform:uppercase;line-height:1}
+#cfgRows{display:grid;grid-template-columns:1fr 1fr;gap:9px 14px}
+#cfgRows .full{grid-column:1/-1}
+.crow{display:flex;flex-direction:column;gap:5px;min-width:0}
+.crow>label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#8fa3ae;font-weight:600}
+.crow>label em{font-style:normal;text-transform:none;letter-spacing:0;color:#6f8591}
+.seg{display:flex;gap:4px;flex-wrap:wrap}
+.seg button{flex:1 1 auto;min-height:34px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--mist);font:600 13px var(--body);touch-action:manipulation;cursor:pointer}
+.seg button.on{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.seg button:disabled:not(.on){opacity:.4}
+.crow input[type=range]{width:100%;accent-color:#ffc233;touch-action:pan-x}
+@media (max-width:640px){#cfgRows{grid-template-columns:1fr}}
+@media (max-height:430px){#cfgBox{padding:12px 14px;gap:8px}#cfgBox h2{font-size:26px}.seg button{min-height:30px}}
+
+#cmp{position:absolute;inset:0;z-index:55;pointer-events:none;--cx:35%;--pw:min(440px,54%)}
+#cmp[hidden]{display:none}
+#cmpImg{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;clip-path:inset(0 calc(100% - var(--cx)) 0 0)}
+#cmpBar{position:absolute;top:0;bottom:0;left:var(--cx);width:44px;margin-left:-22px;pointer-events:auto;touch-action:none;cursor:ew-resize;display:flex;align-items:center;justify-content:center}
+#cmpBar::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 6px rgba(0,0,0,.6)}
+#cmpBar i{position:relative;width:30px;height:30px;border-radius:50%;background:#fff;box-shadow:0 1px 8px rgba(0,0,0,.5)}
+#cmpBar i::before{content:"\2194";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#12171b;font:700 16px var(--body)}
+.cmpL,.cmpR{position:absolute;top:10px;padding:3px 10px;border-radius:8px;background:rgba(0,0,0,.55);color:#fff;font:700 12px var(--body);letter-spacing:.06em;text-transform:uppercase}
+.cmpL{left:12px}
+.cmpR{right:calc(var(--pw) + 12px)}
+#cfg{background:linear-gradient(90deg,transparent 30%,rgba(6,9,12,.45));pointer-events:none;justify-content:flex-end;padding:8px}
+#cfgBox{pointer-events:auto;width:min(440px,54%);max-height:100%}
+.benchrow{display:flex;flex-direction:column;gap:6px}
+.benchrow button{align-self:flex-start;min-height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--gold);background:transparent;color:var(--gold);font:700 13px var(--body);touch-action:manipulation}
+.benchrow button:disabled{opacity:.5}
+.benchrow p{margin:0;font-size:12px;color:#9fb2bc;line-height:1.4}
+
+#mapUI{position:absolute;inset:0;z-index:40;pointer-events:none}
+#mapUI[hidden]{display:none}
+#mapBack{position:absolute;left:max(14px,env(safe-area-inset-left,0px));top:12px;pointer-events:auto}
+#mapCfg{position:absolute;right:max(14px,env(safe-area-inset-right,0px));top:12px;pointer-events:auto;font-size:18px;min-width:44px}
+#mapHint{position:absolute;left:50%;top:14px;transform:translateX(-50%);padding:6px 12px;border-radius:10px;background:var(--glass);border:1px solid var(--line);font-size:12px;color:#d6e4ea;white-space:nowrap;max-width:calc(100% - 200px);overflow:hidden;text-overflow:ellipsis}
+#mapPanel{position:absolute;right:max(16px,env(safe-area-inset-right,0px));bottom:16px;pointer-events:auto;min-width:210px;padding:14px 16px;border-radius:14px;background:rgba(12,17,21,.86);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+#mapPanel[hidden]{display:none}
+#mapPanel small{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--moss);font-weight:600}
+#mapPanel b{font-family:var(--display);font-style:italic;font-size:28px;line-height:1;color:var(--gold);text-transform:uppercase}
+#mpG{display:flex;gap:14px;font-size:14px;color:#cfe3ee;font-weight:600}
+#mapPanel .btn{margin-top:4px}
+@media (max-height:430px){#mapPanel{padding:10px 12px;bottom:10px}#mapPanel b{font-size:23px}#mapHint{font-size:11px}}
+</style>
+
+<div id="stage"></div>
+<div id="hud">
+  <div class="top">
+    <div class="stat" id="hearts" aria-label="Vidas"></div>
+    <div class="stat"><span class="coin-ico"></span><span id="coinN">0</span><span class="of">/ <span id="coinT">0</span></span></div>
+    <div class="stat" aria-label="Cristais"><svg class="gem-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 9l8 13 8-13z"/></svg><span id="gemN">0</span><span class="of">/ 3</span></div>
+    <div class="stat feather-stat" id="featherStat" hidden>Pena <span id="featherN">0</span>s</div>
+    <div class="stat fire-stat" id="fireStat" hidden>Fogo</div>
+    <div class="stat cape-stat" id="capeStat" hidden>Capa <span class="pm" id="pmBox"><i id="pmFill"></i></span></div>
+    <div class="stat key-stat" id="keyStat" hidden>🔑 Chave</div>
+    <div class="stat air-stat" id="airStat" hidden>Ar <span class="pm" id="airBox"><i id="airFill"></i></span></div>
+    <div class="stat"><span id="timeN">5:00</span></div>
+    <div class="grow"></div>
+  </div>
+  <div id="bossBar" hidden><span>Rei Besouro</span><div class="bar"><i id="bossFill"></i></div></div>
+  <div id="stickZone" aria-label="Analógico"><div id="stickBase"><div id="stickKnob"></div></div></div>
+  <div id="pad">
+    <button class="pad-btn" id="bJump" type="button">Pular</button>
+    <button class="pad-btn fire" id="bFire" type="button" hidden>Fogo</button>
+    <button class="pad-btn star" id="bStar" type="button" hidden>Shuriken</button>
+  </div>
+</div>
+<div id="toast" role="status"></div>
+<div id="fpsBox" hidden>0 FPS</div>
+<div id="mapUI" hidden>
+  <button class="tbtn" id="mapBack" type="button">← Início</button><button class="tbtn" id="mapCfg" type="button" aria-label="Configurações">⚙</button>
+  <div id="mapHint">Toque numa fase para o Kuro ir até ela · arraste para olhar as ilhas</div>
+  <div id="mapPanel" hidden><small id="mpW"></small><b id="mpN"></b><div id="mpG"></div><button class="btn" id="mpPlay" type="button">Jogar</button></div>
+</div>
+<div id="cmp" hidden><img id="cmpImg" alt=""><div id="cmpBar"><i></i></div><span class="cmpL">Baixo</span><span class="cmpR" id="cmpR"></span></div>
+<button id="pauseBtn" type="button" aria-label="Pausar" hidden>❚❚</button>
+<div id="cfg" hidden><div id="cfgBox"><h2>Configurações</h2><div id="cfgRows"></div><div class="actions"><button class="btn" id="cfgClose" type="button">Voltar</button><button class="btn ghost" id="pauseRestart" type="button" hidden>Reiniciar fase</button><button class="btn ghost" id="pauseMenu" type="button" hidden>Mapa</button></div></div></div>
+<div id="fade"></div>
+<div id="card">
+  <p id="cardKicker"></p>
+  <h1 id="cardTitle">Rumo ao Cume</h1>
+  <p id="cardText"></p>
+  <ul id="cardStats" hidden></ul>
+  <div id="worlds" hidden></div>
+  <div class="actions"><button class="btn" id="playBtn" type="button">Jogar</button><button class="btn ghost" id="mapBtn" type="button" hidden>Mapa</button><button class="btn ghost" id="openBtn" type="button" hidden>Abertura</button><button class="btn ghost" id="cfgBtn" type="button" hidden>⚙ Configurações</button></div>
+  <p id="hint" hidden>Teclado: setas ou A/D movem, espaço pula, Shift corre (ou toque duas vezes na seta e segure), J ou X atira (flor) ou gira (capa); K faz o pulo giratório (sai de cima da raposinha); com a capa, corra até o medidor encher, pule e segure pular para voar, S ou ↓ agacha e entra no cano. No celular: analógico à esquerda (empurre até o fim para correr; para cima sobe no cipó; para baixo agacha ou entra no cano) botão Pular à direita (arraste ele para cima = pulo giratório) e botão Fogo/Giro quando pegar a flor ou a capa. Na água: toque em Pular para dar braçadas (segure para subir devagar, empurre o analógico para baixo para mergulhar) e vigie a barra de Ar. Bata nos blocos por baixo. Menus, configurações e mapa: setas escolhem, Enter confirma, Esc volta (←/→ mexem nas barras).</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script>

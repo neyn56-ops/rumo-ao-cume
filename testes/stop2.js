@@ -1,0 +1,12 @@
+const {chromium}=require('/opt/npm-tools/node_modules/playwright');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--allow-file-access-from-files']});
+const pg=await b.newPage({viewport:{width:640,height:300}});let er=[];pg.on('pageerror',e=>er.push(e.message));await pg.route(/fonts/,r=>r.abort());
+await pg.addInitScript(()=>{window.requestAnimationFrame=()=>1;localStorage.setItem('rumo-ao-cume-cfg',JSON.stringify({preset:'low',pMig:1,aaMig:2}))});
+await pg.goto('file://'+__dirname+'/teste.html',{waitUntil:'domcontentloaded'});await pg.waitForTimeout(2000);
+const E=c=>pg.evaluate(c=>window.__ev(c),c);
+console.log(await E(`startLevel(14);beginPlay();mineFall();enemies.forEach(function(e){e.alive=false});P.inv=1e9;var k;for(k=0;k<120;k++)step(1/60);
+ var K=mnCarts.find(function(c){return c.rail0===5});var o={k0:K.x.toFixed(1)};
+ /* pula dentro do vagonete */ P.x=K.x;P.y=K.so.t+1.5;P.vy=0;for(k=0;k<60;k++){P.x=K.x;step(1/60)}o.dentro=P.onPlat===K.so;
+ for(k=0;k<400;k++)step(1/60);o.parou=K.x.toFixed(2)+' '+K.st;o.kuro=P.x.toFixed(2)+'/'+P.y.toFixed(2)+' noCarro '+(P.onPlat===K.so);
+ keys.right=true;P.jbuf=.13;keys.jump=true;for(k=0;k<120;k++)step(1/60);keys.right=false;keys.jump=false;for(k=0;k<60;k++)step(1/60);o.saiu=P.x.toFixed(2)+'/'+P.y.toFixed(2)+' chao '+P.grounded;JSON.stringify(o)`));
+console.log('erros',er);await b.close()})();

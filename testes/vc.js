@@ -1,0 +1,10 @@
+const {chromium}=require('/opt/npm-tools/node_modules/playwright');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--allow-file-access-from-files']});
+const pg=await b.newPage({viewport:{width:640,height:300}});await pg.route(/fonts/,r=>r.abort());
+await pg.addInitScript(()=>{window.requestAnimationFrame=()=>1;localStorage.setItem('rumo-ao-cume-cfg',JSON.stringify({preset:'high',pMig:1,aaMig:2}))});
+await pg.goto('file://'+__dirname+'/teste.html',{waitUntil:'domcontentloaded'});await pg.waitForTimeout(2000);
+const E=c=>pg.evaluate(c=>window.__ev(c),c);
+console.log(await E(`startLevel(14);beginPlay();mineFall();P.warp=null;document.getElementById('fade').style.opacity=0;P.x=40;P.y=0.1;card.hidden=true;state='play';P.inv=1e9;for(var i=0;i<30;i++)step(1/60);for(var k=0;k<80;k++){animate(1/60);updateCamera(1/60)}render();var n=0,info=[];W.traverse(function(o){if(o.material&&o.material.vertexColors){n++;var c=o.geometry.attributes.color;info.push(o.material.type+' '+(c?c.array.slice(0,3).join(','):'semcor')+' cnt'+(c?c.count:0)+'/'+o.geometry.attributes.position.count)}});JSON.stringify(info)`));
+await pg.screenshot({path:__dirname+'/fotos/vc_on.png'});
+await E(`W.traverse(function(o){if(o.material&&o.material.vertexColors){o.material.vertexColors=false;o.material.needsUpdate=true}});render();1`);
+await pg.screenshot({path:__dirname+'/fotos/vc_off.png'});await b.close()})();

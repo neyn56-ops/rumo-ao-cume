@@ -1,0 +1,10 @@
+const {chromium}=require('/opt/npm-tools/node_modules/playwright');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--allow-file-access-from-files']});
+const pg=await b.newPage({viewport:{width:400,height:200}});pg.on('pageerror',e=>console.log('ERRO',e.message));await pg.route(/fonts/,r=>r.abort());await pg.addInitScript(()=>{window.requestAnimationFrame=()=>1});
+await pg.goto('file://'+__dirname+'/teste.html',{waitUntil:'domcontentloaded'});await pg.waitForTimeout(2000);const E=c=>pg.evaluate(c=>window.__ev(c),c);
+for(const px of [310,316,322])console.log('mergulho, Kuro em '+px,await E(`(function(){startLevel(10);beginPlay();hearts=99;P.x=300;P.y=34.8;for(var k=0;k<30;k++)step(STEP);P.x=${px};for(k=0;k<20;k++)step(STEP);resetKids();boss.state='dive';boss.dt=0;boss.yy=0;boss.x=316;P.x=${px===316?312:px};step(STEP);P.inv=0;var h0=hearts,ran=false;
+ for(k=0;k<90*3;k++){if(!ran&&boss.dt>1.45){ran=true;var d=P.x<316?-1:1;if(P.x-6<boss.aL+1)d=1;if(P.x+6>boss.aR-1)d=-1;keys[d>0?'right':'left']=true}step(STEP);if(boss.state!=='dive')break}keys.left=keys.right=false;
+ var a='desviou='+(hearts===h0)+' dist='+Math.abs(P.x-boss.x).toFixed(1);
+ boss.state='jump';boss.quake=true;boss.jt=-.5;boss.jset=false;boss.jd=1.25;P.inv=0;h0=hearts;var jumped=0;var runT=0;for(k=0;k<90*4;k++){if(boss.state==='jump'&&boss.jset&&!boss.waves.length){var dd=P.x<boss.jx1?-1:1;if(P.x+dd*5<boss.aL+1||P.x+dd*5>boss.aR-1)dd=-dd;if(Math.abs(P.x-boss.jx1)<4.2){keys[dd>0?'right':'left']=true}else{keys.left=keys.right=false}}else{keys.left=keys.right=false}if(boss.waves.length){var w=boss.waves[0];if(Math.abs(w.x-P.x)<2.2&&P.grounded){keys.jump=true;P.jbuf=.13}else keys.jump=false}step(STEP)}keys.jump=false;
+ return a+' | onda: pulou e escapou='+(hearts===h0)})()`));
+await b.close()})();

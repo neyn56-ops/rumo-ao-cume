@@ -1,0 +1,11 @@
+const {chromium}=require('/opt/npm-tools/node_modules/playwright');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--allow-file-access-from-files']});
+const pg=await b.newPage({viewport:{width:900,height:420}});pg.on('pageerror',e=>console.log('ERRO',e.message));await pg.route(/fonts/,r=>r.abort());pg.setDefaultTimeout(0);
+await pg.addInitScript(()=>{window.requestAnimationFrame=()=>1;localStorage.setItem('rumo-ao-cume-cfg',JSON.stringify({preset:'low',pMig:1,aaMig:2}))});
+await pg.goto('file://'+__dirname+'/teste.html',{waitUntil:'domcontentloaded'});await pg.waitForTimeout(2000);
+const E=c=>pg.evaluate(c=>window.__ev(c),c);const K=async k=>{await pg.keyboard.press(k);await pg.waitForTimeout(60)};
+const foc=()=>E('navEl?((navEl.type==="range"?"RANGE ":"")+(navEl.id||navEl.textContent.trim().slice(0,20)))+" y="+Math.round(navEl.getBoundingClientRect().top):"-"');
+await E('window.__openCfg();1');
+let o=[];for(let i=0;i<22;i++){await K(process.env.KEY||'ArrowDown');o.push(await foc())}console.log(o.join('\n'));
+await pg.screenshot({path:__dirname+'/fotos/nav5.png'});
+await b.close()})();

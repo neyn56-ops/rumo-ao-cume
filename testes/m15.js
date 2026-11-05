@@ -1,0 +1,11 @@
+const {chromium}=require('/opt/npm-tools/node_modules/playwright');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--allow-file-access-from-files']});
+const pg=await b.newPage({viewport:{width:640,height:300}});let er=[];pg.on('pageerror',e=>er.push(e.message));await pg.route(/fonts/,r=>r.abort());
+await pg.addInitScript(()=>{window.requestAnimationFrame=()=>1;localStorage.setItem('rumo-ao-cume-cfg',JSON.stringify({preset:'high',pMig:1,aaMig:2}))});
+await pg.goto('file://'+__dirname+'/teste.html',{waitUntil:'domcontentloaded'});await pg.waitForTimeout(2000);
+const E=c=>pg.evaluate(c=>window.__ev(c),c);
+console.log(await E(`var L=LEVELS[14];JSON.stringify({pre:{x:[0,L.pre.camMax],en:(L.pre.enemies||[]).length,bl:(L.pre.blocks||[]).length,cp:(L.pre.checkpoints||[]).length},mina:{cam:L.camMax,en:(L.enemies||[]).length,bl:(L.blocks||[]).length,cp:(L.checkpoints||[]).length,boss:!!L.boss,rails:(L.rails||[]).length,carts:(L.carts||[]).length,gems:(L.gems||[]).length,fe:(L.blocks||[]).filter(function(b){return b.c==='feather'}).length,tg:(L.enemies||[]).filter(function(e){return e.t==='tguard'}).length}})`));
+const shot=async(n,code)=>{await E(code+`;if(typeof trIntro!=='undefined')trIntro=null;card.hidden=true;state='play';P.inv=1e9;for(var i=0;i<30;i++)step(1/60);for(var k=0;k<80;k++){animate(1/60);updateCamera(1/60)}render();1`);await pg.screenshot({path:__dirname+'/fotos/m15_'+n+'.png'})};
+for(const x of [])await shot('p'+x,`startLevel(14);beginPlay();P.x=${x};P.y=floorBelow(${x},40)`);
+for(const x of [40,150,235,312])await shot('m'+x,`startLevel(14);beginPlay();mineFall();P.warp=null;document.getElementById('fade').style.opacity=0;P.x=${x};P.y=Math.max(floorBelow(${x},40),0)+.1`);
+console.log('erros',er.slice(0,3));await b.close()})();

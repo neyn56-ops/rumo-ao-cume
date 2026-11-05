@@ -1,0 +1,6 @@
+(function(){var out=[];function inn(L,ins){startLevel(L);if(ins){if(LV.minePre)mineFall();else if(LV.mzPre)mazeEnter();P.warp=null}}
+ for(var L=0;L<LEVELS.length;L++){for(var ins=0;ins<2;ins++){if(ins&&!LEVELS[L].pre)continue;inn(L,ins);
+  var qs=blocks.filter(function(b){return b.t==='q'&&['mushroom','flower','fruit','heart'].indexOf(b.c)>=0}).map(function(b){return [b.x,b.y,b.c]});
+  qs.forEach(function(q){inn(L,ins);beginPlay();card.hidden=true;state='play';P.inv=1e9;enemies.forEach(function(e){e.alive=false;e.x=-999});var B=blocks.find(function(b){return b.x===q[0]&&b.y===q[1]});var n0=items.length;hitBlock(B);for(var k=0;k<120;k++){P.x=-999;P.y=-999;step(STEP)}
+   items.slice(n0).forEach(function(it){if(it.got)return;var bad=solids.find(function(s){if(s.dead||s.hid||s===B.solid)return false;return it.x+.3>s.l&&it.x-.3<s.r&&it.y+.3>s.b&&it.y-.3<s.t});if(bad)out.push('M'+(L+1)+(ins?' dentro':'')+' '+q[2]+' '+q[0]+','+q[1]+' item em '+it.x.toFixed(1)+','+it.y.toFixed(1))})})}}
+ card.hidden=true;return JSON.stringify(out)})()

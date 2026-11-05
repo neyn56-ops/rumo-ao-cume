@@ -1,0 +1,8 @@
+(function(){var out=[],v3=new T.Vector3(),bb=new T.Box3();
+ [[15,['worm','jfish','sprout','armad','bee','owl']],[16,['beetle','frog','mole','bat','tchase']]].forEach(function(L){L[1].forEach(function(t){
+  startLevel(L[0]);beginPlay();if(L[0]===16){mazeEnter();P.warp=null}card.hidden=true;state='play';P.inv=1e9;var e=enemies.find(function(q){return q.type===t});if(!e){out.push(t+' não achou');return}
+  /* deixa o bicho aparecer (minhocão/peixe no meio do pulo, broto em cima, tatu rolando) */
+  if(t==='worm'||t==='jfish'){e.mt=e.wait+e.air*.5}if(t==='sprout'){e.pr=2.3}if(t==='armad'){e.st2='roll';e.at=0}
+  var px=e.x-6;P.x=px;P.y=e.y+40;for(var k=0;k<3;k++){P.x=px;P.y=e.y+40;P.vy=0;step(STEP)}updEnemy(e,0);foxBubble(e);for(k=0;k<40;k++){P.x=px;P.y=e.y+40;P.vy=0;step(STEP);visEnemy(e,STEP)}
+  var c=e.bub.m.position;bb.setFromObject(e.vis.g);var cen=bb.getCenter(v3);var d=Math.hypot(cen.x-c.x,cen.y-c.y);out.push(t+' '+d.toFixed(2)+(d<.6?' ok':' FORA'))})});
+ card.hidden=true;return JSON.stringify(out)})()

@@ -1,0 +1,10 @@
+const {chromium}=require('/opt/npm-tools/node_modules/playwright');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--allow-file-access-from-files']});
+const pg=await b.newPage({viewport:{width:400,height:200}});pg.on('pageerror',e=>console.log('ERRO',e.message));await pg.route(/fonts/,r=>r.abort());await pg.addInitScript(()=>{window.requestAnimationFrame=()=>1});
+await pg.goto('file://'+__dirname+'/teste.html',{waitUntil:'domcontentloaded'});await pg.waitForTimeout(2000);const E=c=>pg.evaluate(c=>window.__ev(c),c);
+for(const [ki,ax,ay,isle] of [[0,182,19.5,[199,208,21]],[1,258,26,[279,294,30]]])console.log('pipa '+(ki+1),await E(`(function(){startLevel(10);beginPlay();enemies.forEach(function(e){e.alive=false;e.x=-999});P.inv=1e9;windZones.forEach(function(w){w.per=1e9});P.x=${ax};P.y=${ay};for(var k=0;k<20;k++)step(STEP);
+ keys.right=true;var grab=false,log=[];for(k=0;k<60;k++){if(!grab&&P.x>sumKites[${ki}].rope.x0-.6){keys.jump=true;P.jbuf=.13}step(STEP);if(P.climb===sumKites[${ki}].rope){grab=true;break}}keys.right=false;keys.jump=false;if(!grab)return 'NÃO agarrou: P='+P.x.toFixed(1)+','+P.y.toFixed(1);
+ var t=0;for(k=0;k<90*10;k++){step(STEP);t+=STEP;if(sumKites[${ki}].st==='arrive')break}var where=P.x.toFixed(1)+','+P.y.toFixed(1)+' em '+t.toFixed(1)+'s st='+sumKites[${ki}].st+' segurando='+(P.climb===sumKites[${ki}].rope);
+ keys.down=true;step(STEP);keys.down=false;for(k=0;k<90*2;k++)step(STEP);var I=${JSON.stringify(isle)};return 'chegou '+where+' | soltou e caiu em '+P.x.toFixed(1)+','+P.y.toFixed(1)+' '+(P.grounded&&P.x>I[0]&&P.x<I[1]&&Math.abs(P.y-I[2])<.2?'NA ILHA ✓':'FORA ✗')+' estado='+state})()`));
+console.log('nuvem',await E(`(function(){startLevel(10);beginPlay();enemies.forEach(function(e){e.alive=false;e.x=-999});P.inv=1e9;P.x=161;P.y=16.6;var c=sumClouds[0],t=0;for(var k=0;k<90*3;k++){step(STEP);t+=STEP;if(c.so.dead)break}var a='sumiu em '+t.toFixed(2)+'s';for(k=0;k<90*4;k++)step(STEP);return a+', voltou='+!c.so.dead+' estado='+state})()`));
+await b.close()})();

@@ -1,0 +1,15 @@
+const {chromium}=require('/opt/npm-tools/node_modules/playwright');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--allow-file-access-from-files']});
+const pre=process.env.PRE||'low';
+const ctx=await b.newContext({viewport:{width:800,height:370},isMobile:true,hasTouch:true,deviceScaleFactor:2});
+const pg=await ctx.newPage();pg.on('pageerror',e=>console.log('ERRO',e.message));await pg.route(/fonts/,r=>r.abort());pg.setDefaultTimeout(0);
+await pg.addInitScript(p=>{window.requestAnimationFrame=()=>1;localStorage.setItem('rumo-ao-cume-cfg',JSON.stringify({preset:p,pMig:1,aaMig:2}))},pre);
+await pg.goto('file://'+__dirname+'/teste.html',{waitUntil:'domcontentloaded'});await pg.waitForTimeout(2200);
+const E=c=>pg.evaluate(c=>window.__ev(c),c);
+console.log(await E(`startLevel(${process.env.L||11});card.hidden=true;state='play';for(var i=0;i<30;i++)step(1/60);animate(.016);for(var k=0;k<50;k++)splitInstTick();render();
+var fr=new THREE.Frustum(),m=new THREE.Matrix4();m.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);fr.setFromProjectionMatrix(m);
+var L=[];scene.traverseVisible(function(o){if(!o.isMesh&&!o.isPoints)return;var g=o.geometry;var t=o.isPoints?g.attributes.position.count/1000:((g.index?Math.min(g.index.count,g.drawRange.count):g.attributes.position.count)/3);var n=o.isInstancedMesh?o.count:1;
+var vis=o.frustumCulled===false||(g.boundingSphere||g.computeBoundingSphere(),fr.intersectsSphere(g.boundingSphere.clone().applyMatrix4(o.matrixWorld)));
+if(vis)L.push([Math.round(t*n),(o.material&&o.material.type)+" tri="+t+" fc="+o.frustumCulled+" bs="+(g.boundingSphere?g.boundingSphere.radius.toFixed(0):"-")+" inLush="+(lushG&&o.parent===lushG)+" lushN="+(lushG?lushG.children.length:0),n,o.parent&&o.parent.name||'',o.isInstancedMesh?'I':''])});
+L.sort(function(a,b){return b[0]-a[0]});var tot=L.reduce(function(s,a){return s+a[0]},0);'total '+tot+'\\n'+L.slice(0,25).map(function(a){return a.join(' ')}).join('\\n')`));
+await b.close()})();

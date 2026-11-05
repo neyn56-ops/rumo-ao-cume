@@ -1,0 +1,10 @@
+const {chromium}=require('/opt/npm-tools/node_modules/playwright');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--allow-file-access-from-files']});
+const pg=await b.newPage({viewport:{width:960,height:440}});let er=[];pg.on('pageerror',e=>er.push(e.message));await pg.route(/fonts/,r=>r.abort());
+await pg.goto('file://'+__dirname+'/teste.html',{waitUntil:'domcontentloaded'});await pg.waitForTimeout(6000);
+const st=()=>pg.evaluate(()=>window.__ev('state')+' map:'+!document.getElementById('mapUI').hidden+' cfg:'+!document.getElementById('cfg').hidden+' card:'+!document.getElementById('card').hidden);
+await pg.evaluate(()=>window.__ev('openMap({from:17});1'));await pg.waitForTimeout(2500);console.log('abriu',await st());await pg.screenshot({path:__dirname+'/fotos/boot.png'});
+await pg.click('#mapCfg');await pg.waitForTimeout(1500);console.log('engrenagem',await st());
+await pg.click('#cfgClose');await pg.waitForTimeout(1500);console.log('voltou',await st());
+await pg.click('#mapBack');await pg.waitForTimeout(800);console.log('inicio',await st());
+console.log('erros',er.slice(0,3));await b.close()})();

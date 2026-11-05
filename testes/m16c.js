@@ -1,0 +1,10 @@
+const {chromium}=require('/opt/npm-tools/node_modules/playwright');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--allow-file-access-from-files']});
+const pg=await b.newPage({viewport:{width:640,height:300}});let er=[];pg.on('pageerror',e=>er.push(e.message));await pg.route(/fonts/,r=>r.abort());
+await pg.addInitScript(()=>{window.requestAnimationFrame=()=>1;localStorage.setItem('rumo-ao-cume-cfg',JSON.stringify({preset:'high',pMig:1,aaMig:2}))});
+await pg.goto('file://'+__dirname+'/teste.html',{waitUntil:'domcontentloaded'});await pg.waitForTimeout(2000);
+const E=c=>pg.evaluate(c=>window.__ev(c),c);
+console.log(await E(`(function(){var o=[];startLevel(15);beginPlay();card.hidden=true;state='play';P.x=20;P.y=0;P.inv=1e9;var W=enemies.find(function(e){return e.type==='worm'}),k;
+ for(k=0;k<200;k++)step(STEP);W.mt=W.wait+W.air*.5;step(STEP);killE(W,'stomp');o.push(STEP,W.slp,W.x.toFixed(1),W.y.toFixed(2));
+ for(k=0;k<700;k++){step(STEP);if(k%70===0)o.push([W.slp>0?'S':'-',W.wake,W.alive,W.mt.toFixed(1),W.x.toFixed(1),W.y.toFixed(1),W.zz].join(' '))}return JSON.stringify(o)})()`));
+await b.close()})();

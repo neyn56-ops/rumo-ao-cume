@@ -1,0 +1,6 @@
+(function(){startLevel(15);beginPlay();card.hidden=true;state='play';P.inv=1e9;hearts=9;var T=enemies.filter(function(e){return e.type==='turtle'});P.x=T[0].x-.3;P.y=T[0].y+2.5;P.vy=0;var bounces=0,k,log=[],g=30,pv=0;
+for(k=0;k<900;k++){keys.jump=JJ;var t=null;for(var i=0;i<T.length;i++){if(T[i].alive&&!(T[i].slp>0)&&T[i].x>P.x-.3){t=T[i];break}}
+ var nx=t?t.x:358,top=t?t.y+t.h:3.6,dy=P.y-top,disc=P.vy*P.vy+2*g*Math.max(dy,-P.vy*P.vy/(2*g)+.001),tl=(P.vy+Math.sqrt(Math.max(0,disc)))/g;tl=Math.max(tl,.08);
+ var want=(nx-P.x)/tl;keys.run=Math.abs(want)>5;keys.right=P.vx<want-.4;keys.left=P.vx>want+.4;
+ var a=P.vy;step(STEP);if(k>0&&k<4)g=(pv-P.vy)/STEP||g;pv=P.vy;if(P.vy>8&&a<=0){bounces++;log.push(P.x.toFixed(1))}if(P.grounded&&P.x>356.5)break;if(P.y<-3)break}
+keys.right=keys.left=keys.jump=keys.run=false;return 'J=JJ bounces '+bounces+' ['+log.join(',')+'] x '+P.x.toFixed(1)+' y '+P.y.toFixed(1)+' g '+g.toFixed(1)})()

@@ -1,0 +1,978 @@
+# Mapa do código (gerado por ferramentas/mapa.py — não editar à mão)
+
+Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp partes/ARQ`.
+
+## 00_inicio.html  (212 linhas) 
+
+## 01_motor.js  (959 linhas) /*@@parte:01_motor.js*/
+- fail :6
+- shLiteApply :23
+- saveCfg :46
+- lerp :48
+- clamp :49
+- approach :50
+- rnd :51
+- skyTex :84
+- makeEnv :91
+- noiseGrid :146 — ===================== texturas procedurais (PBR) =====================
+- fbm :161
+- makeTex :170
+- regBump :205
+- pbr :206
+- M :211
+- makeLawn :220
+- wrap :224
+- applyLawn :241
+- makeSnowGravel :248 — montanha: neve com manchas de cascalho marrom e pedrinhas (como encosta de verdade)
+- makeFlag :256 — caverna de cristal: caminho de lajotas de pedra bege (com rachaduras) e rocha marrom
+- blockTex :287
+- pena :299
+- seaSandTex :325 — fundo do mar: areia clara com ondulações suaves e rocha azul-petróleo
+- addCaustics :340
+- boxGeo :381
+- mesh :390
+- hsl :395
+- inst :396
+- arm :455
+- leg :470
+- mkPool :522
+- emit :537
+- updFx :547
+- volSfx :571
+- volMus :571
+- initAudio :573
+- tone :599
+- noiseTo :606
+- upSfx :614
+- beep :625
+- noise :629
+- whirlSfx :634 — pulo giratório: "brrriiiu" de pião de brinquedo — sobe de tom com tremido (dono escolheu a opção 3)
+- swoosh :647 — giro da capa: "vuuush" de vento que sobe e desce (entra e sai suave, sem estalo)
+- clop :687
+- mf :707
+- playStep :777
+- musicTick :806
+- expU :825
+- briU :826
+- buildComposer :855
+- layout :875
+- resStep :888 — resolução dinâmica: se o FPS cai, baixa um degrau (até 60%); quando fica folgado por uns segundos, volta a sub
+- calcPR :889
+- prApply :892
+- autoMax :896
+- autoSet :897
+- autoPick :898
+- perfTick :899
+- effCfg :916
+- applyGfx :922
+
+## 10_mundos_dados.js  (807 linhas) /*@@parte:10_mundos_dados.js*/
+- add :170
+- wb :171
+- sx :204
+- liftLevel :261 — mais espaço na vertical: plataformas flutuantes, blocos e o que está em cima deles sobem 20% em relação ao chã
+- g :263
+- skip :264
+- ly :265
+- lyF :266
+- hit :522
+- blockStd :587
+- g :588
+- xs :746
+
+## 11_construcao.js  (534 linhas) /*@@parte:11_construcao.js*/
+- add :7
+- topAt :8
+- disposeLevel :10
+- applyTheme :20
+- makeBeetle :57 — ---------- construtores de inimigos e objetos ----------
+- makeWBeetle :82
+- makeBat :93
+- makeUrchin :112
+- makeWolf :126
+- makeScorpion :149
+- makeTumble :173
+- makeSnowman :184
+- makeFrog :204
+- makeJelly :221
+- makePuffer :233
+- makeFish :253
+- makeEel :267
+- buildLevel :281 — ---------- construção do mundo ----------
+- splitBig :329
+- fixCoins :342
+- buildPlatforms :376
+- scaleUV :406
+- barkCyl :407
+- softSprite :409
+- buildPlatformsForest :415
+- leafBlob :417
+- hangVine :418
+- buildBackdropForest :465
+- splitInst :514
+- splitInstIn :528
+- splitInstQueue :531
+- splitInstTick :532
+
+## 20_vila_ninja.js  (353 linhas) /*@@parte:20_vila_ninja.js*/
+- kawaraTex :6
+- vilM :14
+- vilLantern :30 — lanternas de papel (todas num lote só) + brilho em pontos
+- buildVilLanterns :31
+- roofShape :48 — corte do telhado (z,y) relativo ao topo; walk = faixa plana em cima (onde o Kuro anda)
+- roofGeo :53
+- buildPlatformsVillage :60
+- buildDecorVillage :113 — ---------- cenário: casas ao fundo, cerejeiras, lanternas de pedra, cerca de bambu, torii, rio e biombos -----
+- covered :140 — lanternas de pedra (tōrō) e cerca de bambu atrás da rua, onde não tem casa
+- m3wall :177
+- buildFarVillage :178
+- buildVillageMech :196 — ---------- mecânicas: varais (pendurar), polias, portas de correr, esconderijos e alarme ----------
+- pulleySet :226
+- updVillage :232
+- pHidden :253
+- guardSuspect :255 — o guarda precisa ver o Kuro por um instante (a luz fica laranja) antes do alarme
+- hidMark :257
+- guardSees :264 — guarda: cone de luz da lanterna (para onde ele olha), bloqueado por paredes
+- raiseAlarm :273
+- ninjaAI :278
+- makeGuard :286 — ---------- inimigos da vila ----------
+- makeNinja :311
+- makeCat :328
+- makeCrow :342
+
+## 21_torre_verde.js  (207 linhas) /*@@parte:21_torre_verde.js*/
+- folTex :4
+- r :8
+- fallTex :16
+- r :18
+- lakeTex :26
+- r :30
+- buildDecorHeights :37
+- vilLanMist :114
+- buildFarHeights :115
+- buildHeightsMech :127 — plataformas que sobem e descem; colunas de vento para cima
+- updHeights :144
+- quake :172 — bloco de terremoto: derruba todos os inimigos que estão perto, na tela
+- spitAI :178 — flor-espinho: fica parada e cospe sementes devagar quando o Kuro está perto
+- makeSpitter :183
+- makeBird :195
+
+## 22_vulcao.js  (384 linhas) /*@@parte:22_vulcao.js*/
+- volMats :4
+- r :8
+- lavaMat :25
+- fireMat :45 — chamas: língua de fogo subindo, com ruído que corre para cima (transparente e aditivo)
+- buildPlatformsVolcano :60
+- uvT :62
+- buildDecorVolcano :90
+- buildVolcanoOutside :125
+- onPath :144
+- inPool :151
+- blob :176
+- tree :187
+- blades :200
+- lavaStreamTex :208
+- r :210
+- updVolcanoOutside :216
+- buildFarVolcano :231
+- buildVolcanoMech :244 — ---------- mecânicas do vulcão ----------
+- volChains :281
+- metMat :288
+- r :291
+- metGeo :304
+- metBreak :310
+- metTop :316
+- updVolcano :317
+- makeSalamander :346 — ---------- inimigos do vulcão ----------
+- makeGolem :359
+- makeLavaBall :370
+- lavaBallAI :378
+
+## 23_castelo_fora.js  (234 linhas) /*@@parte:23_castelo_fora.js*/
+- mergeG :5 — junta várias geometrias já posicionadas numa só (1 desenho); cor por vértice opcional
+- xf :14
+- skullGeo :16 — caveira, osso, lápide: peças pequenas com cor por vértice, desenhadas em lote
+- boneGeo :24
+- boneMat :28
+- scatterSkulls :29
+- buildCastleOutside :33
+- onPath :51
+- inPond :54
+- tree :94
+- blades :125
+- sk :131
+- buildDecorCastle :138
+- buildFarCastle :191
+- moonTex :192
+- sceneEnd :212 — fim do cenário: cobre a fase e as salas de cano que ficam além dela
+- buildBackdrop :213
+
+## 24_caverna.js  (245 linhas) /*@@parte:24_caverna.js*/
+- crysGeo :4
+- crysMat :14
+- buildCaveMouth :20 — boca da caverna: arco de rocha com estalactites, pedras na entrada e o céu claro lá fora
+- buildCaveDecor :67
+- outside :68
+- cluster :72
+- ceilPart :112 — teto de rocha (aparece no alto da tela)
+- buildDecorPeaks :117
+- buildDecor :144
+
+## 25_cume.js  (697 linhas) /*@@parte:25_cume.js*/
+- sumRockMat :6
+- snowCap :8 — pinta a pedra: neve nas faces de cima, rocha nas laterais
+- buildPlatformsSummit :13
+- cloudSeaMat :68 — mar de nuvens: ruído que corre devagar, iluminado pelo amanhecer
+- flagMat :82 — bandeirinhas de oração: balançam com o vento e se esticam antes da rajada (o aviso)
+- buildDecorSummit :89
+- quad :117
+- sumGroundAt :152
+- buildFarSummit :153
+- buildSummitMech :172
+- sumMechReset :191
+- updSummitMech :195
+- makeGoat :228 — inimigos da montanha
+- makeSnowCrow :246
+- windSheltered :251 — abrigo do vento: uma pedra ou parede mais alta que o Kuro, do lado de onde o vento vem
+- updSummit :258
+- bossV2Build :273 — ---------- revanche do Rei Besouro: maior, de armadura nova; 3 fases (investidas, ondas de choque, voo e mergu
+- bossV2Reset :287
+- bossV2Phase :291
+- bossV2Seq :292
+- bossV2Hurt :293
+- bossDive :300 — mergulho: sobe, segue o Kuro pela sombra e despenca
+- bossWaves :309
+- bossV2Upd :313
+- bossV2Open :332
+- kuroFlagTex :340
+- cumeEnding :345
+- bm :356
+- updEnding :368
+- graniteTex :401
+- r :403
+- chipRock :412 — rocha lascada: icosaedro com ruído e alguns cortes planos (faces de pedra quebrada)
+- boxUV :425 — UV por projeção de caixa (a textura não estica nas faces)
+- mossRock :429
+- stone :431
+- flushStones :445
+- quad :452
+- spireTex :463 — ---------- paisagem de fundo da encosta: paredões de pedra em agulhas (rocha clara listrada), encosta de casca
+- r :464
+- buildDolomites :470
+- spire :473 — agulhas de pedra: prismas altos e irregulares, pontas quebradas, neve nas saliências
+- mergeVC :515
+- sumBaseAt :521 — altura da encosta atrás da trilha: começa colada no fundo da plataforma (z=-5) e sobe até o pé das agulhas
+- sumSlopeY :522
+- strataTex :524 — textura do paredão: camadas de rocha com rachaduras (cor e relevo)
+- r :525
+- snowTopTex :534 — neve do chão: ondulações do vento e brilhinhos
+- r :535
+- trailTex :543 — trilha pisada no meio da neve: neve suja, cascalho aparecendo e pegadas (bordas somem aos poucos)
+- r :544
+- snowyRockMat :551 — granito com neve só nas faces de cima (calculado na placa de vídeo) e sombra na base
+- sumGrass :558 — grama da montanha com falhas: a mesma grama do jogo, em tufos secos e espalhados
+- gap :560
+- cumulusTex :577 — ---------- parte 2 de dia: céu azul com nuvens grandes, serras azuis ao longe e montanhas verdes saindo do mar
+- r :578
+- ridgeStrip :584
+- buildFarDay :590
+- fm :592
+- buildGreenPeaks :602
+- peak :604
+- sumDay :626
+- sumLin :638
+- linCols :639
+- peakGrassTex :642 — textura de grama vista de longe: tufos, manchas e riscos (clara: a cor vem da montanha)
+- r :643
+- pineGeo :652 — ---------- floresta de pinheiros lá embaixo, aparecendo pelos buracos das nuvens, em camadas com névoa -------
+- buildCloudForest :663
+- needleTex :683 — textura das agulhas do pinheiro: galhos inclinados claros e escuros, com sombra entre eles
+- r :684
+- sumDrift :692 — nuvens e névoa da parte 2 levadas pelo vento (deslizam e voltam do outro lado)
+
+## 26_trilha.js  (631 linhas) /*@@parte:26_trilha.js*/
+- mgL :4
+- trMats :7
+- buildPlatformsTrail :16 — ---------- plataformas: chão de terra com grama, areia da praia, tronco oco e tábuas da torre ----------
+- trInRiver :58 — ---------- Rio Cristalino ----------
+- buildRiverStone :59
+- buildRopeBridge :68
+- trPlankPose :83
+- pebbleTex :87
+- buildRiverDecor :90
+- buildRiverLogs :111 — troncos que descem o rio (sempre para a direita): aparecem lá atrás e afundam no fim
+- trRiverLogs :118
+- trRiverFall :124
+- updRiver :134
+- buildGrassLedge :143
+- shroomCapTex :151
+- buildShrooms :155
+- updShrooms :167
+- buildGardenDecor :175
+- buildBranchPlat :191 — ---------- Caminho das Copas ----------
+- buildCanopyPlat :200
+- trVine :207
+- buildCanopyMech :215
+- updCanopy :234
+- buildCanopyDecor :239
+- buildCaveLedge :253
+- buildWaterfall :256
+- boulder :259
+- updWaterfall :285
+- updMist :300
+- buildMistDecor :305
+- buildSummitDeck :318
+- buildMirante :326
+- updMirante :384
+- buildHollowLog :395 — tronco caído e oco: o Kuro passa por dentro (a frente é aberta) ou sobe por cima
+- frondTex :412 — ---------- decoração ----------
+- bigLeafTex :419
+- trGroundAt :427
+- trSand :428
+- buildTrailDecor :429
+- wingTex :553
+- shape :554
+- trFlowerPose :573 — abre/fecha as pétalas: flores perto do Kuro abrem e balançam
+- buildTrailFar :584 — ---------- fundo: a Árvore Mãe brilhando no horizonte e camadas de floresta na névoa ----------
+- bm :587
+- buildTrailMech :597 — ---------- abertura: o barquinho chega, Kuro e a raposinha pulam na areia ----------
+- updTrailIntro :604
+- updTrail :617
+- trBfly :625
+
+## 27_ceu.js  (273 linhas) /*@@parte:27_ceu.js*/
+- skMats :6
+- skRune :7
+- skBlockMesh :17
+- skCubeFace :32
+- buildPlatformsSky :46
+- skBox :72
+- skAltPlan :73
+- free :77
+- skAltOn :86
+- skUpd :89
+- updSky :129
+- buildDecorSky :144
+- buildFarSky :167
+- shellTex :174 — ---------- tartarugas voadoras ----------
+- makeTurtle :177
+- guardThrow :207
+- updSpears :220
+- guardAI :227
+- turtleAI :246
+- turtleVis :262
+
+## 28_torre.js  (349 linhas) /*@@parte:28_torre.js*/
+- twMats :8
+- twGearGeo :14
+- buildPlatformsTower :21
+- twLight :57
+- twCycle :71
+- twPlace :73
+- buildDecorTower :96 — ---------- cenário de dentro da torre ----------
+- buildFarTower :139
+- reg :140
+- updTower :156
+- buildLevers :183
+- updLevers :189
+- makeMoth :198
+- mothAI :215
+- mothVis :221
+- twTerra :224
+- twDeck :228
+- buildOutside :232
+- twGroundAt :247
+- twOutUpd :248
+- twDay :276
+- lc :277
+- twOutDecor :289
+- twGroundY :319
+- makeDfly :321 — ---------- libélula: voa rápido em zigue-zague ----------
+- dflyAI :329
+- dflyVis :331
+- makeWrob :333 — ---------- robô de corda: anda na sua viga/chão; 1º pulo desliga a corda, 2º derrota ----------
+- wrobAI :344
+- wrobVis :346
+
+## 29_abertura.js  (132 linhas) /*@@parte:29_abertura.js*/
+- playOpening :6
+- house :16
+- tree :24
+- opnLerp :69
+- opnHop :71 — correndo no fim do clipe: pula por cima da mola (e de qualquer mola no caminho) em vez de atravessar
+- opnEase :72
+- updOpening :73
+- opnPose :117
+- endOpening :124
+
+## 29_mina.js  (450 linhas) /*@@parte:29_mina.js*/
+- mnMats :8
+- mnZone :23
+- mnTint :24
+- mgC :25
+- mnVC :26
+- mnRailPrep :28 — ---------- trilhos: ponto na curva pelo comprimento (s) ----------
+- mnAt :29
+- mnYat :30
+- mnSat :31
+- mnGround :32
+- buildPlatformsMine :34 — ---------- chão, pontes de madeira e trilhos ----------
+- mnSign :100
+- mnMakeCart :106
+- mnCartPlace :121
+- mnCartReset :124
+- mnCartUpd :125
+- mnLiftUpd :147 — ---------- elevador e vigas ----------
+- mnBeamUpd :152
+- updMine :157
+- buildMinePre :170
+- mpTrain :204 — trem de minério a vapor lá no fundo da paisagem seca (pedido do dono): passa de tempos em tempos, com fumaça e
+- mpTrainUpd :226
+- updMinePre :233
+- mineFall :244 — o Kuro desceu pelo cano: monta a mina e ele cai lá dentro pelo cano do teto (moedas, tempo, corações e poderes
+- mnCeil :256 — ---------- cenário de dentro da mina ----------
+- buildDecorMine :257
+- crys :281
+- buildFarMine :315
+- makeMole :319 — ---------- toupeira mineira: sai do buraco, anda um pouco e volta para baixo da terra ----------
+- moleAI :333
+- moleVis :340
+- mnBossBuild :344 — =================== chefe: o Toupeirão ===================
+- wall :370
+- mnBossReset :376
+- mnBossHit :379
+- mnBossSeq :389
+- mnRockDrop :390
+- mnRocksUpd :393
+- mnBossUpd :399
+- mnBossVis :429
+- mnWallX :443 — paredes do vagonete: dentro dele o Kuro não sai andando pelos lados; só sai pulando por cima da borda
+
+## 30_cenario.js  (696 linhas) /*@@parte:30_cenario.js*/
+- lushOn :3 — ===================== cenário caprichado (Alto, Ultra e Máximo) — grama, copas, céu e detalhes de cada mundo =
+- lushVis :5
+- lushTick :17
+- bladeGeo :23
+- grassMat :33
+- lushGround :68 — faixas de chão de cada plataforma (pula paredes das salas, canos e espinhos)
+- grassField :75
+- motes :105 — partículas que brilham: vaga-lumes, poeira, brasas, cintilar da neve
+- lightRays :132 — raios de luz inclinados (floresta e recife)
+- skyGlow :145
+- horizonHaze :154
+- leafTex :161
+- leafCanopies :173
+- glowShrooms :202 — cogumelos que brilham (caverna)
+- icicles :219 — pingentes de gelo na borda das plataformas (montanha)
+- buildLush :231
+- buildDecorRuins :294
+- cacGeo :297 — cactos de verdade: tronco com gomos, topo arredondado e braços que sobem (3 modelos)
+- rib :299
+- cyl :300
+- cap :301
+- knee :302
+- buildFarRuins :336
+- buildRuinsExtra :359
+- buildFar :378
+- buildHazards :465
+- capTop :478
+- buildWater :479
+- rgba :486
+- strip :512
+- buildCoral :542
+- updWaterFx :560
+- wv :566
+- flow :585
+- floorTopAt :607
+- buildDecorReef :608
+- buildMovers :647
+- buildCrumbles :667
+- buildSprings :685
+
+## 31_moedas.js  (402 linhas) /*@@parte:31_moedas.js*/
+- fitCoins :3 — ===== 100 moedas por fase, nos pontos que valem a pena (buracos, perigos, lugares altos) =====
+- overGap :9
+- fitHearts :47 — corações em blocos: 2 por fase, em pontos estratégicos (uma vez por fase)
+- support :53
+- okAt :68
+- buildCollectibles :94
+- row :96
+- arc :97
+- pastEnd :112
+- featherTex :135
+- r :138
+- vane :139
+- mushroomModel :162
+- featherModel :185
+- mkItem :200
+- buildMarks :237
+- makeAlertSprite :257
+- buildEnemies :267
+- buildBlades :321
+- buildBoss :352
+- surfY :363
+- wall :376
+- resetBoss :387
+- setBossBar :401
+
+## 32_cachoeiras.js  (423 linhas) /*@@parte:32_cachoeiras.js*/
+- flMats :11
+- buildFalls :26 — ---------- cenário ----------
+- buildTotems :53 — ---------- Pedrão-totem ----------
+- totemSet :66
+- totemUpd :68
+- fallsReset :80
+- updFalls :81
+- makeWorm :90
+- wormPath :97
+- wormAI :98
+- wormVis :107
+- makeBees :116
+- beeAI :125
+- beeBlk :135
+- beeVis :136
+- makeArmad :146
+- armadAI :155
+- armadVis :163
+- makeSprout :168
+- sproutAI :180
+- sproutVis :185
+- makeJFish :189
+- jfishVis :196
+- buildLogs :200 — ---------- tronco giratório com espinhos ----------
+- logsUpd :209
+- makeOwl :219
+- owlAI :228
+- owlVis :236
+- buildWLogs :240 — ---------- troncos descendo a cachoeira ----------
+- wlogsUpd :271
+- kuroMats :288
+- kuroWetApply :290
+- kuroDry :291
+- kuroWetUpd :292
+- buildSinks :300 — ---------- ilhas que afundam ----------
+- sinksUpd :305
+- buildGate :310 — ---------- portão do castelo e a Semente de Luz ----------
+- seedUpd :320
+- farCastle :324 — ---------- castelo lá longe, bem assentado no alto do morro (dono: estava flutuando) ----------
+- flDrop :358 — gotinha em forma de lágrima, transparente e brilhante: primeiro escorre um pouco pelo corpo do Kuro, depois ca
+- flDropUpd :362
+- flDropClear :366
+- buildStreams :370
+- yAt :379
+- streamsUpd :396
+- streamPit :412 — cachoeira com buraco na frente: o riacho corre pelo gramado até o buraco e despenca lá dentro até o rio
+- cov :413
+
+## 33_labirinto.js  (220 linhas) /*@@parte:33_labirinto.js*/
+- mzPrep :12
+- ch :13
+- solidC :14
+- cx :15
+- cy :15
+- floorY :16
+- span :17
+- mzMats :40
+- mzBuild :44
+- ch :45
+- rshape :72
+- op :82
+- mzDecor :121 — parede do fundo e tochas
+- mzTorch :128
+- mzTorchUpd :132
+- mzBreak :136 — quebrar tijolo
+- mzHit :138
+- mzDown :139
+- mzReset :146
+- mzUpd :147
+- mazeEnter :179
+- mzPreDecor :189
+- mzUnlock :207 — a chave entrou e girou: destranca a porta
+- mzHoldKey :213 — a chave presa na mão do Kuro (a mão do lado da câmera), pela argola, com a haste para baixo
+- mzFreeKey :219
+
+## 34_aurora.js  (407 linhas) /*@@parte:34_aurora.js*/
+- auroraBuild :7
+- pine :48
+- makePeng :95 — ---- bichos: Pinguim-tobogã ----
+- pengAI :107
+- pengVis :114
+- makeSeal :121 — ---- bichos: Foca (sai do buraco e joga bola de neve em arco) ----
+- sealAI :133
+- sealVis :142
+- auThrow :147
+- auBallUpd :150
+- auUpd :157 — ---- atualização ----
+- aurReset :184
+- auMats :189
+- auSolid :203
+- auFloeMesh :214 — placa de gelo boiando (flutua um pouquinho, só no visual)
+- auAirBlock :217 — bloco de gelo flutuando no ar (com neve e gotas), como plataforma
+- auFloe :222
+- makeSBird :228 — ---- pássaro-da-neve: voa em onda; quando o Kuro passa embaixo, dá um rasante e volta (desiste depois de um me
+- sbirdAI :238
+- sbirdVis :243
+- auVila :246 — ===================== Vila dos Pescadores (área de fora do Mundo 18) =====================
+- auVilaUpd :283
+- auEnter :308 — (testes e fotos) leva o Kuro direto ao começo do lago
+- auBack :310 — gelo e pilares de gelo lá no fundo (com neve em cima e pinheirinhos), e uma cachoeira congelada
+- auIcUpd :322
+- auChute :332 — calha de gelo aberta (tobogã) ao longo da curva cv
+- auHouse :343
+- auBridgeBuild :360 — ponte de corda com tábuas de luz da aurora: ficam firmes, piscam e somem por um tempo (ritmo da aurora)
+- auBridgeState :369
+- auBridgeUpd :370
+- auLightBuild :375 — o farol: torre listrada vermelha e branca no alto do penhasco, com degraus em volta; lá em cima o Kuro acende 
+- auLightUpd :394
+- auWaveTex :399 — mapa de relevo das ondas (normal map), 2 variações, repetem sem emenda
+- h :401
+- auIceShape :406 — placa do lago congelado com a borda irregular (gelo quebrado), de x0 a x1
+
+## 35_naufragio.js  (437 linhas) /*@@parte:35_naufragio.js*/
+- wkMats :6
+- planks :7
+- wkSolid :24 — casco do navio, caixotes e tábuas: os blocos de LV.solids com 6º valor ('ship' fica invisível, o casco desenha
+- wkShip :33 — ---- a metade do navio encalhada na areia ----
+- rope :55
+- cp :98
+- wkBarrel :104
+- wkDecor :107 — ---- praia: pedras, algas, conchas, madeira trazida pelo mar, poças ----
+- wkSeaH :121 — altura do mar: 4 ondas cruzadas (swell + marolas) + a onda gigante que passa; o mesmo cálculo move a água e os
+- wkSea :124
+- wkStorm :154 — ---- chuva e raios ----
+- wkBolt :161
+- wkBuild :164
+- wkUpd :165
+- wkReset :184
+- makeCrab :186 — ---- bichos: caranguejo e gaivota ----
+- makeGull :195
+- wkDebrisMesh :205 — desenho de cada destroço (as plataformas que boiam são movers; as grandes, do casco, ficam paradas)
+- wkHullPiece :217 — pedaço grande do casco saindo da água (parado: dá para ficar em pé com calma)
+- wkPart2Build :225
+- wkWaveY :239
+- wkPart2Upd :240
+- wkStrikeBolt :271 — raio de verdade (zigue-zague com galhos) do céu até o destroço
+- seg :272
+- wkShatter :277 — o destroço quebra em lascas
+- wkStern :282 — ===================== parte 3: a popa boiando (porão alagado + luta com o Capitão Corvo-Pirata) e a ilha =====
+- makeCaptain :320 — o Capitão Corvo-Pirata (criação própria): corvo de casaca vermelha, chapéu de três pontas, tapa-olho e sabre
+- wkBossBuild :338
+- wkBossBar :342
+- wkBossThrowBarrel :343
+- wkBossCannon :347
+- wkBossUpd :348
+- wkBossFish :389
+- wkBossHit :391
+- wkBossReset :397
+- wkIsland :401 — ilha: palmeiras, poças, árvores caídas, pedras na água
+- palm :402
+- wkRock :419
+- wkPart3Build :424
+- wkPart3Upd :428
+
+## 40_estado.js  (396 linhas) /*@@parte:40_estado.js*/
+- hd :5
+- writeSave :20
+- fmt :22
+- setHearts :23
+- giveLife :29
+- addCoin :35
+- toast :40
+- spawn :44
+- resetState :51
+- showCard :74
+- buildWorlds :86
+- showMenu :96
+- startLevel :103
+- beginPlay :112
+- retry :113
+- stats :120
+- lose :123
+- recordLevel :130
+- scoreLis :139
+- winLevel :143
+- winGame :153
+- spawnDebris :161
+- shatterEnemy :171
+- updDebris :186
+- setAct :209
+- setFire :210
+- setCape :212
+- spinJump :214 — pulo giratório (K ou arrastar o Pular para cima): sem poder só gira; com capa gira com a capa (acerta em volta
+- sjGo :215
+- actUp :218
+- act :219
+- spin :220
+- updWind :233
+- mountFx :250
+- fireFx :256
+- kuroGlow :263
+- capeFx :274
+- updSpin :280
+- updFeathers :299
+- fbClear :309
+- shoot :310
+- fbBoom :323
+- fireCoin :325 — fogo derrota o inimigo e ele vira uma moeda: pula, cai no chão e fica lá até o Kuro pegar
+- updFire :326
+- hurt :357
+- timeUp :380
+- fallDeath :388
+
+## 41_raposa.js  (306 linhas) /*@@parte:41_raposa.js*/
+- makeFoxVis :4
+- part :11
+- tuft :19
+- shag :29 — espalha tufos num elipsoide (centro c, raios e); varre para trás (-x)
+- build :34
+- mk :100
+- furTex :113
+- r :115
+- foxMat :120
+- spawnFox :126
+- foxGround :132
+- mountFox :133
+- dismountFox :139
+- foxBoost :146
+- updFox :152
+- seatY :197 — altura da sela: o quadril do Kuro encosta na sela (a raposa abaixa quando ele agacha)
+- foxVisUpd :198
+- collectItem :238
+- foxBubble :263
+- bubUpd :270
+- bubPop :277
+- foxSpit :283
+- updSpit :289
+- warmShaders :299
+
+## 42_blocos.js  (262 linhas) /*@@parte:42_blocos.js*/
+- quakeM :3
+- buildBlocks :13
+- buildPlants :25 — broto espinhoso: planta que sobe e desce de um cano (desenho original)
+- updPlants :48
+- buildPipes :66
+- setEmpty :86
+- popCoin :88
+- dropCoin :97
+- updDropCoins :103
+- updPopCoins :114
+- hitBlock :121
+- spawnVine :147
+- tryGrab :156
+- ropeMove :179
+- climbMove :185
+- inRoom :202
+- tryWarp :203
+- warpStep :211
+- mountH :244 — montado: no máximo a altura do Kuro grande, para passar pelos mesmos lugares; agachado passa nos túneis
+- stdH :245
+- crH :246
+- blockedAbove :247
+- updCrouch :254
+
+## 50_fisica.js  (55 linhas) /*@@parte:50_fisica.js*/
+- moveMovers :4
+- buildDrops :14
+
+## 51_ruinas.js  (762 linhas) /*@@parte:51_ruinas.js*/
+- sandReset :4
+- sandTex :12
+- qsTex :35
+- wrap :39
+- sandWaveF :51
+- updSandWave :52
+- buildShards :67
+- mk :71
+- floorBelow :80
+- burstShards :81
+- updShards :95
+- startDeath :111
+- finishDeath :122
+- updDeath :131
+- buildSandSys :166
+- disposeSandSys :197
+- inQSand :198
+- updSandSys :199
+- updSandFx :239
+- buildBalls :259
+- updBalls :274
+- dropFloor :290
+- crystalBurst :295
+- updChain :306
+- updDrops :310
+- resetDrops :352
+- updBlades :353
+- updCrumbles :360
+- groundOK :376
+- hazNear :383
+- landTop :387
+- dropOK :397
+- inZone :403
+- terrOK :408
+- eBlockWall :417 — bloco (tijolo/?) e cano são parede: o inimigo nunca sobe neles
+- eHit :428
+- eObstacle :436
+- eHeadFree :444
+- eBlocker :453
+- walkMove :462
+- chaseStuck :507 — inimigo que não consegue pegar o Kuro (ele subiu alto ou o caminho travou) desiste e volta a patrulhar
+- giveUp :514
+- canRealert :524 — depois de desistir: só volta a perseguir se o Kuro descer para a altura dele e chegar perto
+- sees :526
+- witchAI :527
+- batSep :532
+- terrExtent :546 — território real: a plataforma onde o inimigo vive e as vizinhas que ele alcança pulando/descendo (raio TERR)
+- inTerr :563
+- placeEnemies :564
+- frogLedge :574
+- frogHop :588
+- frogMove :622
+- updEnemy :654
+
+## 52_castelo.js  (540 linhas) /*@@parte:52_castelo.js*/
+- sfxMagic :4
+- loseWings :5
+- sjTxt :23 — pulo normal: inimigo de chão dorme um tempo; voador é derrubado (cai e dorme, depois volta a voar). Pulo girat
+- sleepE :25
+- sleepUpd :27
+- killE :36
+- makeSkel :54
+- arm :66
+- leg :74
+- makeWitch :95
+- shurikenGeo :120
+- shotsEnsure :121
+- fireShot :132
+- shotKill :142
+- updShots :146
+- resetShots :175
+- buildFlames :177 — ---------- fogo ----------
+- updFlames :194
+- buildDoor :212 — ---------- porta do salão do trono ----------
+- resetDoor :238
+- updDoor :239
+- updCastleFx :251 — ---------- efeitos do castelo: tochas e relâmpago ----------
+- seg :262
+- buildKids :284
+- liveKids :293
+- k_alive :294
+- killKid :295
+- resetKids :296
+- spawnKid :297
+- updKids :302
+- bossHit :318
+- spawnPieces :336
+- bossHurtFx :346
+- enterArena :360
+- slash :375
+- atkHit :396
+- updSlash :403
+- updBoss :445
+- heavyRelease :512
+- updCharge :518
+- starMesh :523
+- throwStar :524
+- updStars :531
+
+## 53_agua.js  (313 linhas) /*@@parte:53_agua.js*/
+- wTop :4
+- surfWave :6 — altura da onda da superfície (a mesma da faixa da frente): o Kuro boia junto com ela
+- inWater :7
+- currentAt :8
+- emitBub :10
+- updBubFx :24
+- crawlArm :34
+- splashFx :39
+- strokeSwim :40
+- swimJump :46
+- waterVy :51
+- drown :64
+- updAir :69
+- step :87
+
+## 60_animacao.js  (460 linhas) /*@@parte:60_animacao.js*/
+- pose :6
+- visEnemy :210
+- visKids :318
+- visBoss :326
+- animate :360
+- viewLeft :430 — borda esquerda que a câmera mostra quando está no começo da fase (na altura do chão)
+- updateCamera :431
+
+## 70_entrada.js  (347 linhas) /*@@parte:70_entrada.js*/
+- dblTap :4
+- press :14
+- navBox :34
+- navList :35
+- navSet :36
+- navClear :37
+- navStart :38
+- navMove :41
+- near :51
+- navPress :57
+- mapKey :65
+- gpKey :79
+- gpPoll :80
+- hide :101
+- show :101
+- home :124
+- drive :129
+- jup :153
+- fup :157
+- sup :159
+- edit :170
+- row :174
+- cur :204
+- cur :214
+- cur :235
+- refreshCfg :241
+- verdict :261
+- setCx :265
+- snapBase :272
+- showcase :280
+- openCfg :288
+- clearKeys :298
+- pauseUI :299
+- pauseGame :303
+- leavePause :311
+- resumeGame :316
+- closeCfg :321
+
+## 71_laco_e_mapa.js  (570 linhas) /*@@parte:71_laco_e_mapa.js*/
+- render :4
+- onSea :44
+- mapHeight :46
+- mapPathDist :54
+- mapMat :55
+- mapLabel :56
+- buildMap :66
+- slab :76 — ilhas
+- ribbon :93
+- spot :106
+- many :116
+- parts :118
+- lm :139
+- best :140
+- faceTo :147
+- bx :262
+- buildMapDecor2 :306 — maquete da Terra Nova: o mundo 12 (praia, trilha, rio, cogumelos e a árvore gigante); os outros ficam na nebli
+- mapPosAt :347
+- mapRefresh :353
+- mapAvatarOn :366
+- mapAvatarOff :370
+- mapShowPanel :376
+- mapGo :384
+- openMap :390
+- leaveMap :408
+- mapUpdate :411
+- mapTap :465
+- up :486
+- startBench :494
+- benchStep :501
+- frame :523
+
+## 99_fim.html  (26 linhas) <!--@@parte:99_fim.html-->
+- upd :12
+- lockL :14
+- goFs :15
+- first :19
