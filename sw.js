@@ -3,4 +3,6 @@ var V='rumo-a5c39726',F=["./", "index.html", "manifest.webmanifest", "icons/icon
 self.addEventListener('install',function(e){e.waitUntil(caches.open(V).then(function(c){return c.addAll(F)}).then(function(){return self.skipWaiting()}))});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(function(n){return n!==V}).map(function(n){return caches.delete(n)}))}).then(function(){return self.clients.claim()}))});
 self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;
+  var u=new URL(e.request.url);if(e.request.mode==='navigate'||/\/(index\.html)?$/.test(u.pathname)){/* a página do jogo: busca na internet primeiro (correção chega na hora); sem internet usa a cópia guardada */
+    e.respondWith(fetch(e.request,{cache:'no-store'}).then(function(n){if(n&&n.ok){var cp=n.clone();caches.open(V).then(function(c){c.put('index.html',cp)})}return n}).catch(function(){return caches.match('index.html')}));return}
   e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(function(r){return r||fetch(e.request).then(function(n){if(n&&(n.ok||n.type==='opaque')&&/fonts\.(googleapis|gstatic)\.com/.test(e.request.url)){var cp=n.clone();caches.open(V).then(function(c){c.put(e.request,cp)})}return n}).catch(function(){return caches.match('index.html')})}))});
