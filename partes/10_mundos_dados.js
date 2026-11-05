@@ -805,29 +805,28 @@ LEVELS.push({name:'O Naufrágio',theme:20,music:16,camMax:416,limit:900,es:1.05,
 blockStd(LEVELS[LEVELS.length-1]);
 STORY.worlds.push({kicker:'Mundo 19 · Terra Nova',title:'O Naufrágio',text:'Uma tempestade partiu um navio pirata ao meio: a proa encalhou na praia e a popa ficou boiando no mar. Suba pelos caixotes e pelo convés, escale o mastro até o cesto da gávea, fuja dos caranguejos e das gaivotas — e cuidado com os raios!'});
 
-/* ===== Terra Nova — Mundo 20: Cânion Invertido (plano aprovado pelo dono, 05/11; manhã, sem chefe). Parte 1: o fundo do cânion =====
-   Chão em y 0 e teto de pedra com a parte de baixo em y 8 (5º valor 'roof'); canyon.A = linha do meio do espelho da gravidade.
-   Setas [x,y,'up'|'down']: 'up' vira a gravidade para o teto, 'down' traz de volta. Buracos do teto dão para o céu (cair neles é queda). */
-LEVELS.push({name:'Cânion Invertido',theme:21,music:17,camMax:392,zoom:1.3,limit:900,es:1.05,noLift:1,coinN:100,
- canyon:{A:4,free:312,seed:[381,11.2],arrows:[[12,.9,'up'],[31,6.9,'down'],[58,.9,'up'],[72,6.9,'down'],[91,.9,'up'],[113,6.9,'down'],
-  /* parte 2: as gargantas — setas que trocam sozinhas [x,y,'up'|'down',segundos,atraso] e pedras que caem para cima [x,largura] */
-  [156,.9,'up',1.6,0,'up'],[190,6.9,'down'],[210,.9,'up',1.3,.6,'up'],[226,6.9,'up',1.5,0,'down'],[236,.9,'up'],[250,6.9,'down'],[259.5,.9,'up'],[290,6.9,'down'],
-  /* parte 3: a subida até o arco — pedras soltas no ar (anda em cima e embaixo), abismo embaixo e céu em cima */
-  [315,.9,'up'],[340.5,5.3,'up',1.4,0,'up'],[347,5.3,'down'],[353.5,2.7,'up']],
-  rocks:[[136,1.6],[150,1.6],[178,1.4],[182,1.4],[205,1.8],[228,1.4],[276,1.4],[280,1.4],[284,1.4]]},
- solids:[[-14,42,0],[46,62,0],[68,86,0],[90,104,0],[112,160,0],[166,184,0],[192,214,0],[222,240,0],[246,262,0],[270,316,0],[316.5,323,4.6,4,0,'slab'],[326,334,4.6,4,0,'slab'],[333,339,6.6,6,0,'slab'],[342,348,6.6,6,0,'slab'],[348.5,355,2,1.4,0,'slab'],[355,362,9.6,9,0,'slab'],[363,370,11.1,10.5,0,'slab'],[371,391,14,12,0,'arch'],
-  [-14,23,14,8,0,'roof'],[27,52,14,8,0,'roof'],[56,78,14,8,0,'roof'],[81,100,14,8,0,'roof'],[103,124,14,8,0,'roof'],[129,170,14,8,0,'roof'],[174,200,14,8,0,'roof'],[204,232,14,8,0,'roof'],[236,256,14,8,0,'roof'],[262,300,14,8,0,'roof']],
- floats:[],movers:[],crumbles:[],feathers:[],spikes:[],springs:[],
- enemies:[{t:'beetle',x0:33,x1:41,y:0,s:1.1},{t:'bat',x0:38,x1:40,y:7.35,s:1.4,hang:1},{t:'beetle',x0:48,x1:56,y:0,s:1.3},
-  {t:'bat',x0:65,x1:67,y:7.35,s:1.5,hang:1},{t:'bat',x0:81,x1:83,y:7.35,s:1.5,hang:1},{t:'beetle',x0:70,x1:80,y:0,s:1.3},
-  {t:'bat',x0:107,x1:109,y:7.35,s:1.5,hang:1},{t:'frog',x0:128,x1:140,y:0},{t:'bat',x0:135,x1:137,y:7.35,s:1.6,hang:1},
-  {t:'bat',x0:186,x1:188,y:7.35,s:1.6,hang:1},{t:'beetle',x0:194,x1:202,y:0,s:1.4},{t:'bat',x0:219,x1:221,y:7.35,s:1.6,hang:1},{t:'frog',x0:224,x1:238,y:0},
-  {t:'bat',x0:243,x1:245,y:7.35,s:1.7,hang:1},{t:'beetle',x0:252,x1:260,y:0,s:1.4},{t:'bat',x0:268,x1:272,y:4.2,s:1.6},{t:'bat',x0:294,x1:296,y:7.35,s:1.6,hang:1},
-  {t:'bat',x0:323,x1:333,y:1.6,s:1.3},{t:'bat',x0:359,x1:361,y:8.35,s:1.5,hang:1},{t:'bat',x0:364,x1:374,y:7.4,s:1.4}],
- blocks:[{x:6,y:2.4,t:'q',c:'mushroom'},{x:52,y:2.4,t:'q',c:'fruit'},{x:120,y:2.4,t:'brick'},{x:121,y:2.4,t:'q',c:'coin'},{x:122,y:2.4,t:'brick'},{x:132,y:2.4,t:'q',c:'flower'},{x:197,y:2.4,t:'q',c:'mushroom'},{x:256,y:2.4,t:'brick'},{x:257,y:2.4,t:'q',c:'coin'}],
- coins:[['r',2,10,.9,4],['r',15,22,7.1,4],['r',27.5,30,7.1,2],['r',34,41,.9,4],['r',47,57,.9,5],['r',53,55,7.1,2],['r',58,71,7.1,6],
-  ['r',76,85,.9,5],['r',92,99,7.1,4],['r',101,102,7.1,1],['r',104,112,7.1,4],['r',114,130,.9,6],['r',138,148,.9,4],['r',161,169,7.1,4],['r',175,189,7.1,6],['r',193,203,.9,5],['r',215,231,7.1,7],['r',224,239,.9,5],['r',237,249,7.1,5],['r',251,258,.9,3],['r',263,289,7.1,10],['r',271,274,.9,2],['r',287,298,.9,4],['r',304,313,.9,5],['r',318,322,3.1,3],['r',327,333,3.1,4],['r',335,338,5.1,2],['r',343,346,5.1,2],['r',349.5,353,2.9,3],['r',356,361,8.1,3],['r',372,378,11.1,3]],
- gems:[[70,7.2],[229,7.2],[366.5,9.6]],
- checkpoints:[[47,0],[69,0],[114,0],[153,0],[194,0],[247,0],[302,0],[350,2]],goal:{x:381,top:12},crystalGoal:1,start:{x:0,y:0}});
+/* ===== Terra Nova — Mundo 20: Cânion do Sol (refeito a pedido do dono, 05/11: fase no sentido normal, sem virar a gravidade;
+   o perigo vem do cânion: barrancos que desmoronam, pedras rolando, pilões que esmagam, paredes que fecham...). Manhã, sem chefe.
+   Parte 1: o fundo do cânion — barrancos que desmoronam (crumbles no chão), pedras rolando (canyon.boulders [de x, até x, segundos, atraso]),
+   escorpiões, gêiser de areia (mola) até um cristal. canyon.free negativo = a câmera segue o Kuro na altura desde o começo. */
+LEVELS.push({name:'Cânion do Sol',theme:21,music:17,camMax:396,zoom:1.15,limit:900,es:1.05,noLift:1,coinN:110,
+ canyon:{A:4,free:-20,camUp:2.1,arrows:[],rocks:[],boulders:[[58,36,4.2,0],[89,77.6,3.2,1.5],[128,106,3.8,.8]],
+  /* parte 2: a garganta — pilões de pedra [x,largura,altura parado,segundos parado,atraso,aviso] (o largo 215 é o teto que desce),
+     troncos balançando [x do pino,y do pino,comprimento,abertura,velocidade,fase] */
+  crushers:[[170,2.2,4.6,1.4,0,.45],[176,2.2,4.6,1.4,.7,.45],[182,2.2,4.6,1.4,1.4,.45],[215,10,4.4,3.2,0,.9],[240,2.4,4.8,1.5,0,.45],[252,2.4,4.8,1.5,.9,.45],[271.5,2.6,5.0,2.2,0,.5]],
+  logs:[[228.1,9.2,7.4,.85,1.5,0],[246,9.2,7.6,.8,1.7,1.2]],
+  /* parte 3: a subida até o arco — saliências presas no paredão ('ledge'), ponte de corda que arrebenta (tábuas que caem), rajadas de areia, abutres */
+  bridge:[330,342.1,6.6],seed:[389,14.3]},
+ solids:[[-14,30,0],[34,60,0],[63,90,0],[72,77,1.6,0,0],[102.4,130,0],[134,200,0],[204,226,0],[230.2,260,0],[263.5,274,0],[274,282,5.5],[282,310,0],[312,315.4,1.8,1.2,0,'ledge'],[321,325,5,4.4,0,'ledge'],[327,330.1,6.6,6,0,'ledge'],[342.1,356,6.6,5.6,0,'ledge'],[361.4,366,9.8,9.2,0,'ledge'],[368,373,11.4,10.8,0,'ledge'],[373,393,13.2,12,0,'arch']],
+ floats:[],movers:[],crumbles:[[30,34,0],[90,92.6,0],[94,96.6,.8],[98,100.6,.4],[260,263.5,0],[317,321,3.4],[330.1,331.0,6.6,'plank'],[331.1,332.0,6.6,'plank'],[332.1,333.0,6.6,'plank'],[333.1,334.0,6.6,'plank'],[334.1,335.0,6.6,'plank'],[335.1,336.0,6.6,'plank'],[336.1,337.0,6.6,'plank'],[337.1,338.0,6.6,'plank'],[338.1,339.0,6.6,'plank'],[339.1,340.0,6.6,'plank'],[340.1,341.0,6.6,'plank'],[341.1,342.0,6.6,'plank'],[358,361.4,8.2]],feathers:[],spikes:[],springs:[[112,0]],
+ enemies:[{t:'beetle',x0:18,x1:27,y:0,s:1.1},{t:'beetle',x0:40,x1:50,y:0,s:1.2},{t:'beetle',x0:80,x1:88,y:0,s:1.3},
+  {t:'beetle',x0:108,x1:116,y:0,s:1.3},{t:'beetle',x0:140,x1:150,y:0,s:1.4},{t:'bat',x0:66,x1:76,y:4.5,s:1.3},
+  {t:'beetle',x0:186,x1:196,y:0,s:1.4},{t:'beetle',x0:233,x1:238,y:0,s:1.3},{t:'beetle',x0:288,x1:298,y:0,s:1.5},{t:'bat',x0:198,x1:210,y:5,s:1.4},
+  {t:'bat',x0:316,x1:328,y:8,s:1.3},{t:'bat',x0:346,x1:356,y:9.6,s:1.4},{t:'beetle',x0:349,x1:355,y:6.6,s:1.2},{t:'bat',x0:364,x1:372,y:13.5,s:1.4}],
+ blocks:[{x:6,y:2.4,t:'q',c:'mushroom'},{x:11,y:2.4,t:'brick'},{x:12,y:2.4,t:'q',c:'coin'},{x:13,y:2.4,t:'brick'},{x:74.5,y:4,t:'q',c:'fruit'},{x:142,y:2.4,t:'q',c:'fox'},{x:206,y:2.4,t:'q',c:'flower'},{x:234,y:2.4,t:'q',c:'mushroom'},{x:286,y:2.4,t:'brick'},{x:287,y:2.4,t:'q',c:'coin'}],
+ coins:[['r',2,10,.9,4],['r',14,27,.9,5],['r',31,33,1.6,2],['r',37,56,.9,6],['r',64,70,.9,3],['r',72.5,76.5,2.5,3],['r',90.5,100,2.4,5],['r',115,127,.9,5],['r',110,114,4.5,3],['r',131,133,1.6,2],['r',140,154,.9,5],['r',164,168,.9,3],['r',169,183,.9,6],['r',186,198,.9,5],['r',201,203,1.8,2],['r',205,209,.9,3],['r',210.5,219.5,.9,6],['r',222,225,.9,3],['r',227,230,2.4,3],['r',232,239,.9,4],['r',240,252,.9,5],['r',254,259,.9,3],['r',261,263,.9,2],['r',265,270,.9,3],['r',275,281,6.4,4],['r',283,298,.9,6],['r',301,309,.9,4],['r',312.5,315,2.7,2],['r',317.5,320.3,4.3,3],['r',322,324.5,5.9,2],['r',327.5,329.6,7.5,2],['r',330.5,341.5,7.6,7],['r',343,355,7.5,6],['r',358.5,361,9.1,3],['r',362,365.5,10.7,3],['r',368.5,372,12.3,3],['r',374,387,14.1,7]],
+ gems:[[112,8.2],[278,6.5],[336,9.4]],
+ wind:[{x0:343,x1:357,dir:-1,per:6,on:2.2,ph:1,str:4}],
+ checkpoints:[[62,0],[104,0],[163,0],[204,0],[231,0],[264,0],[300,0],[345,6.6]],goal:{x:389,top:13.2},crystalGoal:1,start:{x:0,y:0}});
 blockStd(LEVELS[LEVELS.length-1]);
-STORY.worlds.push({kicker:'Mundo 20 · Terra Nova',title:'Cânion Invertido',text:'Num cânion de pedra vermelha, a manhã acorda tudo de cabeça para baixo: setas antigas viram a gravidade e o Kuro cai para o teto! Ande pelo chão e pelo teto, pule os buracos que dão para o céu e cuidado com os morcegos que dormem pendurados.'});
+STORY.worlds.push({kicker:'Mundo 20 · Terra Nova',title:'Cânion do Sol',text:'Um cânion de pedra vermelha acorda com o sol da manhã — e ele não quer visitas! O chão desmorona, pedras rolam ladeira abaixo, pilões de rocha esmagam e paredes se fecham. Corra, pule e chegue ao arco de pedra onde brilha a Semente de Luz.'});

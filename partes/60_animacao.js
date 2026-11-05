@@ -407,6 +407,7 @@ function animate(dt){
     var q=Math.max(0,s.sq)/.35;
     s.pad.position.y=.42-.2*q+(s.sq>0?Math.sin((1-q)*Math.PI)*.12:0);
     s.coil.scale.y=1-.45*q;
+    if(s.plume){s.plume.visible=s.sq>0;s.plume.scale.set(.6+q*.6,.3+(1-q)*1.2,.6+q*.6);s.plume.material.opacity=.55*q+.1}/* gêiser de areia */
   });
   if(flag.geo){
     var p=flag.geo.attributes.position,b=flag.base;
@@ -432,7 +433,7 @@ function animate(dt){
 function viewLeft(){var cm=(LV&&LV.camMin!==undefined)?LV.camMin:7,hw=cam.dist*((LV&&LV.zoom)||1)*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;return cm-hw}
 function updateCamera(dt,snap){
   var tx=clamp(P.x+P.face*.8+clamp(P.vx*.36,-3.6,3.6),(LV&&LV.camMin!==undefined)?LV.camMin:7,LV?LV.camMax:186),ty=((LV&&LV.tall)?Math.max(2.4,P.y+1.7):Math.max(2.4,2.6+P.y*.66))+P.look*1.0;
-  if(LV&&LV.canyon){var Ac=LV.canyon.A,cfr=LV.canyon.free!==undefined?clamp((P.x-LV.canyon.free)/6,0,1):0;ty=lerp(Ac+(P.y+P.h/2-Ac)*.25+.4,P.y+P.h/2+((CN&&CN.flip)?-.8:.8),cfr)+P.look}/* parte 3 (sem teto): a câmera acompanha o Kuro na altura *//* Cânion Invertido: a câmera mostra o chão e o teto juntos (não gira) */
+  if(LV&&LV.canyon){var Ac=LV.canyon.A,cfr=LV.canyon.free!==undefined?clamp((P.x-LV.canyon.free)/6,0,1):0;ty=lerp(Ac+(P.y+P.h/2-Ac)*.25+.4,P.y+P.h/2+((CN&&CN.flip)?-.8:(LV.canyon.camUp||.8)),cfr)+P.look}/* parte 3 (sem teto): a câmera acompanha o Kuro na altura *//* Cânion Invertido: a câmera mostra o chão e o teto juntos (não gira) */
   if(LV&&LV.rooms){for(var ri=0;ri<LV.rooms.length;ri++){var rm=LV.rooms[ri];if(P.x>rm.a){var hw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect,lo=rm.l+hw,hi=rm.r-hw;if(lo>hi)lo=hi=(rm.l+rm.r)/2;tx=clamp(P.x,lo,hi);ty=2.6;break}}}
   if(volEsc&&volEsc.on){var ehw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;tx=Math.min(LV.camMax,Math.max(tx,volEsc.wx+ehw-3))}
   if(LV&&LV.boss&&!(boss&&boss.v2&&boss.state==='dead')){var bhw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;tx=Math.min(tx,LV.boss.arena[1]+.4-bhw)}

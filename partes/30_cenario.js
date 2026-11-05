@@ -677,6 +677,11 @@ function buildCrumbles(){
     }else if(curTheme.falls){/* Vale das Cachoeiras: tábua da ponte de madeira, com cordas */
       m=new T.Group();var pl=mesh(boxGeo(w-.07,.2,1.8,1),woodM,true,true);pl.position.y=.15;m.add(pl);
       [-1,1].forEach(function(sd){var rp=mesh(new T.CylinderGeometry(.03,.03,w,5),M(0xc8a46a,.9),false,false);rp.rotation.z=Math.PI/2;rp.position.set(0,.55,sd*.85);m.add(rp);var po=mesh(new T.CylinderGeometry(.05,.05,.55,5),barkM,false,false);po.position.set(-w/2+.08,.4,sd*.85);m.add(po)});
+    }else if(curTheme.canyon&&c[3]==='plank'){/* Cânion do Sol: tábua da ponte de corda que arrebenta */
+      m=new T.Group();var cM=cnMats();var pk=mesh(boxGeo(w-.08,.16,1.8,1),cM.plankM||(cM.plankM=pbr(texWood,.85,.5,{color:new T.Color(0xc8986a)})),true,true);pk.position.y=.17;m.add(pk);
+    }else if(curTheme.canyon){/* Cânion do Sol: barranco de pedra vermelha rachado (fica igual ao chão, mas com rachaduras) */
+      m=new T.Group();var cA=cnMats(),ch=c[2]+14,cb=mesh(boxGeo(w-.06,ch,6.6,2),cA.rock);cb.position.set(0,-.05-ch/2,-1.6);m.add(cb);/* coluna de pedra até o fundo (cai inteira) */
+      var ct=mesh(boxGeo(w-.02,.3,6.9,2),MATS[21].top);ct.position.set(0,.1,-1.6);m.add(ct);
     }else m=mesh(boxGeo(w,.5,2.8,curTheme.name==='village'?2.5:1.2),curTheme.name==='heights'?barkM:curTheme.name==='village'?vilM().roof:curTheme.name==='castle'?castleCrumbM:(curTheme.name==='peaks'?iceCrumbM:(curTheme.name==='ruins'?ruinCrumbM:crumbM)));
     m.position.set(cx,c[2]-.25,0);add(m);
     var o={l:c[0],r:c[1],t:c[2],b:c[2]-.5,oneway:false,flt:true,crumble:true,state:0,tm:0,vy:0,mesh:m,cx:cx,baseY:c[2]-.25,dead:false};
@@ -691,7 +696,10 @@ function buildSprings(){
     var coil=new T.Group();g.add(coil);
     for(var i=0;i<4;i++){var t=mesh(new T.TorusGeometry(.2,.04,6,14),coilM);t.rotation.x=Math.PI/2;t.position.y=.12+i*.07;coil.add(t)}
     var pad=mesh(new T.CylinderGeometry(.5,.5,.1,16),padM);pad.position.y=.42;g.add(pad);
+    var plume=null;if(curTheme.canyon){/* Cânion do Sol: gêiser de areia — cratera de pedra, sem mola; a areia esguicha ao pular */
+      coil.visible=false;base.material=cnMats().crust;pad.material=M(0xe0a070,.95);var cr=mesh(new T.TorusGeometry(.55,.16,6,14),cnMats().rockC);cr.rotation.x=Math.PI/2;cr.position.y=.12;g.add(cr);
+      plume=new T.Mesh(new T.ConeGeometry(.5,3,10,1,true),new T.MeshBasicMaterial({color:0xf0c890,transparent:true,opacity:.5,depthWrite:false}));plume.rotation.x=Math.PI;plume.position.y=1.9;plume.visible=false;g.add(plume)}
     g.position.set(s[0],s[1],0);add(g);
-    springs.push({x:s[0],base:s[1],t:s[1]+.45,pad:pad,coil:coil,cd:0,sq:0});
+    springs.push({x:s[0],base:s[1],t:s[1]+.45,pad:pad,coil:coil,cd:0,sq:0,plume:plume});
   });
 }

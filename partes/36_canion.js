@@ -47,6 +47,11 @@ function cnSolid(s,m3){var A=cnMats(),x0=s[0],x1=s[1],top=s[2],bot=s[3]!==undefi
     if(s[5]==='slab'){var r=rnd(x0*13|0),pt=[];for(var i=0;i<3;i++){var ph=.5+r()*1.2;pt.push({g:xf(new T.ConeGeometry(.25+r()*.25,ph,5),[x0+.6+r()*(w-1.2),bot-ph/2+.05,-.3+(r()-.5)*1.2],[Math.PI,r()*3,0])})}add(new T.Mesh(mergeG(pt),A.crust))}
     else cnArch(x0,x1,bot,top);/* arco de pedra curvo atrás do caminho */
     solids.push({l:x0,r:x1,t:top,b:bot,oneway:false,slip:false,roof:true,slab:1});return}
+  if(s[5]==='ledge'){/* parte 3: saliência presa no paredão (a rocha entra até o fundo, z −7) com a parte de baixo afinando */
+    var lb=mesh(ldRough(new T.BoxGeometry(w,top-bot,8,Math.max(2,w|0),2,6),.08,2.2),A.rock);lb.position.set(cx,(top+bot)/2,-3);add(lb);
+    var lt=mesh(boxGeo(w+.1,.22,8.1,2),m3.top);lt.position.set(cx,top-.1,-3);add(lt);
+    var un=mesh(new T.ConeGeometry(w*.45,2.2,6),A.rock);un.rotation.x=Math.PI;un.scale.z=2.2;un.position.set(cx,bot-1.05,-4);add(un);
+    solids.push({l:x0,r:x1,t:top,b:bot,oneway:false,slip:false});return}
   if(s[5]==='roof'){var b=mesh(boxGeo(w,top-bot-.3,6.8,4.2),A.rock,false);/* sem sombra: o chão embaixo fica claro */b.position.set(cx,(top+bot+.3)/2,-1.6);add(b);
     var lip=mesh(boxGeo(w+.14,.34,6.94,2.2),A.crust);lip.position.set(cx,bot+.17,-1.6);add(lip)}
   else{var vb=bot;var body=mesh(boxGeo(w,top-.3-vb,6.8,4.2),A.rock);body.position.set(cx,(top-.3+vb)/2,-1.6);add(body);
@@ -107,6 +112,16 @@ function cnBuild(th){CN={flip:0,rot:0,A:LV.canyon.A,arrows:[],cd:0,t:0,mir:null,
     CN.arrows.push({x:a[0],y:a[1],up:a[2]==='up',up0:a[2]==='up',per:a[3]||0,off:a[4]||0,go:a[5]||null,v:v,ph:a[0]*.7,fl:0,rz:a[2]==='up'?0:Math.PI})});
   CN.rocks=[];(LV.canyon.rocks||[]).forEach(function(q){var w=q[1]||1.6,h=1.2,so={l:q[0]-w/2,r:q[0]+w/2,t:h,b:0,oneway:false,slip:false,crock:1};solids.push(so);
     CN.rocks.push({x:q[0],w:w,h:h,so:so,m:cnRockMesh(w,h,q[0]),st:'rest',t:0,v:0,cd:0})});
+  CN.bld=(LV.canyon.boulders||[]).map(function(b){var m=mesh(ldRough(new T.IcosahedronGeometry(.68,2),.14,2.4),cnM.boulM||(cnM.boulM=pbr(texStone,.92,.7,{color:new T.Color(0x7a3c26)})));m.visible=false;add(m);return {x0:b[0],x1:b[1],per:b[2],off:b[3]||0,t:0,on:0,x:b[0],m:m}});
+  /* parte 2: pilões de pedra (sólidos que caem e sobem) e troncos balançando */
+  CN.crs=(LV.canyon.crushers||[]).map(function(q){var w=q[1],h=w>5?1.4:1.3,rest=q[2],so={l:q[0]-w/2,r:q[0]+w/2,t:rest+h,b:rest,oneway:false,slip:false,crush:1};solids.push(so);
+    return {x:q[0],w:w,h:h,rest:rest,up:q[3],off:q[4]||0,warn:q[5]||.45,so:so,m:cnCrushMesh(q[0],w,h,rest),st:'up',t:0,v:0}});
+  CN.logs=(LV.canyon.logs||[]).map(function(q){return {px:q[0],py:q[1],L:q[2],amp:q[3],sp:q[4],ph:q[5]||0,m:cnLogMesh(q[0],q[1],q[2]),a:0,lx:0,ly:0}});
+  if(LV.canyon.crushers)cnGorge(160,306);
+  if(LV.canyon.crushers)cnGorge(306,400);
+  if(LV.canyon.bridge){var B=LV.canyon.bridge,rpM=M(0xc8a46a,.9),wd=pbr(texWood,.85,.5,{color:new T.Color(0xb88a5a)});/* cordas e postes da ponte (as tábuas são as que caem) */
+    [-1,1].forEach(function(sd){var rl=B[1]-B[0],rp=mesh(new T.CylinderGeometry(.035,.035,rl,5),rpM,false,false);rp.rotation.z=Math.PI/2;rp.position.set((B[0]+B[1])/2,B[2]+.85,sd*.85);add(rp);
+      [B[0],B[1]].forEach(function(px){var po=mesh(new T.CylinderGeometry(.07,.08,1.1,6),wd);po.position.set(px,B[2]+.45,sd*.85);add(po)})})}
   if(LV.canyon.seed)cnSeedBuild(LV.canyon.seed);
   cnReset()}
 /* a Semente de Luz, pendurada embaixo do arco: tocar nela termina a fase (luz sobe pelo arco) */
@@ -124,7 +139,7 @@ function cnRockMesh(w,h,seed){var A=cnMats(),g=new T.Group(),r=rnd(seed*7|0);
   var b=mesh(new T.DodecahedronGeometry(.5,1),A.rockC);b.scale.set(w*.98,h*.95,1.3);g.add(b);
   for(var i=0;i<5;i++){var c=new T.Mesh(new T.BoxGeometry(.05,.3+r()*.4,.04),A.upM);c.position.set((r()-.5)*w*.7,(r()-.5)*h*.5,.62);c.rotation.z=(r()-.5)*1.4;g.add(c)}
   g.position.set(seed,h/2,0);add(g);return g}
-function cnReset(){if(!CN)return;CN.flip=0;CN.rot=0;CN.cd=0;CN.t=0;if(CN.seed&&CN.seed.got<2){CN.seed.got=0;CN.seed.t=0}
+function cnReset(){if(!CN)return;(CN.crs||[]).forEach(function(c){c.st='up';c.t=-c.off;c.v=0;c.so.b=c.rest;c.so.t=c.rest+c.h});(CN.bld||[]).forEach(function(b){b.t=-b.off;b.on=0;b.m.visible=false});CN.flip=0;CN.rot=0;CN.cd=0;CN.t=0;if(CN.seed&&CN.seed.got<2){CN.seed.got=0;CN.seed.t=0}
   (CN.rocks||[]).forEach(function(k){k.st='rest';k.t=0;k.v=0;k.cd=0;k.so.b=0;k.so.t=k.h;k.m.position.set(k.x,k.h/2,0)});
   enemies.forEach(function(e){if(e.hang){e.st='hang';e.x=e.hx;e.y=e.hy;e.cur=0;e.bvx=e.bvy=0}})}
 /* vira a gravidade (chamado quando o Kuro passa por uma seta) */
@@ -139,7 +154,7 @@ function cnSetFlip(f,ax,ay){if(!CN||CN.flip===f)return;CN.flip=f;CN.cd=.35;
 function cnUpd(dt){if(!CN)return;CN.t+=dt;if(CN.cd>0)CN.cd-=dt;
   /* setas que trocam sozinhas: ficam per segundos de um jeito e per do outro */
   for(var j=0;j<CN.arrows.length;j++){var sa=CN.arrows[j];if(!sa.per)continue;var ph=(CN.t+sa.off)%(sa.per*2);sa.up=ph<sa.per?sa.up0:!sa.up0;sa.warn=(ph%sa.per)>sa.per-.5}
-  cnRocks(dt);cnSeedUpd(dt);
+  cnRocks(dt);cnBoulders(dt);cnCrush(dt);cnLogs(dt);cnSeedUpd(dt);
   if(state==='play'&&CN.cd<=0){for(var i=0;i<CN.arrows.length;i++){var a=CN.arrows[i];
     if(a.up!==!!CN.flip&&Math.abs(P.x-a.x)<.75&&P.y<a.y+.75&&P.y+P.h>a.y-.75){a.fl=1;cnSetFlip(a.up?1:0,a.x,a.y);break}}}
   /* caiu para o céu por um buraco do teto */
@@ -164,6 +179,49 @@ function cnRocks(dt){var top=CN.A*2;(CN.rocks||[]).forEach(function(k){var so=k.
   if(state!=='play')return;
   var over=P.x+P.w/2>so.l+.05&&P.x-P.w/2<so.r-.05&&P.y<so.t-.02&&P.y+P.h>so.b+.02,crush=carry&&P.y+P.h>top-.02;
   if(over||crush){hurt(k.x,1);P.x=P.x<k.x?so.l-P.w/2-.06:so.r+P.w/2+.06;P.vx=0;if(crush){P.onPlat=null;P.grounded=false}}})}
+/* Cânion do Sol: pedras que rolam ladeira abaixo (de x0 até x1, para a esquerda, contra o Kuro). Saem de uma fenda do paredão,
+   rolam e se despedaçam no fim; voltam a cada 'per' segundos. Pular por cima (1,4 de altura). */
+function cnBoulders(dt){(CN.bld||[]).forEach(function(b){var R=.68;
+  if(!b.on){b.t+=dt;if(b.t>=b.per){b.t=0;b.on=1;b.x=b.x0;b.z=-2.6;b.m.visible=true;if(Math.abs(P.x-b.x0)<26)beep(55,.5,'sawtooth',.03,-20)}return}
+  b.z=Math.min(0,b.z+dt*7);if(b.z>=0)b.x-=dt*5.4;b.m.position.set(b.x,R+Math.abs(Math.sin(b.x*2.1))*.04,b.z);b.m.rotation.z+=dt*5.4/R;
+  if(Math.abs(P.x-b.x)<26&&Math.random()<dt*8)emit(dustPool,b.x+.4,.1,2,1.4,.4,.4,1.1,-.1);
+  if(b.z>-.4&&state==='play'&&Math.abs(P.x-b.x)<R*.85+P.w/2&&P.y<R*1.8&&P.y+P.h>.05)hurt(b.x,1);
+  if(b.x<=b.x1){b.on=0;b.m.visible=false;emit(dustPool,b.x,.4,14,3,.7,.7,1.3,-.2);if(Math.abs(P.x-b.x)<20){beep(80,.25,'square',.04,-40);shake=Math.max(shake,.12)}}})}
+/* pilão de pedra: bloco de rocha pendurado em correntes. Parado em cima → treme e solta poeira (aviso) → cai rápido e esmaga
+   → fica no chão um pouco → sobe devagar. É sólido: dá para subir nele (sobe junto, devagar). Quem fica embaixo leva dano e é
+   empurrado para fora (nunca fica preso). Os largos (teto que desce) caem mais devagar e avisam mais cedo. */
+function cnCrushMesh(x,w,h,rest){var A=cnMats(),g=new T.Group(),wide=w>5;
+  var b=mesh(ldRough(new T.BoxGeometry(w,h,wide?3.4:2.2,Math.max(2,w*2|0),3,4),.06,3),cnM.boulM||(cnM.boulM=pbr(texStone,.92,.7,{color:new T.Color(0x7a3c26)})));b.position.y=h/2;g.add(b);
+  var cr=mesh(boxGeo(w+.08,.18,wide?3.5:2.3,2),A.crust);cr.position.y=.09;g.add(cr);
+  var ir=M(0x3a3438,.5,.6);[-1,1].forEach(function(sd){var ch=mesh(new T.CylinderGeometry(.05,.05,14,5),ir,false,false);ch.position.set(sd*(w/2-.3),h+7,0);g.add(ch)});
+  if(wide)for(var i=0;i<Math.floor(w/1.4);i++){var sp=mesh(new T.ConeGeometry(.16,.4,5),A.rockC,false,false);sp.rotation.x=Math.PI;sp.position.set(-w/2+.7+i*1.4,-.15,0);g.add(sp)}
+  g.position.set(x,rest,0);add(g);return g}
+function cnCrush(dt){(CN.crs||[]).forEach(function(c){var so=c.so,dy=0,fl=0;
+  for(var i=0;i<solids.length;i++){var q=solids[i];if(q===so||q.crush||q.dead||q.crumble)continue;if(c.x>=q.l&&c.x<=q.r&&q.t<=c.rest+.01&&q.t>fl-1e-4)fl=q.t}/* chão embaixo do pilão */
+  if(c.st==='up'){c.t+=dt;if(c.t>=c.up){c.st='warn';c.t=c.warn;if(Math.abs(P.x-c.x)<16)beep(90,.3,'sawtooth',.025,-30)}}
+  else if(c.st==='warn'){c.t-=dt;if(Math.random()<dt*14)emit(dustPool,c.x+(Math.random()-.5)*c.w,so.b,1,.6,.5,.5,1.2,.6);if(c.t<=0){c.st='fall';c.v=0}}
+  else if(c.st==='fall'){c.v=Math.min(c.w>5?10:24,c.v+(c.w>5?30:70)*dt);dy=-c.v*dt;if(so.b+dy<=fl){dy=fl-so.b;c.st='down';c.t=c.w>5?1.1:.7;emit(dustPool,c.x,fl+.1,c.w>5?20:10,3,.7,.7,1.3,-.2);if(Math.abs(P.x-c.x)<14){beep(55,.35,'square',.05,-25);shake=Math.max(shake,.3)}}}
+  else if(c.st==='down'){c.t-=dt;if(c.t<=0)c.st='rise'}
+  else if(c.st==='rise'){dy=Math.min(2.2*dt,c.rest-so.b);if(so.b+dy>=c.rest-1e-4){dy=c.rest-so.b;c.st='up';c.t=0}}
+  if(dy){var carry=P.onPlat===so&&P.grounded&&dy>0;so.b+=dy;so.t+=dy;if(carry)P.y=so.t}
+  c.m.position.set(c.x+(c.st==='warn'?Math.sin(CN.t*80)*.04:0),so.b,0);
+  if(state!=='play')return;
+  if(P.x+P.w/2>so.l+.05&&P.x-P.w/2<so.r-.05&&P.y<so.b-.02&&P.y+P.h>so.b+.02&&P.y<so.t){/* embaixo do pilão que desce: dano e empurra para fora */
+    hurt(c.x,1);var gl=so.l-P.w/2-.08,gr=so.r+P.w/2+.08;P.x=(P.x<c.x)?gl:gr;P.vx=0;P.onPlat=null}})}
+/* tronco balançando em duas cordas, preso numa viga entre as paredes do cânion */
+function cnLogMesh(px,py,L){var A=cnMats(),g=new T.Group(),wd=pbr(texWood,.85,.5,{color:new T.Color(0xc89a70)});
+  var beam=mesh(new T.CylinderGeometry(.2,.2,9,8),wd);beam.rotation.x=Math.PI/2;beam.position.set(px,py+.2,-2.6);add(beam);
+  var arm=new T.Group();arm.position.set(px,py,0);add(arm);
+  var lg=mesh(new T.CylinderGeometry(.38,.38,2.6,12),wd);lg.rotation.x=Math.PI/2;lg.position.y=-L;arm.add(lg);
+  var rpM=M(0xc8a46a,.9);[-1,1].forEach(function(sd){var rp=mesh(new T.CylinderGeometry(.035,.035,L,5),rpM,false,false);rp.position.set(0,-L/2,sd*.9);arm.add(rp)});
+  return arm}
+function cnLogs(dt){(CN.logs||[]).forEach(function(l){var a=l.amp*Math.sin(CN.t*l.sp+l.ph),av=l.amp*l.sp*Math.cos(CN.t*l.sp+l.ph);l.m.rotation.z=a;
+  l.lx=l.px+Math.sin(a)*l.L;l.ly=l.py-Math.cos(a)*l.L;
+  if(state!=='play')return;var cx=clamp(l.lx,P.x-P.w/2,P.x+P.w/2),cy=clamp(l.ly,P.y,P.y+P.h);
+  if(Math.hypot(cx-l.lx,cy-l.ly)<.42){var vx=Math.cos(a)*av*l.L;hurt(l.lx,1);P.vx=clamp(vx,-9,9)}})}
+/* garganta: paredões altos bem perto, atrás do caminho (dá a sensação de corredor apertado) */
+function cnGorge(x0,x1){var A=cnMats(),L=[],r=rnd(x0|0);for(var x=x0;x<x1;x+=3+r()*3){var h=12+r()*6,w=3.4+r()*2;L.push({g:xf(new T.BoxGeometry(w,h,2.4,2,4,1),[x,h/2-2,-6.2-r()*.8],[0,(r()-.5)*.3,0])})}
+  var m=new T.Mesh(mergeG(L),A.wallM);add(m)}
 /* ---- o espelho da física: com a gravidade virada, o passo do Kuro roda no mundo de cabeça para baixo ---- */
 function cnIn(){if(!CN||!CN.flip)return 0;var A2=CN.A*2,i,s,m;
   if(!CN.mir||CN.mirN!==solids.length||CN.mirS!==solids){CN.mir=solids.map(function(q){var o=Object.create(q);q.__cm=o;return o});CN.mirN=solids.length;CN.mirS=solids}

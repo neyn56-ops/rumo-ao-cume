@@ -66,7 +66,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - effCfg :916
 - applyGfx :922
 
-## 10_mundos_dados.js  (833 linhas) /*@@parte:10_mundos_dados.js*/
+## 10_mundos_dados.js  (832 linhas) /*@@parte:10_mundos_dados.js*/
 - add :170
 - wb :171
 - sx :204
@@ -448,7 +448,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - mnBossVis :429
 - mnWallX :443 — paredes do vagonete: dentro dele o Kuro não sai andando pelos lados; só sai pulando por cima da borda
 
-## 30_cenario.js  (697 linhas) /*@@parte:30_cenario.js*/
+## 30_cenario.js  (705 linhas) /*@@parte:30_cenario.js*/
 - lushOn :3 — ===================== cenário caprichado (Alto, Ultra e Máximo) — grama, copas, céu e detalhes de cada mundo =
 - lushVis :5
 - lushTick :17
@@ -487,7 +487,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - buildDecorReef :609
 - buildMovers :648
 - buildCrumbles :668
-- buildSprings :686
+- buildSprings :691
 
 ## 31_moedas.js  (403 linhas) /*@@parte:31_moedas.js*/
 - fitCoins :3 — ===== 100 moedas por fase, nos pontos que valem a pena (buracos, perigos, lugares altos) =====
@@ -670,24 +670,30 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - wkPart3Build :424
 - wkPart3Upd :428
 
-## 36_canion.js  (184 linhas) /*@@parte:36_canion.js*/
+## 36_canion.js  (242 linhas) /*@@parte:36_canion.js*/
 - cnStrata :10
 - cnMats :17
 - cnSolid :42 — chão e teto do cânion: chão com terra vermelha por cima; teto (5º valor 'roof') com a crosta embaixo — é por o
-- cnArch :57
-- cnScenery :67 — ---- cenário: paredão do fundo em camadas, mesas lá longe, pedras flutuando no céu, cactos ----
-- cnArrowMesh :92 — ---- setas de gravidade: placa de pedra com runa brilhando; azul = gravidade para cima (teto), laranja = para 
-- cnBuild :104
-- cnSeedBuild :113 — a Semente de Luz, pendurada embaixo do arco: tocar nela termina a fase (luz sobe pelo arco)
-- cnSeedUpd :119
-- cnRockMesh :123 — pedra que cai para cima: pedra vermelha com rachaduras azuis brilhando (a mesma cor da seta que leva para o te
-- cnReset :127
-- cnSetFlip :131 — vira a gravidade (chamado quando o Kuro passa por uma seta)
-- cnUpd :139
-- cnRocks :157
-- cnIn :168 — ---- o espelho da física: com a gravidade virada, o passo do Kuro roda no mundo de cabeça para baixo ----
-- cnOut :176
-- cnPose :182 — desenho: o Kuro gira de cabeça para baixo em volta dos pés (a câmera não gira)
+- cnArch :62
+- cnScenery :72 — ---- cenário: paredão do fundo em camadas, mesas lá longe, pedras flutuando no céu, cactos ----
+- cnArrowMesh :97 — ---- setas de gravidade: placa de pedra com runa brilhando; azul = gravidade para cima (teto), laranja = para 
+- cnBuild :109
+- cnSeedBuild :128 — a Semente de Luz, pendurada embaixo do arco: tocar nela termina a fase (luz sobe pelo arco)
+- cnSeedUpd :134
+- cnRockMesh :138 — pedra que cai para cima: pedra vermelha com rachaduras azuis brilhando (a mesma cor da seta que leva para o te
+- cnReset :142
+- cnSetFlip :146 — vira a gravidade (chamado quando o Kuro passa por uma seta)
+- cnUpd :154
+- cnRocks :172
+- cnBoulders :184
+- cnCrushMesh :193
+- cnCrush :199
+- cnLogMesh :212 — tronco balançando em duas cordas, preso numa viga entre as paredes do cânion
+- cnLogs :218
+- cnGorge :223 — garganta: paredões altos bem perto, atrás do caminho (dá a sensação de corredor apertado)
+- cnIn :226 — ---- o espelho da física: com a gravidade virada, o passo do Kuro roda no mundo de cabeça para baixo ----
+- cnOut :234
+- cnPose :240 — desenho: o Kuro gira de cabeça para baixo em volta dos pés (a câmera não gira)
 
 ## 40_estado.js  (398 linhas) /*@@parte:40_estado.js*/
 - hd :5
@@ -909,14 +915,14 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - updAir :69
 - step :87
 
-## 60_animacao.js  (463 linhas) /*@@parte:60_animacao.js*/
+## 60_animacao.js  (464 linhas) /*@@parte:60_animacao.js*/
 - pose :6
 - visEnemy :211
 - visKids :320
 - visBoss :328
 - animate :362
-- viewLeft :432 — borda esquerda que a câmera mostra quando está no começo da fase (na altura do chão)
-- updateCamera :433
+- viewLeft :433 — borda esquerda que a câmera mostra quando está no começo da fase (na altura do chão)
+- updateCamera :434
 
 ## 65_carregando.js  (145 linhas) /*@@parte:65_carregando.js*/
 - ldSkyTex :11

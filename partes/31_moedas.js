@@ -277,7 +277,7 @@ function buildEnemies(){
     });
     var o={type:t,x0:e.x0,x1:e.x1,y:e.y,base:e.y,by:e.y,hx:(e.x0+e.x1)/2,sz:false,fg:true,speed:(e.s||1.6)*(LV.es||1),x:e.x0,dir:1,alive:true,deadT:0,ph:i*1.7,w:.5,h:.85,stomp:true,vy:0,vx:0,hop:1+i*.2,land:0,vis:null,st:'patrol',alertT:0,loseT:0,cur:(e.s||1.6)*(LV.es||1),bvx:0,bvy:0};
     if(e.hang){o.hang=1;o.hx=(e.x0+e.x1)/2;o.hy=e.y;o.base=e.y-2.6;o.st='hang'}/* Cânion: morcego pendurado no teto */
-    var ice6=curTheme.name==='peaks',des7=curTheme.name==='ruins';
+    var ice6=curTheme.name==='peaks',des7=curTheme.name==='ruins'||!!curTheme.canyon;/* Cânion do Sol: escorpião, abutre e capim-rolante como no deserto */
     var vol=curTheme.name==='volcano';
     var sum11=curTheme.name==='summit';
     if(t==='beetle'&&sum11)o.vis=makeGoat();

@@ -4,5 +4,5 @@ const pg=await b.newPage({viewport:{width:960,height:440}});let er=[];pg.on('pag
 await pg.addInitScript(()=>{window.requestAnimationFrame=()=>1;localStorage.setItem('rumo-ao-cume-cfg',JSON.stringify({preset:'high',pMig:1,aaMig:2}))});
 await pg.goto('file://'+__dirname+'/teste.html',{waitUntil:'domcontentloaded'});await pg.waitForTimeout(2000);
 const E=c=>pg.evaluate(c=>window.__ev(c),c);
-for(const s of JSON.parse(process.argv[2])){const [x,y,n,f]=s;await E(`leaveMap();startLevel(19);beginPlay();card.hidden=true;state='play';P.inv=0;for(var k=0;k<${n||120};k++){CN.flip=${f||0};CN.cd=9;P.x=${x};P.y=${y};P.vy=0;P.grounded=true;step(1/60);animate(1/60);updateCamera(1/60)}render();1`);await pg.screenshot({path:__dirname+'/fotos/m20_'+x+'.png'})}
+for(const s of JSON.parse(process.argv[2])){const [x,y,n,f]=s;await E(`leaveMap();startLevel(19);beginPlay();card.hidden=true;state='play';P.inv=0;for(var k=0;k<${n||120};k++){CN.flip=${f||0};CN.cd=9;if(${n}===61&&k==0){CN.bld[0].on=0;CN.bld[0].t=CN.bld[0].per-.01}P.x=${x};P.y=${y};P.vy=0;P.grounded=true;step(1/60);animate(1/60);updateCamera(1/60)}render();1`);await pg.screenshot({path:__dirname+'/fotos/m20_'+x+'.png'})}
 console.log('erros',er.slice(0,3));await b.close()})();

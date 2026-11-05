@@ -514,28 +514,47 @@ return res.join(' | ')})()`);const r=JSON.parse(await E(`(function(){var o=[],k;
    go();P.x=361;P.y=.8;keys.right=true;for(k=0;k<90*15;k++){if(P.grounded&&k%40==0){keys.jump=true;P.jbuf=.12}else if(P.vy<0)keys.jump=false;step(STEP);if(state!=='play')break}keys.right=false;keys.jump=false;o.push('ilha '+state+(state==='win'?' ok':' NÃO'));
    card.hidden=true;return JSON.stringify(o)})()`));
   marca('Mundo 19 parte 3: popa, Capitão Corvo-Pirata e a ilha',!/NÃO/.test(g)&&r.every(function(x){return / ok$/.test(x)}),g.split(' | ').filter(function(x){return /NÃO/.test(x)}).join('; ')+' '+r.join('; '))}
- /* 63: Mundo 20 — Cânion Invertido: robô passa a fase inteira até a Semente de Luz (espera as setas que trocam sozinhas); setas viram a gravidade, o Kuro anda no teto, buraco do teto é queda, morcego pendurado acorda e o pulo de baixo derruba, renasce com a gravidade normal */
- {const CI=await E(`LEVELS.findIndex(function(l){return l.canyon})`);const BOT=`(function(){startLevel(${CI});beginPlay();enemies.forEach(function(e){e.alive=false;e.x=-999});P.inv=1e9;hearts=99;P.x=0;P.y=0;for(var k=0;k<5;k++)step(STEP);
-function sup(x){for(var i=0;i<solids.length;i++){var s=solids[i];if(s.dead||x<=s.l||x>=s.r)continue;if(CN.flip?((s.roof)&&s.b-(P.y+P.h)>-.4&&s.b-(P.y+P.h)<3):((!s.roof||s.slab)&&Math.abs(s.t-P.y)<.4))return true}return false}
-keys.right=true;keys.run=RUNV;var hold=0,log=[],fl=0,hurtN=0,h0=hearts;
-for(k=0;k<90*90&&state==='play';k++){var wt=false;CN.arrows.forEach(function(a){if(a.per&&P.grounded&&a.x-P.x>.2&&a.x-P.x<3.4&&(a.up!==(a.go==='up')||a.warn||(a.per+((CN.t+a.off)%a.per)*0)<0))wt=true});keys.right=!wt;if(!wt&&P.grounded&&!sup(P.x+1.1)){keys.jump=true;P.jbuf=.13;hold=26}if(hold>0){hold--;if(!hold)keys.jump=false}
- var f0=CN.flip;step(STEP);if(CN.flip!==f0){fl++;log.push((CN.flip?'↑':'↓')+P.x.toFixed(0))}if(hearts<h0){hurtN++;h0=hearts}}
-keys.right=keys.run=keys.jump=false;var hs=CN.rocks.filter(function(q){return q.st!=='rest'||q.cd>0}).length;return 'pedras='+hs+' estado='+state+' x='+P.x.toFixed(1)+' y='+P.y.toFixed(1)+' viradas='+fl+' '+log.join(' ')+' machucou='+hurtN+' t='+(k/90).toFixed(1)+'s'})()`;
-  const run=await E(BOT.replace('RUNV','true')),walk=await E(BOT.replace('RUNV','false'));
-  const r=await E(`(function(){dyn=null;state='play';startLevel(${CI});beginPlay();enemies.forEach(function(e){e.alive=false;e.x=-999});P.inv=1e9;P.x=10;P.y=0;for(var k=0;k<5;k++)step(STEP);keys.right=true;for(k=0;k<90*1.4;k++)step(STEP);keys.right=false;for(k=0;k<20;k++)step(STEP);
-   var teto=CN.flip===1&&P.grounded&&Math.abs(P.y+P.h-CN.A*2)<.05;var o='teto='+teto;
-   P.x=24.5;P.vx=0;P.inv=0;hearts=5;var h0=hearts;for(k=0;k<90*2&&!dyn;k++)step(STEP);o+=' buraco='+(!!dyn&&hearts<h0);
-   dyn=null;state='play';spawn({x:2,y:0});o+=' renasce='+(CN.flip===0);
-   startLevel(${CI});beginPlay();var b=enemies.filter(function(e){return e.hang})[1];enemies.forEach(function(e){if(e!==b){e.alive=false;e.x=-999}});var s0=b.st;
-   cnSetFlip(1,0,0);P.x=b.x-3.5;P.y=CN.A*2-P.h;P.vy=0;for(k=0;k<10;k++)step(STEP);P.x=b.x-3;for(k=0;k<5;k++)step(STEP);var acorda=s0==='hang'&&b.st!=='hang';
-   b.st='hang';b.x=b.hx;b.y=b.hy;P.inv=0;h0=hearts;P.x=b.x;P.y=b.y-2.2;P.vy=7;P.vx=0;for(k=0;k<30;k++)step(STEP);
-   o+=' morcego acorda='+acorda+' pulo de baixo derruba='+(b.st!=='hang'&&hearts===h0);return o})()`);
-  const pd=await E(`(function(){var o=[],k,h0,j;function ini(){startLevel(${CI});beginPlay();enemies.forEach(function(e){e.alive=false;e.x=-999})}
-   ini();k=CN.rocks[2];cnSetFlip(1,0,0);P.x=k.x;P.y=CN.A*2-P.h;P.vy=0;P.inv=0;h0=hearts;for(j=0;j<200;j++)step(STEP);o.push('pedra pega parado='+(hearts<h0));
-   ini();k=CN.rocks[2];cnSetFlip(1,0,0);P.x=k.x-4;P.y=CN.A*2-P.h;P.vy=0;P.inv=0;for(j=0;j<20;j++)step(STEP);h0=hearts;keys.right=true;keys.run=true;for(j=0;j<70;j++)step(STEP);keys.right=keys.run=false;o.push('correndo passa='+(hearts===h0&&k.st!=='rest'));
-   ini();k=CN.rocks[0];P.x=k.x-5;P.y=0;for(j=0;j<10;j++)step(STEP);P.x=k.x;P.y=k.h;P.vy=0;P.inv=0;h0=hearts;var top=0;for(j=0;j<120;j++){step(STEP);top=Math.max(top,P.y)}o.push('sobe junto='+(top>5)+' espremido='+(hearts<h0&&Math.abs(P.x-k.x)>k.w/2));
-   P.inv=1e9;P.x=k.x-12;for(j=0;j<90*5;j++)step(STEP);o.push('volta ao chão='+(k.st==='rest'&&k.so.b===0));
-   var a=CN.arrows.filter(function(q){return q.per})[0],s='';CN.t=0;for(j=0;j<90*4;j++){cnUpd(STEP);if(j%45==0)s+=a.up?'A':'B'}o.push('seta troca='+(s==='AAAABBBA'));return o.join(' ')})()`);
-  marca('Mundo 20: setas de gravidade, teto, buracos, morcegos, pedras que sobem e setas que trocam',/win x=38\d.*viradas=17/.test(run)&&/win x=38\d.*viradas=17/.test(walk)&&!/false/.test(r)&&!/false/.test(pd),'correndo: '+run+' | andando: '+walk+' | '+r+' | '+pd)}
+ /* 63: Mundo 20 — Cânion do Sol: robô passa as partes 1 e 2 andando e correndo; pedra rolando, barranco, gêiser, pilões, tronco, pilão que leva à mesa */
+ {const g=await E(`(function(){var out=[];[0,1].forEach(function(run){startLevel(19);beginPlay();card.hidden=true;state='play';hearts=99;enemies.forEach(function(e){e.alive=false;e.x=-999});
+var hits=0,h0=hurt;hurt=function(){if(P.inv<=0)hits++;return h0.apply(this,arguments)};
+function gnd(x){return solids.some(function(s){return !s.dead&&x>=s.l&&x<=s.r&&Math.abs(s.t-P.y)<.3})||crumbles.some(function(c){return !c.dead&&x>=c.l&&x<=c.r})}
+keys.right=true;keys.run=!!run;var k,maxx=0;
+for(k=0;k<90*90&&state==="play"&&P.x<158;k++){var near=CN.bld.some(function(b){return b.on&&b.z>-1&&b.x>P.x&&b.x-P.x<(run?3.4:2.6)});
+ var edge=P.grounded&&!gnd(P.x+(run?1.6:1.1));var up=P.grounded&&solids.some(function(s){return s.t>P.y+.5&&s.t<P.y+2.5&&s.l>P.x&&s.l-P.x<1.4});
+ if((near||edge||up)&&P.grounded){keys.jump=true;P.jbuf=.12}else if(P.vy<0||P.grounded)keys.jump=false;
+ step(STEP);if(P.x>maxx)maxx=P.x}
+hurt=h0;keys.right=false;keys.run=false;keys.jump=false;out.push((run?"correndo":"andando")+": estado="+(P.x>=158?"win":state)+' x='+P.x.toFixed(1)+' max='+maxx.toFixed(1)+' batidas='+hits+' t='+(k/90).toFixed(1)+'s')});return out.join(' | ')})()`);const r=await E(`(function(){var o=[];startLevel(19);beginPlay();card.hidden=true;state='play';hearts=9;enemies.forEach(function(e){e.alive=false;e.x=-999});
+ /* pedra rolando machuca quem fica parado */P.x=40;P.y=0;P.vy=0;P.inv=0;var b=CN.bld[0],h0=hearts,k;b.on=0;b.t=b.per-.01;for(k=0;k<90*6&&hearts===h0;k++){P.x=40;step(STEP)}o.push('pedra '+(hearts<h0?'ok':'NÃO'));
+ /* barranco desmorona */startLevel(19);beginPlay();card.hidden=true;state='play';P.inv=1e9;var c=crumbles[1];P.x=91.3;P.y=.05;P.vy=0;for(k=0;k<90*1.2;k++){step(STEP)}o.push('barranco '+(c.dead||c.state>=2?'ok':'NÃO'));
+ /* gêiser joga para cima */startLevel(19);beginPlay();card.hidden=true;state='play';P.inv=1e9;P.x=112;P.y=1.5;P.vy=-2;var my=0;for(k=0;k<90*2;k++){step(STEP);my=Math.max(my,P.y)}o.push('gêiser '+my.toFixed(1)+(my>6?' ok':' NÃO'));
+ return o.join(' | ')})()`);
+ const g2=await E(`(function(){var out=[];[0,1].forEach(function(run){startLevel(19);beginPlay();card.hidden=true;state='play';hearts=99;enemies.forEach(function(e){e.alive=false;e.x=-999});
+P.x=163;P.y=0;P.vy=0;var hits=[],h0=hurt;hurt=function(){if(P.inv<=0)hits.push(P.x.toFixed(0));return h0.apply(this,arguments)};
+function gnd(x){return solids.some(function(s){return !s.dead&&!s.crush&&x>=s.l&&x<=s.r&&Math.abs(s.t-P.y)<.3})||crumbles.some(function(c){return !c.dead&&x>=c.l&&x<=c.r})}
+var sp=run?7.5:4.6,k,ride=0;
+for(k=0;k<90*80&&state==="play"&&P.x<265.5;k++){var go=true;keys.run=!!run;
+ CN.crs.forEach(function(c){if(c.x===271.5)return;var d=c.so.l-P.x;if(d>0&&d<1.3&&P.grounded){var need=(c.w+2)/sp+.15;var ok=(c.st==='rise'&&c.so.b>1.9)||(c.st==='up'&&c.up-c.t>need);if(!ok)go=false}});
+ CN.logs.forEach(function(l){var d=l.px-P.x;if(d>0&&d<3.2&&P.grounded){var ph=(CN.t*l.sp+l.ph)%(Math.PI*2);var a=l.amp*Math.sin(CN.t*l.sp+l.ph),av=Math.cos(CN.t*l.sp+l.ph);if(!(a>.45&&av>0))go=false}});
+ var rc=CN.crs.filter(function(c){return c.x===271.5})[0];
+ var ctl=0;if(P.onPlat===rc.so)ride=1;
+ if(ride){ctl=1;keys.right=false;if(rc.so.t>5.9){keys.right=true;keys.jump=true;P.jbuf=.12}if(P.y>5.3&&P.x>273.5)ride=0}
+ else if(P.x>265.5&&P.x<274&&P.y<1){ctl=1;var ok=rc.st==='down'||(rc.st==='rise'&&rc.so.t<2.4);if(!P.grounded){keys.right=P.x<271.2;keys.left=P.x>272}else{keys.right=P.x<269.5;keys.left=false;if(ok&&P.x>=269.3){keys.jump=true;P.jbuf=.12;keys.right=true}else keys.jump=false}}
+ if(!ctl){keys.left=false;keys.right=go}
+ var edge=!ctl&&P.grounded&&!gnd(P.x+(run?1.6:1.1));
+ if(go&&edge){keys.jump=true;P.jbuf=.12}else if(!ctl&&(P.vy<0||P.grounded))keys.jump=false;
+ step(STEP)}
+hurt=h0;keys.right=keys.run=keys.jump=false;out.push((run?'correndo':'andando')+': estado='+state+' x='+P.x.toFixed(1)+' y='+P.y.toFixed(1)+' batidas='+hits.join(',')+' t='+(k/90).toFixed(1)+'s')});return out.join(' | ')})()`);const r2=await E(`(function(){var o=[];startLevel(19);beginPlay();card.hidden=true;state='play';P.inv=1e9;var rc=CN.crs[6],k;rc.st='down';rc.t=.7;rc.so.b=0;rc.so.t=rc.h;P.x=271.5;P.y=rc.h;P.vy=0;for(k=0;k<90;k++)step(STEP);for(k=0;k<90*4&&rc.so.t<5.9;k++)step(STEP);keys.right=true;keys.jump=true;P.jbuf=.12;for(k=0;k<135;k++){step(STEP);if(P.vy<0)keys.jump=false}keys.right=false;o.push('pilão leva até a mesa '+(P.y>5.3&&document.getElementById('gemN').textContent==='1'?'ok':'NÃO'));
+ startLevel(19);beginPlay();card.hidden=true;state='play';P.inv=0;hearts=9;var c=CN.crs[0],h0=hearts;P.x=170;P.y=0;P.vy=0;c.st='warn';c.t=.05;for(k=0;k<90;k++)step(STEP);o.push('pilão esmaga e empurra para fora '+(hearts<h0&&(P.x<c.so.l||P.x>c.so.r)?'ok':'NÃO'));
+ startLevel(19);beginPlay();card.hidden=true;state='play';P.inv=0;hearts=9;h0=hearts;var l=CN.logs[1];P.x=246;P.y=0;P.vy=0;for(k=0;k<90*5&&hearts===h0;k++){P.x=246;step(STEP)}o.push('tronco bate '+(hearts<h0?'ok':'NÃO'));
+ startLevel(19);beginPlay();card.hidden=true;state='play';hearts=99;P.inv=0;P.x=283;P.y=0;keys.right=true;for(k=0;k<90*10&&state==='play'&&P.x<301;k++)step(STEP);keys.right=false;o.push('chega na parte 3 '+(P.x>=301?'ok':'NÃO'));return o.join(' | ')})()`);
+ const g3=await E(`(function(){var out=[];[0,1].forEach(function(run){startLevel(19);beginPlay();card.hidden=true;state='play';hearts=99;enemies.forEach(function(e){e.alive=false;e.x=-999});
+P.x=301;P.y=0;P.vy=0;var hits=[],h0=hurt;hurt=function(){if(P.inv<=0)hits.push(P.x.toFixed(0));return h0.apply(this,arguments)};
+function sol(x,y){return solids.some(function(s){return !s.dead&&x>=s.l&&x<=s.r&&Math.abs(s.t-y)<.3})}
+keys.right=true;keys.run=!!run;var k,maxx=0;
+for(k=0;k<90*60&&state==='play';k++){var ahead=P.x+(run?1.5:1.0);var edge=P.grounded&&!sol(ahead,P.y);var up=P.grounded&&solids.some(function(s){return !s.dead&&s.t>P.y+.4&&s.t<P.y+2.6&&s.l>P.x&&s.l-P.x<1.3});
+ if((edge||up)&&P.grounded){keys.jump=true;P.jbuf=.12}else if(P.grounded||P.vy<0)keys.jump=false;
+ step(STEP);if(P.x>maxx)maxx=P.x}
+hurt=h0;keys.right=keys.run=keys.jump=false;out.push((run?'correndo':'andando')+': estado='+state+' x='+P.x.toFixed(1)+' y='+P.y.toFixed(1)+' max='+maxx.toFixed(1)+' batidas='+hits.join(',')+' t='+(k/90).toFixed(1)+'s')});return out.join(' | ')})()`);const r3=await E(`(function(){startLevel(19);beginPlay();card.hidden=true;state='play';P.inv=1e9;P.x=331;P.y=6.6;P.vy=0;keys.right=true;for(var k=0;k<90*1.2;k++)step(STEP);keys.right=false;var c=crumbles.filter(function(q){return q.l>330&&q.l<331})[0];return 'tábua cai '+(c&&c.state>=2?'ok':'NÃO')})()`);
+  marca('Mundo 20: Cânion do Sol — pedras rolando, barrancos, gêiser, pilões, teto que desce, troncos, subida, ponte, Semente',/andando: estado=win.*correndo: estado=win/.test(g3)&&!/NÃO/.test(r3)&&/estado=win.*estado=win/.test(g)&&!/NÃO/.test(r)&&/andando: estado=play x=265.*correndo: estado=play x=265/.test(g2)&&!/NÃO/.test(r2),g+' || '+r+' || '+g2+' || '+r2+' || '+g3+' || '+r3)}
  marca('sem erros de JavaScript durante os testes',!erros.length,erros.slice(0,3).join('; '));await pg.close();
  await b.close();const f=res.filter(r=>!r[1]).length;console.log('\n'+(f?'❌ '+f+' teste(s) falharam':'✅ todos os '+res.length+' testes passaram'));process.exit(f?1:0)})();
