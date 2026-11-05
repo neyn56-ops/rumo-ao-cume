@@ -505,3 +505,4 @@ A área de trabalho do Claude é temporária. Para recomeçar:
 - Teste novo (Mundo 20): o robô passa a parte 1 andando e correndo (6 viradas), fica em pé no teto, cair no buraco do teto é queda, renasce com a gravidade normal, morcego pendurado acorda e o pulo de baixo derruba sem machucar.
 - Próximas partes (combinado no plano): parte 2 — gargantas com pedras que caem para cima e setas que trocam de lado sozinhas; parte 3 — subida final alternando a gravidade até o arco de pedra com a Semente de Luz.
 - Obs. (05/11): o arquivo `claude/como-trabalhar.md` citado pelo dono não existe no repositório.
+- Obs. testes (05/11): nesta área de trabalho a bateria completa trava no teste 32 (Mundo 14) com "Target crashed" — acontece igual na versão de antes do Mundo 20 (página acumula memória depois de ~30 testes). Rodando do teste 32 em diante numa página nova, todos passam.

@@ -515,7 +515,7 @@ return res.join(' | ')})()`);const r=JSON.parse(await E(`(function(){var o=[],k;
    card.hidden=true;return JSON.stringify(o)})()`));
   marca('Mundo 19 parte 3: popa, Capitão Corvo-Pirata e a ilha',!/NÃO/.test(g)&&r.every(function(x){return / ok$/.test(x)}),g.split(' | ').filter(function(x){return /NÃO/.test(x)}).join('; ')+' '+r.join('; '))}
  /* Mundo 20 — Cânion Invertido: setas viram a gravidade, o Kuro anda no teto, buraco do teto é queda, morcego pendurado acorda e o pulo de baixo derruba, renasce com a gravidade normal */
- {const CI=await E(`LEVELS.findIndex(function(l){return l.canyon})`);const BOT=`(function(){startLevel(CI);beginPlay();enemies.forEach(function(e){e.alive=false;e.x=-999});P.inv=1e9;hearts=99;P.x=0;P.y=0;for(var k=0;k<5;k++)step(STEP);
+ {const CI=await E(`LEVELS.findIndex(function(l){return l.canyon})`);const BOT=`(function(){startLevel(${CI});beginPlay();enemies.forEach(function(e){e.alive=false;e.x=-999});P.inv=1e9;hearts=99;P.x=0;P.y=0;for(var k=0;k<5;k++)step(STEP);
 function sup(x){for(var i=0;i<solids.length;i++){var s=solids[i];if(s.dead||x<=s.l||x>=s.r)continue;if(CN.flip?(s.roof&&Math.abs(s.b-(P.y+P.h))<.4):(!s.roof&&Math.abs(s.t-P.y)<.4))return true}return false}
 keys.right=true;keys.run=RUNV;var hold=0,log=[],fl=0,hurtN=0,h0=hearts;
 for(k=0;k<90*60&&state==='play';k++){if(P.grounded&&!sup(P.x+1.1)){keys.jump=true;P.jbuf=.13;hold=26}if(hold>0){hold--;if(!hold)keys.jump=false}
