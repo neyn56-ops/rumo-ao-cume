@@ -212,6 +212,7 @@ function buildFarCastle(th,r){
 function sceneEnd(){var e=240;(LV.solids||[]).forEach(function(q){if(q[1]+40>e)e=q[1]+40});return e}
 function buildBackdrop(th,m3){
   if(th.name==='forest'){buildBackdropForest(th);return}
+  if(th.copa)return;/* Copa: no alto, sem chão */
   if(th.name==='volcano'||th.name==='summit'||th.name==='sky'||th.name==='tower'||th.name==='mine'||th.name==='maze')return;/* o cume tem o mar de nuvens; o vulcão tem o rio de lava no lugar do chão de fundo */
   var depth=-5-th.mz;
   var xl=(th.name==='castle'&&LV.outX!==undefined)?LV.outX:(th.name==='trail'?4:(th.aurora&&LV.lake?Math.min(-40,LV.lake[0]-60):-40)),/* Mundo 18: o terreno vai até antes da vila */xe=sceneEnd(),bw=xe-xl,bc=(xe+xl)/2;

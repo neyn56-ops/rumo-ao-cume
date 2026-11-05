@@ -299,7 +299,8 @@ function buildLevel(idx){
   if(typeof kuroDry==='function')kuroDry();/* Kuro seco ao começar qualquer fase */
   if(th.aurora)auroraBuild(th);
   if(th.canyon)cnBuild(th);
-  if(th.roots)rtBuild(th);/* Mundo 21: sementes que viram ponte, esporos *//* Mundo 20: paredões, setas de gravidade */
+  if(th.roots||th.copa)rtBuild(th);
+  if(th.copa)cpBuild(th);/* Mundo 22: folhas que dobram, a Bruxa que aparece *//* Mundo 21: sementes que viram ponte, esporos *//* Mundo 20: paredões, setas de gravidade */
   if(th.wreck)wkBuild(th);/* Mundo 19: navio encalhado, mar com ondas, chuva e raios *//* Mundo 18: aurora, estrelas, lago, gelo que trinca */
   if(th.falls)buildFalls(th);/* Mundo 16: cachoeiras, rio, castelo lá longe e os Pedrões-totem */
   if(th.name==='ruins')buildRuinsExtra();
@@ -386,7 +387,8 @@ function buildPlatforms(m3){
   if(curTheme.name==='mine'){buildPlatformsMine();return}
   LV.solids.forEach(function(s){
     if(curTheme.canyon&&typeof cnSolid==='function'){cnSolid(s,m3);return}
-    if(curTheme.roots&&s[5]==='root'&&typeof rtSolid==='function'){rtSolid(s,m3);return}/* Raízes: raiz grossa deitada *//* Cânion Invertido: chão e teto de pedra vermelha */
+    if(curTheme.roots&&s[5]==='root'&&typeof rtSolid==='function'){rtSolid(s,m3);return}
+    if(curTheme.copa&&typeof cpSolid==='function'){cpSolid(s,m3);return}/* Copa: galhos *//* Raízes: raiz grossa deitada *//* Cânion Invertido: chão e teto de pedra vermelha */
     if(curTheme.wreck&&s[5]&&typeof wkSolid==='function'){wkSolid(s);return}/* Naufrágio: casco do navio, caixotes e tábuas */
     if(curTheme.aurora&&!s[4]&&typeof auSolid==='function'){auSolid(s,m3);return}/* Lago da Aurora: bloco de gelo com neve escorrendo */
     var x0=s[0],x1=s[1],top=s[2],bot=s[3]!==undefined?s[3]:-14,w=x1-x0,cx=(x0+x1)/2;

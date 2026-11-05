@@ -66,7 +66,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - effCfg :916
 - applyGfx :922
 
-## 10_mundos_dados.js  (853 linhas) /*@@parte:10_mundos_dados.js*/
+## 10_mundos_dados.js  (871 linhas) /*@@parte:10_mundos_dados.js*/
 - add :170
 - wb :171
 - sx :204
@@ -80,7 +80,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - g :588
 - xs :746
 
-## 11_construcao.js  (538 linhas) /*@@parte:11_construcao.js*/
+## 11_construcao.js  (540 linhas) /*@@parte:11_construcao.js*/
 - add :7
 - topAt :8
 - disposeLevel :10
@@ -99,20 +99,20 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - makeFish :253
 - makeEel :267
 - buildLevel :281 — ---------- construção do mundo ----------
-- splitBig :331
-- fixCoins :344
-- buildPlatforms :378
-- scaleUV :410
-- barkCyl :411
-- softSprite :413
-- buildPlatformsForest :419
-- leafBlob :421
-- hangVine :422
-- buildBackdropForest :469
-- splitInst :518
-- splitInstIn :532
-- splitInstQueue :535
-- splitInstTick :536
+- splitBig :332
+- fixCoins :345
+- buildPlatforms :379
+- scaleUV :412
+- barkCyl :413
+- softSprite :415
+- buildPlatformsForest :421
+- leafBlob :423
+- hangVine :424
+- buildBackdropForest :471
+- splitInst :520
+- splitInstIn :534
+- splitInstQueue :537
+- splitInstTick :538
 
 ## 20_vila_ninja.js  (353 linhas) /*@@parte:20_vila_ninja.js*/
 - kawaraTex :6
@@ -188,7 +188,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - makeLavaBall :370
 - lavaBallAI :378
 
-## 23_castelo_fora.js  (234 linhas) /*@@parte:23_castelo_fora.js*/
+## 23_castelo_fora.js  (235 linhas) /*@@parte:23_castelo_fora.js*/
 - mergeG :5 — junta várias geometrias já posicionadas numa só (1 desenho); cor por vértice opcional
 - xf :14
 - skullGeo :16 — caveira, osso, lápide: peças pequenas com cor por vértice, desenhadas em lote
@@ -207,7 +207,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - sceneEnd :212 — fim do cenário: cobre a fase e as salas de cano que ficam além dela
 - buildBackdrop :213
 
-## 24_caverna.js  (247 linhas) /*@@parte:24_caverna.js*/
+## 24_caverna.js  (248 linhas) /*@@parte:24_caverna.js*/
 - crysGeo :4
 - crysMat :14
 - buildCaveMouth :20 — boca da caverna: arco de rocha com estalactites, pedras na entrada e o céu claro lá fora
@@ -448,7 +448,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - mnBossVis :429
 - mnWallX :443 — paredes do vagonete: dentro dele o Kuro não sai andando pelos lados; só sai pulando por cima da borda
 
-## 30_cenario.js  (714 linhas) /*@@parte:30_cenario.js*/
+## 30_cenario.js  (724 linhas) /*@@parte:30_cenario.js*/
 - lushOn :3 — ===================== cenário caprichado (Alto, Ultra e Máximo) — grama, copas, céu e detalhes de cada mundo =
 - lushVis :5
 - lushTick :17
@@ -465,29 +465,29 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - glowShrooms :202 — cogumelos que brilham (caverna)
 - icicles :219 — pingentes de gelo na borda das plataformas (montanha)
 - buildLush :231
-- buildDecorRuins :298
-- cacGeo :301 — cactos de verdade: tronco com gomos, topo arredondado e braços que sobem (3 modelos)
-- rib :303
-- cyl :304
-- cap :305
-- knee :306
-- buildFarRuins :340
-- buildRuinsExtra :363
-- buildFar :382
-- buildHazards :470
-- capTop :483
-- buildWater :484
-- rgba :491
-- strip :517
-- buildCoral :547
-- updWaterFx :565
-- wv :571
-- flow :590
-- floorTopAt :612
-- buildDecorReef :613
-- buildMovers :652
-- buildCrumbles :673
-- buildSprings :696
+- buildDecorRuins :301
+- cacGeo :304 — cactos de verdade: tronco com gomos, topo arredondado e braços que sobem (3 modelos)
+- rib :306
+- cyl :307
+- cap :308
+- knee :309
+- buildFarRuins :343
+- buildRuinsExtra :366
+- buildFar :385
+- buildHazards :473
+- capTop :486
+- buildWater :487
+- rgba :494
+- strip :520
+- buildCoral :550
+- updWaterFx :568
+- wv :574
+- flow :593
+- floorTopAt :615
+- buildDecorReef :616
+- buildMovers :655
+- buildCrumbles :676
+- buildSprings :703
 
 ## 31_moedas.js  (403 linhas) /*@@parte:31_moedas.js*/
 - fitCoins :3 — ===== 100 moedas por fase, nos pontos que valem a pena (buracos, perigos, lugares altos) =====
@@ -720,7 +720,27 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - rtBossBar :180
 - rtBossUpd :181
 
-## 40_estado.js  (400 linhas) /*@@parte:40_estado.js*/
+## 38_copa.js  (146 linhas) /*@@parte:38_copa.js*/
+- cpMats :9
+- cpSolid :20 — galho: tronco deitado de casca com musgo em cima e um galho de apoio que volta para o tronco lá atrás
+- cpDecor :29 — cenário: o tronco gigante atrás, copas de folhas, flores, pétalas e nuvens lá embaixo
+- cpLeafMesh :38 — ---- folhas gigantes que dobram e a Bruxa que aparece ----
+- cpWitchVis :42
+- cpBuild :46
+- cpReset :51
+- cpPoof :53
+- cpInZone :54
+- cpUpd :55
+- cpConeMesh :75 — ===== Parte 2: a copa alta — galhos podres (crumbles), pinhas que rolam, flores que jogam para cima (springs),
+- cpConesBuild :77
+- cpConesUpd :78
+- cpCauldron :89
+- cpBossBuild :95
+- cpBossReset :100
+- cpBossBar :102
+- cpBossUpd :103
+
+## 40_estado.js  (402 linhas) /*@@parte:40_estado.js*/
 - hd :5
 - writeSave :20
 - fmt :22
@@ -729,45 +749,45 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - addCoin :35
 - toast :40
 - spawn :44
-- resetState :53
-- showCard :78
-- buildWorlds :90
-- showMenu :100
-- startLevel :107
-- beginPlay :116
-- retry :117
-- stats :124
-- lose :127
-- recordLevel :134
-- scoreLis :143
-- winLevel :147
-- winGame :157
-- spawnDebris :165
-- shatterEnemy :175
-- updDebris :190
-- setAct :213
-- setFire :214
-- setCape :216
-- spinJump :218 — pulo giratório (K ou arrastar o Pular para cima): sem poder só gira; com capa gira com a capa (acerta em volta
-- sjGo :219
-- actUp :222
-- act :223
-- spin :224
-- updWind :237
-- mountFx :254
-- fireFx :260
-- kuroGlow :267
-- capeFx :278
-- updSpin :284
-- updFeathers :303
-- fbClear :313
-- shoot :314
-- fbBoom :327
-- fireCoin :329 — fogo derrota o inimigo e ele vira uma moeda: pula, cai no chão e fica lá até o Kuro pegar
-- updFire :330
-- hurt :361
-- timeUp :384
-- fallDeath :392
+- resetState :54
+- showCard :80
+- buildWorlds :92
+- showMenu :102
+- startLevel :109
+- beginPlay :118
+- retry :119
+- stats :126
+- lose :129
+- recordLevel :136
+- scoreLis :145
+- winLevel :149
+- winGame :159
+- spawnDebris :167
+- shatterEnemy :177
+- updDebris :192
+- setAct :215
+- setFire :216
+- setCape :218
+- spinJump :220 — pulo giratório (K ou arrastar o Pular para cima): sem poder só gira; com capa gira com a capa (acerta em volta
+- sjGo :221
+- actUp :224
+- act :225
+- spin :226
+- updWind :239
+- mountFx :256
+- fireFx :262
+- kuroGlow :269
+- capeFx :280
+- updSpin :286
+- updFeathers :305
+- fbClear :315
+- shoot :316
+- fbBoom :329
+- fireCoin :331 — fogo derrota o inimigo e ele vira uma moeda: pula, cai no chão e fica lá até o Kuro pegar
+- updFire :332
+- hurt :363
+- timeUp :386
+- fallDeath :394
 
 ## 41_raposa.js  (306 linhas) /*@@parte:41_raposa.js*/
 - makeFoxVis :4
@@ -924,7 +944,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - throwStar :524
 - updStars :531
 
-## 53_agua.js  (318 linhas) /*@@parte:53_agua.js*/
+## 53_agua.js  (319 linhas) /*@@parte:53_agua.js*/
 - wTop :4
 - surfWave :6 — altura da onda da superfície (a mesma da faixa da frente): o Kuro boia junto com ela
 - inWater :7

@@ -254,7 +254,10 @@ function buildLush(th,now){
     if(!lite)lightRays({x0:20,gap:11,w0:2,w1:4.5,h:30,y:10,z0:-9,z1:-4,tilt:-.36,color:0xfff2c0,op:.22});
     lushVis();splitInstIn(lushG);return;
   }
-  if(th.name==='valley'){
+  if(th.copa){/* Copa: pétalas e pólen dourado no ar */
+    motes({n:140,x0:-10,x1:xe,y0:-2,y1:16,z0:-8,z1:2,color:0xffc0d8,size:.1,drift:1.1,op:.8,seed:22});
+    motes({n:120,x0:-10,x1:xe,y0:-2,y1:16,z0:-8,z1:2,color:0xfff2c0,size:.05,drift:.7,op:.6,seed:23});
+  }else if(th.name==='valley'){
     lushHideTufts=true;
     grassField({bands:[[-4.95,-.95,32,.42,.95],[-.95,.75,5,.14,.26],[.75,1.85,30,.24,.42]],wid:[.11,.16],back:{z1:-24,dens:7,h0:.7,h1:1.2,w0:.2,w1:.3}});
     if(LQ>=.7)leafCanopies();
@@ -388,7 +391,7 @@ function buildFar(th){
   if(th.name==='heights'){buildFarHeights(th,r);return}
   if(th.name==='volcano'){buildFarVolcano(th,r);return}
   if(th.name==='summit'){buildFarSummit(th,r);return}
-  if(th.name==='sky'){buildFarSky(th,r);return}
+  if(th.name==='sky'||th.copa){buildFarSky(th,r);return}
   if(th.name==='tower'){buildFarTower(th,r);return}
   if(th.name==='mine'){buildFarMine(th,r);return}
   if(th.name==='ruins'){buildFarRuins(th,r);return}
@@ -682,6 +685,10 @@ function buildCrumbles(){
     }else if(curTheme.falls){/* Vale das Cachoeiras: tábua da ponte de madeira, com cordas */
       m=new T.Group();var pl=mesh(boxGeo(w-.07,.2,1.8,1),woodM,true,true);pl.position.y=.15;m.add(pl);
       [-1,1].forEach(function(sd){var rp=mesh(new T.CylinderGeometry(.03,.03,w,5),M(0xc8a46a,.9),false,false);rp.rotation.z=Math.PI/2;rp.position.set(0,.55,sd*.85);m.add(rp);var po=mesh(new T.CylinderGeometry(.05,.05,.55,5),barkM,false,false);po.position.set(-w/2+.08,.4,sd*.85);m.add(po)});
+    }else if(curTheme.copa){/* Copa: pedaço de galho podre (mais escuro, com rachaduras) */
+      m=new T.Group();var cA=cpMats(),pg=new T.CylinderGeometry(.5,.55,w-.05,12,2);pg.rotateZ(Math.PI/2);var pb=mesh(ldRough(pg,.08,2),cA.rotM||(cA.rotM=pbr(texWood,.95,1.4,{color:new T.Color(0x6a5446)})));pb.position.y=-.25;m.add(pb);
+      var ck=M(0x2a1a12,.9);for(var q2=0;q2<3;q2++){var cl2=mesh(boxGeo(.05,.5,.05,1),ck,false,false);cl2.position.set(-w/2+(q2+.5)*w/3,-.2,.52);cl2.rotation.z=(q2-1)*.5;m.add(cl2)}
+      var fu=mesh(new T.SphereGeometry(.18,8,6),M(0xd8c8a0,.8),false,false);fu.scale.set(1.4,.4,1);fu.position.set(w/4,.0,.45);m.add(fu);
     }else if(curTheme.canyon&&c[3]==='plank'){/* Cânion do Sol: tábua da ponte de corda que arrebenta */
       m=new T.Group();var cM=cnMats();var pk=mesh(boxGeo(w-.08,.16,1.8,1),cM.plankM||(cM.plankM=pbr(texWood,.85,.5,{color:new T.Color(0xc8986a)})),true,true);pk.position.y=.17;m.add(pk);
     }else if(curTheme.canyon){/* Cânion do Sol: barranco de pedra vermelha rachado (fica igual ao chão, mas com rachaduras) */
@@ -701,6 +708,9 @@ function buildSprings(){
     var coil=new T.Group();g.add(coil);
     for(var i=0;i<4;i++){var t=mesh(new T.TorusGeometry(.2,.04,6,14),coilM);t.rotation.x=Math.PI/2;t.position.y=.12+i*.07;coil.add(t)}
     var pad=mesh(new T.CylinderGeometry(.5,.5,.1,16),padM);pad.position.y=.42;g.add(pad);
+    if(curTheme.copa){/* Copa: flor grande que joga para cima (o miolo é a parte que afunda) */
+      coil.visible=false;base.visible=false;var fA=cpMats(),stc=mesh(new T.CylinderGeometry(.08,.12,.42,6),fA.vein);stc.position.y=.21;g.add(stc);
+      pad.geometry=new T.CylinderGeometry(.42,.38,.16,14);pad.material=fA.fcore;for(var pe=0;pe<6;pe++){var pt=mesh(new T.SphereGeometry(.34,8,6),fA.flower,false,false);var ap=pe/6*Math.PI*2;pt.position.set(Math.cos(ap)*.62,-.02,Math.sin(ap)*.62);pt.scale.set(1.3,.25,.8);pt.rotation.y=-ap;pad.add(pt)}}
     if(curTheme.roots){/* Raízes: cogumelo grande que brilha (o chapéu é a parte que afunda) */
       coil.visible=false;base.visible=false;var rA=rtMats(),st=mesh(new T.CylinderGeometry(.14,.2,.42,8),rA.stem);st.position.y=.21;g.add(st);
       pad.geometry=new T.SphereGeometry(.62,14,8,0,Math.PI*2,0,Math.PI/2);pad.scale.y=.6;pad.material=rA.capB;

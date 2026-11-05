@@ -851,3 +851,21 @@ LEVELS.push({name:'Raízes da Árvore Mãe',theme:22,music:18,camMax:372,limit:9
  checkpoints:[[38,4.2],[98,0],[158,0],[188,0],[242,4.2],[276,4.2],[304,4.2],[351,4.2]],goal:{x:368,top:4.2},start:{x:0,y:6}});
 blockStd(LEVELS[LEVELS.length-1]);
 STORY.worlds.push({kicker:'Mundo 21 · Terra Nova',title:'Raízes da Árvore Mãe',text:'Embaixo da Árvore Mãe, as raízes guardam um mundo escuro que brilha: cogumelos de luz, esporos no ar e sementes que fazem raízes crescerem. Lá no fundo, no coração das raízes, mora a Aranha das Raízes. O Kuro precisa passar por ela.'});
+/* ===== Terra Nova — Mundo 22: Copa da Árvore Mãe (último mundo; plano aprovado pelo dono, 05/11; amanhecer dourado; chefe final a Bruxa).
+   Parte 1: tronco e primeiros galhos. 6º valor 'leafp' = folha gigante que dobra; roots.bridges/vines = semente-ponte e cipó (mesmo código do Mundo 21);
+   copa.witchZones = trechos onde a Bruxa aparece, joga poção e some (não dá para derrotar). */
+LEVELS.push({name:'Copa da Árvore Mãe',theme:23,tall:1,music:19,camMax:372,limit:900,es:1.05,noLift:1,coinN:100,zoom:1.1,
+ roots:{bridges:[{seed:[38.5,3.4],l:40,r:50,t:2.5,dur:9}],vines:[[97.5,15.4,6.6]]},
+ copa:{witchFirst:6,witchZones:[[20,318]],boss:{x0:331,x1:367,floor:18,cx:349},
+  /* parte 2: pinhas que caem da copa e rolam [de x, até x, segundos, atraso, altura do galho] */
+  cones:[[189,168,3.6,0,9],[221,197,3.4,1.2,11],[279,256,3.2,.6,14.5]]},
+ solids:[[-10,18,0],[20.5,24.5,1.2,0,0,'leafp'],[26.5,40,2.5],[50,62,2.5],[64,68,4,0,0,'leafp'],[70,74,5.5,0,0,'leafp'],[76,92,6.5],[104,119.3,6.5],[119.5,123.5,8,0,0,'leafp'],[123.8,152,8.5],[167,190,9],[193.5,222,11],[224,240,13.5],[252.8,280,14.5],[282,286,16.5,0,0,'leafp'],[288,292,17.5,0,0,'leafp'],[294,370,18]],
+ floats:[],movers:[],crumbles:[[152.8,155,8.5],[155.8,158,8.5],[158.8,161,8.5],[161.8,164,8.5],[164.8,166.6,8.5],[240.8,243,13.5],[243.8,246,13.5],[246.8,249,13.5],[249.8,252,13.5]],feathers:[],spikes:[],springs:[[107,6.5],[262,14.5],[310,18]],
+ wind:[{x0:78,x1:91,dir:-1,per:6,on:2.2,ph:1,str:3.6}],
+ enemies:[{t:'beetle',x0:30,x1:38,y:2.5,s:1.1},{t:'bat',x0:52,x1:62,y:5.5,s:1.2},{t:'beetle',x0:80,x1:90,y:6.5,s:1.2},{t:'bat',x0:126,x1:136,y:11,s:1.3},{t:'beetle',x0:138,x1:148,y:8.5,s:1.3},{t:'bat',x0:170,x1:186,y:12.5,s:1.3},{t:'beetle',x0:206,x1:216,y:11,s:1.3},{t:'bat',x0:256,x1:272,y:18.5,s:1.4},{t:'beetle',x0:313,x1:322,y:18,s:1.4}],
+ blocks:[{x:6,y:2.4,t:'q',c:'mushroom'},{x:12,y:2.4,t:'brick'},{x:13,y:2.4,t:'q',c:'coin'},{x:14,y:2.4,t:'brick'},{x:56,y:4.9,t:'q',c:'flower'},{x:199,y:13.4,t:'q',c:'fox'},{x:232,y:15.9,t:'q',c:'feather'},{x:300,y:20.4,t:'q',c:'mushroom'}],
+ coins:[['r',2,10,.9,4],['r',21,24,2.1,2],['r',27,37,3.4,4],['r',41,49,3.4,4],['r',51,61,3.4,4],['r',64.5,67.5,4.9,2],['r',70.5,73.5,6.4,2],['r',77,91,7.4,5],['r',95,101,8.8,3],['r',105,117,7.4,4],['r',120,123,8.9,2],['r',127,148,9.4,6],['r',153,166,9.4,6],['r',168,188,9.9,6],['r',190.5,193,11,2],['r',195,220,11.9,7],['r',225,238,14.4,5],['r',241,251,14.4,5],['r',254,278,15.4,7],['r',283,291,18.6,4],['r',302,307,18.9,3],['r',313,328,18.9,5]],
+ gems:[[107,13.6],[262,21.3],[310,24.8]],
+ checkpoints:[[52,2.5],[112,6.5],[169,9],[196,11],[255,14.5],[296,18],[324,18]],goal:{x:999,top:99},start:{x:0,y:0}});
+blockStd(LEVELS[LEVELS.length-1]);
+STORY.worlds.push({kicker:'Mundo 22 · Terra Nova',title:'Copa da Árvore Mãe',text:'O sol nasce dourado no alto da Árvore Mãe. Folhas gigantes, galhos que balançam no vento e, lá no topo, a Bruxa espera com o seu caldeirão. Ela vai aparecer pelo caminho para atrapalhar — mas só no fim dá para enfrentá-la de verdade.',end:'A Bruxa foi vencida e a Árvore Mãe acordou, brilhando com o sol da manhã. A Terra Nova está salva — e o Kuro e a raposinha olham o horizonte, prontos para a próxima aventura.'});

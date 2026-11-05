@@ -291,7 +291,7 @@ function buildEnemies(){
     else if(t==='urchin'){o.vis=ice6?makeSnowman():(des7?makeTumble():makeUrchin());o.stomp=false;o.h=ice6?1.3:(des7?.95:.9);o.speed*=.75;o.cur=o.speed}
     else if(t==='frog'){o.vis=nin?makeNinja():makeFrog();o.w=.45;o.h=nin?1.25:.75;o.speed=0;o.x=(e.x0+e.x1)/2;if(nin){o.ninja=true;o.w=.4}}
     else if(t==='spit'){o.vis=makeSpitter();o.stomp=false;o.w=.45;o.h=1.4;o.speed=0;o.x=(e.x0+e.x1)/2}
-    else if(t==='bat'){o.vis=vil?makeCrow():(curTheme.name==='heights'?makeBird():makeBat(ice6?'ice':(des7?'vult':(curTheme.name==='volcano'?'ash':false))));o.w=des7?.5:.4;o.h=.55}
+    else if(t==='bat'){o.vis=vil?makeCrow():((curTheme.name==='heights'||curTheme.copa)?makeBird():makeBat(ice6?'ice':(des7?'vult':(curTheme.name==='volcano'?'ash':false))));o.w=des7?.5:.4;o.h=.55}
     else if(t==='turtle'||t==='tchase'||t==='tshell'||t==='tguard'){o.vis=makeTurtle(t,e.moss);o.w=.55;o.h=.8;o.amp=e.amp||.4;if(t==='tchase'){o.speed=0;o.x=(e.x0+e.x1)/2}if(t==='tguard'){o.x=e.bx;o.hx=e.bx;o.by0=e.y;o.terr=[e.x0-1,e.x1+1,e.by-3,e.by+6];o.wings=true}}
     else if(t==='dfly'){o.vis=makeDfly();o.w=.5;o.h=.45;o.speed=(e.s||1.6)}
     else if(t==='wrob'){o.vis=makeWrob();o.w=.42;o.h=1.25;o.speed=(e.s||1.2);o.off=0}

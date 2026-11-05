@@ -609,5 +609,46 @@ hurt=h0;dyn=null;keys.left=keys.right=keys.jump=false;
 var won=b.won;for(k=0;k<90*3;k++){keys.right=true;step(STEP)}keys.right=false;
 return 'venceu='+won+' hp='+b.hp+' batidas='+hits+' t='+(k/90).toFixed(0)+' x='+P.x.toFixed(1)+' w1aberta='+b.w1.dead+' '+log.join('')})()`);const r4=await E(`(function(){var o=[],k;startLevel(20);beginPlay();card.hidden=true;state='play';P.inv=1e9;var b=RT.boss;P.x=320;P.y=4.2;for(k=0;k<30;k++)step(STEP);var ok1=!b.w0.dead;resetState();var ok2=b.w0.dead&&!b.w1.dead&&b.st==='wait';b.won=true;resetState();var ok3=b.w0.dead&&b.w1.dead;return 'arena fecha '+(ok1?'ok':'NÃO')+' | morreu na luta: abre a entrada '+(ok2?'ok':'NÃO')+' | vencida e morreu: tudo aberto '+(ok3?'ok':'NÃO')})()`);
   marca('Mundo 21: Raízes — semente-ponte, esporos, cogumelos, cipós, raiz que sobe, raízes que andam, espinhos, aranhas, Aranha das Raízes',/venceu=true.*w1aberta=true/.test(g4)&&/x=3(4[89]|[5-6]\d)/.test(g4)&&!/NÃO/.test(r4)&&/andando: estado=win.*correndo: estado=win/.test(g)&&!/NÃO/.test(r)&&!/NÃO/.test(g2+g3+r2),g+' || '+r+' || '+g2+' || '+g3+' || '+r2+' || '+g4+' || '+r4)}
+ /* 65: Mundo 22 — Copa da Árvore Mãe (parte 1): robô sobe andando e correndo (folhas, semente-ponte, vento, cipó, flor); Bruxa aparece e a poção machuca; folha dobra e volta */
+ {const g=await E(`(function(){var out=[];[0,1].forEach(function(run){startLevel(21);beginPlay();card.hidden=true;state='play';hearts=99;P.inv=1e9;enemies.forEach(function(e){e.alive=false;e.x=-999});
+function sol(x,y){return solids.some(function(s){return !s.dead&&x>=s.l&&x<=s.r&&Math.abs(s.t-y)<.6})}
+var k,att=0,v=RT.vines[0];keys.run=!!run;
+for(k=0;k<90*70&&state==='play'&&P.x<148;k++){var ctl=0;
+ if(!att&&P.x>90&&P.x<93&&P.y>6&&P.y<7){ctl=1;keys.run=false;if(P.grounded){if(P.x<91.4){keys.right=true}else{keys.right=false;if(Math.abs(v.a)<.06&&v.w<0){keys.right=true;keys.jump=true;P.jbuf=.12}else keys.jump=false}}}
+ if(RT.sw){att=1;ctl=1;keys.jump=false;keys.right=v.w>0;keys.left=v.w<0;if(v.a>.75&&v.w>0){keys.left=false;keys.right=true;keys.jump=true}}
+ else if(att&&P.x<104&&!P.grounded){ctl=1;keys.left=false;keys.right=true}
+ if(!ctl){keys.left=false;keys.right=true;keys.run=!!run;var ahead=P.x+(run?1.5:1.0);var edge=P.grounded&&!sol(ahead,P.y);var up=P.grounded&&solids.some(function(s){return !s.dead&&s.t>P.y+.4&&s.t<P.y+2.6&&s.l>P.x&&s.l-P.x<1.4});
+  if((edge||up)&&P.grounded){keys.jump=true;P.jbuf=.12}else if(P.grounded||P.vy<0)keys.jump=false}
+ step(STEP)}
+dyn=null;keys.right=keys.left=keys.run=keys.jump=false;out.push((run?'correndo':'andando')+': x='+P.x.toFixed(1)+' y='+P.y.toFixed(1)+' estado='+state+' cipó='+att+(P.x>=148||state==='win'?' ok':' NÃO'))});return out.join(' | ')})()`);const r=await E(`(function(){var o=[],k;startLevel(21);beginPlay();card.hidden=true;state='play';P.inv=0;hearts=9;enemies.forEach(function(e){e.alive=false});var h0=hearts,seen=0;for(k=0;k<90*14;k++){P.x=58;P.y=2.5;step(STEP);if(CP.w.st==='show')seen=1}o.push('bruxa aparece '+(seen?'ok':'NÃO'));o.push('poção machuca '+(hearts<h0?'ok':'NÃO'));
+ startLevel(21);beginPlay();card.hidden=true;state='play';P.inv=1e9;var q=CP.leaves[0];P.x=22.5;P.y=1.2;P.vy=0;for(k=0;k<90*2;k++)step(STEP);o.push('folha dobra '+(q.d>.8?'ok':'NÃO'));P.x=10;P.y=0;for(k=0;k<90*3;k++)step(STEP);o.push('folha volta '+(q.d<.05?'ok':'NÃO'));return o.join(' | ')})()`);
+ const g2=await E(`(function(){var out=[];[0,1].forEach(function(run){startLevel(21);beginPlay();card.hidden=true;state='play';hearts=99;P.inv=1e9;P.x=146;P.y=8.5;enemies.forEach(function(e){e.alive=false;e.x=-999});
+function sol(x,y){return solids.some(function(s){return !s.dead&&x>=s.l&&x<=s.r&&Math.abs(s.t-y)<.6})}
+var k,att=0,v=RT.vines[0];keys.run=!!run;
+for(k=0;k<90*70&&state==='play'&&P.x<316;k++){var ctl=0;
+ if(!att&&P.x>90&&P.x<93&&P.y>6&&P.y<7){ctl=1;keys.run=false;if(P.grounded){if(P.x<91.4){keys.right=true}else{keys.right=false;if(Math.abs(v.a)<.06&&v.w<0){keys.right=true;keys.jump=true;P.jbuf=.12}else keys.jump=false}}}
+ if(RT.sw){att=1;ctl=1;keys.jump=false;keys.right=v.w>0;keys.left=v.w<0;if(v.a>.75&&v.w>0){keys.left=false;keys.right=true;keys.jump=true}}
+ else if(att&&P.x<104&&!P.grounded){ctl=1;keys.left=false;keys.right=true}
+ if(!ctl){keys.left=false;keys.right=true;keys.run=!!run;var ahead=P.x+(run?1.5:1.0);var edge=P.grounded&&!sol(ahead,P.y);var up=P.grounded&&solids.some(function(s){return !s.dead&&s.t>P.y+.4&&s.t<P.y+2.6&&s.l>P.x&&s.l-P.x<1.4});
+  if((edge||up)&&P.grounded){keys.jump=true;P.jbuf=.12}else if(P.grounded||P.vy<0)keys.jump=false}
+ step(STEP)}
+dyn=null;keys.right=keys.left=keys.run=keys.jump=false;out.push((run?'correndo':'andando')+': x='+P.x.toFixed(1)+' y='+P.y.toFixed(1)+' estado='+state+' cipó='+att+(P.x>=148||state==='win'?' ok':' NÃO'))});return out.join(' | ')})()`);const r2=await E(`(function(){var k;startLevel(21);beginPlay();card.hidden=true;state='play';P.inv=0;hearts=9;enemies.forEach(function(e){e.alive=false});CP.w.t=999;var b=CP.cones[0],h0=hearts;b.on=0;b.t=b.per-.01;for(k=0;k<90*6&&hearts===h0;k++){P.x=176;P.y=9;step(STEP)}return 'pinha machuca '+(hearts<h0?'ok':'NÃO')})()`);
+ const g4=await E(`(function(){startLevel(21);beginPlay();card.hidden=true;state='play';hearts=99;P.inv=0;enemies.forEach(function(e){e.alive=false;e.x=-999});CP.w.t=9999;
+var b=CP.boss,B=b.B,k,hits=0,h0=hurt,log='',lastSt='';hurt=function(){if(P.inv<=0)hits++;return h0.apply(this,arguments)};P.x=326;P.y=18;P.vy=0;
+function go(tx){keys.right=P.x<tx-.2;keys.left=P.x>tx+.2}
+var hold=0;for(k=0;k<90*150&&state==="play"&&!b.won;k++){keys.jump=hold>0&&P.vy>0;if(hold>0)hold--;
+ if(b.st!==lastSt){log+=b.st.slice(0,3)+b.hp+" ";lastSt=b.st}
+ if(b.st==='wait'||b.st==='intro')go(336);
+ else if(b.st==='down'||b.st==='stir'){go(b.x-.2);if(b.st==="stir"&&Math.abs(P.x-b.x)<.5&&P.grounded){keys.jump=true;P.jbuf=.12;hold=40}}
+ else if(b.st==='flee'){go(B.cx)}
+ else if(b.st==='flee2'){if(!P.grounded&&P.y>B.floor+3){go(b.x)}else go(B.cx)}
+ else{var tgt=B.cx-6;b.bolts.forEach(function(q){if(q.t>0&&Math.abs(q.x-tgt)<2)tgt=q.x+(q.x<B.cx?3.5:-3.5)});go(tgt);
+  var near=b.orbs.some(function(o){return Math.abs(o.x-P.x)<2.4&&o.y<B.floor+1.5&&Math.sign(o.vx)===Math.sign(P.x-o.x)});if(near&&P.grounded){keys.jump=true;P.jbuf=.12;hold=40}}
+ if(!keys.jump&&P.vy<0)keys.jump=false;
+ step(STEP)}
+var won=b.won;for(k=0;k<90*5&&state==='play';k++)step(STEP);
+hurt=h0;dyn=null;keys.left=keys.right=keys.jump=false;
+return 'venceu='+won+' estado='+state+' batidas='+hits+' '+log})()`);const r4=await E(`(function(){var o=[],k;startLevel(21);beginPlay();card.hidden=true;state='play';P.inv=1e9;CP.w.t=9999;var b=CP.boss;P.x=334;P.y=18;for(k=0;k<30;k++)step(STEP);var ok1=!b.w0.dead;resetState();var ok2=b.w0.dead&&b.st==='wait';return 'arena fecha '+(ok1?'ok':'NÃO')+' | morreu na luta: reabre e reinicia '+(ok2?'ok':'NÃO')})()`);
+  marca('Mundo 22: Copa — folhas, Bruxa que aparece, cipó, galhos podres, pinhas, flores, pena, luta final e Fim da aventura',/venceu=true estado=win/.test(g4)&&!/NÃO/.test(r4)&&/andando: .*ok.*correndo: .*ok/.test(g)&&/andando: x=31[6-9].*correndo: x=31[6-9]/.test(g2)&&!/NÃO/.test(g+r+r2),g+' || '+r+' || '+g2+' || '+r2+' || '+g4+' || '+r4)}
  marca('sem erros de JavaScript durante os testes',!erros.length,erros.slice(0,3).join('; '));await pg.close();
  await b.close();const f=res.filter(r=>!r[1]).length;console.log('\n'+(f?'❌ '+f+' teste(s) falharam':'✅ todos os '+res.length+' testes passaram'));process.exit(f?1:0)})();

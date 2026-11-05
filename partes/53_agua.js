@@ -109,6 +109,7 @@ function step(dt){
   else if(curTheme.wreck)wkUpd(dt);
   else if(curTheme.canyon)cnUpd(dt);
   else if(curTheme.roots)rtUpd(dt);
+  else if(curTheme.copa){rtUpd(dt);cpUpd(dt)}
   if(P.onPlat&&P.onPlat.mover)P.x+=P.onPlat.x-P.onPlat.px;
   var CNF=curTheme.canyon?cnIn():0;/* Mundo 20: gravidade virada — o passo do Kuro roda no mundo espelhado (ver 36_canion.js) */
   var ax=keys.jx!==0?keys.jx:((keys.right?1:0)-(keys.left?1:0));
@@ -258,7 +259,7 @@ function step(dt){
   }
   }
   if(CNF)cnOut();
-  if(curTheme.roots&&RT&&RT.sw)rtSwingAfter(dt);/* Mundo 21: pendurado no cipó */
+  if((curTheme.roots||curTheme.copa)&&RT&&RT.sw)rtSwingAfter(dt);/* Mundo 21: pendurado no cipó */
   tryWarp(dt);
   if(LV.lavaY!==undefined&&P.y<LV.lavaY-.15&&state==='play'){emit(sparkPool,P.x,LV.lavaY+.2,24,5,.8,.4,.3,3);fallDeath('O Kuro caiu na lava! Voltando ao último checkpoint.');return}
   if(P.y<-9||(LV.fall&&P.x>LV.fall.x&&P.x<LV.fall.x2&&P.y<LV.fall.y)){fallDeath();return}
