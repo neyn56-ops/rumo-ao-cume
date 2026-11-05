@@ -13045,7 +13045,7 @@ function ldPose(dt){var t=LD.t,R=rig,j=LD.end>=0?clamp((t-LD.end)/.8,0,1):0,air=
     (F.ears||[]).forEach(function(e,k){e.rotation.x=(k?1:-1)*-.28+(Math.sin(t*.9+k*2)>.92?.25:0)})}}
 function ldFrame(){if(!LD)return;var now=performance.now(),dt=Math.min(.05,(now-LD.last)/1000);LD.last=now;LD.t+=dt;
   var c=renderer.domElement,w=c.clientWidth||innerWidth,h=c.clientHeight||innerHeight;if(Math.abs(LD.cam.aspect-w/h)>.001){LD.cam.aspect=w/h;LD.cam.updateProjectionMatrix()}
-  var z=Math.min(1,LD.t/9);LD.cam.position.set(-1.9+z*.4,1.25+z*.08,6.4-z*.8);LD.cam.lookAt(LD.look);/* câmera chega perto bem devagar */
+  if(LD.camFix)LD.cam.lookAt(LD.look);else{var z=Math.min(1,LD.t/9);LD.cam.position.set(-1.9+z*.4,1.25+z*.08,6.4-z*.8);LD.cam.lookAt(LD.look)}/* camFix: fotos do ícone do app *//* câmera chega perto bem devagar */
   LD.ft.offset.y=(LD.ft.offset.y+dt*1.4)%1;
   (LD.leaves||[]).forEach(function(l){l.m.rotation.z=l.rz+Math.sin(LD.t*1.3+l.ph)*.05});
   (LD.rays||[]).forEach(function(m,i){m.material.opacity=.16+Math.sin(LD.t*.6+i*1.7)*.07});
