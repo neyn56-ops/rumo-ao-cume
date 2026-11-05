@@ -1,6 +1,6 @@
 """Monta o pacote PWA (app instalável e que funciona sem internet): pwa/ e rumo-ao-cume-app.zip"""
 import os,shutil,re,json,hashlib,zipfile
-from PIL import Image,ImageDraw
+from PIL import ImageFilter, Image,ImageDraw
 R=os.path.dirname(os.path.dirname(os.path.abspath(__file__)));O=os.path.join(R,'pwa')
 shutil.rmtree(O,ignore_errors=True);os.makedirs(O+'/lib');os.makedirs(O+'/icons')
 s=open(R+'/jogo.html',encoding='utf8').read()
@@ -18,20 +18,12 @@ s=s.replace('</body>','<script>if("serviceWorker" in navigator&&location.protoco
 open(O+'/index.html','w',encoding='utf8').write(s)
 # ícone: montanha nevada com a bandeirinha dourada no cume e a faixa vermelha do Kuro
 def icon(n,mask=False):
-    S=n*4;im=Image.new('RGB',(S,S));d=ImageDraw.Draw(im)
-    for y in range(S):
-        k=y/S;d.line([(0,y),(S,y)],fill=(int(30+60*k),int(70+90*k),int(140+70*k)))
-    pad=S*(.12 if mask else 0)
-    def P(x,y):return (pad+x*(S-2*pad),pad+y*(S-2*pad))
-    d.polygon([P(-.1,1.05),P(.28,.55),P(.45,.7),P(.62,.3),P(1.1,1.05)],fill=(46,58,74))
-    d.polygon([P(.62,.3),P(.52,.43),P(.57,.47),P(.62,.41),P(.68,.47),P(.73,.43)],fill=(240,246,255))
-    d.polygon([P(.28,.55),P(.22,.63),P(.28,.62),P(.34,.64)],fill=(230,238,250))
-    d.line([P(.62,.3),P(.62,.08)],fill=(250,240,220),width=int(S*.018))
-    d.polygon([P(.62,.08),P(.8,.13),P(.62,.18)],fill=(255,196,58))
-    d.rectangle([P(-.1,.8),P(1.1,.88)],fill=(206,40,46))
-    d.polygon([P(.18,.8),P(.06,.95),P(.14,.96),P(.24,.88)],fill=(206,40,46))
-    if not mask:
-        m=Image.new('L',(S,S),0);ImageDraw.Draw(m).rounded_rectangle([0,0,S-1,S-1],radius=int(S*.22),fill=255)
+    """ícone: o Kuro e a raposinha (foto 3D da tela de carregamento, ferramentas/icone-kuro.png)"""
+    src=Image.open(os.path.join(R,'ferramentas','icone-kuro.png')).convert('RGB');S=n*4
+    if mask:
+        im=src.resize((int(S*.8),int(S*.8)),Image.LANCZOS);bg=src.resize((S,S),Image.LANCZOS).filter(ImageFilter.GaussianBlur(S*.03));bg.paste(im,(int(S*.1),int(S*.1)));im=bg
+    else:
+        im=src.resize((S,S),Image.LANCZOS);m=Image.new('L',(S,S),0);ImageDraw.Draw(m).rounded_rectangle([0,0,S-1,S-1],radius=int(S*.22),fill=255)
         bg=Image.new('RGBA',(S,S),(0,0,0,0));bg.paste(im,(0,0),m);im=bg
     return im.resize((n,n),Image.LANCZOS)
 for n in (192,512):icon(n).save(O+f'/icons/icon-{n}.png')
