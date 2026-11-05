@@ -808,23 +808,26 @@ STORY.worlds.push({kicker:'Mundo 19 · Terra Nova',title:'O Naufrágio',text:'Um
 /* ===== Terra Nova — Mundo 20: Cânion Invertido (plano aprovado pelo dono, 05/11; manhã, sem chefe). Parte 1: o fundo do cânion =====
    Chão em y 0 e teto de pedra com a parte de baixo em y 8 (5º valor 'roof'); canyon.A = linha do meio do espelho da gravidade.
    Setas [x,y,'up'|'down']: 'up' vira a gravidade para o teto, 'down' traz de volta. Buracos do teto dão para o céu (cair neles é queda). */
-LEVELS.push({name:'Cânion Invertido',theme:21,music:17,camMax:300,zoom:1.3,limit:720,es:1.05,noLift:1,coinN:100,
- canyon:{A:4,arrows:[[12,.9,'up'],[31,6.9,'down'],[58,.9,'up'],[72,6.9,'down'],[91,.9,'up'],[113,6.9,'down'],
+LEVELS.push({name:'Cânion Invertido',theme:21,music:17,camMax:392,zoom:1.3,limit:900,es:1.05,noLift:1,coinN:100,
+ canyon:{A:4,free:312,seed:[381,11.2],arrows:[[12,.9,'up'],[31,6.9,'down'],[58,.9,'up'],[72,6.9,'down'],[91,.9,'up'],[113,6.9,'down'],
   /* parte 2: as gargantas — setas que trocam sozinhas [x,y,'up'|'down',segundos,atraso] e pedras que caem para cima [x,largura] */
-  [156,.9,'up',1.6],[190,6.9,'down'],[210,.9,'up',1.3,.6],[226,6.9,'up',1.5],[236,.9,'up'],[250,6.9,'down'],[259.5,.9,'up'],[290,6.9,'down']],
+  [156,.9,'up',1.6,0,'up'],[190,6.9,'down'],[210,.9,'up',1.3,.6,'up'],[226,6.9,'up',1.5,0,'down'],[236,.9,'up'],[250,6.9,'down'],[259.5,.9,'up'],[290,6.9,'down'],
+  /* parte 3: a subida até o arco — pedras soltas no ar (anda em cima e embaixo), abismo embaixo e céu em cima */
+  [315,.9,'up'],[340.5,5.3,'up',1.4,0,'up'],[347,5.3,'down'],[353.5,2.7,'up']],
   rocks:[[136,1.6],[150,1.6],[178,1.4],[182,1.4],[205,1.8],[228,1.4],[276,1.4],[280,1.4],[284,1.4]]},
- solids:[[-14,42,0],[46,62,0],[68,86,0],[90,104,0],[112,160,0],[166,184,0],[192,214,0],[222,240,0],[246,262,0],[270,300,0],
+ solids:[[-14,42,0],[46,62,0],[68,86,0],[90,104,0],[112,160,0],[166,184,0],[192,214,0],[222,240,0],[246,262,0],[270,316,0],[316.5,323,4.6,4,0,'slab'],[326,334,4.6,4,0,'slab'],[333,339,6.6,6,0,'slab'],[342,348,6.6,6,0,'slab'],[348.5,355,2,1.4,0,'slab'],[355,362,9.6,9,0,'slab'],[363,370,11.1,10.5,0,'slab'],[371,391,14,12,0,'arch'],
   [-14,23,14,8,0,'roof'],[27,52,14,8,0,'roof'],[56,78,14,8,0,'roof'],[81,100,14,8,0,'roof'],[103,124,14,8,0,'roof'],[129,170,14,8,0,'roof'],[174,200,14,8,0,'roof'],[204,232,14,8,0,'roof'],[236,256,14,8,0,'roof'],[262,300,14,8,0,'roof']],
  floats:[],movers:[],crumbles:[],feathers:[],spikes:[],springs:[],
  enemies:[{t:'beetle',x0:33,x1:41,y:0,s:1.1},{t:'bat',x0:38,x1:40,y:7.35,s:1.4,hang:1},{t:'beetle',x0:48,x1:56,y:0,s:1.3},
   {t:'bat',x0:65,x1:67,y:7.35,s:1.5,hang:1},{t:'bat',x0:81,x1:83,y:7.35,s:1.5,hang:1},{t:'beetle',x0:70,x1:80,y:0,s:1.3},
   {t:'bat',x0:107,x1:109,y:7.35,s:1.5,hang:1},{t:'frog',x0:128,x1:140,y:0},{t:'bat',x0:135,x1:137,y:7.35,s:1.6,hang:1},
   {t:'bat',x0:186,x1:188,y:7.35,s:1.6,hang:1},{t:'beetle',x0:194,x1:202,y:0,s:1.4},{t:'bat',x0:219,x1:221,y:7.35,s:1.6,hang:1},{t:'frog',x0:224,x1:238,y:0},
-  {t:'bat',x0:243,x1:245,y:7.35,s:1.7,hang:1},{t:'beetle',x0:252,x1:260,y:0,s:1.4},{t:'bat',x0:268,x1:272,y:4.2,s:1.6},{t:'bat',x0:294,x1:296,y:7.35,s:1.6,hang:1}],
+  {t:'bat',x0:243,x1:245,y:7.35,s:1.7,hang:1},{t:'beetle',x0:252,x1:260,y:0,s:1.4},{t:'bat',x0:268,x1:272,y:4.2,s:1.6},{t:'bat',x0:294,x1:296,y:7.35,s:1.6,hang:1},
+  {t:'bat',x0:323,x1:333,y:1.6,s:1.3},{t:'bat',x0:359,x1:361,y:8.35,s:1.5,hang:1},{t:'bat',x0:364,x1:374,y:7.4,s:1.4}],
  blocks:[{x:6,y:2.4,t:'q',c:'mushroom'},{x:52,y:2.4,t:'q',c:'fruit'},{x:120,y:2.4,t:'brick'},{x:121,y:2.4,t:'q',c:'coin'},{x:122,y:2.4,t:'brick'},{x:132,y:2.4,t:'q',c:'flower'},{x:197,y:2.4,t:'q',c:'mushroom'},{x:256,y:2.4,t:'brick'},{x:257,y:2.4,t:'q',c:'coin'}],
  coins:[['r',2,10,.9,4],['r',15,22,7.1,4],['r',27.5,30,7.1,2],['r',34,41,.9,4],['r',47,57,.9,5],['r',53,55,7.1,2],['r',58,71,7.1,6],
-  ['r',76,85,.9,5],['r',92,99,7.1,4],['r',101,102,7.1,1],['r',104,112,7.1,4],['r',114,130,.9,6],['r',138,148,.9,4],['r',161,169,7.1,4],['r',175,189,7.1,6],['r',193,203,.9,5],['r',215,231,7.1,7],['r',224,239,.9,5],['r',237,249,7.1,5],['r',251,258,.9,3],['r',263,289,7.1,10],['r',271,274,.9,2],['r',287,298,.9,4]],
- gems:[[70,7.2],[229,7.2]],
- checkpoints:[[47,0],[69,0],[114,0],[153,0],[194,0],[247,0]],goal:{x:297,top:0},start:{x:0,y:0}});
+  ['r',76,85,.9,5],['r',92,99,7.1,4],['r',101,102,7.1,1],['r',104,112,7.1,4],['r',114,130,.9,6],['r',138,148,.9,4],['r',161,169,7.1,4],['r',175,189,7.1,6],['r',193,203,.9,5],['r',215,231,7.1,7],['r',224,239,.9,5],['r',237,249,7.1,5],['r',251,258,.9,3],['r',263,289,7.1,10],['r',271,274,.9,2],['r',287,298,.9,4],['r',304,313,.9,5],['r',318,322,3.1,3],['r',327,333,3.1,4],['r',335,338,5.1,2],['r',343,346,5.1,2],['r',349.5,353,2.9,3],['r',356,361,8.1,3],['r',372,378,11.1,3]],
+ gems:[[70,7.2],[229,7.2],[366.5,9.6]],
+ checkpoints:[[47,0],[69,0],[114,0],[153,0],[194,0],[247,0],[302,0],[350,2]],goal:{x:381,top:12},crystalGoal:1,start:{x:0,y:0}});
 blockStd(LEVELS[LEVELS.length-1]);
 STORY.worlds.push({kicker:'Mundo 20 · Terra Nova',title:'Cânion Invertido',text:'Num cânion de pedra vermelha, a manhã acorda tudo de cabeça para baixo: setas antigas viram a gravidade e o Kuro cai para o teto! Ande pelo chão e pelo teto, pule os buracos que dão para o céu e cuidado com os morcegos que dormem pendurados.'});

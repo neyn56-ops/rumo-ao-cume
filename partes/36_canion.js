@@ -35,6 +35,13 @@ MUSIC.splice(MUSIC.length-1,0,{bpm:104,lead:'triangle',lv:.05,drums:2,bassT:1,
   roots:[33,41,36,40],ch:[[57,60,64],[53,57,60],[55,60,64],[56,59,64]]});/* 17 */
 /* chão e teto do cânion: chão com terra vermelha por cima; teto (5º valor 'roof') com a crosta embaixo — é por onde o Kuro anda quando a gravidade vira */
 function cnSolid(s,m3){var A=cnMats(),x0=s[0],x1=s[1],top=s[2],bot=s[3]!==undefined?s[3]:-14,w=x1-x0,cx=(x0+x1)/2;
+  if(s[5]==='slab'||s[5]==='arch'){/* parte 3: pedra solta no ar (dá para andar em cima e embaixo) e o arco de pedra do final */
+    var th=top-bot,sb=mesh(boxGeo(w,th,s[5]==='arch'?6.8:2.6,3),A.rock);sb.position.set(cx,bot+th/2,s[5]==='arch'?-1.6:-.3);add(sb);
+    var cu=mesh(boxGeo(w+.1,.16,s[5]==='arch'?6.9:2.7,2),A.crust);cu.position.set(cx,bot+.08,sb.position.z);add(cu);
+    var ct=mesh(boxGeo(w+.1,.16,2.7,2),m3.top);ct.position.set(cx,top-.08,-.3);if(s[5]==='slab')add(ct);
+    if(s[5]==='slab'){var r=rnd(x0*13|0),pt=[];for(var i=0;i<3;i++){var ph=.5+r()*1.2;pt.push({g:xf(new T.ConeGeometry(.25+r()*.25,ph,5),[x0+.6+r()*(w-1.2),bot-ph/2+.05,-.3+(r()-.5)*1.2],[Math.PI,r()*3,0])})}add(new T.Mesh(mergeG(pt),A.crust))}
+    else{[x0+1,x1-1].forEach(function(lx){var lg=mesh(boxGeo(2.2,bot+14,4,4),A.rock);lg.position.set(lx,(bot-14)/2,-4.4);add(lg)})}/* pernas do arco descendo para o abismo, atrás do caminho */
+    solids.push({l:x0,r:x1,t:top,b:bot,oneway:false,slip:false,roof:true,slab:1});return}
   if(s[5]==='roof'){var b=mesh(boxGeo(w,top-bot-.3,6.8,4.2),A.rock);b.position.set(cx,(top+bot+.3)/2,-1.6);add(b);
     var lip=mesh(boxGeo(w+.14,.34,6.94,2.2),A.crust);lip.position.set(cx,bot+.17,-1.6);add(lip)}
   else{var vb=bot;var body=mesh(boxGeo(w,top-.3-vb,6.8,4.2),A.rock);body.position.set(cx,(top-.3+vb)/2,-1.6);add(body);
@@ -75,16 +82,27 @@ function cnArrowMesh(up){var A=cnMats(),g=new T.Group(),sh=new T.Shape();
 function cnBuild(th){CN={flip:0,rot:0,A:LV.canyon.A,arrows:[],cd:0,t:0,mir:null,real:null,emit0:null,told:0};cnMats();cnScenery();
   (LV.canyon.arrows||[]).forEach(function(a){var v=cnArrowMesh(a[2]==='up');v.g.position.set(a[0],a[1],.3);add(v.g);
     if(a[3]){v.ring.material=cnM.swM;var r2=new T.Mesh(new T.RingGeometry(.86,.92,28,1,0,Math.PI*1.5),cnM.swM);r2.position.z=.03;v.g.add(r2);v.r2=r2}/* seta que troca sozinha: anel amarelo e um arco que gira */
-    CN.arrows.push({x:a[0],y:a[1],up:a[2]==='up',up0:a[2]==='up',per:a[3]||0,off:a[4]||0,v:v,ph:a[0]*.7,fl:0,rz:a[2]==='up'?0:Math.PI})});
+    CN.arrows.push({x:a[0],y:a[1],up:a[2]==='up',up0:a[2]==='up',per:a[3]||0,off:a[4]||0,go:a[5]||null,v:v,ph:a[0]*.7,fl:0,rz:a[2]==='up'?0:Math.PI})});
   CN.rocks=[];(LV.canyon.rocks||[]).forEach(function(q){var w=q[1]||1.6,h=1.2,so={l:q[0]-w/2,r:q[0]+w/2,t:h,b:0,oneway:false,slip:false,crock:1};solids.push(so);
     CN.rocks.push({x:q[0],w:w,h:h,so:so,m:cnRockMesh(w,h,q[0]),st:'rest',t:0,v:0,cd:0})});
+  if(LV.canyon.seed)cnSeedBuild(LV.canyon.seed);
   cnReset()}
+/* a Semente de Luz, pendurada embaixo do arco: tocar nela termina a fase (luz sobe pelo arco) */
+function cnSeedBuild(S){var g=new T.Group(),A=cnMats();
+  var core=new T.Mesh(new T.IcosahedronGeometry(.32,1),new T.MeshStandardMaterial({color:0xffb820,emissive:0xff9a10,emissiveIntensity:1.1,roughness:.3}));core.scale.set(.8,1.25,.8);g.add(core);
+  var stem=mesh(new T.CylinderGeometry(.03,.05,.7,6),A.crust,false,false);stem.position.y=.55;g.add(stem);
+  var halo=new T.Mesh(new T.RingGeometry(.45,.62,32),new T.MeshBasicMaterial({color:0xffe080,transparent:true,opacity:.5,depthWrite:false,side:T.DoubleSide}));g.add(halo);
+  var lt=new T.PointLight(0xffd070,1.6,9,1.6);g.add(lt);
+  g.position.set(S[0],S[1],0);add(g);CN.seed={x:S[0],y:S[1],g:g,core:core,halo:halo,lt:lt,got:0,t:0}}
+function cnSeedUpd(dt){var s=CN.seed;if(!s)return;
+  if(!s.got&&state==='play'&&Math.abs(P.x-s.x)<.9&&s.y>P.y-.5&&s.y<P.y+P.h+.5){s.got=1;s.t=0;sfxMagic();emit(sparkPool,s.x,s.y,30,4,.9,.4,.2,0);toast('A Semente de Luz!');P.vx=0}
+  if(s.got){s.t+=dt;P.vx=0;keys.right=keys.left=false;if(s.t>1.6&&state==='play'){s.got=2;winLevel()}}}
 /* pedra que cai para cima: pedra vermelha com rachaduras azuis brilhando (a mesma cor da seta que leva para o teto) */
 function cnRockMesh(w,h,seed){var A=cnMats(),g=new T.Group(),r=rnd(seed*7|0);
   var b=mesh(new T.DodecahedronGeometry(.5,1),A.rockC);b.scale.set(w*.98,h*.95,1.3);g.add(b);
   for(var i=0;i<5;i++){var c=new T.Mesh(new T.BoxGeometry(.05,.3+r()*.4,.04),A.upM);c.position.set((r()-.5)*w*.7,(r()-.5)*h*.5,.62);c.rotation.z=(r()-.5)*1.4;g.add(c)}
   g.position.set(seed,h/2,0);add(g);return g}
-function cnReset(){if(!CN)return;CN.flip=0;CN.rot=0;CN.cd=0;CN.t=0;
+function cnReset(){if(!CN)return;CN.flip=0;CN.rot=0;CN.cd=0;CN.t=0;if(CN.seed&&CN.seed.got<2){CN.seed.got=0;CN.seed.t=0}
   (CN.rocks||[]).forEach(function(k){k.st='rest';k.t=0;k.v=0;k.cd=0;k.so.b=0;k.so.t=k.h;k.m.position.set(k.x,k.h/2,0)});
   enemies.forEach(function(e){if(e.hang){e.st='hang';e.x=e.hx;e.y=e.hy;e.cur=0;e.bvx=e.bvy=0}})}
 /* vira a gravidade (chamado quando o Kuro passa por uma seta) */
@@ -99,7 +117,7 @@ function cnSetFlip(f,ax,ay){if(!CN||CN.flip===f)return;CN.flip=f;CN.cd=.35;
 function cnUpd(dt){if(!CN)return;CN.t+=dt;if(CN.cd>0)CN.cd-=dt;
   /* setas que trocam sozinhas: ficam per segundos de um jeito e per do outro */
   for(var j=0;j<CN.arrows.length;j++){var sa=CN.arrows[j];if(!sa.per)continue;var ph=(CN.t+sa.off)%(sa.per*2);sa.up=ph<sa.per?sa.up0:!sa.up0;sa.warn=(ph%sa.per)>sa.per-.5}
-  cnRocks(dt);
+  cnRocks(dt);cnSeedUpd(dt);
   if(state==='play'&&CN.cd<=0){for(var i=0;i<CN.arrows.length;i++){var a=CN.arrows[i];
     if(a.up!==!!CN.flip&&Math.abs(P.x-a.x)<.75&&P.y<a.y+.75&&P.y+P.h>a.y-.75){a.fl=1;cnSetFlip(a.up?1:0,a.x,a.y);break}}}
   /* caiu para o céu por um buraco do teto */
@@ -108,6 +126,7 @@ function cnUpd(dt){if(!CN)return;CN.t+=dt;if(CN.cd>0)CN.cd-=dt;
   CN.arrows.forEach(function(a){var on=a.up!==!!CN.flip;a.v.g.position.y=a.y+Math.sin(CN.t*2+a.ph)*.08;a.v.ar.material=a.up?cnM.upM:cnM.dnM;
     a.rz+=((a.up?0:Math.PI)-a.rz)*.3;a.v.ar.rotation.z=a.rz;if(a.v.r2){a.v.r2.rotation.z=-CN.t*3;a.v.r2.visible=!a.warn||Math.floor(CN.t*10)%2===0}
     a.v.g.scale.setScalar((on?1:.82)+a.fl*.35);a.fl=Math.max(0,a.fl-.05);a.v.ring.rotation.z=CN.t*(a.up?1.4:-1.4);a.v.ar.position.y=Math.sin(CN.t*3+a.ph)*.05*(a.up?1:-1)});
+  if(CN.seed){var sd=CN.seed,gl=sd.got?1+sd.t*2:1;sd.g.position.y=sd.y+Math.sin(CN.t*2)*.06;sd.core.rotation.y=CN.t*1.5;sd.halo.scale.setScalar(gl+Math.sin(CN.t*3)*.08);sd.halo.material.opacity=sd.got?Math.max(0,.6-sd.t*.3):.5;sd.lt.intensity=1.6*gl}
   (CN.rocks||[]).forEach(function(k){var sk=k.st==='warn'?Math.sin(CN.t*70)*.06:0;k.m.position.set(k.x+sk,(k.so.b+k.so.t)/2,0);k.m.rotation.z=k.st==='stuck'||k.st==='back'?Math.PI:0});
   cnM.upM.emissiveIntensity=.8+Math.sin(CN.t*4)*.3;cnM.dnM.emissiveIntensity=.8+Math.sin(CN.t*4+1.5)*.3;
   (CN.floaters||[]).forEach(function(f){f.o.position.y=f.y+Math.sin(CN.t*f.sp+f.ph)*.6;f.o.rotation.y+=.002;f.o.rotation.x+=.001})}
