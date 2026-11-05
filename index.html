@@ -9387,7 +9387,7 @@ function cnPose(dt){if(!CN||!LV||!LV.canyon)return;CN.rot+=((CN.flip?1:0)-CN.rot
    Parte 1: a descida — raiz que cresce e vira ponte (tocar a semente), cogumelos que pulam, esporos que acendem
    prateleiras de fungo escondidas. Partes 2 e 3 (galerias, coração das raízes e a Aranha) vêm depois. */
 var RT=null,rtM=null;
-THEMES.push({name:'cave',roots:1,sky:['#020c0a','#05181a','#0a2a24','#031210'],fog:'#06201a',fd:.016,sun:0x9affd8,si:.55,sunOff:[-10,26,14],hemi:[0x6affc0,0x10180e,.32],exp:.92,env:5,lantern:3.4,snow:false,mz:-26,valley:0x0a2018});/* 22 */
+THEMES.push({name:'cave',roots:1,sky:['#0a1830','#14284a','#1e3c5a','#0c1c30'],fog:'#16304a',fd:.012,sun:0xc8dcff,si:1.25,sunOff:[-14,26,14],hemi:[0xa8c8ff,0x1c2a2a,.62],exp:1.0,env:5,lantern:3.4,snow:false,mz:-26,valley:0x0a2018});/* 22 */
 function rtMats(){if(rtM)return rtM;
   rtM={bark:pbr(texWood,.95,1.2,{color:new T.Color(0x6a4a34)}),barkD:pbr(texWood,.95,1.2,{color:new T.Color(0x4a3426)}),
     stem:M(0xe8e0c8,.7),capG:new T.MeshStandardMaterial({color:0x10a060,emissive:0x00d070,emissiveIntensity:.55,roughness:.5}),
