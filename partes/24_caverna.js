@@ -171,6 +171,7 @@ function buildDecor(th){
     list.push({x:x,z:zt2,y:mY(x,zt2)-.1,s:.8+r2()*.9,sp:snow?0:(r2(),1),rot:r2()*6.28});
   }
   if(th.dry)list=list.filter(function(t,k){return k%4===0});
+  if(th.aurora&&LV.lake){var rl=rnd(4646);list.forEach(function(t){if(t.x>LV.lake[0]-3&&t.x<LV.lake[1]+3&&t.z>-46){t.z=-47-rl()*14;t.y=mY(t.x,t.z)-.1}})}/* Lago da Aurora: árvore em cima da água ia flutuar — vai para a margem lá do fundo */
   if(th.canyon)list=[];/* Cânion: sem árvores (tem cactos) *//* região seca: só umas árvores soltas */
   var con=list.filter(function(t){return t.sp===0}),bro=list.filter(function(t){return t.sp===1});
   var trunkG=new T.CylinderGeometry(.2,.32,1,6);trunkG.translate(0,.5,0);

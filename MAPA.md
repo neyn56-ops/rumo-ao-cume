@@ -207,7 +207,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - sceneEnd :212 — fim do cenário: cobre a fase e as salas de cano que ficam além dela
 - buildBackdrop :213
 
-## 24_caverna.js  (248 linhas) /*@@parte:24_caverna.js*/
+## 24_caverna.js  (249 linhas) /*@@parte:24_caverna.js*/
 - crysGeo :4
 - crysMat :14
 - buildCaveMouth :20 — boca da caverna: arco de rocha com estalactites, pedras na entrada e o céu claro lá fora
