@@ -32,9 +32,9 @@ function auroraBuild(th){A0=auMats();
     var wn=auWaveTex(),wm=new T.MeshStandardMaterial({color:0x5878a0,roughness:.3,metalness:.2,normalMap:wn[0],normalScale:new T.Vector2(.38,.38),emissive:new T.Color(0x0c2236),emissiveIntensity:.3});
     wm.side=T.DoubleSide;var wm2=wm.clone();wm2.normalMap=wn[1];wm2.transparent=true;wm2.opacity=.35;wm2.depthWrite=false;
     var W=L[1]-L[0]+200,cx=(L[0]+L[1])/2;
-    var wp=new T.Mesh(new T.PlaneGeometry(W,90),wm);wp.rotation.x=-Math.PI/2;wp.position.set(cx,-.3,-41);/* vai até a margem lá do fundo */wp.receiveShadow=true;add(wp);
-    var wp2=new T.Mesh(new T.PlaneGeometry(W,90),wm2);wp2.rotation.x=-Math.PI/2;wp2.position.set(cx,-.28,-41);add(wp2);
-    [wn[0],wn[1]].forEach(function(t,k){t.repeat.set(W/(k?4.5:3.2),90/(k?4.5:3.2))});AU.water=wm;AU.wave=wn;
+    var wp=new T.Mesh(new T.PlaneGeometry(W,130),wm);wp.rotation.x=-Math.PI/2;wp.position.set(cx,-.3,-21);/* vai até a margem lá do fundo e passa da câmera (tela alta no PC mostrava o fundo escuro) *//* vai até a margem lá do fundo */wp.receiveShadow=true;add(wp);
+    var wp2=new T.Mesh(new T.PlaneGeometry(W,130),wm2);wp2.rotation.x=-Math.PI/2;wp2.position.set(cx,-.28,-21);add(wp2);
+    [wn[0],wn[1]].forEach(function(t,k){t.repeat.set(W/(k?4.5:3.2),130/(k?4.5:3.2))});AU.water=wm;AU.wave=wn;
     /* o lago congelado (patinação) só no trecho da parte 1; no resto a água fica aberta, com ondas */
     var fz=LV.frozen||[24,200];
     var itx=iceTopM.map?iceTopM.map.clone():null;if(itx){itx.wrapS=itx.wrapT=T.RepeatWrapping;itx.repeat.set((fz[1]-fz[0])/3,40/3);itx.needsUpdate=true}
