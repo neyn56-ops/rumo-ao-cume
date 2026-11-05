@@ -969,7 +969,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - viewLeft :433 — borda esquerda que a câmera mostra quando está no começo da fase (na altura do chão)
 - updateCamera :434
 
-## 65_carregando.js  (145 linhas) /*@@parte:65_carregando.js*/
+## 65_carregando.js  (173 linhas) /*@@parte:65_carregando.js*/
 - ldSkyTex :11
 - ldGlowTex :14
 - ldFallTex :16
@@ -979,13 +979,14 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - ldCloudTex :29
 - ldScenery :33
 - P :34
-- ldStart :76
-- ldTip :100
-- ldPose :101
-- ldFrame :119
-- ldBoot :131 — monta o jogo em etapas; entre uma e outra a cena anda. fim(): começa o laço do jogo
-- next :135
-- finish :142
+- ldExtra :84 — detalhes que deixam a cena mais rica: capim no penhasco, folhas grandes na frente, raios de sol, névoa das cac
+- ldStart :100
+- ldTip :125
+- ldPose :126
+- ldFrame :144
+- ldBoot :159 — monta o jogo em etapas; entre uma e outra a cena anda. fim(): começa o laço do jogo
+- next :163
+- finish :170
 
 ## 70_entrada.js  (347 linhas) /*@@parte:70_entrada.js*/
 - dblTap :4
