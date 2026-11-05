@@ -514,13 +514,13 @@ return res.join(' | ')})()`);const r=JSON.parse(await E(`(function(){var o=[],k;
    go();P.x=361;P.y=.8;keys.right=true;for(k=0;k<90*15;k++){if(P.grounded&&k%40==0){keys.jump=true;P.jbuf=.12}else if(P.vy<0)keys.jump=false;step(STEP);if(state!=='play')break}keys.right=false;keys.jump=false;o.push('ilha '+state+(state==='win'?' ok':' NÃO'));
    card.hidden=true;return JSON.stringify(o)})()`));
   marca('Mundo 19 parte 3: popa, Capitão Corvo-Pirata e a ilha',!/NÃO/.test(g)&&r.every(function(x){return / ok$/.test(x)}),g.split(' | ').filter(function(x){return /NÃO/.test(x)}).join('; ')+' '+r.join('; '))}
- /* Mundo 20 — Cânion Invertido: setas viram a gravidade, o Kuro anda no teto, buraco do teto é queda, morcego pendurado acorda e o pulo de baixo derruba, renasce com a gravidade normal */
+ /* 63: Mundo 20 — Cânion Invertido: robô passa as partes 1 e 2 (espera as setas que trocam sozinhas); setas viram a gravidade, o Kuro anda no teto, buraco do teto é queda, morcego pendurado acorda e o pulo de baixo derruba, renasce com a gravidade normal */
  {const CI=await E(`LEVELS.findIndex(function(l){return l.canyon})`);const BOT=`(function(){startLevel(${CI});beginPlay();enemies.forEach(function(e){e.alive=false;e.x=-999});P.inv=1e9;hearts=99;P.x=0;P.y=0;for(var k=0;k<5;k++)step(STEP);
 function sup(x){for(var i=0;i<solids.length;i++){var s=solids[i];if(s.dead||x<=s.l||x>=s.r)continue;if(CN.flip?(s.roof&&Math.abs(s.b-(P.y+P.h))<.4):(!s.roof&&Math.abs(s.t-P.y)<.4))return true}return false}
 keys.right=true;keys.run=RUNV;var hold=0,log=[],fl=0,hurtN=0,h0=hearts;
-for(k=0;k<90*60&&state==='play';k++){if(P.grounded&&!sup(P.x+1.1)){keys.jump=true;P.jbuf=.13;hold=26}if(hold>0){hold--;if(!hold)keys.jump=false}
+for(k=0;k<90*90&&state==='play';k++){var wt=false;CN.arrows.forEach(function(a){if(a.per&&P.grounded&&a.x-P.x>.2&&a.x-P.x<1.4&&(a.up===!!CN.flip||a.warn))wt=true});keys.right=!wt;if(!wt&&P.grounded&&!sup(P.x+1.1)){keys.jump=true;P.jbuf=.13;hold=26}if(hold>0){hold--;if(!hold)keys.jump=false}
  var f0=CN.flip;step(STEP);if(CN.flip!==f0){fl++;log.push((CN.flip?'↑':'↓')+P.x.toFixed(0))}if(hearts<h0){hurtN++;h0=hearts}}
-keys.right=keys.run=keys.jump=false;return 'estado='+state+' x='+P.x.toFixed(1)+' y='+P.y.toFixed(1)+' viradas='+fl+' '+log.join(' ')+' machucou='+hurtN+' t='+(k/90).toFixed(1)+'s'})()`;
+keys.right=keys.run=keys.jump=false;var hs=CN.rocks.filter(function(q){return q.st!=='rest'||q.cd>0}).length;return 'pedras='+hs+' estado='+state+' x='+P.x.toFixed(1)+' y='+P.y.toFixed(1)+' viradas='+fl+' '+log.join(' ')+' machucou='+hurtN+' t='+(k/90).toFixed(1)+'s'})()`;
   const run=await E(BOT.replace('RUNV','true')),walk=await E(BOT.replace('RUNV','false'));
   const r=await E(`(function(){startLevel(${CI});beginPlay();enemies.forEach(function(e){e.alive=false;e.x=-999});P.inv=1e9;P.x=10;P.y=0;for(var k=0;k<5;k++)step(STEP);keys.right=true;for(k=0;k<90*1.4;k++)step(STEP);keys.right=false;for(k=0;k<20;k++)step(STEP);
    var teto=CN.flip===1&&P.grounded&&Math.abs(P.y+P.h-CN.A*2)<.05;var o='teto='+teto;
@@ -530,6 +530,12 @@ keys.right=keys.run=keys.jump=false;return 'estado='+state+' x='+P.x.toFixed(1)+
    cnSetFlip(1,0,0);P.x=b.x-3.5;P.y=CN.A*2-P.h;P.vy=0;for(k=0;k<10;k++)step(STEP);P.x=b.x-3;for(k=0;k<5;k++)step(STEP);var acorda=s0==='hang'&&b.st!=='hang';
    b.st='hang';b.x=b.hx;b.y=b.hy;P.inv=0;h0=hearts;P.x=b.x;P.y=b.y-2.2;P.vy=7;P.vx=0;for(k=0;k<30;k++)step(STEP);
    o+=' morcego acorda='+acorda+' pulo de baixo derruba='+(b.st!=='hang'&&hearts===h0);return o})()`);
-  marca('Mundo 20: setas de gravidade, teto, buracos e morcegos',/win.*viradas=6/.test(run)&&/win.*viradas=6/.test(walk)&&!/false/.test(r),'correndo: '+run+' | andando: '+walk+' | '+r)}
+  const pd=await E(`(function(){var o=[],k,h0,j;function ini(){startLevel(${CI});beginPlay();enemies.forEach(function(e){e.alive=false;e.x=-999})}
+   ini();k=CN.rocks[2];cnSetFlip(1,0,0);P.x=k.x;P.y=CN.A*2-P.h;P.vy=0;P.inv=0;h0=hearts;for(j=0;j<200;j++)step(STEP);o.push('pedra pega parado='+(hearts<h0));
+   ini();k=CN.rocks[2];cnSetFlip(1,0,0);P.x=k.x-4;P.y=CN.A*2-P.h;P.vy=0;P.inv=0;for(j=0;j<20;j++)step(STEP);h0=hearts;keys.right=true;keys.run=true;for(j=0;j<70;j++)step(STEP);keys.right=keys.run=false;o.push('correndo passa='+(hearts===h0&&k.st!=='rest'));
+   ini();k=CN.rocks[0];P.x=k.x-5;P.y=0;for(j=0;j<10;j++)step(STEP);P.x=k.x;P.y=k.h;P.vy=0;P.inv=0;h0=hearts;var top=0;for(j=0;j<120;j++){step(STEP);top=Math.max(top,P.y)}o.push('sobe junto='+(top>5)+' espremido='+(hearts<h0&&Math.abs(P.x-k.x)>k.w/2));
+   P.inv=1e9;P.x=k.x-12;for(j=0;j<90*5;j++)step(STEP);o.push('volta ao chão='+(k.st==='rest'&&k.so.b===0));
+   var a=CN.arrows.filter(function(q){return q.per})[0],s='';CN.t=0;for(j=0;j<90*4;j++){cnUpd(STEP);if(j%45==0)s+=a.up?'A':'B'}o.push('seta troca='+(s==='AAAABBBA'));return o.join(' ')})()`);
+  marca('Mundo 20: setas de gravidade, teto, buracos, morcegos, pedras que sobem e setas que trocam',/win.*viradas=14/.test(run)&&/win.*viradas=14/.test(walk)&&!/false/.test(r)&&!/false/.test(pd),'correndo: '+run+' | andando: '+walk+' | '+r+' | '+pd)}
  marca('sem erros de JavaScript durante os testes',!erros.length,erros.slice(0,3).join('; '));await pg.close();
  await b.close();const f=res.filter(r=>!r[1]).length;console.log('\n'+(f?'❌ '+f+' teste(s) falharam':'✅ todos os '+res.length+' testes passaram'));process.exit(f?1:0)})();

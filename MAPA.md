@@ -66,7 +66,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - effCfg :916
 - applyGfx :922
 
-## 10_mundos_dados.js  (825 linhas) /*@@parte:10_mundos_dados.js*/
+## 10_mundos_dados.js  (830 linhas) /*@@parte:10_mundos_dados.js*/
 - add :170
 - wb :171
 - sx :204
@@ -670,19 +670,21 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - wkPart3Build :424
 - wkPart3Upd :428
 
-## 36_canion.js  (114 linhas) /*@@parte:36_canion.js*/
+## 36_canion.js  (143 linhas) /*@@parte:36_canion.js*/
 - cnStrata :10
 - cnMats :17
-- cnSolid :35 — chão e teto do cânion: chão com terra vermelha por cima; teto (5º valor 'roof') com a crosta embaixo — é por o
-- cnScenery :42 — ---- cenário: paredão do fundo em camadas, mesas lá longe, pedras flutuando no céu, cactos ----
-- cnArrowMesh :67 — ---- setas de gravidade: placa de pedra com runa brilhando; azul = gravidade para cima (teto), laranja = para 
-- cnBuild :73
-- cnReset :76
-- cnSetFlip :79 — vira a gravidade (chamado quando o Kuro passa por uma seta)
-- cnUpd :87
-- cnIn :98 — ---- o espelho da física: com a gravidade virada, o passo do Kuro roda no mundo de cabeça para baixo ----
-- cnOut :106
-- cnPose :112 — desenho: o Kuro gira de cabeça para baixo em volta dos pés (a câmera não gira)
+- cnSolid :37 — chão e teto do cânion: chão com terra vermelha por cima; teto (5º valor 'roof') com a crosta embaixo — é por o
+- cnScenery :44 — ---- cenário: paredão do fundo em camadas, mesas lá longe, pedras flutuando no céu, cactos ----
+- cnArrowMesh :69 — ---- setas de gravidade: placa de pedra com runa brilhando; azul = gravidade para cima (teto), laranja = para 
+- cnBuild :75
+- cnRockMesh :83 — pedra que cai para cima: pedra vermelha com rachaduras azuis brilhando (a mesma cor da seta que leva para o te
+- cnReset :87
+- cnSetFlip :91 — vira a gravidade (chamado quando o Kuro passa por uma seta)
+- cnUpd :99
+- cnRocks :116
+- cnIn :127 — ---- o espelho da física: com a gravidade virada, o passo do Kuro roda no mundo de cabeça para baixo ----
+- cnOut :135
+- cnPose :141 — desenho: o Kuro gira de cabeça para baixo em volta dos pés (a câmera não gira)
 
 ## 40_estado.js  (398 linhas) /*@@parte:40_estado.js*/
 - hd :5

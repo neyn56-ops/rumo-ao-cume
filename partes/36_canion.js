@@ -24,6 +24,8 @@ function cnMats(){if(cnM)return cnM;
     upM:new T.MeshStandardMaterial({color:0x2ac8ff,emissive:0x0aa8ff,emissiveIntensity:1,roughness:.4,transparent:true,opacity:.92}),
     dnM:new T.MeshStandardMaterial({color:0xff9a3a,emissive:0xff7a10,emissiveIntensity:1,roughness:.4,transparent:true,opacity:.92}),
     ringM:new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.35,depthWrite:false}),
+    swM:new T.MeshBasicMaterial({color:0xffe060,transparent:true,opacity:.75,depthWrite:false,side:T.DoubleSide}),
+    rockC:pbr(texStone,.92,.5,{color:new T.Color(0xb85a38),flatShading:true}),
     stoneM:pbr(texStone,.9,.3,{color:new T.Color(0xb07a5a)}),discM:M(0x4a2a1e,.8)};
   return cnM}
 MATS.push({top:pbr(texDirt,.97,1.1,{color:new T.Color(0xe0a070)}),side:pbr(texStone,.95,.3,{color:new T.Color(0xb8643c)}),slab:pbr(texStone,.9,.2,{color:new T.Color(0xc07a52)}),meadow:pbr(texDirt,.97,1,{color:new T.Color(0xd89a6a)}),cliff:pbr(texStone,.95,.3,{color:new T.Color(0xa85a36)})});/* 21: Cânion Invertido — terra e pedra vermelhas */
@@ -71,9 +73,19 @@ function cnArrowMesh(up){var A=cnMats(),g=new T.Group(),sh=new T.Shape();
   var ring=new T.Mesh(new T.RingGeometry(.66,.78,28),A.ringM);ring.position.z=.02;g.add(ring);
   return {g:g,ar:ar,ring:ring}}
 function cnBuild(th){CN={flip:0,rot:0,A:LV.canyon.A,arrows:[],cd:0,t:0,mir:null,real:null,emit0:null,told:0};cnMats();cnScenery();
-  (LV.canyon.arrows||[]).forEach(function(a){var v=cnArrowMesh(a[2]==='up');v.g.position.set(a[0],a[1],.3);add(v.g);CN.arrows.push({x:a[0],y:a[1],up:a[2]==='up',v:v,ph:a[0]*.7,fl:0})});
+  (LV.canyon.arrows||[]).forEach(function(a){var v=cnArrowMesh(a[2]==='up');v.g.position.set(a[0],a[1],.3);add(v.g);
+    if(a[3]){v.ring.material=cnM.swM;var r2=new T.Mesh(new T.RingGeometry(.86,.92,28,1,0,Math.PI*1.5),cnM.swM);r2.position.z=.03;v.g.add(r2);v.r2=r2}/* seta que troca sozinha: anel amarelo e um arco que gira */
+    CN.arrows.push({x:a[0],y:a[1],up:a[2]==='up',up0:a[2]==='up',per:a[3]||0,off:a[4]||0,v:v,ph:a[0]*.7,fl:0,rz:a[2]==='up'?0:Math.PI})});
+  CN.rocks=[];(LV.canyon.rocks||[]).forEach(function(q){var w=q[1]||1.6,h=1.2,so={l:q[0]-w/2,r:q[0]+w/2,t:h,b:0,oneway:false,slip:false,crock:1};solids.push(so);
+    CN.rocks.push({x:q[0],w:w,h:h,so:so,m:cnRockMesh(w,h,q[0]),st:'rest',t:0,v:0,cd:0})});
   cnReset()}
-function cnReset(){if(!CN)return;CN.flip=0;CN.rot=0;CN.cd=0;
+/* pedra que cai para cima: pedra vermelha com rachaduras azuis brilhando (a mesma cor da seta que leva para o teto) */
+function cnRockMesh(w,h,seed){var A=cnMats(),g=new T.Group(),r=rnd(seed*7|0);
+  var b=mesh(new T.DodecahedronGeometry(.5,1),A.rockC);b.scale.set(w*.98,h*.95,1.3);g.add(b);
+  for(var i=0;i<5;i++){var c=new T.Mesh(new T.BoxGeometry(.05,.3+r()*.4,.04),A.upM);c.position.set((r()-.5)*w*.7,(r()-.5)*h*.5,.62);c.rotation.z=(r()-.5)*1.4;g.add(c)}
+  g.position.set(seed,h/2,0);add(g);return g}
+function cnReset(){if(!CN)return;CN.flip=0;CN.rot=0;CN.cd=0;CN.t=0;
+  (CN.rocks||[]).forEach(function(k){k.st='rest';k.t=0;k.v=0;k.cd=0;k.so.b=0;k.so.t=k.h;k.m.position.set(k.x,k.h/2,0)});
   enemies.forEach(function(e){if(e.hang){e.st='hang';e.x=e.hx;e.y=e.hy;e.cur=0;e.bvx=e.bvy=0}})}
 /* vira a gravidade (chamado quando o Kuro passa por uma seta) */
 function cnSetFlip(f,ax,ay){if(!CN||CN.flip===f)return;CN.flip=f;CN.cd=.35;
@@ -85,15 +97,32 @@ function cnSetFlip(f,ax,ay){if(!CN||CN.flip===f)return;CN.flip=f;CN.cd=.35;
   /* morcegos pendurados por perto acordam com o tranco */
   enemies.forEach(function(e){if(e.hang&&e.alive&&e.st==='hang'&&Math.abs(e.x-P.x)<9){e.st='alert';e.alertT=.35+Math.random()*.25}})}
 function cnUpd(dt){if(!CN)return;CN.t+=dt;if(CN.cd>0)CN.cd-=dt;
+  /* setas que trocam sozinhas: ficam per segundos de um jeito e per do outro */
+  for(var j=0;j<CN.arrows.length;j++){var sa=CN.arrows[j];if(!sa.per)continue;var ph=(CN.t+sa.off)%(sa.per*2);sa.up=ph<sa.per?sa.up0:!sa.up0;sa.warn=(ph%sa.per)>sa.per-.5}
+  cnRocks(dt);
   if(state==='play'&&CN.cd<=0){for(var i=0;i<CN.arrows.length;i++){var a=CN.arrows[i];
     if(a.up!==!!CN.flip&&Math.abs(P.x-a.x)<.75&&P.y<a.y+.75&&P.y+P.h>a.y-.75){a.fl=1;cnSetFlip(a.up?1:0,a.x,a.y);break}}}
   /* caiu para o céu por um buraco do teto */
   if(CN.flip&&state==='play'&&P.y>CN.A*2+9){fallDeath('O Kuro caiu para o céu! Voltando ao último checkpoint.')}
   if(CN.lastTm===tm)return;CN.lastTm=tm;/* daqui para baixo é só visual */
   CN.arrows.forEach(function(a){var on=a.up!==!!CN.flip;a.v.g.position.y=a.y+Math.sin(CN.t*2+a.ph)*.08;a.v.ar.material=a.up?cnM.upM:cnM.dnM;
+    a.rz+=((a.up?0:Math.PI)-a.rz)*.3;a.v.ar.rotation.z=a.rz;if(a.v.r2){a.v.r2.rotation.z=-CN.t*3;a.v.r2.visible=!a.warn||Math.floor(CN.t*10)%2===0}
     a.v.g.scale.setScalar((on?1:.82)+a.fl*.35);a.fl=Math.max(0,a.fl-.05);a.v.ring.rotation.z=CN.t*(a.up?1.4:-1.4);a.v.ar.position.y=Math.sin(CN.t*3+a.ph)*.05*(a.up?1:-1)});
+  (CN.rocks||[]).forEach(function(k){var sk=k.st==='warn'?Math.sin(CN.t*70)*.06:0;k.m.position.set(k.x+sk,(k.so.b+k.so.t)/2,0);k.m.rotation.z=k.st==='stuck'||k.st==='back'?Math.PI:0});
   cnM.upM.emissiveIntensity=.8+Math.sin(CN.t*4)*.3;cnM.dnM.emissiveIntensity=.8+Math.sin(CN.t*4+1.5)*.3;
   (CN.floaters||[]).forEach(function(f){f.o.position.y=f.y+Math.sin(CN.t*f.sp+f.ph)*.6;f.o.rotation.y+=.002;f.o.rotation.x+=.001})}
+/* pedras que caem para cima: o Kuro chega perto → tremem 0,45 s → sobem rápido até o teto (batem e grudam 1,6 s) → descem devagar.
+   Em cima dela com a gravidade normal o Kuro sobe junto (e é espremido se chegar no teto); no caminho dela, machuca e empurra para o lado. */
+function cnRocks(dt){var top=CN.A*2;(CN.rocks||[]).forEach(function(k){var so=k.so,dy=0;if(k.cd>0)k.cd-=dt;
+  if(k.st==='rest'){if(state==='play'&&k.cd<=0&&Math.abs(P.x-k.x)<k.w/2+1.8){k.st='warn';k.t=.45;beep(70,.4,'sawtooth',.03,30)}}
+  else if(k.st==='warn'){k.t-=dt;if(k.t<=0){k.st='rise';k.v=2;emit(dustPool,k.x,.2,10,2.6,.6,.6,1.3,-.2)}}
+  else if(k.st==='rise'){k.v=Math.min(16,k.v+40*dt);dy=k.v*dt;if(so.t+dy>=top){dy=top-so.t;k.st='stuck';k.t=1.6;shake=Math.max(shake,.22);beep(60,.3,'square',.05,-30);emit(dustPool,k.x,top-.1,12,3,.6,.6,1.3,-.2)}}
+  else if(k.st==='stuck'){k.t-=dt;if(k.t<=0)k.st='back'}
+  else if(k.st==='back'){dy=-Math.min(3.2*dt,so.b);if(so.b+dy<=1e-4){dy=-so.b;k.st='rest';k.cd=1.2}}
+  if(!dy)return;var carry=!CN.flip&&P.onPlat===so&&dy>0&&P.grounded;so.t+=dy;so.b+=dy;if(carry)P.y=so.t;
+  if(state!=='play')return;
+  var over=P.x+P.w/2>so.l+.05&&P.x-P.w/2<so.r-.05&&P.y<so.t-.02&&P.y+P.h>so.b+.02,crush=carry&&P.y+P.h>top-.02;
+  if(over||crush){hurt(k.x,1);P.x=P.x<k.x?so.l-P.w/2-.06:so.r+P.w/2+.06;P.vx=0;if(crush){P.onPlat=null;P.grounded=false}}})}
 /* ---- o espelho da física: com a gravidade virada, o passo do Kuro roda no mundo de cabeça para baixo ---- */
 function cnIn(){if(!CN||!CN.flip)return 0;var A2=CN.A*2,i,s,m;
   if(!CN.mir||CN.mirN!==solids.length||CN.mirS!==solids){CN.mir=solids.map(function(q){var o=Object.create(q);q.__cm=o;return o});CN.mirN=solids.length;CN.mirS=solids}
