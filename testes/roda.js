@@ -522,9 +522,9 @@ for(k=0;k<90*90&&state==='play';k++){var wt=false;CN.arrows.forEach(function(a){
  var f0=CN.flip;step(STEP);if(CN.flip!==f0){fl++;log.push((CN.flip?'↑':'↓')+P.x.toFixed(0))}if(hearts<h0){hurtN++;h0=hearts}}
 keys.right=keys.run=keys.jump=false;var hs=CN.rocks.filter(function(q){return q.st!=='rest'||q.cd>0}).length;return 'pedras='+hs+' estado='+state+' x='+P.x.toFixed(1)+' y='+P.y.toFixed(1)+' viradas='+fl+' '+log.join(' ')+' machucou='+hurtN+' t='+(k/90).toFixed(1)+'s'})()`;
   const run=await E(BOT.replace('RUNV','true')),walk=await E(BOT.replace('RUNV','false'));
-  const r=await E(`(function(){startLevel(${CI});beginPlay();enemies.forEach(function(e){e.alive=false;e.x=-999});P.inv=1e9;P.x=10;P.y=0;for(var k=0;k<5;k++)step(STEP);keys.right=true;for(k=0;k<90*1.4;k++)step(STEP);keys.right=false;for(k=0;k<20;k++)step(STEP);
+  const r=await E(`(function(){dyn=null;state='play';startLevel(${CI});beginPlay();enemies.forEach(function(e){e.alive=false;e.x=-999});P.inv=1e9;P.x=10;P.y=0;for(var k=0;k<5;k++)step(STEP);keys.right=true;for(k=0;k<90*1.4;k++)step(STEP);keys.right=false;for(k=0;k<20;k++)step(STEP);
    var teto=CN.flip===1&&P.grounded&&Math.abs(P.y+P.h-CN.A*2)<.05;var o='teto='+teto;
-   P.x=24.5;P.vx=0;P.inv=0;var h0=hearts;for(k=0;k<90*2&&!dyn;k++)step(STEP);o+=' buraco='+(!!dyn&&hearts<h0);
+   P.x=24.5;P.vx=0;P.inv=0;hearts=5;var h0=hearts;for(k=0;k<90*2&&!dyn;k++)step(STEP);o+=' buraco='+(!!dyn&&hearts<h0);
    dyn=null;state='play';spawn({x:2,y:0});o+=' renasce='+(CN.flip===0);
    startLevel(${CI});beginPlay();var b=enemies.filter(function(e){return e.hang})[1];enemies.forEach(function(e){if(e!==b){e.alive=false;e.x=-999}});var s0=b.st;
    cnSetFlip(1,0,0);P.x=b.x-3.5;P.y=CN.A*2-P.h;P.vy=0;for(k=0;k<10;k++)step(STEP);P.x=b.x-3;for(k=0;k<5;k++)step(STEP);var acorda=s0==='hang'&&b.st!=='hang';
