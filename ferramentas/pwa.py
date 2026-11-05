@@ -10,6 +10,7 @@ for p in libs:
     d=O+'/lib/'+p;os.makedirs(os.path.dirname(d),exist_ok=True);shutil.copy(NM+p,d)
 s=s.replace('https://cdn.jsdelivr.net/npm/three@0.147.0/','lib/')
 ver=hashlib.md5(s.encode()).hexdigest()[:8]
+s=s.replace('</body>','<div id="verTag" style="position:fixed;right:6px;bottom:4px;z-index:1000;font:11px sans-serif;color:#fff;opacity:.55;pointer-events:none;text-shadow:0 1px 2px #000">versão '+ver[:6]+'</div></body>',1)  # número da versão no canto: mostra se o aparelho abriu a versão nova
 head=('<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#16202a">'
  '<link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/icon-192.png">'
  '<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">')
