@@ -918,19 +918,23 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - viewLeft :432 — borda esquerda que a câmera mostra quando está no começo da fase (na altura do chão)
 - updateCamera :433
 
-## 65_carregando.js  (122 linhas) /*@@parte:65_carregando.js*/
+## 65_carregando.js  (145 linhas) /*@@parte:65_carregando.js*/
 - ldSkyTex :11
 - ldGlowTex :14
 - ldFallTex :16
-- ldScenery :19 — cenário parado: tudo numa malha só, cada peça com sua cor
-- P :19
-- ldStart :54
-- ldTip :77
-- ldPose :78
-- ldFrame :96
-- ldBoot :108 — monta o jogo em etapas; entre uma e outra a cena anda. fim(): começa o laço do jogo
-- next :112
-- finish :119
+- ldN :20 — ruído simples por posição (mesma posição = mesmo valor: a malha não abre fendas)
+- ldRough :22 — deixa a pedra irregular: empurra cada ponto para fora/dentro conforme o ruído
+- ldMountain :24 — montanha com encostas, sulcos e neve que desce pelas ranhuras (cores por ponto)
+- ldCloudTex :29
+- ldScenery :33
+- P :34
+- ldStart :76
+- ldTip :100
+- ldPose :101
+- ldFrame :119
+- ldBoot :131 — monta o jogo em etapas; entre uma e outra a cena anda. fim(): começa o laço do jogo
+- next :135
+- finish :142
 
 ## 70_entrada.js  (347 linhas) /*@@parte:70_entrada.js*/
 - dblTap :4

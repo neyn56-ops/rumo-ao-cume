@@ -6,4 +6,4 @@ const pg=await b.newPage({viewport:{width:960,height:440}});let er=[];pg.on('pag
 await pg.goto('file://'+__dirname+'/ld.html',{waitUntil:'domcontentloaded'});
 await pg.waitForSelector('#ld.on3d',{timeout:120000});await pg.waitForTimeout(+(process.argv[2]||2500));await pg.screenshot({path:__dirname+'/fotos/ld.png'});console.log('erros0',er.slice(0,4));
 const t0=Date.now();await pg.waitForFunction(()=>!document.getElementById('ld'),null,{timeout:+(process.argv[3]||180000)});
-console.log('saiu em',Date.now()-t0,'ms; erros',er.slice(0,4));await pg.waitForTimeout(1500);await pg.screenshot({path:__dirname+'/fotos/ld2.png'});await b.close()})();
+console.log('tela',await pg.evaluate(()=>Math.round(window.__ldMs)),'ms; saiu em',Date.now()-t0,'ms; erros',er.slice(0,4));await pg.waitForTimeout(1500);await pg.screenshot({path:__dirname+'/fotos/ld2.png'});await b.close()})();

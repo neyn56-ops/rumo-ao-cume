@@ -16,8 +16,29 @@ function ldGlowTex(r,g,b){var c=document.createElement('canvas');c.width=c.heigh
 function ldFallTex(){var c=document.createElement('canvas');c.width=64;c.height=128;var x=c.getContext('2d'),r=rnd(77);x.fillStyle='rgba(220,240,255,.55)';x.fillRect(0,0,64,128);
   for(var i=0;i<60;i++){x.fillStyle='rgba(255,255,255,'+(.4+r()*.5)+')';x.fillRect(r()*64,r()*128,1+r()*3,10+r()*30)}var t=new T.CanvasTexture(c);t.wrapS=t.wrapT=T.RepeatWrapping;return t}
 /* cenário parado: tudo numa malha só, cada peça com sua cor */
-function ldScenery(sc){var L=[],r=rnd(2611);function P(g,c,p,ro,s){L.push({g:xf(g,p,ro,s),c:c})}
-  var ROCK=0x8a5636,ROCKD=0x6a3f28,GRASS=0x5fae3a,GRASSD=0x3f8a2c,SNOW=0xf4f8ff,STONE=0xd8c7a4,ROOF=0xc0503a,WOOD=0x8a5a32,LEAF=0x3f9a3a,LEAFD=0x2c7a30;
+/* ruído simples por posição (mesma posição = mesmo valor: a malha não abre fendas) */
+function ldN(x,y,z){return Math.sin(x*1.7+z*.9)*Math.sin(y*2.3+x*.6)*.5+Math.sin(x*4.1+y*3.7+z*2.9)*.3+Math.sin(z*5.3-x*4.7)*.2}
+/* deixa a pedra irregular: empurra cada ponto para fora/dentro conforme o ruído */
+function ldRough(g,amt,fq){g=g.index?g:g;var p=g.attributes.position,v=new T.Vector3();for(var i=0;i<p.count;i++){v.fromBufferAttribute(p,i);var l=v.length()||1,n=ldN(v.x*fq,v.y*fq,v.z*fq);v.multiplyScalar(1+n*amt/l);p.setXYZ(i,v.x,v.y,v.z)}g.computeVertexNormals();return g}
+/* montanha com encostas, sulcos e neve que desce pelas ranhuras (cores por ponto) */
+function ldMountain(sc,R,H,x,y,z,ry,mat){var g=new T.ConeGeometry(R,H,44,22),p=g.attributes.position,v=new T.Vector3(),col=new Float32Array(p.count*3),c=new T.Color(),rk=new T.Color(0x5e5468),rk2=new T.Color(0x84766e),sn=new T.Color(0xf6f9ff);
+  for(var i=0;i<p.count;i++){v.fromBufferAttribute(p,i);var h=(v.y+H/2)/H,a=Math.atan2(v.z,v.x),rr=Math.hypot(v.x,v.z),rid=Math.abs(Math.sin(a*7+h*3))*.12+ldN(v.x*.25,v.y*.25,v.z*.25)*.1;
+    if(rr>.01){var k=1+rid*(1-h*.6);v.x*=k;v.z*=k}v.y+=ldN(v.x*.15,1,v.z*.15)*H*.03*(1-h);p.setXYZ(i,v.x,v.y,v.z);
+    var sw=clamp((h-.62+Math.sin(a*7+h*3)*.08+ldN(v.x*.4,v.y*.4,v.z*.4)*.1)/.08,0,1);c.copy(rk).lerp(rk2,clamp(.5+ldN(v.x*.5,v.y*.5,v.z*.5),0,1)).lerp(sn,sw);col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b}
+  g.setAttribute('color',new T.BufferAttribute(col,3));g.computeVertexNormals();var m=new T.Mesh(g,mat);m.position.set(x,y,z);m.rotation.y=ry;sc.add(m)}
+function ldCloudTex(){var c=document.createElement('canvas');c.width=256;c.height=128;var x=c.getContext('2d'),r=rnd(909);
+  for(var i=0;i<26;i++){var px=40+r()*176,py=50+r()*40-Math.sin((px-40)/176*Math.PI)*28,rr=18+r()*26,g=x.createRadialGradient(px,py,0,px,py,rr),sh=py>78?.82:1;
+    g.addColorStop(0,'rgba('+(255*sh|0)+','+(255*sh|0)+','+(255*sh+3|0)+',.9)');g.addColorStop(.6,'rgba(255,255,255,.45)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,256,128)}
+  var t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;return t}
+function ldScenery(sc){var G={},r=rnd(2611);
+  var KEY={},tint=new T.Color();function P(g,c,p,ro,s){var k=KEY[c]||'plain';
+    if(k==='rock'&&(g.type==='DodecahedronGeometry'||g.type==='IcosahedronGeometry'))g=ldRough(new T.IcosahedronGeometry(g.parameters.radius,3),g.parameters.radius*.28,1.6/g.parameters.radius);
+    else if(k==='rock'&&g.type==='ConeGeometry'){var pr=g.parameters;g=ldRough(new T.ConeGeometry(pr.radius,pr.height,20,10),pr.radius*.16,2.2/pr.radius)}
+    else if(k==='leaf'&&g.type==='IcosahedronGeometry')g=ldRough(new T.IcosahedronGeometry(g.parameters.radius,2),g.parameters.radius*.25,3/g.parameters.radius);
+    (G[k]=G[k]||[]).push({g:xf(g,p,ro,s),c:c})}
+  var ROCK=0xc89878,ROCKD=0xa07a62,GRASS=0x98bf7c,GRASSD=0x7aa862,SNOW=0xf4f8ff,STONE=0xf0e4cc,ROOF=0xc0503a,WOOD=0xd8b090,LEAF=0x8ac070,LEAFD=0x6aa058;
+  [ROCK,ROCKD].forEach(function(c){KEY[c]='rock'});[GRASS,GRASSD].forEach(function(c){KEY[c]='grass'});[LEAF,LEAFD].forEach(function(c){KEY[c]='leaf'});
+  [WOOD,0xa8703e,0x6a4424,0xc8a070,0xe8d0a0].forEach(function(c){KEY[c]='wood'});[STONE,0xf2e2c0].forEach(function(c){KEY[c]='stone'});
   /* penhasco da frente */
   P(new T.CylinderGeometry(4.2,3.2,1.2,9),GRASS,[-1.2,-.62,.2],[0,.3,0],[1.25,1,.8]);
   for(var i=0;i<7;i++)P(new T.DodecahedronGeometry(1.5+r()*.6,0),i%2?ROCK:ROCKD,[-4.5+i*1.25,-2.9-r()*1.2,-.2+r()*1.2],[r(),r(),r()],[1,1.2,.9]);
@@ -30,9 +51,8 @@ function ldScenery(sc){var L=[],r=rnd(2611);function P(g,c,p,ro,s){L.push({g:xf(
   /* folhas na frente, nos cantos */
   for(i=0;i<7;i++){var bs=.35+r()*.35;P(new T.IcosahedronGeometry(bs,1),i%2?LEAF:LEAFD,[i<4?-5.4+i*.55:-2.2+i*.3,bs*.55,-1.5+r()*.5],[r(),r(),r()],[1.3,.85,1])}/* moitas em cima do penhasco */
   /* o Cume: montanha com neve e encostas */
-  P(new T.ConeGeometry(22,48,9,1),0x7a6a8a,[26,-12,-82],[0,.4,0]);P(new T.ConeGeometry(8.4,18.3,9,1),SNOW,[26,2.85,-82],[0,.4,0]);
-  P(new T.ConeGeometry(10,18,8,1),0x6a6080,[3,-10,-62],[0,1,0]);P(new T.ConeGeometry(3.4,6.1,8,1),SNOW,[3,-2.9,-62],[0,1,0]);
-  P(new T.ConeGeometry(11,19,8,1),0x6c6484,[30,-11,-60],[0,.2,0]);P(new T.ConeGeometry(3.6,6.2,8,1),SNOW,[30,-4.6,-60],[0,.2,0]);
+  var mm=pbr(texStone,.9,.6,{vertexColors:true});
+  ldMountain(sc,22,48,26,-12,-82,.4,mm);ldMountain(sc,10,18,3,-10,-62,1,mm);ldMountain(sc,11,19,30,-11,-60,.2,mm);
   /* ilhas flutuantes */
   var IS=[[8.5,-1.3,-9,3,1],[14,1.5,-24,4.2,2],[4,5,-34,2.6,0],[-7,4,-28,3,3],[24,4,-30,3.4,2],[-14,1,-22,2.4,3],[20,-2.5,-14,2.2,0]];
   IS.forEach(function(s,k){var x=s[0],y=s[1],z=s[2],R=s[3];
@@ -49,8 +69,10 @@ function ldScenery(sc){var L=[],r=rnd(2611);function P(g,c,p,ro,s){L.push({g:xf(
     if(i%4===0)[-1,1].forEach(function(sd){P(new T.CylinderGeometry(.04,.05,.7,5),0x6a4424,[pp.x+sd*.42*Math.cos(.52),pp.y+.35,pp.z+sd*.42*Math.sin(.52)])})}
   for(i=0;i<n;i++){var u0=i/n,u1=(i+1)/n,p0=a.clone().lerp(b,u0),p1=a.clone().lerp(b,u1);p0.y+=.55-Math.sin(u0*Math.PI)*.45;p1.y+=.55-Math.sin(u1*Math.PI)*.45;
     [-1,1].forEach(function(sd){var ox=sd*.42*Math.cos(.52),oz=sd*.42*Math.sin(.52),q0=new T.Vector3(p0.x+ox,p0.y,p0.z+oz),q1=new T.Vector3(p1.x+ox,p1.y,p1.z+oz),d=q1.clone().sub(q0),g=new T.CylinderGeometry(.018,.018,d.length(),4);
-      g.rotateX(Math.PI/2);g.lookAt(d);g.translate((q0.x+q1.x)/2,(q0.y+q1.y)/2,(q0.z+q1.z)/2);L.push({g:g,c:0xc8a070})})}
-  var m=new T.Mesh(mergeG(L,true),M(0xffffff,.9,0,{vertexColors:true,flatShading:true}));sc.add(m);return IS}
+      g.rotateX(Math.PI/2);g.lookAt(d);g.translate((q0.x+q1.x)/2,(q0.y+q1.y)/2,(q0.z+q1.z)/2);(G.wood=G.wood||[]).push({g:g,c:0xc8a070})})}
+  var MT={rock:pbr(texStone,.95,1.4,{vertexColors:true}),grass:pbr(texGrass,.95,.8,{vertexColors:true}),leaf:pbr(texGrass,.85,.9,{vertexColors:true}),
+    wood:pbr(texWood,.85,.7,{vertexColors:true}),stone:pbr(texBrick,.9,.7,{vertexColors:true}),plain:M(0xffffff,.6,0,{vertexColors:true})};
+  Object.keys(G).forEach(function(k){sc.add(new T.Mesh(mergeG(G[k],true),MT[k]))});return IS}
 function ldStart(){var c=renderer.domElement,sc=new T.Scene(),cam=new T.PerspectiveCamera(48,(c.clientWidth||innerWidth)/(c.clientHeight||innerHeight),.1,400);
   LD={sc:sc,cam:cam,t:0,p:0,shown:0,end:-1,tip:0,tipT:0,home:null,last:performance.now(),fogC:new T.Color(0xcfe4f7)};
   sc.background=ldSkyTex();sc.fog=new T.Fog(0xd6e8f8,30,140);
@@ -60,9 +82,10 @@ function ldStart(){var c=renderer.domElement,sc=new T.Scene(),cam=new T.Perspect
   var ft=ldFallTex(),fm=new T.MeshBasicMaterial({map:ft,transparent:true,opacity:.85,depthWrite:false,fog:true});LD.ft=ft;
   [[0,1.7],[1,2.4],[3,1.8]].forEach(function(q){var s=IS[q[0]],h=s[3]*2.4,w=new T.Mesh(new T.PlaneGeometry(q[1]*.8,h),fm);w.position.set(s[0]+s[3]*.55,s[1]-h/2-.1,s[2]+s[3]*.75);sc.add(w)});
   /* mar de nuvens e nuvens que passam */
-  var cm=new T.MeshLambertMaterial({color:0xffffff,emissive:0x8a96a8,flatShading:true}),cg=new T.IcosahedronGeometry(1,1);LD.clouds=[];
-  var r=rnd(5150);for(var i=0;i<(LITE?10:16);i++){var g=new T.Group(),k=3+(r()*3|0);for(var j=0;j<k;j++){var b=new T.Mesh(cg,cm);b.position.set(j*1.3-k*.6,r()*.5,r()*.6);b.scale.setScalar(1+r()*.8);g.add(b)}
-    var low=i<7,cx=-30+r()*70;if(!low&&cx>8&&cx<42)cx-=40;/* nuvens do alto longe do Cume */g.position.set(cx,low?-7-r()*3:8+r()*10,low?-12-r()*30:-30-r()*30);g.scale.setScalar(low?2.2:1.4+r());sc.add(g);LD.clouds.push({g:g,sp:.25+r()*.4})}
+  var ct=ldCloudTex();LD.clouds=[];/* nuvens macias (imagem com bolhas suaves), não mais bolas de polígono */
+  var r=rnd(5150);for(var i=0;i<(LITE?14:22);i++){var low=i<10,cx=-34+r()*76;if(!low&&cx>8&&cx<42)cx-=40;/* nuvens do alto longe do Cume */
+    var g=new T.Sprite(new T.SpriteMaterial({map:ct,transparent:true,depthWrite:false,opacity:low?.95:.85,color:low?0xf4f8ff:0xffffff}));
+    g.position.set(cx,low?-6-r()*3:8+r()*10,low?-10-r()*34:-30-r()*30);var w=low?16+r()*14:8+r()*8;g.scale.set(w,w*.5,1);sc.add(g);LD.clouds.push({g:g,sp:.25+r()*.4})}
   /* estrela na ponta do Cume */
   var sh=new T.Shape();for(i=0;i<10;i++){var an=Math.PI/2+i*Math.PI/5,rr=i%2?.42:1;if(i)sh.lineTo(Math.cos(an)*rr,Math.sin(an)*rr);else sh.moveTo(Math.cos(an)*rr,Math.sin(an)*rr)}
   var st=new T.Mesh(new T.ExtrudeGeometry(sh,{depth:.3,bevelEnabled:true,bevelSize:.12,bevelThickness:.12,bevelSegments:1}),new T.MeshStandardMaterial({color:0xffd23a,emissive:0xffaa00,emissiveIntensity:.9,roughness:.35,metalness:.3}));
@@ -113,9 +136,9 @@ function ldBoot(steps,fim){var el=document.getElementById('ld');
     if(i<steps.length){var home=rig.root.parent;steps[i++]();if(LD){if(rig.root.parent!==LD.sc){LD.home=rig.root.parent;LD.sc.add(rig.root)}else if(home!==LD.sc)LD.home=home}
       if(LD)LD.p=i/steps.length;requestAnimationFrame(next);return}
     if(LD&&window.__ldHold){window.__LD=LD;LD.p=1;requestAnimationFrame(next);return}/* fotos da tela (testes/ld.js) */
-    if(LD&&!done&&(performance.now()-t0<2600||LD.shown<.97)){LD.p=1;requestAnimationFrame(next);return}
+    if(LD&&!done&&(performance.now()-t0<6000||LD.shown<.97)){LD.p=1;requestAnimationFrame(next);return}
     if(!done){done=true;if(!LD){finish();return}LD.end=LD.t;el.classList.add('pulo');setTimeout(function(){el.classList.add('flash')},650);setTimeout(finish,1050)}
     if(LD)requestAnimationFrame(next)}
-  function finish(){var L=LD;LD=null;if(L){if(L.home)L.home.add(rig.root);if(L.fox)L.sc.remove(L.fox.g)}
+  function finish(){window.__ldMs=performance.now()-t0;var L=LD;LD=null;if(L){if(L.home)L.home.add(rig.root);if(L.fox)L.sc.remove(L.fox.g)}
     document.body.classList.remove('ldg');fim();el.classList.add('sai');setTimeout(function(){el.remove()},700)}
   requestAnimationFrame(next)}

@@ -537,3 +537,4 @@ A área de trabalho do Claude é temporária. Para recomeçar:
 - Leve: cenário parado em 1 malha só (cores por vértice), sem sombras. Antes do 3D aparecer, o fundo já é o céu em degradê (não mais preto); a cor da abertura do app (manifest) também virou azul-céu.
 - Testes: `window.__noLoad` (copia_teste.py) monta direto, sem a tela. Fotos da tela: `node testes/ldf.js '["LD.t=0"]'` (window.__ldHold segura a tela).
 - Obs. testes: a bateria completa às vezes derruba a página no teste 62 por falta de memória (acumula ~60 testes na mesma página); rodando `node testes/so.js 62 63` passam.
+- (05/11, 2ª versão) Tela fica no mínimo 6 s. Cenário mais realista: texturas do jogo (pedra, grama, madeira, tijolo), pedras e ilhas irregulares (ldRough: ruído por posição), montanhas com sulcos e neve descendo pelas ranhuras (ldMountain, cores por ponto), nuvens macias (imagem com bolhas suaves em sprites) no lugar das bolas de polígono. window.__ldMs = quanto tempo a tela ficou.
