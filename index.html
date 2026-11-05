@@ -1976,6 +1976,24 @@ LEVELS.push({name:'O Naufrágio',theme:20,music:16,camMax:416,limit:900,es:1.05,
 blockStd(LEVELS[LEVELS.length-1]);
 STORY.worlds.push({kicker:'Mundo 19 · Terra Nova',title:'O Naufrágio',text:'Uma tempestade partiu um navio pirata ao meio: a proa encalhou na praia e a popa ficou boiando no mar. Suba pelos caixotes e pelo convés, escale o mastro até o cesto da gávea, fuja dos caranguejos e das gaivotas — e cuidado com os raios!'});
 
+/* ===== Terra Nova — Mundo 20: Cânion Invertido (plano aprovado pelo dono, 05/11; manhã, sem chefe). Parte 1: o fundo do cânion =====
+   Chão em y 0 e teto de pedra com a parte de baixo em y 8 (5º valor 'roof'); canyon.A = linha do meio do espelho da gravidade.
+   Setas [x,y,'up'|'down']: 'up' vira a gravidade para o teto, 'down' traz de volta. Buracos do teto dão para o céu (cair neles é queda). */
+LEVELS.push({name:'Cânion Invertido',theme:21,music:17,camMax:150,zoom:1.3,limit:600,es:1.05,noLift:1,coinN:100,
+ canyon:{A:4,arrows:[[12,.9,'up'],[31,6.9,'down'],[58,.9,'up'],[72,6.9,'down'],[91,.9,'up'],[113,6.9,'down']]},
+ solids:[[-14,42,0],[46,62,0],[68,86,0],[90,104,0],[112,152,0],
+  [-14,23,14,8,0,'roof'],[27,52,14,8,0,'roof'],[56,78,14,8,0,'roof'],[81,100,14,8,0,'roof'],[103,124,14,8,0,'roof'],[129,152,14,8,0,'roof']],
+ floats:[],movers:[],crumbles:[],feathers:[],spikes:[],springs:[],
+ enemies:[{t:'beetle',x0:33,x1:41,y:0,s:1.1},{t:'bat',x0:38,x1:40,y:7.35,s:1.4,hang:1},{t:'beetle',x0:48,x1:56,y:0,s:1.3},
+  {t:'bat',x0:65,x1:67,y:7.35,s:1.5,hang:1},{t:'bat',x0:81,x1:83,y:7.35,s:1.5,hang:1},{t:'beetle',x0:70,x1:80,y:0,s:1.3},
+  {t:'bat',x0:107,x1:109,y:7.35,s:1.5,hang:1},{t:'frog',x0:128,x1:140,y:0},{t:'bat',x0:135,x1:137,y:7.35,s:1.6,hang:1}],
+ blocks:[{x:6,y:2.4,t:'q',c:'mushroom'},{x:52,y:2.4,t:'q',c:'fruit'},{x:120,y:2.4,t:'brick'},{x:121,y:2.4,t:'q',c:'coin'},{x:122,y:2.4,t:'brick'},{x:132,y:2.4,t:'q',c:'flower'}],
+ coins:[['r',2,10,.9,4],['r',15,22,7.1,4],['r',27.5,30,7.1,2],['r',34,41,.9,4],['r',47,57,.9,5],['r',53,55,7.1,2],['r',58,71,7.1,6],
+  ['r',76,85,.9,5],['r',92,99,7.1,4],['r',101,102,7.1,1],['r',104,112,7.1,4],['r',114,146,.9,12]],
+ gems:[[70,7.2]],
+ checkpoints:[[47,0],[69,0],[114,0]],goal:{x:146,top:0},start:{x:0,y:0}});
+blockStd(LEVELS[LEVELS.length-1]);
+STORY.worlds.push({kicker:'Mundo 20 · Terra Nova',title:'Cânion Invertido',text:'Num cânion de pedra vermelha, a manhã acorda tudo de cabeça para baixo: setas antigas viram a gravidade e o Kuro cai para o teto! Ande pelo chão e pelo teto, pule os buracos que dão para o céu e cuidado com os morcegos que dormem pendurados.'});
 /*@@parte:11_construcao.js*/
 /* ---------- contêineres do mundo atual ---------- */
 var lushPend=false,broMat=null,tuftMesh=null,lastBro=null,lushG=null,lushSky=null,lushU={time:{value:0},ps:{value:400}},lushAnim=[],lushHideTufts=false;
@@ -2276,6 +2294,7 @@ function buildLevel(idx){
   buildLush(th);
   if(typeof kuroDry==='function')kuroDry();/* Kuro seco ao começar qualquer fase */
   if(th.aurora)auroraBuild(th);
+  if(th.canyon)cnBuild(th);/* Mundo 20: paredões, setas de gravidade */
   if(th.wreck)wkBuild(th);/* Mundo 19: navio encalhado, mar com ondas, chuva e raios *//* Mundo 18: aurora, estrelas, lago, gelo que trinca */
   if(th.falls)buildFalls(th);/* Mundo 16: cachoeiras, rio, castelo lá longe e os Pedrões-totem */
   if(th.name==='ruins')buildRuinsExtra();
@@ -2361,6 +2380,7 @@ function buildPlatforms(m3){
   if(curTheme.name==='tower'){buildPlatformsTower();return}
   if(curTheme.name==='mine'){buildPlatformsMine();return}
   LV.solids.forEach(function(s){
+    if(curTheme.canyon&&typeof cnSolid==='function'){cnSolid(s,m3);return}/* Cânion Invertido: chão e teto de pedra vermelha */
     if(curTheme.wreck&&s[5]&&typeof wkSolid==='function'){wkSolid(s);return}/* Naufrágio: casco do navio, caixotes e tábuas */
     if(curTheme.aurora&&!s[4]&&typeof auSolid==='function'){auSolid(s,m3);return}/* Lago da Aurora: bloco de gelo com neve escorrendo */
     var x0=s[0],x1=s[1],top=s[2],bot=s[3]!==undefined?s[3]:-14,w=x1-x0,cx=(x0+x1)/2;
@@ -3858,7 +3878,8 @@ function buildDecor(th){
     var zt2=-6.5-r2()*30;
     list.push({x:x,z:zt2,y:mY(x,zt2)-.1,s:.8+r2()*.9,sp:snow?0:(r2(),1),rot:r2()*6.28});
   }
-  if(th.dry)list=list.filter(function(t,k){return k%4===0});/* região seca: só umas árvores soltas */
+  if(th.dry)list=list.filter(function(t,k){return k%4===0});
+  if(th.canyon)list=[];/* Cânion: sem árvores (tem cactos) *//* região seca: só umas árvores soltas */
   var con=list.filter(function(t){return t.sp===0}),bro=list.filter(function(t){return t.sp===1});
   var trunkG=new T.CylinderGeometry(.2,.32,1,6);trunkG.translate(0,.5,0);
   var tr=inst(trunkG,M(0x5a4030,.95),list.length,true);
@@ -6900,6 +6921,7 @@ function buildFar(th){
       var u=(y+h/2)/h;
       if(peaks){var rock=(u<.92&&Math.sin(p.getX(v)*.45+i*1.7+y*.12)*Math.cos(p.getZ(v)*.37+y*.22)>.05)||(u>.2&&u<.5&&r()<.45);
         c.set(rock?(th.aurora?(r()<.5?'#7ab4e4':'#5a96d0'):(r()<.5?'#5a4232':'#463428')):(u<.15?(th.aurora?'#b8d8f0':'#c8ccd4'):'#f4f7fb'))}/* Mundo 18: montanhas de gelo azul */
+      else if(th.canyon)c.set('#a8583a').lerp(new T.Color('#e8a878'),u);/* Cânion: mesas de pedra vermelha, sem neve */
       else if(th.name==='trail'||th.falls)c.set('#3f7a4e').lerp(new T.Color('#9cc48a'),u*u);/* Terra Nova: morros verdes, sem neve */
       else if(u>.72)c.set('#eef3f7');
       else c.set('#6b7f95').lerp(new T.Color('#8fa3b6'),u);
@@ -7439,6 +7461,7 @@ function buildEnemies(){
       else if(e.y>q.base+.5&&e.y<q.top+3.5&&e.x0<q.x+2.6&&e.x1>q.x-2.6){if((e.x0+e.x1)/2>=q.x){e.x0=q.x+2.6;if(e.x1<e.x0+3)e.x1=e.x0+3}else{e.x1=q.x-2.6;if(e.x0>e.x1-3)e.x0=e.x1-3}}
     });
     var o={type:t,x0:e.x0,x1:e.x1,y:e.y,base:e.y,by:e.y,hx:(e.x0+e.x1)/2,sz:false,fg:true,speed:(e.s||1.6)*(LV.es||1),x:e.x0,dir:1,alive:true,deadT:0,ph:i*1.7,w:.5,h:.85,stomp:true,vy:0,vx:0,hop:1+i*.2,land:0,vis:null,st:'patrol',alertT:0,loseT:0,cur:(e.s||1.6)*(LV.es||1),bvx:0,bvy:0};
+    if(e.hang){o.hang=1;o.hx=(e.x0+e.x1)/2;o.hy=e.y;o.base=e.y-2.6;o.st='hang'}/* Cânion: morcego pendurado no teto */
     var ice6=curTheme.name==='peaks',des7=curTheme.name==='ruins';
     var vol=curTheme.name==='volcano';
     var sum11=curTheme.name==='summit';
@@ -9050,6 +9073,120 @@ function wkPart3Upd(dt){var t=WK.t;
   /* a tempestade passa perto da ilha */
   var I=LV.island;if(I){var k=clamp((P.x-(I.x0-40))/40,0,1);WK.calm=k;if(k>.5)WK.next=Math.max(WK.next,2)}}
 
+/*@@parte:36_canion.js*/
+/* ===================== Mundo 20 — Cânion Invertido =====================
+   Plano aprovado pelo dono (05/11): de manhã, câmera no padrão do jogo (a tela não gira, só o Kuro vira de cabeça para baixo).
+   Mecânica: setas de gravidade. Passou por uma seta, a gravidade vira: o Kuro cai para o teto de pedra e anda por ele.
+   Truque da física: com a gravidade virada, a física do Kuro roda num "espelho" (o mundo de cabeça para baixo em volta
+   da linha do meio LV.canyon.A), então pulo, pulo duplo, capa, quinas e blocos funcionam igual sem reescrever nada.
+   Parte 1: o fundo do cânion — setas, teto com buracos para o céu e morcegos pendurados que acordam. */
+var CN=null,cnM=null;
+THEMES.push({name:'valley',dry:1,canyon:1,sky:['#3f8fe0','#7ec0f0','#ffe2b4','#fff0d2'],fog:'#f2d8b8',fd:.0075,sun:0xfff0d8,si:2.3,sunOff:[-22,14,16],hemi:[0xffe6cc,0x8a4a2a,.34],exp:.84,env:0,lantern:0,snow:true,sandFx:true,mz:-45,valley:0xb0603a});/* 21 */
+function cnStrata(seed,sat){var c=document.createElement('canvas');c.width=c.height=256;var x=c.getContext('2d'),r=rnd(seed),y=0;
+  var pal=[[12,52,40],[16,54,45],[20,50,50],[9,50,36],[24,44,56],[14,52,42]];
+  while(y<256){var h=6+r()*22,p=pal[(r()*pal.length)|0];x.fillStyle='hsl('+p[0]+','+(p[1]*sat)+'%,'+p[2]+'%)';x.fillRect(0,y,256,h+1);
+    x.fillStyle='rgba(60,20,10,.25)';x.fillRect(0,y+h-1.5,256,1.5);y+=h}
+  for(var i=0;i<900;i++){x.fillStyle='rgba('+(r()<.5?'40,14,6':'255,236,210')+','+(.04+r()*.08)+')';x.fillRect(r()*256,r()*256,1+r()*6,1+r()*2)}
+  for(i=0;i<18;i++){x.strokeStyle='rgba(50,18,8,.35)';x.lineWidth=1;x.beginPath();var cx=r()*256,cy=r()*256;x.moveTo(cx,cy);for(var k=0;k<5;k++){cx+=(r()-.5)*14;cy+=4+r()*10;x.lineTo(cx,cy)}x.stroke()}/* rachaduras */
+  var t=new T.CanvasTexture(c);t.wrapS=t.wrapT=T.RepeatWrapping;t.encoding=T.sRGBEncoding;return t}
+function cnMats(){if(cnM)return cnM;
+  var st=cnStrata(201,1),st2=cnStrata(202,.85);
+  cnM={rock:new T.MeshStandardMaterial({map:st,color:0xd8c0b0,roughness:.93,bumpMap:texStone.bump,bumpScale:.25}),
+    far:new T.MeshStandardMaterial({map:st2,color:0xe8c8b8,roughness:.97}),wallM:new T.MeshStandardMaterial({map:st2,color:0xc8a898,roughness:.95}),
+    col:M(0xffffff,.95,0,{vertexColors:true}),
+    crust:pbr(texDirt,.97,.9,{color:new T.Color(0xc8784a)}),
+    cactus:M(0x5f8a46,.8),cactusD:M(0x46703a,.85),flower:M(0xff8ab0,.6),
+    upM:new T.MeshStandardMaterial({color:0x2ac8ff,emissive:0x0aa8ff,emissiveIntensity:1,roughness:.4,transparent:true,opacity:.92}),
+    dnM:new T.MeshStandardMaterial({color:0xff9a3a,emissive:0xff7a10,emissiveIntensity:1,roughness:.4,transparent:true,opacity:.92}),
+    ringM:new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.35,depthWrite:false}),
+    stoneM:pbr(texStone,.9,.3,{color:new T.Color(0xb07a5a)}),discM:M(0x4a2a1e,.8)};
+  return cnM}
+MATS.push({top:pbr(texDirt,.97,1.1,{color:new T.Color(0xe0a070)}),side:pbr(texStone,.95,.3,{color:new T.Color(0xb8643c)}),slab:pbr(texStone,.9,.2,{color:new T.Color(0xc07a52)}),meadow:pbr(texDirt,.97,1,{color:new T.Color(0xd89a6a)}),cliff:pbr(texStone,.95,.3,{color:new T.Color(0xa85a36)})});/* 21: Cânion Invertido — terra e pedra vermelhas */
+/* música do cânion: manhã aberta, um pouco de faroeste (entra antes da música do mapa, que é sempre a última) */
+MUSIC.splice(MUSIC.length-1,0,{bpm:104,lead:'triangle',lv:.05,drums:2,bassT:1,
+  mel:[69,0,72,0,76,0,74,72, 69,0,0,67,0,69,0,0, 72,0,76,0,79,0,77,76, 74,0,72,0,69,0,0,0],
+  roots:[33,41,36,40],ch:[[57,60,64],[53,57,60],[55,60,64],[56,59,64]]});/* 17 */
+/* chão e teto do cânion: chão com terra vermelha por cima; teto (5º valor 'roof') com a crosta embaixo — é por onde o Kuro anda quando a gravidade vira */
+function cnSolid(s,m3){var A=cnMats(),x0=s[0],x1=s[1],top=s[2],bot=s[3]!==undefined?s[3]:-14,w=x1-x0,cx=(x0+x1)/2;
+  if(s[5]==='roof'){var b=mesh(boxGeo(w,top-bot-.3,6.8,4.2),A.rock);b.position.set(cx,(top+bot+.3)/2,-1.6);add(b);
+    var lip=mesh(boxGeo(w+.14,.34,6.94,2.2),A.crust);lip.position.set(cx,bot+.17,-1.6);add(lip)}
+  else{var vb=bot;var body=mesh(boxGeo(w,top-.3-vb,6.8,4.2),A.rock);body.position.set(cx,(top-.3+vb)/2,-1.6);add(body);
+    var lp=mesh(boxGeo(w+.14,.34,6.94,2.2),m3.top);lp.position.set(cx,top-.17,-1.6);add(lp)}
+  solids.push({l:x0,r:x1,t:top,b:bot,oneway:false,slip:false,roof:s[5]==='roof'})}
+/* ---- cenário: paredão do fundo em camadas, mesas lá longe, pedras flutuando no céu, cactos ---- */
+function cnScenery(){var A=cnMats(),C=LV.canyon,r=rnd(2020),list=[],x,k;
+  var x0=-30,x1=(LV.camMax||150)+40;
+  /* paredão do fundo: colunas de rocha de alturas diferentes (deixam o céu aparecer entre elas) */
+  for(x=x0;x<x1;x+=7+r()*7){var h=8+r()*13,wd=3+r()*3.5,z=-13-r()*4;
+    list.push({g:xf(boxGeo(wd,h,3,5),[x,h/2-1.5,z],[0,(r()-.5)*.4,0])});
+    if(r()<.45){var hc=1.4+r()*1.6;list.push({g:xf(boxGeo(wd*.6,hc,2.4,5),[x+(r()-.5)*1.4,h-1.5+hc/2,z+.2])})}}
+  var wall=new T.Mesh(mergeG(list),A.wallM);wall.receiveShadow=true;add(wall);
+  /* mesas lá longe e pedras de cabeça para baixo penduradas no céu (o "cânion invertido") */
+  list=[];for(x=x0-20;x<x1+20;x+=12+r()*10){var mh=8+r()*14,mw=8+r()*10;list.push({g:xf(new T.CylinderGeometry(mw*.42,mw*.55,mh,7,1),[x,mh/2-2,-46-r()*20],[0,r()*3,0])})}
+  for(x=x0;x<x1;x+=14+r()*12){var ph=3+r()*4,pw=2.5+r()*2.5,py=C.A*2+9+r()*8;list.push({g:xf(new T.ConeGeometry(pw,ph,6,1),[x,py-ph/2,-26-r()*14],[Math.PI,r()*3,0])});
+    list.push({g:xf(new T.CylinderGeometry(pw*1.05,pw*.95,1.2,6,1),[x,py+.5,-26-r()*0],[0,r()*3,0])})}
+  var far=new T.Mesh(mergeG(list),A.far);add(far);
+  /* pedras flutuando devagar no céu (só enfeite) */
+  CN.floaters=[];var fg=new T.DodecahedronGeometry(1,0);
+  for(k=0;k<(LITE?6:12);k++){var fm=mesh(fg,A.stoneM,false,false),s2=.5+r()*1.2;fm.scale.set(s2*1.3,s2,s2);fm.position.set(x0+r()*(x1-x0),C.A*2+5+r()*7,-14-r()*10);add(fm);CN.floaters.push({o:fm,y:fm.position.y,ph:r()*6,sp:.3+r()*.4})}
+  /* cactos e pedrinhas atrás do caminho, só onde tem chão */
+  list=[];var lc=[];LV.solids.forEach(function(s){if(s[5]==='roof'||s[2]!==0)return;for(var xx=Math.max(s[0],x0)+1.5;xx<s[1]-1;xx+=3+r()*5){var z2=-3.2-r()*2.2;
+    if(r()<.55){var ch=1+r()*1.4;lc.push({g:xf(new T.CylinderGeometry(.18,.22,ch,7),[xx,ch/2,z2])},{g:xf(new T.SphereGeometry(.18,7,5),[xx,ch,z2])});
+      if(r()<.7){var ah=.5+r()*.5,sd=r()<.5?-1:1;lc.push({g:xf(new T.CylinderGeometry(.11,.12,.5,6),[xx+sd*.28,ch*.5,z2],[0,0,sd*Math.PI/2])},{g:xf(new T.CylinderGeometry(.11,.12,ah,6),[xx+sd*.5,ch*.5+ah/2,z2])})}}
+    else list.push({g:xf(new T.DodecahedronGeometry(.3+r()*.4,0),[xx,.1,z2],[r(),r(),r()],[1.3,.7,1])})}});
+  if(lc.length)add(new T.Mesh(mergeG(lc),A.cactus));if(list.length){var pd=new T.Mesh(mergeG(list),A.stoneM);pd.castShadow=false;add(pd)}
+  /* pontinhas de pedra embaixo do teto, lá atrás (não ficam no caminho do Kuro) */
+  list=[];LV.solids.forEach(function(s){if(s[5]!=='roof')return;for(var xx=s[0]+.6;xx<s[1]-.4;xx+=1.2+r()*1.6){var th=.4+r()*1.1;list.push({g:xf(new T.ConeGeometry(.22+r()*.2,th,5),[xx,s[3]-th/2,-3.6-r()*1.2],[Math.PI,r()*3,0])})}});
+  if(list.length)add(new T.Mesh(mergeG(list),A.crust))}
+/* ---- setas de gravidade: placa de pedra com runa brilhando; azul = gravidade para cima (teto), laranja = para baixo (chão) ---- */
+function cnArrowMesh(up){var A=cnMats(),g=new T.Group(),sh=new T.Shape();
+  sh.moveTo(0,.5);sh.lineTo(.42,.02);sh.lineTo(.16,.02);sh.lineTo(.16,-.48);sh.lineTo(-.16,-.48);sh.lineTo(-.16,.02);sh.lineTo(-.42,.02);sh.lineTo(0,.5);
+  var ar=new T.Mesh(new T.ExtrudeGeometry(sh,{depth:.08,bevelEnabled:false}),up?A.upM:A.dnM);ar.position.z=.04;if(!up)ar.rotation.z=Math.PI;g.add(ar);
+  var disc=mesh(new T.CylinderGeometry(.62,.62,.1,20),A.discM,false,false);disc.rotation.x=Math.PI/2;disc.position.z=-.05;g.add(disc);
+  var ring=new T.Mesh(new T.RingGeometry(.66,.78,28),A.ringM);ring.position.z=.02;g.add(ring);
+  return {g:g,ar:ar,ring:ring}}
+function cnBuild(th){CN={flip:0,rot:0,A:LV.canyon.A,arrows:[],cd:0,t:0,mir:null,real:null,emit0:null,told:0};cnMats();cnScenery();
+  (LV.canyon.arrows||[]).forEach(function(a){var v=cnArrowMesh(a[2]==='up');v.g.position.set(a[0],a[1],.3);add(v.g);CN.arrows.push({x:a[0],y:a[1],up:a[2]==='up',v:v,ph:a[0]*.7,fl:0})});
+  cnReset()}
+function cnReset(){if(!CN)return;CN.flip=0;CN.rot=0;CN.cd=0;
+  enemies.forEach(function(e){if(e.hang){e.st='hang';e.x=e.hx;e.y=e.hy;e.cur=0;e.bvx=e.bvy=0}})}
+/* vira a gravidade (chamado quando o Kuro passa por uma seta) */
+function cnSetFlip(f,ax,ay){if(!CN||CN.flip===f)return;CN.flip=f;CN.cd=.35;
+  if(P.mount){dismountFox('off');if(fox)fox.away=true;P.crouch=false;P.h=stdH()}
+  P.grounded=false;P.onPlat=null;P.coyote=0;P.jbuf=0;P.dj=false;P.flyT=0;P.vy=f?Math.max(P.vy,1.5):Math.min(P.vy,-1.5);
+  beep(f?300:700,.28,'sine',.04,f?500:-420);beep(f?450:520,.18,'triangle',.02,f?300:-260,.05);
+  emit(sparkPool,ax,ay,14,3.2,.6,.35,.2,0);
+  if(!CN.told){CN.told=1;toast(f?'A gravidade virou! O Kuro anda no teto. A seta laranja traz de volta':'Gravidade normal de novo')}
+  /* morcegos pendurados por perto acordam com o tranco */
+  enemies.forEach(function(e){if(e.hang&&e.alive&&e.st==='hang'&&Math.abs(e.x-P.x)<9){e.st='alert';e.alertT=.35+Math.random()*.25}})}
+function cnUpd(dt){if(!CN)return;CN.t+=dt;if(CN.cd>0)CN.cd-=dt;
+  if(state==='play'&&CN.cd<=0){for(var i=0;i<CN.arrows.length;i++){var a=CN.arrows[i];
+    if(a.up!==!!CN.flip&&Math.abs(P.x-a.x)<.75&&P.y<a.y+.75&&P.y+P.h>a.y-.75){a.fl=1;cnSetFlip(a.up?1:0,a.x,a.y);break}}}
+  /* caiu para o céu por um buraco do teto */
+  if(CN.flip&&state==='play'&&P.y>CN.A*2+9){fallDeath('O Kuro caiu para o céu! Voltando ao último checkpoint.')}
+  if(CN.lastTm===tm)return;CN.lastTm=tm;/* daqui para baixo é só visual */
+  CN.arrows.forEach(function(a){var on=a.up!==!!CN.flip;a.v.g.position.y=a.y+Math.sin(CN.t*2+a.ph)*.08;a.v.ar.material=a.up?cnM.upM:cnM.dnM;
+    a.v.g.scale.setScalar((on?1:.82)+a.fl*.35);a.fl=Math.max(0,a.fl-.05);a.v.ring.rotation.z=CN.t*(a.up?1.4:-1.4);a.v.ar.position.y=Math.sin(CN.t*3+a.ph)*.05*(a.up?1:-1)});
+  cnM.upM.emissiveIntensity=.8+Math.sin(CN.t*4)*.3;cnM.dnM.emissiveIntensity=.8+Math.sin(CN.t*4+1.5)*.3;
+  (CN.floaters||[]).forEach(function(f){f.o.position.y=f.y+Math.sin(CN.t*f.sp+f.ph)*.6;f.o.rotation.y+=.002;f.o.rotation.x+=.001})}
+/* ---- o espelho da física: com a gravidade virada, o passo do Kuro roda no mundo de cabeça para baixo ---- */
+function cnIn(){if(!CN||!CN.flip)return 0;var A2=CN.A*2,i,s,m;
+  if(!CN.mir||CN.mirN!==solids.length||CN.mirS!==solids){CN.mir=solids.map(function(q){var o=Object.create(q);q.__cm=o;return o});CN.mirN=solids.length;CN.mirS=solids}
+  for(i=0;i<solids.length;i++){s=solids[i];m=CN.mir[i];m.t=A2-s.b;m.b=A2-s.t}
+  CN.real=solids;solids=CN.mir;
+  P.y=A2-P.y-P.h;P.vy=-P.vy;if(P.prevY!==undefined)P.prevY=A2-P.prevY-P.h;P.airVy=-(P.airVy||0);
+  if(P.onPlat&&P.onPlat.__cm)P.onPlat=P.onPlat.__cm;
+  CN.emit0=emit;emit=function(pool,x,y){var a=Array.prototype.slice.call(arguments);a[2]=A2-y;return CN.emit0.apply(null,a)};
+  return 1}
+function cnOut(){var A2=CN.A*2;solids=CN.real;emit=CN.emit0;
+  P.y=A2-P.y-P.h;P.vy=-P.vy;if(P.prevY!==undefined)P.prevY=A2-P.prevY-P.h;P.airVy=-(P.airVy||0);
+  if(P.onPlat&&CN.mir.indexOf(P.onPlat)>=0)P.onPlat=Object.getPrototypeOf(P.onPlat)}
+/* com a gravidade virada, o empurrão de quando o Kuro se machuca vai para longe do teto */
+var cnHurt0=hurt;hurt=function(){var vy=P.vy,r=cnHurt0.apply(this,arguments);if(CN&&CN.flip&&LV&&LV.canyon&&P.vy!==vy&&P.vy>0)P.vy=-P.vy;return r};
+/* desenho: o Kuro gira de cabeça para baixo em volta dos pés (a câmera não gira) */
+function cnPose(dt){if(!CN||!LV||!LV.canyon)return;CN.rot+=((CN.flip?1:0)-CN.rot)*(1-Math.exp(-dt*12));var u=CN.rot*CN.rot*(3-2*CN.rot);
+  rig.root.rotation.x=u*Math.PI;rig.root.position.y+=u*P.h*.98}
+
 /*@@parte:40_estado.js*/
 /* ===================== estado do jogo ===================== */
 var P={look:0,flapA:0,cape:false,pm:0,flyT:0,glide:0,spinT:0,spinCd:0,jsq:0,jsnap:false,fire:false,fcd:0,shootT:0,runT:0,x:0,y:0,vx:0,vy:0,w:.6,h:1.35,face:1,grounded:false,onPlat:null,coyote:0,jbuf:0,inv:0,stun:0,prevY:0,phase:0,land:0,airVy:0,yaw:Math.PI/2,stepIdx:0,feather:0,dj:false,noCut:0,cheer:0,nextBlink:2,blink:0,cph:0,climb:null,warp:null,vineCd:0,shield:false,idleT:0,pipeT:0,skid:0,big:false,crouch:false,sz:.78,csq:1,growT:0,sc:[0,0,0,0],inW:false,hd:false,air:1,swimCd:0,tapCd:0,drownT:.4};
@@ -9094,6 +9231,7 @@ function toast(msg){
   clearTimeout(toast.k);toast.k=setTimeout(function(){t.classList.remove('show')},2300);
 }
 function spawn(pt){
+  if(curTheme.canyon&&typeof cnReset==='function')cnReset();/* Cânion: renasce com a gravidade normal */
   if(LV&&LV.kites)sumMechReset();
   if(volEsc&&volEsc.on){volEsc.on=false;volEsc.wall.visible=false;volEsc.gl.visible=false}/* renasceu: a parede recomeça um pouco atrás dele */
   if(fox&&fox.state==='ride'&&fox.vis){if(W)W.remove(fox.vis.g);fox=null}P.mount=false;P.boostT=0;P.lastDryX=undefined;
@@ -9115,6 +9253,7 @@ function resetState(){
   if(LV&&LV.maze&&typeof mzReset==='function')mzReset();
   if(curTheme.aurora&&typeof aurReset==='function')aurReset();
   if(curTheme.wreck&&typeof wkReset==='function')wkReset();
+  if(curTheme.canyon&&typeof cnReset==='function')cnReset();
   resetBoss();resetDrops();P.swimToast=false;$('airStat').hidden=true;airBubs.forEach(function(b){b.on=true;b.cd=0;b.mesh.visible=true});
   respawn={x:LV.start.x,y:LV.start.y};placeEnemies(respawn.x);
   setHearts();$('coinN').textContent=bank;$('gemN').textContent='0';$('timeN').textContent='0:00';
@@ -10758,7 +10897,9 @@ function updEnemy(e,dt){
     if(e.ninja)ninjaAI(e,dt);
   }else if(t==='bat'){
     batSep(e,dt);
-    if(e.st==='patrol'){
+    if(e.st==='hang'){e.x=e.hx;e.y=e.hy;e.cur=0;e.bvx=e.bvy=0;/* Cânion: morcego pendurado no teto, dormindo de cabeça para baixo; acorda com o Kuro perto */
+      if(state==='play'&&Math.abs(P.x-e.x)<5&&Math.abs(P.y+P.h/2-e.y)<9.6){e.st='alert';e.alertT=.35;sfx.alert()}}
+    else if(e.st==='patrol'){
       var bnx=e.x+e.dir*e.speed*dt;if(eHit(e,bnx,e.y))e.dir=-e.dir;else e.x=bnx;
       if(e.x<e.x0){e.x=e.x0;e.dir=1}else if(e.x>e.x1){e.x=e.x1;e.dir=-1}
       var bny=e.base+Math.sin(mt*2.4+e.ph)*.8;if(!eHit(e,e.x,bny))e.y=bny;e.cur=e.speed;e.bvx=e.dir*e.speed;e.bvy=0;
@@ -10767,7 +10908,7 @@ function updEnemy(e,dt){
       e.alertT-=dt;e.dir=P.x>e.x?1:-1;e.cur=0;
       if(e.alertT<=0){e.st='chase';e.loseT=0}
     }else if(e.st==='chase'){
-      var dx=P.x-e.x,dy=P.y+1.5-e.y,d=Math.hypot(dx,dy)||1,sp=hd(4.3,5.0)*(alarmT>0?1.25:1),kk=1-Math.exp(-dt*hd(3.2,3.4));
+      var dx=P.x-e.x,dy=P.y+((curTheme.canyon&&CN&&CN.flip)?P.h-1.5:1.5)-e.y,/* Cânion: com o Kuro no teto, o morcego vem por baixo dele */d=Math.hypot(dx,dy)||1,sp=hd(4.3,5.0)*(alarmT>0?1.25:1),kk=1-Math.exp(-dt*hd(3.2,3.4));
       e.bvx+=(dx/d*sp-e.bvx)*kk;e.bvy+=(dy/d*sp-e.bvy)*kk;
       var cbx=clamp(e.x+e.bvx*dt,e.x0-9,e.x1+9),cby=clamp(e.y+e.bvy*dt,e.base-3.2,e.base+4.2);
       if(!eHit(e,cbx,e.y))e.x=cbx;else e.bvx=0;
@@ -11480,7 +11621,9 @@ function step(dt){
   else if(curTheme.falls)updFalls(dt);
   else if(curTheme.aurora)auUpd(dt);
   else if(curTheme.wreck)wkUpd(dt);
+  else if(curTheme.canyon)cnUpd(dt);
   if(P.onPlat&&P.onPlat.mover)P.x+=P.onPlat.x-P.onPlat.px;
+  var CNF=curTheme.canyon?cnIn():0;/* Mundo 20: gravidade virada — o passo do Kuro roda no mundo espelhado (ver 36_canion.js) */
   var ax=keys.jx!==0?keys.jx:((keys.right?1:0)-(keys.left?1:0));
   if(P.stun>0){P.stun-=dt;ax=0}
   if(P.inv>0)P.inv-=dt;
@@ -11627,6 +11770,7 @@ function step(dt){
     }
   }
   }
+  if(CNF)cnOut();
   tryWarp(dt);
   if(LV.lavaY!==undefined&&P.y<LV.lavaY-.15&&state==='play'){emit(sparkPool,P.x,LV.lavaY+.2,24,5,.8,.4,.3,3);fallDeath('O Kuro caiu na lava! Voltando ao último checkpoint.');return}
   if(P.y<-9||(LV.fall&&P.x>LV.fall.x&&P.x<LV.fall.x2&&P.y<LV.fall.y)){fallDeath();return}
@@ -11650,9 +11794,9 @@ function step(dt){
     if((e.type==='guard'||(e.type==='beetle'&&curTheme.name==='village'))&&pHidden())continue;/* atrás do biombo: o guarda e o gato passam sem encostar */
     if(!e.noHit&&Math.abs(P.x-(e.bx!==undefined?e.bx:e.x))<P.w/2+(e.bhw!==undefined?e.bhw:e.w)&&P.y<e.y+e.h&&P.y+P.h>e.y){
       if((e.slp>0||e.wake)&&!P.sj&&!(P.mount&&P.vy<-1&&P.y>e.y+e.h*.45)){/* montado: caindo de verdade por cima derrota; andando sobe e passa por cima igual *//* dormindo: vira um degrau baixinho — o Kuro sobe e anda por cima (não quica, não atravessa) */
-        var stp=e.y+e.h*.55;if(e.slp>0&&e.landed&&P.vy<=.5&&P.y>stp-.6&&P.y<stp+.3){P.y=stp;P.vy=0;P.grounded=true;P.onPlat=null;P.dj=false}continue}
-      if(e.stomp&&P.vy<=.5&&P.y>e.y+e.h*.45&&(!(e.slp>0||e.wake)||P.sj||P.mount)){/* dormindo: o pulo normal não quica de novo (o Kuro passa e pisa no chão); giratório/raposinha derrotam */
-        killE(e,(P.sj||P.mount)?'sjump':'stomp')/* giratório ou montado na raposinha: derrota na hora */;P.vy=P.inW?(keys.jump?8.5:6.5):(keys.jump?14.5:10.5);P.grounded=false;P.onPlat=null;P.dj=false;
+        var stp=e.y+e.h*.55;if(!CNF&&e.slp>0&&e.landed&&P.vy<=.5&&P.y>stp-.6&&P.y<stp+.3){P.y=stp;P.vy=0;P.grounded=true;P.onPlat=null;P.dj=false}continue}
+      if(e.stomp&&(CNF?(P.vy>=-.5&&P.y+P.h<e.y+e.h*.55):(P.vy<=.5&&P.y>e.y+e.h*.45))&&(!(e.slp>0||e.wake)||P.sj||P.mount)){/* dormindo: o pulo normal não quica de novo (o Kuro passa e pisa no chão); giratório/raposinha derrotam */
+        killE(e,(P.sj||P.mount)?'sjump':'stomp')/* giratório ou montado na raposinha: derrota na hora */;P.vy=(CNF?-1:1)*(P.inW?(keys.jump?8.5:6.5):(keys.jump?14.5:10.5));P.grounded=false;P.onPlat=null;P.dj=false;
         sfx.stomp();emit(dustPool,e.x,e.y+.4,7,2.4,.55,.55,1.2,-.3);
       }else if(P.spinT<=0&&!e.safe)hurt(e.x,(e.type==='urchin'&&curTheme.name!=='peaks'&&curTheme.name!=='ruins')?1:0);
     }
@@ -11889,6 +12033,7 @@ function pose(dt){
   if(typeof AU!=='undefined'&&AU&&AU.lh){var F2=AU.lh.F,dxg=P.x-F2.x,onG=P.y>F2.top-.4&&Math.abs(dxg)<2.8;P.gz=(P.gz||0)+((onG?-3.2+Math.sqrt(Math.max(1,7.3-dxg*dxg)):0)-(P.gz||0))*(1-Math.exp(-dt*8));/* anda em volta da lanterna, dentro da grade */rig.root.position.z=P.gz}/* na galeria do farol o Kuro anda mais para dentro (não fica na beirada) *//* tobogã: o Kuro vai sentado dentro do tubo */
   if(P.mountT>0){var mk2=1-P.mountT/.8,ak=clamp((mk2-.1)/.72,0,1);rig.root.position.y+=Math.sin(ak*Math.PI)*1.7-(mk2<.1?(1-mk2/.1)*seatY()*0:0);rig.root.position.x-=P.face*(1-ak)*.8}/* salto até a sela */
   foxVisUpd(dt);
+  if(curTheme.canyon&&!dyn)cnPose(dt);/* Mundo 20: Kuro de cabeça para baixo no teto */
   if(typeof AU!=='undefined'&&AU&&(AU.sl||AU.sin)){rig.hipL.rotation.x=rig.hipR.rotation.x=-1.45;rig.kneeL.rotation.x=rig.kneeR.rotation.x=.25;rig.root.position.y-=.05}/* tobogã: sentado, pernas para a frente */
   rig.root.visible=!(P.inv>0&&Math.floor(P.inv*14)%2===0&&state==='play');
 }
@@ -11942,7 +12087,8 @@ function visEnemy(e,dt){
       v.inner.scale.set(1/Math.sqrt(sy),sy,1/Math.sqrt(sy));
     }else if(t==='bat'){
       v.g.rotation.y=e.dir>0?Math.PI/2:-Math.PI/2;
-      v.wings.forEach(function(w){w.p.rotation.z=w.sd*Math.sin(tm*14+e.ph)*.8});
+      var hng=e.st==='hang';v.g.children[0].rotation.z=hng?Math.PI:0;if(hng)v.g.position.y=e.y+.3;/* pendurado de cabeça para baixo, asas fechadas */
+      v.wings.forEach(function(w){w.p.rotation.z=hng?w.sd*-1.2:w.sd*Math.sin(tm*14+e.ph)*.8});
     }else if(t==='wbeetle'){
       v.g.rotation.y=e.dir>0?Math.PI/2:-Math.PI/2;
       v.wings.forEach(function(w){w.p.rotation.z=w.sd*(.15+Math.sin(tm*38+e.ph)*.6)});
@@ -12116,6 +12262,7 @@ function animate(dt){
 function viewLeft(){var cm=(LV&&LV.camMin!==undefined)?LV.camMin:7,hw=cam.dist*((LV&&LV.zoom)||1)*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;return cm-hw}
 function updateCamera(dt,snap){
   var tx=clamp(P.x+P.face*.8+clamp(P.vx*.36,-3.6,3.6),(LV&&LV.camMin!==undefined)?LV.camMin:7,LV?LV.camMax:186),ty=((LV&&LV.tall)?Math.max(2.4,P.y+1.7):Math.max(2.4,2.6+P.y*.66))+P.look*1.0;
+  if(LV&&LV.canyon){var Ac=LV.canyon.A;ty=Ac+(P.y+P.h/2-Ac)*.25+.4+P.look}/* Cânion Invertido: a câmera mostra o chão e o teto juntos (não gira) */
   if(LV&&LV.rooms){for(var ri=0;ri<LV.rooms.length;ri++){var rm=LV.rooms[ri];if(P.x>rm.a){var hw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect,lo=rm.l+hw,hi=rm.r-hw;if(lo>hi)lo=hi=(rm.l+rm.r)/2;tx=clamp(P.x,lo,hi);ty=2.6;break}}}
   if(volEsc&&volEsc.on){var ehw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;tx=Math.min(LV.camMax,Math.max(tx,volEsc.wx+ehw-3))}
   if(LV&&LV.boss&&!(boss&&boss.v2&&boss.state==='dead')){var bhw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;tx=Math.min(tx,LV.boss.arena[1]+.4-bhw)}
