@@ -830,3 +830,24 @@ LEVELS.push({name:'Cânion do Sol',theme:21,music:17,camMax:396,zoom:1.15,limit:
  checkpoints:[[65,0],[104,0],[163,0],[205.5,0],[236.5,0],[264,0],[300,0],[345,6.6]],goal:{x:389,top:13.2},crystalGoal:1,start:{x:0,y:0}});
 blockStd(LEVELS[LEVELS.length-1]);
 STORY.worlds.push({kicker:'Mundo 20 · Terra Nova',title:'Cânion do Sol',text:'Um cânion de pedra vermelha acorda com o sol da manhã — e ele não quer visitas! O chão desmorona, pedras rolam ladeira abaixo, pilões de rocha esmagam e paredes se fecham. Corra, pule e chegue ao arco de pedra onde brilha a Semente de Luz.'});
+/* ===== Terra Nova — Mundo 21: Raízes da Árvore Mãe (plano aprovado pelo dono, 05/11; escuro com brilho verde; chefe Aranha das Raízes no fim).
+   Parte 1: a descida. roots.bridges = semente que faz a raiz crescer e virar ponte {seed:[x,y],l,r,t,dur};
+   roots.spores = esporos que acendem prateleiras de fungo {at:[x,y],shelves:[[l,r,t],...],dur}; springs = cogumelos que pulam; 6º valor 'root' = raiz grossa deitada. */
+LEVELS.push({name:'Raízes da Árvore Mãe',theme:22,music:18,camMax:372,limit:900,es:1.05,coinN:100,
+ roots:{bridges:[{seed:[24,5.1],l:26,r:36,t:4.2,dur:9},{seed:[118.5,.9],l:120,r:132,t:0,dur:9}],
+  spores:[{at:[72.5,3.6],shelves:[[77,80,3.4],[83,86,4.6],[89,92,3.4]],dur:8}],
+  /* parte 2: cipós [x do pino,y do pino,comprimento], raízes que sobem [x,largura,y baixo,y alto,velocidade],
+     raízes de espinho [x,largura,y,período,atraso], aranhinhas no fio [x,y do teto,y mais baixo] */
+  vines:[[175.4,9.6,6.8],[261.8,12.2,7]],lifts:[[201.6,2.4,0,4.6,.9]],thorns:[[191,1.4,0,2.6,0],[197,1.4,0,2.6,1.3],[285.5,1.4,4.2,2.4,.6]],
+  spiders:[[194,9,1.4],[281,13,5.6],[292,13,5.6]],
+  /* parte 3: arena da Aranha das Raízes (paredes de raiz em w0 e w1, sementes que derrubam a aranha) */
+  boss:{x0:316,x1:346,floor:4.2,top:13.6,w0:314.4,w1:346.8,seeds:[321,331,341]}},
+ solids:[[-14,14,6],[14,26,4.2],[36,52,4.2],[52,74,2.4],[93.5,120,0],[103,110,6.4,0,0,'root'],[132,172,0],[172,183,-6],[183,200.4,0],[202.8,222,4.2],[237.3,256,4.2],[256,270,0],[270,374,4.2],[309.5,313,9,0,0,'root']],
+ floats:[],movers:[{cx:226,range:2,speed:.9,top:4.2,w:3.4},{cx:233.5,range:2,speed:1.15,top:4.2,w:3.4}],crumbles:[],feathers:[],spikes:[],springs:[[50.5,4.2],[100.5,0],[172.5,-6],[256.5,0],[307.5,4.2]],
+ enemies:[{t:'beetle',x0:40,x1:47,y:4.2,s:1.1},{t:'bat',x0:56,x1:66,y:5.5,s:1.2},{t:'beetle',x0:58,x1:68,y:2.4,s:1.2},{t:'beetle',x0:111,x1:116,y:0,s:1.3},{t:'bat',x0:124,x1:130,y:3,s:1.3},{t:'beetle',x0:136,x1:146,y:0,s:1.3},{t:'beetle',x0:207,x1:218,y:4.2,s:1.3},{t:'bat',x0:244,x1:254,y:7.5,s:1.3},{t:'beetle',x0:294,x1:300,y:4.2,s:1.3}],
+ blocks:[{x:6,y:8.4,t:'q',c:'mushroom'},{x:19,y:6.6,t:'q',c:'coin'},{x:60,y:4.8,t:'brick'},{x:61,y:4.8,t:'q',c:'flower'},{x:62,y:4.8,t:'brick'},{x:140,y:2.4,t:'q',c:'fox'}],
+ coins:[['r',2,12,6.9,5],['r',15,24,5.1,4],['r',27,35,5.6,5],['r',37,46,5.1,4],['r',53,58,3.3,3],['r',63,72,3.3,4],['r',77.5,79.5,4.3,2],['r',83.5,85.5,5.5,2],['r',89.5,91.5,4.3,2],['r',111,117,.9,4],['r',104,109.5,7.3,4],['r',121,131,1.4,5],['r',134,148,.9,5],['r',152,170,.9,6],['r',173,182,-5.1,4],['r',187,190,.9,2],['r',193,196,.9,2],['r',199,201,.9,2],['r',205,220,5.1,6],['r',224,238,5.6,6],['r',241,255,5.1,5],['r',258,269,.9,4],['r',272,283,5.1,4],['r',287,296,5.1,4],['r',301,306,5.1,3],['r',310,312.5,9.9,2],['r',349,366,5.1,6]],
+ gems:[[108,8.2],[267.8,9],[311.5,10.6]],
+ checkpoints:[[38,4.2],[98,0],[158,0],[188,0],[242,4.2],[276,4.2],[304,4.2],[351,4.2]],goal:{x:368,top:4.2},start:{x:0,y:6}});
+blockStd(LEVELS[LEVELS.length-1]);
+STORY.worlds.push({kicker:'Mundo 21 · Terra Nova',title:'Raízes da Árvore Mãe',text:'Embaixo da Árvore Mãe, as raízes guardam um mundo escuro que brilha: cogumelos de luz, esporos no ar e sementes que fazem raízes crescerem. Lá no fundo, no coração das raízes, mora a Aranha das Raízes. O Kuro precisa passar por ela.'});

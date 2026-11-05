@@ -157,6 +157,7 @@ function buildDecor(th){
   if(th.name==='ruins'){buildDecorRuins(th);return}
   if(th.name==='peaks'){buildDecorPeaks(th);return}
   var r=rnd(77+LV.theme*13),dummy=new T.Object3D(),col=new T.Color(),i,x;
+  if(th.roots){rtDecor(th,r,dummy);return}/* Mundo 21: raízes, cogumelos que brilham */
   if(th.name==='cave'){buildCaveDecor(th,r,dummy,col);return}
   var snow=th.name==='peaks',list=[];
   for(x=(th.name==='trail'?17:-20);x<215;x+=(snow?2.6:3.1)+r()*(snow?2.4:3.2)){

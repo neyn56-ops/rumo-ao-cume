@@ -265,6 +265,10 @@ function buildLush(th,now){
       mat:{base:'#0b3010',mid:'#24802a',tip:'#9ee05a'}});
     motes({n:1000,x0:-20,x1:xe,y0:-1,y1:11,z0:-6,z1:2,color:0xd8ff7a,size:.14,drift:.9,tw:1});/* vaga-lumes */
     if(!lite)lightRays({gap:9,w0:2,w1:5,h:34,y:10,z0:-10,z1:-4,tilt:-.38,color:0xfff2b8,op:.3});
+  }else if(th.roots){/* Raízes: musgo e esporos que brilham no ar */
+    grassField({bands:[[-4.8,-3.2,5,.25,.6]],wid:[.22,.34],mat:{base:'#0a2410',mid:'#1e5a2a',tip:'#4ea860',sway:.5,spd:.6},seed:43});
+    motes({n:420,x0:-10,x1:xe,y0:0,y1:13,z0:-12,z1:2,color:0x7affc0,size:.09,drift:.6,tw:.9});
+    motes({n:120,x0:-10,x1:xe,y0:0,y1:9,z0:-6,z1:2,color:0x9ad8ff,size:.06,drift:.8,op:.5,seed:13});
   }else if(th.name==='cave'){
     grassField({bands:[[-4.8,-3.2,5,.25,.6]],wid:[.22,.34],mat:{base:'#0e2a0a',mid:'#24601a',tip:'#5ea040',sway:.5,spd:.6},seed:41});/* plantinhas verdes */
     motes({n:380,x0:-10,x1:xe,y0:0,y1:13,z0:-12,z1:2,color:0x8fd0ff,size:.08,drift:.7,tw:.7});/* poeira de cristal */
@@ -416,7 +420,7 @@ function buildFar(th){
     gg.addColorStop(0,'rgba(255,255,255,1)');gg.addColorStop(1,'rgba(255,255,255,0)');
     gx.fillStyle=gg;gx.fillRect(0,0,64,64);
     var gt=new T.CanvasTexture(gc);gt.encoding=T.sRGBEncoding;
-    var cols=[0x58b8ff,0x7ac8ff,0x3a8aff,0xffc28a];
+    var cols=th.roots?[0x40ffb0,0x60e0ff,0x2ac890,0xb0ff70]:[0x58b8ff,0x7ac8ff,0x3a8aff,0xffc28a];
     for(i=0;i<30;i++){
       var s=new T.Sprite(new T.SpriteMaterial({map:gt,transparent:true,blending:T.AdditiveBlending,depthWrite:false,color:cols[i%4],opacity:.45,fog:false}));
       var sz=4+r()*8;s.scale.set(sz,sz,1);s.position.set(-230+r()*460,r()*18,-34-r()*26);farG.add(s);
@@ -658,6 +662,7 @@ function buildMovers(){
       trMats();m=new T.Group();for(var px=-d.w/2+.21;px<d.w/2;px+=.42){var pl=mesh(new T.BoxGeometry(.38,.14,2.1),trPlankM,true,true);pl.position.set(px,.12,0);m.add(pl)}
       [-.8,.8].forEach(function(z){var bm=mesh(new T.BoxGeometry(d.w,.14,.14),trBarkM,true,false);bm.position.set(0,-.02,z);m.add(bm);[-1,1].forEach(function(sd){var v=mesh(new T.CylinderGeometry(.03,.03,14,4),vineM,false,false);v.position.set(sd*(d.w/2-.15),7,z);m.add(v)})});add(m);
     }else if(curTheme.aurora&&typeof auFloeMesh==='function'){m=auFloeMesh(d.w);add(m)}
+    else if(curTheme.roots&&typeof rtMoverMesh==='function'){m=rtMoverMesh(d.w);add(m)}/* Mundo 21: raiz que anda */
     else if(curTheme.wreck&&typeof wkDebrisMesh==='function'){m=wkDebrisMesh(d.w,d.kind);add(m)}/* Mundo 19: destroços boiando *//* Mundo 18: bloco de gelo boiando que anda */
     else{m=mesh(boxGeo(d.w,.45,3.2,1.2),woodM);add(m)}
     var o={kind:d.kind,cx:d.cx,range:d.range,speed:d.speed,w:d.w,t:d.top,b:d.top-.45,oneway:false,flt:true,mover:true,x:d.cx,px:d.cx,l:d.cx-d.w/2,r:d.cx+d.w/2,mesh:m};
@@ -696,6 +701,10 @@ function buildSprings(){
     var coil=new T.Group();g.add(coil);
     for(var i=0;i<4;i++){var t=mesh(new T.TorusGeometry(.2,.04,6,14),coilM);t.rotation.x=Math.PI/2;t.position.y=.12+i*.07;coil.add(t)}
     var pad=mesh(new T.CylinderGeometry(.5,.5,.1,16),padM);pad.position.y=.42;g.add(pad);
+    if(curTheme.roots){/* Raízes: cogumelo grande que brilha (o chapéu é a parte que afunda) */
+      coil.visible=false;base.visible=false;var rA=rtMats(),st=mesh(new T.CylinderGeometry(.14,.2,.42,8),rA.stem);st.position.y=.21;g.add(st);
+      pad.geometry=new T.SphereGeometry(.62,14,8,0,Math.PI*2,0,Math.PI/2);pad.scale.y=.6;pad.material=rA.capB;
+      for(var sp2=0;sp2<5;sp2++){var dt2=mesh(new T.SphereGeometry(.07,6,4),rA.stem,false,false);var aa=sp2*1.26;dt2.position.set(Math.cos(aa)*.38,.22,Math.sin(aa)*.38);pad.add(dt2)}}
     var plume=null;if(curTheme.canyon){/* Cânion do Sol: gêiser de areia — cratera de pedra, sem mola; a areia esguicha ao pular */
       coil.visible=false;base.material=cnMats().crust;pad.material=M(0xe0a070,.95);var cr=mesh(new T.TorusGeometry(.55,.16,6,14),cnMats().rockC);cr.rotation.x=Math.PI/2;cr.position.y=.12;g.add(cr);
       plume=new T.Mesh(new T.ConeGeometry(.5,3,10,1,true),new T.MeshBasicMaterial({color:0xf0c890,transparent:true,opacity:.5,depthWrite:false}));plume.rotation.x=Math.PI;plume.position.y=1.9;plume.visible=false;g.add(plume)}

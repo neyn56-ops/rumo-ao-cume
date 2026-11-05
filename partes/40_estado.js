@@ -43,6 +43,7 @@ function toast(msg){
 }
 function spawn(pt){
   if(curTheme.canyon&&typeof cnReset==='function')cnReset();/* Cânion: renasce com a gravidade normal */
+  if(curTheme.roots&&typeof rtReset==='function')rtReset();/* Raízes: pontes e fungos voltam ao começo */
   if(LV&&LV.kites)sumMechReset();
   if(volEsc&&volEsc.on){volEsc.on=false;volEsc.wall.visible=false;volEsc.gl.visible=false}/* renasceu: a parede recomeça um pouco atrás dele */
   if(fox&&fox.state==='ride'&&fox.vis){if(W)W.remove(fox.vis.g);fox=null}P.mount=false;P.boostT=0;P.lastDryX=undefined;
@@ -65,6 +66,7 @@ function resetState(){
   if(curTheme.aurora&&typeof aurReset==='function')aurReset();
   if(curTheme.wreck&&typeof wkReset==='function')wkReset();
   if(curTheme.canyon&&typeof cnReset==='function')cnReset();
+  if(curTheme.roots&&typeof rtReset==='function')rtReset();
   resetBoss();resetDrops();P.swimToast=false;$('airStat').hidden=true;airBubs.forEach(function(b){b.on=true;b.cd=0;b.mesh.visible=true});
   respawn={x:LV.start.x,y:LV.start.y};placeEnemies(respawn.x);
   setHearts();$('coinN').textContent=bank;$('gemN').textContent='0';$('timeN').textContent='0:00';

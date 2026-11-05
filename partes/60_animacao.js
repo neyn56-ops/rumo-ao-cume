@@ -437,8 +437,9 @@ function updateCamera(dt,snap){
   if(LV&&LV.rooms){for(var ri=0;ri<LV.rooms.length;ri++){var rm=LV.rooms[ri];if(P.x>rm.a){var hw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect,lo=rm.l+hw,hi=rm.r-hw;if(lo>hi)lo=hi=(rm.l+rm.r)/2;tx=clamp(P.x,lo,hi);ty=2.6;break}}}
   if(volEsc&&volEsc.on){var ehw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;tx=Math.min(LV.camMax,Math.max(tx,volEsc.wx+ehw-3))}
   if(LV&&LV.boss&&!(boss&&boss.v2&&boss.state==='dead')){var bhw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;tx=Math.min(tx,LV.boss.arena[1]+.4-bhw)}
-  var zArena=(LV&&LV.boss&&LV.boss.v2&&P.arena&&boss&&boss.state!=='dead')?1.2:(sumEnd?sumEnd.zoom:(opn?opn.zoom:1));var wkL=typeof WK!=='undefined'&&WK&&WK.camLock!=null&&curTheme.wreck;if(wkL)zArena=1.55;/* luta do Mundo 19: câmera afasta para mostrar o convés inteiro */cam.zk=(cam.zk||1)+(zArena-(cam.zk||1))*(snap?1:1-Math.exp(-dt*2));
+  var zArena=(LV&&LV.boss&&LV.boss.v2&&P.arena&&boss&&boss.state!=='dead')?1.2:(sumEnd?sumEnd.zoom:(opn?opn.zoom:1));var wkL=typeof WK!=='undefined'&&WK&&WK.camLock!=null&&curTheme.wreck;if(wkL)zArena=1.55;var rtL=typeof RT!=='undefined'&&RT&&RT.camLock&&curTheme.roots;if(rtL)zArena=RT.camLock.z;/* luta do Mundo 19: câmera afasta para mostrar o convés inteiro */cam.zk=(cam.zk||1)+(zArena-(cam.zk||1))*(snap?1:1-Math.exp(-dt*2));
   if(wkL){tx=WK.camLock;ty=LV.captain.deck+2.6}
+  else if(rtL){tx=RT.camLock.x;ty=RT.camLock.y}/* luta do Mundo 21: arena inteira na tela */
   else if(zArena>1&&!opn){var hw2=cam.dist*cam.zk*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;tx=clamp((P.x+boss.x)/2,P.x-hw2+2.5,P.x+hw2-2.5);tx=clamp(tx,LV.boss.arena[0]-.4+hw2,LV.boss.arena[1]+.4-hw2);ty=LV.boss.top+3.2}/* luta no Cume: a câmera abre e mostra o Kuro e o Rei juntos */
   if(cfgView){tx=cfgView.x;ty=cfgView.y}
   if(sumEnd){tx=sumEnd.cx;ty=sumEnd.cy}

@@ -556,5 +556,58 @@ for(k=0;k<90*60&&state==='play';k++){var ahead=P.x+(run?1.5:1.0);var edge=P.grou
  step(STEP);if(P.x>maxx)maxx=P.x}
 hurt=h0;keys.right=keys.run=keys.jump=false;out.push((run?'correndo':'andando')+': estado='+state+' x='+P.x.toFixed(1)+' y='+P.y.toFixed(1)+' max='+maxx.toFixed(1)+' batidas='+hits.join(',')+' t='+(k/90).toFixed(1)+'s')});return out.join(' | ')})()`);const r3=await E(`(function(){startLevel(19);beginPlay();card.hidden=true;state='play';P.inv=1e9;P.x=331;P.y=6.6;P.vy=0;keys.right=true;for(var k=0;k<90*1.2;k++)step(STEP);keys.right=false;var c=crumbles.filter(function(q){return q.l>330&&q.l<331})[0];return 'tábua cai '+(c&&c.state>=2?'ok':'NÃO')})()`);
   marca('Mundo 20: Cânion do Sol — pedras rolando, barrancos, gêiser, pilões, teto que desce, troncos, subida, ponte, Semente',/andando: estado=win.*correndo: estado=win/.test(g3)&&!/NÃO/.test(r3)&&/estado=win.*estado=win/.test(g)&&!/NÃO/.test(r)&&/andando: estado=play x=265.*correndo: estado=play x=265/.test(g2)&&!/NÃO/.test(r2),g+' || '+r+' || '+g2+' || '+r2+' || '+g3+' || '+r3)}
+ /* 64: Mundo 21 — Raízes da Árvore Mãe (parte 1): robô desce andando e correndo; semente faz a raiz virar ponte e ela murcha; esporo acende os fungos */
+ {const g=await E(`(function(){var out=[];[0,1].forEach(function(run){startLevel(20);beginPlay();card.hidden=true;state='play';hearts=99;enemies.forEach(function(e){e.alive=false;e.x=-999});
+P.x=0;P.y=6;P.vy=0;var hits=[],h0=hurt;hurt=function(){if(P.inv<=0)hits.push(P.x.toFixed(0));return h0.apply(this,arguments)};
+function sol(x,y){return solids.some(function(s){return !s.dead&&x>=s.l&&x<=s.r&&Math.abs(s.t-y)<.3})}
+keys.right=true;keys.run=!!run;var k,maxx=0;
+for(k=0;k<90*60&&state==='play'&&P.x<158;k++){var ahead=P.x+(run?1.5:1.0);var edge=P.grounded&&!sol(ahead,P.y);var up=P.grounded&&solids.some(function(s){return !s.dead&&s.t>P.y+.4&&s.t<P.y+2.6&&s.l>P.x&&s.l-P.x<1.3});
+ if((edge||up)&&P.grounded){keys.jump=true;P.jbuf=.12}else if(P.grounded||P.vy<0)keys.jump=false;
+ step(STEP);if(P.x>maxx)maxx=P.x}
+dyn=null;hurt=h0;keys.right=keys.run=keys.jump=false;out.push((run?'correndo':'andando')+': estado='+(P.x>=158?'win':state)+' x='+P.x.toFixed(1)+' y='+P.y.toFixed(1)+' max='+maxx.toFixed(1)+' batidas='+hits.join(',')+' t='+(k/90).toFixed(1)+'s')});return out.join(' | ')})()`);const r=await E(`(function(){var o=[],k;startLevel(20);beginPlay();card.hidden=true;state='play';P.inv=1e9;var q=RT.grow[0];P.x=24;P.y=4.2;P.vy=0;for(k=0;k<90*1.2;k++)step(STEP);o.push('semente faz ponte '+(!q.so.dead&&q.so.r>=35.9?'ok':'NÃO'));
+ for(k=0;k<90*12;k++){P.x=20;P.y=4.2;step(STEP)}o.push('ponte murcha '+(q.so.dead?'ok':'NÃO'));
+ startLevel(20);beginPlay();card.hidden=true;state='play';P.inv=1e9;var sp=RT.spores[0];P.x=72.5;P.y=2.4;P.vy=0;for(k=0;k<20;k++)step(STEP);o.push('esporo acende fungos '+(sp.sh.every(function(h){return !h.so.dead})?'ok':'NÃO'));
+ return o.join(' | ')})()`);
+ const g2=await E(`(function(){var o=[];[[0,165,0,183.5,171.8],[1,250,4.2,270.5,255.8]].forEach(function(c){startLevel(20);beginPlay();card.hidden=true;state='play';P.inv=1e9;hearts=99;enemies.forEach(function(e){e.alive=false;e.x=-999});RT.spiders.forEach(function(s){s.alive=false});
+ var v=RT.vines[c[0]],k,edge=c[4],att=0,maxA=0;P.x=c[1];P.y=c[2];P.vy=0;keys.right=true;
+ for(k=0;k<90*30&&state==='play';k++){
+  if(!RT.sw&&!att){if(P.x>=edge-.2&&P.grounded){keys.right=false;var tx=v.px+Math.sin(v.a)*v.L;if(Math.abs(v.a)<.06&&v.w<0){keys.right=true;keys.jump=true;P.jbuf=.12}}else if(P.grounded)keys.right=true}
+  if(RT.sw){att=1;keys.jump=false;keys.run=false;keys.right=v.w>0;keys.left=v.w<0;maxA=Math.max(maxA,v.a);if(v.a>.75&&v.w>0){keys.left=false;keys.right=true;keys.jump=true}}
+  else if(att){keys.left=false;keys.right=true;if(P.grounded)keys.jump=false}
+  if(!RT.sw&&P.vy<0&&!att)keys.jump=false;
+  step(STEP);if(att&&P.grounded&&P.x>c[3])break}
+ keys.right=keys.left=keys.jump=keys.run=false;o.push('cipó '+(c[0]+1)+': segurou='+att+' x='+P.x.toFixed(1)+' y='+P.y.toFixed(1)+' estado='+state+' maxA='+maxA.toFixed(2)+(P.x>c[3]&&P.y>=c[2]-.1?' ok':' NÃO'))});return o.join(' | ')})()`);const g3=await E(`(function(){var out=[];[[0,184,0,256],[1,184,0,256],[0,271,4.2,298],[1,271,4.2,298]].forEach(function(c){var run=c[0];startLevel(20);beginPlay();card.hidden=true;state='play';hearts=99;enemies.forEach(function(e){e.alive=false;e.x=-999});
+P.x=c[1];P.y=c[2];P.vy=0;var hits=[],h0=hurt;hurt=function(){if(P.inv<=0)hits.push(P.x.toFixed(0));return h0.apply(this,arguments)};
+function sol(x,y){return solids.some(function(s){return !s.dead&&x>=s.l&&x<=s.r&&Math.abs(s.t-y)<.3})}
+var L=RT.lifts[0],k;keys.run=!!run;
+for(k=0;k<90*60&&state==='play'&&P.x<c[3];k++){var go=true,ctl=0;
+ RT.thorns.forEach(function(q){var d=q.x-q.w/2-P.x;if(d>0&&d<1.2&&P.grounded&&Math.abs(P.y-q.y)<.2){var cc=(RT.t+q.off)%q.per;if(!(cc<q.per*.45-(q.w+2)/(run?7:4.6)-.1))go=false}});
+ if(P.x>197&&P.x<203.2&&P.y<4){ctl=1;if(P.onPlat===L.so){keys.right=L.so.t>4.35;keys.jump=false}else{var ok=L.so.t<.3;keys.right=ok||P.x<199.4;if(!ok&&P.x>199.2)keys.right=false;if(P.grounded&&P.x>200&&ok){keys.jump=false}}}
+ if(!ctl){keys.right=go;var edge=P.grounded&&!sol(P.x+(run?1.5:1.0),P.y);var up=P.grounded&&solids.some(function(s){return !s.dead&&s.t>P.y+.4&&s.t<P.y+2.6&&s.l>P.x&&s.l-P.x<1.3});
+  if(P.x>219&&P.x<238.5&&P.grounded&&Math.abs(P.y-4.2)<.2){var me=solids.filter(function(s){return !s.dead&&P.x>=s.l-.05&&P.x<=s.r+.05&&Math.abs(s.t-P.y)<.2}).sort(function(a,b){return b.r-a.r})[0];
+  var nx=solids.filter(function(s){return !s.dead&&me&&s!==me&&s.l>me.l&&Math.abs(s.t-4.2)<.2&&s.r>me.r}).sort(function(a,b){return a.l-b.l})[0];
+  if(me&&nx&&nx.l-me.r<.5){keys.right=true}else if(me){keys.right=P.x<me.r-.9}edge=false}
+if(go&&(edge||up)&&P.grounded){keys.jump=true;P.jbuf=.12}else if(P.grounded||P.vy<0)keys.jump=false}
+ step(STEP)}
+dyn=null;hurt=h0;keys.right=keys.run=keys.jump=false;out.push((run?'correndo':'andando')+' '+c[1]+': x='+P.x.toFixed(1)+' y='+P.y.toFixed(1)+' estado='+state+' batidas='+hits.join(',')+((P.x>=c[3]||state==='win')&&state!=='dying'?' ok':' NÃO'))});return out.join(' | ')})()`);const r2=await E(`(function(){var o=[],k;startLevel(20);beginPlay();card.hidden=true;state='play';P.inv=0;hearts=9;var h0=hearts,q=RT.thorns[0];for(k=0;k<90*4&&hearts===h0;k++){P.x=q.x;P.y=0;step(STEP)}o.push('espinho machuca '+(hearts<h0?'ok':'NÃO'));
+ startLevel(20);beginPlay();card.hidden=true;state='play';P.inv=0;hearts=9;h0=hearts;var s=RT.spiders[0];for(k=0;k<90*3&&hearts===h0;k++){P.x=s.x;P.y=0;step(STEP)}o.push('aranha desce e machuca '+(hearts<h0?'ok':'NÃO'));
+ startLevel(20);beginPlay();card.hidden=true;state='play';P.inv=1e9;s=RT.spiders[0];s.st='wait';s.t=5;s.y=s.low;P.x=s.x;P.y=s.low+1.2;P.vy=-3;for(k=0;k<30;k++)step(STEP);o.push('pisar na aranha '+(!s.alive?'ok':'NÃO'));
+ startLevel(20);beginPlay();card.hidden=true;state='play';P.inv=1e9;P.x=176;P.y=-6;P.vy=0;keys.left=true;for(k=0;k<90*5;k++){step(STEP);if(P.grounded&&P.x<172&&P.y>-1)break}keys.left=false;o.push('volta do fundo do cipó '+(P.x<172&&P.y>-1?'ok':'NÃO'));
+ return o.join(' | ')})()`);
+ const g4=await E(`(function(){startLevel(20);beginPlay();card.hidden=true;state='play';hearts=99;P.inv=0;enemies.forEach(function(e){e.alive=false;e.x=-999});
+var b=RT.boss,k,hits=0,h0=hurt,log=[];hurt=function(){if(P.inv<=0)hits++;return h0.apply(this,arguments)};P.x=310;P.y=4.2;P.vy=0;
+function go(tx){keys.right=P.x<tx-.15;keys.left=P.x>tx+.15}
+for(k=0;k<90*120&&state==='play'&&!b.won;k++){keys.jump=false;
+ if(b.st==='wait'||b.st==='intro'){go(320)}
+ else if(b.st==='stun'){if(Math.abs(P.x-b.x)>2.4)go(b.x+(P.x<b.x?-2:2));else{go(b.x);if(P.grounded){keys.jump=true;P.jbuf=.12}}}
+ else if(b.st==='warn'||b.st==='drop'||b.st==='bite'){go(b.x+(P.x<b.x?-3.2:3.2))}
+ else{var s=b.seeds.filter(function(q){return q.st==='ready'}).sort(function(a,c){return Math.abs(a.x-P.x)-Math.abs(c.x-P.x)})[0];
+  if(s){var stand=s.x-1.4;if(Math.abs(b.x-stand)<.7&&Math.abs(P.x-stand)<.4)go(s.x);else go(stand)}else go(331)}
+ if(P.grounded&&b.webs.some(function(w){return Math.abs(P.x-w.x)<1.3})&&(keys.left||keys.right)){keys.jump=true;P.jbuf=.12}
+ step(STEP);if(k%90==0)log.push(b.st[0]+b.hp)}
+hurt=h0;dyn=null;keys.left=keys.right=keys.jump=false;
+var won=b.won;for(k=0;k<90*3;k++){keys.right=true;step(STEP)}keys.right=false;
+return 'venceu='+won+' hp='+b.hp+' batidas='+hits+' t='+(k/90).toFixed(0)+' x='+P.x.toFixed(1)+' w1aberta='+b.w1.dead+' '+log.join('')})()`);const r4=await E(`(function(){var o=[],k;startLevel(20);beginPlay();card.hidden=true;state='play';P.inv=1e9;var b=RT.boss;P.x=320;P.y=4.2;for(k=0;k<30;k++)step(STEP);var ok1=!b.w0.dead;resetState();var ok2=b.w0.dead&&!b.w1.dead&&b.st==='wait';b.won=true;resetState();var ok3=b.w0.dead&&b.w1.dead;return 'arena fecha '+(ok1?'ok':'NÃO')+' | morreu na luta: abre a entrada '+(ok2?'ok':'NÃO')+' | vencida e morreu: tudo aberto '+(ok3?'ok':'NÃO')})()`);
+  marca('Mundo 21: Raízes — semente-ponte, esporos, cogumelos, cipós, raiz que sobe, raízes que andam, espinhos, aranhas, Aranha das Raízes',/venceu=true.*w1aberta=true/.test(g4)&&/x=3(4[89]|[5-6]\d)/.test(g4)&&!/NÃO/.test(r4)&&/andando: estado=win.*correndo: estado=win/.test(g)&&!/NÃO/.test(r)&&!/NÃO/.test(g2+g3+r2),g+' || '+r+' || '+g2+' || '+g3+' || '+r2+' || '+g4+' || '+r4)}
  marca('sem erros de JavaScript durante os testes',!erros.length,erros.slice(0,3).join('; '));await pg.close();
  await b.close();const f=res.filter(r=>!r[1]).length;console.log('\n'+(f?'❌ '+f+' teste(s) falharam':'✅ todos os '+res.length+' testes passaram'));process.exit(f?1:0)})();
