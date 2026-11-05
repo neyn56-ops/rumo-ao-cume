@@ -1993,32 +1993,31 @@ LEVELS.push({name:'O Naufrágio',theme:20,music:16,camMax:416,limit:900,es:1.05,
 blockStd(LEVELS[LEVELS.length-1]);
 STORY.worlds.push({kicker:'Mundo 19 · Terra Nova',title:'O Naufrágio',text:'Uma tempestade partiu um navio pirata ao meio: a proa encalhou na praia e a popa ficou boiando no mar. Suba pelos caixotes e pelo convés, escale o mastro até o cesto da gávea, fuja dos caranguejos e das gaivotas — e cuidado com os raios!'});
 
-/* ===== Terra Nova — Mundo 20: Cânion Invertido (plano aprovado pelo dono, 05/11; manhã, sem chefe). Parte 1: o fundo do cânion =====
-   Chão em y 0 e teto de pedra com a parte de baixo em y 8 (5º valor 'roof'); canyon.A = linha do meio do espelho da gravidade.
-   Setas [x,y,'up'|'down']: 'up' vira a gravidade para o teto, 'down' traz de volta. Buracos do teto dão para o céu (cair neles é queda). */
-LEVELS.push({name:'Cânion Invertido',theme:21,music:17,camMax:392,zoom:1.3,limit:900,es:1.05,noLift:1,coinN:100,
- canyon:{A:4,free:312,seed:[381,11.2],arrows:[[12,.9,'up'],[31,6.9,'down'],[58,.9,'up'],[72,6.9,'down'],[91,.9,'up'],[113,6.9,'down'],
-  /* parte 2: as gargantas — setas que trocam sozinhas [x,y,'up'|'down',segundos,atraso] e pedras que caem para cima [x,largura] */
-  [156,.9,'up',1.6,0,'up'],[190,6.9,'down'],[210,.9,'up',1.3,.6,'up'],[226,6.9,'up',1.5,0,'down'],[236,.9,'up'],[250,6.9,'down'],[259.5,.9,'up'],[290,6.9,'down'],
-  /* parte 3: a subida até o arco — pedras soltas no ar (anda em cima e embaixo), abismo embaixo e céu em cima */
-  [315,.9,'up'],[340.5,5.3,'up',1.4,0,'up'],[347,5.3,'down'],[353.5,2.7,'up']],
-  rocks:[[136,1.6],[150,1.6],[178,1.4],[182,1.4],[205,1.8],[228,1.4],[276,1.4],[280,1.4],[284,1.4]]},
- solids:[[-14,42,0],[46,62,0],[68,86,0],[90,104,0],[112,160,0],[166,184,0],[192,214,0],[222,240,0],[246,262,0],[270,316,0],[316.5,323,4.6,4,0,'slab'],[326,334,4.6,4,0,'slab'],[333,339,6.6,6,0,'slab'],[342,348,6.6,6,0,'slab'],[348.5,355,2,1.4,0,'slab'],[355,362,9.6,9,0,'slab'],[363,370,11.1,10.5,0,'slab'],[371,391,14,12,0,'arch'],
-  [-14,23,14,8,0,'roof'],[27,52,14,8,0,'roof'],[56,78,14,8,0,'roof'],[81,100,14,8,0,'roof'],[103,124,14,8,0,'roof'],[129,170,14,8,0,'roof'],[174,200,14,8,0,'roof'],[204,232,14,8,0,'roof'],[236,256,14,8,0,'roof'],[262,300,14,8,0,'roof']],
- floats:[],movers:[],crumbles:[],feathers:[],spikes:[],springs:[],
- enemies:[{t:'beetle',x0:33,x1:41,y:0,s:1.1},{t:'bat',x0:38,x1:40,y:7.35,s:1.4,hang:1},{t:'beetle',x0:48,x1:56,y:0,s:1.3},
-  {t:'bat',x0:65,x1:67,y:7.35,s:1.5,hang:1},{t:'bat',x0:81,x1:83,y:7.35,s:1.5,hang:1},{t:'beetle',x0:70,x1:80,y:0,s:1.3},
-  {t:'bat',x0:107,x1:109,y:7.35,s:1.5,hang:1},{t:'frog',x0:128,x1:140,y:0},{t:'bat',x0:135,x1:137,y:7.35,s:1.6,hang:1},
-  {t:'bat',x0:186,x1:188,y:7.35,s:1.6,hang:1},{t:'beetle',x0:194,x1:202,y:0,s:1.4},{t:'bat',x0:219,x1:221,y:7.35,s:1.6,hang:1},{t:'frog',x0:224,x1:238,y:0},
-  {t:'bat',x0:243,x1:245,y:7.35,s:1.7,hang:1},{t:'beetle',x0:252,x1:260,y:0,s:1.4},{t:'bat',x0:268,x1:272,y:4.2,s:1.6},{t:'bat',x0:294,x1:296,y:7.35,s:1.6,hang:1},
-  {t:'bat',x0:323,x1:333,y:1.6,s:1.3},{t:'bat',x0:359,x1:361,y:8.35,s:1.5,hang:1},{t:'bat',x0:364,x1:374,y:7.4,s:1.4}],
- blocks:[{x:6,y:2.4,t:'q',c:'mushroom'},{x:52,y:2.4,t:'q',c:'fruit'},{x:120,y:2.4,t:'brick'},{x:121,y:2.4,t:'q',c:'coin'},{x:122,y:2.4,t:'brick'},{x:132,y:2.4,t:'q',c:'flower'},{x:197,y:2.4,t:'q',c:'mushroom'},{x:256,y:2.4,t:'brick'},{x:257,y:2.4,t:'q',c:'coin'}],
- coins:[['r',2,10,.9,4],['r',15,22,7.1,4],['r',27.5,30,7.1,2],['r',34,41,.9,4],['r',47,57,.9,5],['r',53,55,7.1,2],['r',58,71,7.1,6],
-  ['r',76,85,.9,5],['r',92,99,7.1,4],['r',101,102,7.1,1],['r',104,112,7.1,4],['r',114,130,.9,6],['r',138,148,.9,4],['r',161,169,7.1,4],['r',175,189,7.1,6],['r',193,203,.9,5],['r',215,231,7.1,7],['r',224,239,.9,5],['r',237,249,7.1,5],['r',251,258,.9,3],['r',263,289,7.1,10],['r',271,274,.9,2],['r',287,298,.9,4],['r',304,313,.9,5],['r',318,322,3.1,3],['r',327,333,3.1,4],['r',335,338,5.1,2],['r',343,346,5.1,2],['r',349.5,353,2.9,3],['r',356,361,8.1,3],['r',372,378,11.1,3]],
- gems:[[70,7.2],[229,7.2],[366.5,9.6]],
- checkpoints:[[47,0],[69,0],[114,0],[153,0],[194,0],[247,0],[302,0],[350,2]],goal:{x:381,top:12},crystalGoal:1,start:{x:0,y:0}});
+/* ===== Terra Nova — Mundo 20: Cânion do Sol (refeito a pedido do dono, 05/11: fase no sentido normal, sem virar a gravidade;
+   o perigo vem do cânion: barrancos que desmoronam, pedras rolando, pilões que esmagam, paredes que fecham...). Manhã, sem chefe.
+   Parte 1: o fundo do cânion — barrancos que desmoronam (crumbles no chão), pedras rolando (canyon.boulders [de x, até x, segundos, atraso]),
+   escorpiões, gêiser de areia (mola) até um cristal. canyon.free negativo = a câmera segue o Kuro na altura desde o começo. */
+LEVELS.push({name:'Cânion do Sol',theme:21,music:17,camMax:396,zoom:1.15,limit:900,es:1.05,noLift:1,coinN:110,
+ canyon:{A:4,free:-20,camUp:2.1,arrows:[],rocks:[],boulders:[[58,36,4.2,0],[89,77.6,3.2,1.5],[128,106,3.8,.8]],
+  /* parte 2: a garganta — pilões de pedra [x,largura,altura parado,segundos parado,atraso,aviso] (o largo 215 é o teto que desce),
+     troncos balançando [x do pino,y do pino,comprimento,abertura,velocidade,fase] */
+  crushers:[[170,2.2,4.6,1.4,0,.45],[176,2.2,4.6,1.4,.7,.45],[182,2.2,4.6,1.4,1.4,.45],[215,10,4.4,3.2,0,.9],[240,2.4,4.8,1.5,0,.45],[252,2.4,4.8,1.5,.9,.45],[271.5,2.6,5.0,2.2,0,.5]],
+  logs:[[228.1,9.2,7.4,.85,1.5,0],[246,9.2,7.6,.8,1.7,1.2]],
+  /* parte 3: a subida até o arco — saliências presas no paredão ('ledge'), ponte de corda que arrebenta (tábuas que caem), rajadas de areia, abutres */
+  bridge:[330,342.1,6.6],seed:[389,14.3]},
+ solids:[[-14,30,0],[34,60,0],[63,90,0],[72,77,1.6,0,0],[102.4,130,0],[134,200,0],[204,226,0],[230.2,260,0],[263.5,274,0],[274,282,5.5],[282,310,0],[312,315.4,1.8,1.2,0,'ledge'],[321,325,5,4.4,0,'ledge'],[327,330.1,6.6,6,0,'ledge'],[342.1,356,6.6,5.6,0,'ledge'],[361.4,366,9.8,9.2,0,'ledge'],[368,373,11.4,10.8,0,'ledge'],[373,393,13.2,12,0,'arch']],
+ floats:[],movers:[],crumbles:[[30,34,0],[90,92.6,0],[94,96.6,.8],[98,100.6,.4],[260,263.5,0],[317,321,3.4],[330.1,331.0,6.6,'plank'],[331.1,332.0,6.6,'plank'],[332.1,333.0,6.6,'plank'],[333.1,334.0,6.6,'plank'],[334.1,335.0,6.6,'plank'],[335.1,336.0,6.6,'plank'],[336.1,337.0,6.6,'plank'],[337.1,338.0,6.6,'plank'],[338.1,339.0,6.6,'plank'],[339.1,340.0,6.6,'plank'],[340.1,341.0,6.6,'plank'],[341.1,342.0,6.6,'plank'],[358,361.4,8.2]],feathers:[],spikes:[],springs:[[112,0]],
+ enemies:[{t:'beetle',x0:18,x1:27,y:0,s:1.1},{t:'beetle',x0:40,x1:50,y:0,s:1.2},{t:'beetle',x0:80,x1:88,y:0,s:1.3},
+  {t:'beetle',x0:108,x1:116,y:0,s:1.3},{t:'beetle',x0:140,x1:150,y:0,s:1.4},{t:'bat',x0:66,x1:76,y:4.5,s:1.3},
+  {t:'beetle',x0:186,x1:196,y:0,s:1.4},{t:'beetle',x0:233,x1:238,y:0,s:1.3},{t:'beetle',x0:288,x1:298,y:0,s:1.5},{t:'bat',x0:198,x1:210,y:5,s:1.4},
+  {t:'bat',x0:316,x1:328,y:8,s:1.3},{t:'bat',x0:346,x1:356,y:9.6,s:1.4},{t:'beetle',x0:349,x1:355,y:6.6,s:1.2},{t:'bat',x0:364,x1:372,y:13.5,s:1.4}],
+ blocks:[{x:6,y:2.4,t:'q',c:'mushroom'},{x:11,y:2.4,t:'brick'},{x:12,y:2.4,t:'q',c:'coin'},{x:13,y:2.4,t:'brick'},{x:74.5,y:4,t:'q',c:'fruit'},{x:142,y:2.4,t:'q',c:'fox'},{x:206,y:2.4,t:'q',c:'flower'},{x:234,y:2.4,t:'q',c:'mushroom'},{x:286,y:2.4,t:'brick'},{x:287,y:2.4,t:'q',c:'coin'}],
+ coins:[['r',2,10,.9,4],['r',14,27,.9,5],['r',31,33,1.6,2],['r',37,56,.9,6],['r',64,70,.9,3],['r',72.5,76.5,2.5,3],['r',90.5,100,2.4,5],['r',115,127,.9,5],['r',110,114,4.5,3],['r',131,133,1.6,2],['r',140,154,.9,5],['r',164,168,.9,3],['r',169,183,.9,6],['r',186,198,.9,5],['r',201,203,1.8,2],['r',205,209,.9,3],['r',210.5,219.5,.9,6],['r',222,225,.9,3],['r',227,230,2.4,3],['r',232,239,.9,4],['r',240,252,.9,5],['r',254,259,.9,3],['r',261,263,.9,2],['r',265,270,.9,3],['r',275,281,6.4,4],['r',283,298,.9,6],['r',301,309,.9,4],['r',312.5,315,2.7,2],['r',317.5,320.3,4.3,3],['r',322,324.5,5.9,2],['r',327.5,329.6,7.5,2],['r',330.5,341.5,7.6,7],['r',343,355,7.5,6],['r',358.5,361,9.1,3],['r',362,365.5,10.7,3],['r',368.5,372,12.3,3],['r',374,387,14.1,7]],
+ gems:[[112,8.2],[278,6.5],[336,9.4]],
+ wind:[{x0:343,x1:357,dir:-1,per:6,on:2.2,ph:1,str:4}],
+ checkpoints:[[62,0],[104,0],[163,0],[204,0],[231,0],[264,0],[300,0],[345,6.6]],goal:{x:389,top:13.2},crystalGoal:1,start:{x:0,y:0}});
 blockStd(LEVELS[LEVELS.length-1]);
-STORY.worlds.push({kicker:'Mundo 20 · Terra Nova',title:'Cânion Invertido',text:'Num cânion de pedra vermelha, a manhã acorda tudo de cabeça para baixo: setas antigas viram a gravidade e o Kuro cai para o teto! Ande pelo chão e pelo teto, pule os buracos que dão para o céu e cuidado com os morcegos que dormem pendurados.'});
+STORY.worlds.push({kicker:'Mundo 20 · Terra Nova',title:'Cânion do Sol',text:'Um cânion de pedra vermelha acorda com o sol da manhã — e ele não quer visitas! O chão desmorona, pedras rolam ladeira abaixo, pilões de rocha esmagam e paredes se fecham. Corra, pule e chegue ao arco de pedra onde brilha a Semente de Luz.'});
 /*@@parte:11_construcao.js*/
 /* ---------- contêineres do mundo atual ---------- */
 var lushPend=false,broMat=null,tuftMesh=null,lastBro=null,lushG=null,lushSky=null,lushU={time:{value:0},ps:{value:400}},lushAnim=[],lushHideTufts=false;
@@ -7190,6 +7189,11 @@ function buildCrumbles(){
     }else if(curTheme.falls){/* Vale das Cachoeiras: tábua da ponte de madeira, com cordas */
       m=new T.Group();var pl=mesh(boxGeo(w-.07,.2,1.8,1),woodM,true,true);pl.position.y=.15;m.add(pl);
       [-1,1].forEach(function(sd){var rp=mesh(new T.CylinderGeometry(.03,.03,w,5),M(0xc8a46a,.9),false,false);rp.rotation.z=Math.PI/2;rp.position.set(0,.55,sd*.85);m.add(rp);var po=mesh(new T.CylinderGeometry(.05,.05,.55,5),barkM,false,false);po.position.set(-w/2+.08,.4,sd*.85);m.add(po)});
+    }else if(curTheme.canyon&&c[3]==='plank'){/* Cânion do Sol: tábua da ponte de corda que arrebenta */
+      m=new T.Group();var cM=cnMats();var pk=mesh(boxGeo(w-.08,.16,1.8,1),cM.plankM||(cM.plankM=pbr(texWood,.85,.5,{color:new T.Color(0xc8986a)})),true,true);pk.position.y=.17;m.add(pk);
+    }else if(curTheme.canyon){/* Cânion do Sol: barranco de pedra vermelha rachado (fica igual ao chão, mas com rachaduras) */
+      m=new T.Group();var cA=cnMats(),ch=c[2]+14,cb=mesh(boxGeo(w-.06,ch,6.6,2),cA.rock);cb.position.set(0,-.05-ch/2,-1.6);m.add(cb);/* coluna de pedra até o fundo (cai inteira) */
+      var ct=mesh(boxGeo(w-.02,.3,6.9,2),MATS[21].top);ct.position.set(0,.1,-1.6);m.add(ct);
     }else m=mesh(boxGeo(w,.5,2.8,curTheme.name==='village'?2.5:1.2),curTheme.name==='heights'?barkM:curTheme.name==='village'?vilM().roof:curTheme.name==='castle'?castleCrumbM:(curTheme.name==='peaks'?iceCrumbM:(curTheme.name==='ruins'?ruinCrumbM:crumbM)));
     m.position.set(cx,c[2]-.25,0);add(m);
     var o={l:c[0],r:c[1],t:c[2],b:c[2]-.5,oneway:false,flt:true,crumble:true,state:0,tm:0,vy:0,mesh:m,cx:cx,baseY:c[2]-.25,dead:false};
@@ -7204,8 +7208,11 @@ function buildSprings(){
     var coil=new T.Group();g.add(coil);
     for(var i=0;i<4;i++){var t=mesh(new T.TorusGeometry(.2,.04,6,14),coilM);t.rotation.x=Math.PI/2;t.position.y=.12+i*.07;coil.add(t)}
     var pad=mesh(new T.CylinderGeometry(.5,.5,.1,16),padM);pad.position.y=.42;g.add(pad);
+    var plume=null;if(curTheme.canyon){/* Cânion do Sol: gêiser de areia — cratera de pedra, sem mola; a areia esguicha ao pular */
+      coil.visible=false;base.material=cnMats().crust;pad.material=M(0xe0a070,.95);var cr=mesh(new T.TorusGeometry(.55,.16,6,14),cnMats().rockC);cr.rotation.x=Math.PI/2;cr.position.y=.12;g.add(cr);
+      plume=new T.Mesh(new T.ConeGeometry(.5,3,10,1,true),new T.MeshBasicMaterial({color:0xf0c890,transparent:true,opacity:.5,depthWrite:false}));plume.rotation.x=Math.PI;plume.position.y=1.9;plume.visible=false;g.add(plume)}
     g.position.set(s[0],s[1],0);add(g);
-    springs.push({x:s[0],base:s[1],t:s[1]+.45,pad:pad,coil:coil,cd:0,sq:0});
+    springs.push({x:s[0],base:s[1],t:s[1]+.45,pad:pad,coil:coil,cd:0,sq:0,plume:plume});
   });
 }
 /*@@parte:31_moedas.js*/
@@ -7487,7 +7494,7 @@ function buildEnemies(){
     });
     var o={type:t,x0:e.x0,x1:e.x1,y:e.y,base:e.y,by:e.y,hx:(e.x0+e.x1)/2,sz:false,fg:true,speed:(e.s||1.6)*(LV.es||1),x:e.x0,dir:1,alive:true,deadT:0,ph:i*1.7,w:.5,h:.85,stomp:true,vy:0,vx:0,hop:1+i*.2,land:0,vis:null,st:'patrol',alertT:0,loseT:0,cur:(e.s||1.6)*(LV.es||1),bvx:0,bvy:0};
     if(e.hang){o.hang=1;o.hx=(e.x0+e.x1)/2;o.hy=e.y;o.base=e.y-2.6;o.st='hang'}/* Cânion: morcego pendurado no teto */
-    var ice6=curTheme.name==='peaks',des7=curTheme.name==='ruins';
+    var ice6=curTheme.name==='peaks',des7=curTheme.name==='ruins'||!!curTheme.canyon;/* Cânion do Sol: escorpião, abutre e capim-rolante como no deserto */
     var vol=curTheme.name==='volcano';
     var sum11=curTheme.name==='summit';
     if(t==='beetle'&&sum11)o.vis=makeGoat();
@@ -9147,6 +9154,11 @@ function cnSolid(s,m3){var A=cnMats(),x0=s[0],x1=s[1],top=s[2],bot=s[3]!==undefi
     if(s[5]==='slab'){var r=rnd(x0*13|0),pt=[];for(var i=0;i<3;i++){var ph=.5+r()*1.2;pt.push({g:xf(new T.ConeGeometry(.25+r()*.25,ph,5),[x0+.6+r()*(w-1.2),bot-ph/2+.05,-.3+(r()-.5)*1.2],[Math.PI,r()*3,0])})}add(new T.Mesh(mergeG(pt),A.crust))}
     else cnArch(x0,x1,bot,top);/* arco de pedra curvo atrás do caminho */
     solids.push({l:x0,r:x1,t:top,b:bot,oneway:false,slip:false,roof:true,slab:1});return}
+  if(s[5]==='ledge'){/* parte 3: saliência presa no paredão (a rocha entra até o fundo, z −7) com a parte de baixo afinando */
+    var lb=mesh(ldRough(new T.BoxGeometry(w,top-bot,8,Math.max(2,w|0),2,6),.08,2.2),A.rock);lb.position.set(cx,(top+bot)/2,-3);add(lb);
+    var lt=mesh(boxGeo(w+.1,.22,8.1,2),m3.top);lt.position.set(cx,top-.1,-3);add(lt);
+    var un=mesh(new T.ConeGeometry(w*.45,2.2,6),A.rock);un.rotation.x=Math.PI;un.scale.z=2.2;un.position.set(cx,bot-1.05,-4);add(un);
+    solids.push({l:x0,r:x1,t:top,b:bot,oneway:false,slip:false});return}
   if(s[5]==='roof'){var b=mesh(boxGeo(w,top-bot-.3,6.8,4.2),A.rock,false);/* sem sombra: o chão embaixo fica claro */b.position.set(cx,(top+bot+.3)/2,-1.6);add(b);
     var lip=mesh(boxGeo(w+.14,.34,6.94,2.2),A.crust);lip.position.set(cx,bot+.17,-1.6);add(lip)}
   else{var vb=bot;var body=mesh(boxGeo(w,top-.3-vb,6.8,4.2),A.rock);body.position.set(cx,(top-.3+vb)/2,-1.6);add(body);
@@ -9207,6 +9219,16 @@ function cnBuild(th){CN={flip:0,rot:0,A:LV.canyon.A,arrows:[],cd:0,t:0,mir:null,
     CN.arrows.push({x:a[0],y:a[1],up:a[2]==='up',up0:a[2]==='up',per:a[3]||0,off:a[4]||0,go:a[5]||null,v:v,ph:a[0]*.7,fl:0,rz:a[2]==='up'?0:Math.PI})});
   CN.rocks=[];(LV.canyon.rocks||[]).forEach(function(q){var w=q[1]||1.6,h=1.2,so={l:q[0]-w/2,r:q[0]+w/2,t:h,b:0,oneway:false,slip:false,crock:1};solids.push(so);
     CN.rocks.push({x:q[0],w:w,h:h,so:so,m:cnRockMesh(w,h,q[0]),st:'rest',t:0,v:0,cd:0})});
+  CN.bld=(LV.canyon.boulders||[]).map(function(b){var m=mesh(ldRough(new T.IcosahedronGeometry(.68,2),.14,2.4),cnM.boulM||(cnM.boulM=pbr(texStone,.92,.7,{color:new T.Color(0x7a3c26)})));m.visible=false;add(m);return {x0:b[0],x1:b[1],per:b[2],off:b[3]||0,t:0,on:0,x:b[0],m:m}});
+  /* parte 2: pilões de pedra (sólidos que caem e sobem) e troncos balançando */
+  CN.crs=(LV.canyon.crushers||[]).map(function(q){var w=q[1],h=w>5?1.4:1.3,rest=q[2],so={l:q[0]-w/2,r:q[0]+w/2,t:rest+h,b:rest,oneway:false,slip:false,crush:1};solids.push(so);
+    return {x:q[0],w:w,h:h,rest:rest,up:q[3],off:q[4]||0,warn:q[5]||.45,so:so,m:cnCrushMesh(q[0],w,h,rest),st:'up',t:0,v:0}});
+  CN.logs=(LV.canyon.logs||[]).map(function(q){return {px:q[0],py:q[1],L:q[2],amp:q[3],sp:q[4],ph:q[5]||0,m:cnLogMesh(q[0],q[1],q[2]),a:0,lx:0,ly:0}});
+  if(LV.canyon.crushers)cnGorge(160,306);
+  if(LV.canyon.crushers)cnGorge(306,400);
+  if(LV.canyon.bridge){var B=LV.canyon.bridge,rpM=M(0xc8a46a,.9),wd=pbr(texWood,.85,.5,{color:new T.Color(0xb88a5a)});/* cordas e postes da ponte (as tábuas são as que caem) */
+    [-1,1].forEach(function(sd){var rl=B[1]-B[0],rp=mesh(new T.CylinderGeometry(.035,.035,rl,5),rpM,false,false);rp.rotation.z=Math.PI/2;rp.position.set((B[0]+B[1])/2,B[2]+.85,sd*.85);add(rp);
+      [B[0],B[1]].forEach(function(px){var po=mesh(new T.CylinderGeometry(.07,.08,1.1,6),wd);po.position.set(px,B[2]+.45,sd*.85);add(po)})})}
   if(LV.canyon.seed)cnSeedBuild(LV.canyon.seed);
   cnReset()}
 /* a Semente de Luz, pendurada embaixo do arco: tocar nela termina a fase (luz sobe pelo arco) */
@@ -9224,7 +9246,7 @@ function cnRockMesh(w,h,seed){var A=cnMats(),g=new T.Group(),r=rnd(seed*7|0);
   var b=mesh(new T.DodecahedronGeometry(.5,1),A.rockC);b.scale.set(w*.98,h*.95,1.3);g.add(b);
   for(var i=0;i<5;i++){var c=new T.Mesh(new T.BoxGeometry(.05,.3+r()*.4,.04),A.upM);c.position.set((r()-.5)*w*.7,(r()-.5)*h*.5,.62);c.rotation.z=(r()-.5)*1.4;g.add(c)}
   g.position.set(seed,h/2,0);add(g);return g}
-function cnReset(){if(!CN)return;CN.flip=0;CN.rot=0;CN.cd=0;CN.t=0;if(CN.seed&&CN.seed.got<2){CN.seed.got=0;CN.seed.t=0}
+function cnReset(){if(!CN)return;(CN.crs||[]).forEach(function(c){c.st='up';c.t=-c.off;c.v=0;c.so.b=c.rest;c.so.t=c.rest+c.h});(CN.bld||[]).forEach(function(b){b.t=-b.off;b.on=0;b.m.visible=false});CN.flip=0;CN.rot=0;CN.cd=0;CN.t=0;if(CN.seed&&CN.seed.got<2){CN.seed.got=0;CN.seed.t=0}
   (CN.rocks||[]).forEach(function(k){k.st='rest';k.t=0;k.v=0;k.cd=0;k.so.b=0;k.so.t=k.h;k.m.position.set(k.x,k.h/2,0)});
   enemies.forEach(function(e){if(e.hang){e.st='hang';e.x=e.hx;e.y=e.hy;e.cur=0;e.bvx=e.bvy=0}})}
 /* vira a gravidade (chamado quando o Kuro passa por uma seta) */
@@ -9239,7 +9261,7 @@ function cnSetFlip(f,ax,ay){if(!CN||CN.flip===f)return;CN.flip=f;CN.cd=.35;
 function cnUpd(dt){if(!CN)return;CN.t+=dt;if(CN.cd>0)CN.cd-=dt;
   /* setas que trocam sozinhas: ficam per segundos de um jeito e per do outro */
   for(var j=0;j<CN.arrows.length;j++){var sa=CN.arrows[j];if(!sa.per)continue;var ph=(CN.t+sa.off)%(sa.per*2);sa.up=ph<sa.per?sa.up0:!sa.up0;sa.warn=(ph%sa.per)>sa.per-.5}
-  cnRocks(dt);cnSeedUpd(dt);
+  cnRocks(dt);cnBoulders(dt);cnCrush(dt);cnLogs(dt);cnSeedUpd(dt);
   if(state==='play'&&CN.cd<=0){for(var i=0;i<CN.arrows.length;i++){var a=CN.arrows[i];
     if(a.up!==!!CN.flip&&Math.abs(P.x-a.x)<.75&&P.y<a.y+.75&&P.y+P.h>a.y-.75){a.fl=1;cnSetFlip(a.up?1:0,a.x,a.y);break}}}
   /* caiu para o céu por um buraco do teto */
@@ -9264,6 +9286,49 @@ function cnRocks(dt){var top=CN.A*2;(CN.rocks||[]).forEach(function(k){var so=k.
   if(state!=='play')return;
   var over=P.x+P.w/2>so.l+.05&&P.x-P.w/2<so.r-.05&&P.y<so.t-.02&&P.y+P.h>so.b+.02,crush=carry&&P.y+P.h>top-.02;
   if(over||crush){hurt(k.x,1);P.x=P.x<k.x?so.l-P.w/2-.06:so.r+P.w/2+.06;P.vx=0;if(crush){P.onPlat=null;P.grounded=false}}})}
+/* Cânion do Sol: pedras que rolam ladeira abaixo (de x0 até x1, para a esquerda, contra o Kuro). Saem de uma fenda do paredão,
+   rolam e se despedaçam no fim; voltam a cada 'per' segundos. Pular por cima (1,4 de altura). */
+function cnBoulders(dt){(CN.bld||[]).forEach(function(b){var R=.68;
+  if(!b.on){b.t+=dt;if(b.t>=b.per){b.t=0;b.on=1;b.x=b.x0;b.z=-2.6;b.m.visible=true;if(Math.abs(P.x-b.x0)<26)beep(55,.5,'sawtooth',.03,-20)}return}
+  b.z=Math.min(0,b.z+dt*7);if(b.z>=0)b.x-=dt*5.4;b.m.position.set(b.x,R+Math.abs(Math.sin(b.x*2.1))*.04,b.z);b.m.rotation.z+=dt*5.4/R;
+  if(Math.abs(P.x-b.x)<26&&Math.random()<dt*8)emit(dustPool,b.x+.4,.1,2,1.4,.4,.4,1.1,-.1);
+  if(b.z>-.4&&state==='play'&&Math.abs(P.x-b.x)<R*.85+P.w/2&&P.y<R*1.8&&P.y+P.h>.05)hurt(b.x,1);
+  if(b.x<=b.x1){b.on=0;b.m.visible=false;emit(dustPool,b.x,.4,14,3,.7,.7,1.3,-.2);if(Math.abs(P.x-b.x)<20){beep(80,.25,'square',.04,-40);shake=Math.max(shake,.12)}}})}
+/* pilão de pedra: bloco de rocha pendurado em correntes. Parado em cima → treme e solta poeira (aviso) → cai rápido e esmaga
+   → fica no chão um pouco → sobe devagar. É sólido: dá para subir nele (sobe junto, devagar). Quem fica embaixo leva dano e é
+   empurrado para fora (nunca fica preso). Os largos (teto que desce) caem mais devagar e avisam mais cedo. */
+function cnCrushMesh(x,w,h,rest){var A=cnMats(),g=new T.Group(),wide=w>5;
+  var b=mesh(ldRough(new T.BoxGeometry(w,h,wide?3.4:2.2,Math.max(2,w*2|0),3,4),.06,3),cnM.boulM||(cnM.boulM=pbr(texStone,.92,.7,{color:new T.Color(0x7a3c26)})));b.position.y=h/2;g.add(b);
+  var cr=mesh(boxGeo(w+.08,.18,wide?3.5:2.3,2),A.crust);cr.position.y=.09;g.add(cr);
+  var ir=M(0x3a3438,.5,.6);[-1,1].forEach(function(sd){var ch=mesh(new T.CylinderGeometry(.05,.05,14,5),ir,false,false);ch.position.set(sd*(w/2-.3),h+7,0);g.add(ch)});
+  if(wide)for(var i=0;i<Math.floor(w/1.4);i++){var sp=mesh(new T.ConeGeometry(.16,.4,5),A.rockC,false,false);sp.rotation.x=Math.PI;sp.position.set(-w/2+.7+i*1.4,-.15,0);g.add(sp)}
+  g.position.set(x,rest,0);add(g);return g}
+function cnCrush(dt){(CN.crs||[]).forEach(function(c){var so=c.so,dy=0,fl=0;
+  for(var i=0;i<solids.length;i++){var q=solids[i];if(q===so||q.crush||q.dead||q.crumble)continue;if(c.x>=q.l&&c.x<=q.r&&q.t<=c.rest+.01&&q.t>fl-1e-4)fl=q.t}/* chão embaixo do pilão */
+  if(c.st==='up'){c.t+=dt;if(c.t>=c.up){c.st='warn';c.t=c.warn;if(Math.abs(P.x-c.x)<16)beep(90,.3,'sawtooth',.025,-30)}}
+  else if(c.st==='warn'){c.t-=dt;if(Math.random()<dt*14)emit(dustPool,c.x+(Math.random()-.5)*c.w,so.b,1,.6,.5,.5,1.2,.6);if(c.t<=0){c.st='fall';c.v=0}}
+  else if(c.st==='fall'){c.v=Math.min(c.w>5?10:24,c.v+(c.w>5?30:70)*dt);dy=-c.v*dt;if(so.b+dy<=fl){dy=fl-so.b;c.st='down';c.t=c.w>5?1.1:.7;emit(dustPool,c.x,fl+.1,c.w>5?20:10,3,.7,.7,1.3,-.2);if(Math.abs(P.x-c.x)<14){beep(55,.35,'square',.05,-25);shake=Math.max(shake,.3)}}}
+  else if(c.st==='down'){c.t-=dt;if(c.t<=0)c.st='rise'}
+  else if(c.st==='rise'){dy=Math.min(2.2*dt,c.rest-so.b);if(so.b+dy>=c.rest-1e-4){dy=c.rest-so.b;c.st='up';c.t=0}}
+  if(dy){var carry=P.onPlat===so&&P.grounded&&dy>0;so.b+=dy;so.t+=dy;if(carry)P.y=so.t}
+  c.m.position.set(c.x+(c.st==='warn'?Math.sin(CN.t*80)*.04:0),so.b,0);
+  if(state!=='play')return;
+  if(P.x+P.w/2>so.l+.05&&P.x-P.w/2<so.r-.05&&P.y<so.b-.02&&P.y+P.h>so.b+.02&&P.y<so.t){/* embaixo do pilão que desce: dano e empurra para fora */
+    hurt(c.x,1);var gl=so.l-P.w/2-.08,gr=so.r+P.w/2+.08;P.x=(P.x<c.x)?gl:gr;P.vx=0;P.onPlat=null}})}
+/* tronco balançando em duas cordas, preso numa viga entre as paredes do cânion */
+function cnLogMesh(px,py,L){var A=cnMats(),g=new T.Group(),wd=pbr(texWood,.85,.5,{color:new T.Color(0xc89a70)});
+  var beam=mesh(new T.CylinderGeometry(.2,.2,9,8),wd);beam.rotation.x=Math.PI/2;beam.position.set(px,py+.2,-2.6);add(beam);
+  var arm=new T.Group();arm.position.set(px,py,0);add(arm);
+  var lg=mesh(new T.CylinderGeometry(.38,.38,2.6,12),wd);lg.rotation.x=Math.PI/2;lg.position.y=-L;arm.add(lg);
+  var rpM=M(0xc8a46a,.9);[-1,1].forEach(function(sd){var rp=mesh(new T.CylinderGeometry(.035,.035,L,5),rpM,false,false);rp.position.set(0,-L/2,sd*.9);arm.add(rp)});
+  return arm}
+function cnLogs(dt){(CN.logs||[]).forEach(function(l){var a=l.amp*Math.sin(CN.t*l.sp+l.ph),av=l.amp*l.sp*Math.cos(CN.t*l.sp+l.ph);l.m.rotation.z=a;
+  l.lx=l.px+Math.sin(a)*l.L;l.ly=l.py-Math.cos(a)*l.L;
+  if(state!=='play')return;var cx=clamp(l.lx,P.x-P.w/2,P.x+P.w/2),cy=clamp(l.ly,P.y,P.y+P.h);
+  if(Math.hypot(cx-l.lx,cy-l.ly)<.42){var vx=Math.cos(a)*av*l.L;hurt(l.lx,1);P.vx=clamp(vx,-9,9)}})}
+/* garganta: paredões altos bem perto, atrás do caminho (dá a sensação de corredor apertado) */
+function cnGorge(x0,x1){var A=cnMats(),L=[],r=rnd(x0|0);for(var x=x0;x<x1;x+=3+r()*3){var h=12+r()*6,w=3.4+r()*2;L.push({g:xf(new T.BoxGeometry(w,h,2.4,2,4,1),[x,h/2-2,-6.2-r()*.8],[0,(r()-.5)*.3,0])})}
+  var m=new T.Mesh(mergeG(L),A.wallM);add(m)}
 /* ---- o espelho da física: com a gravidade virada, o passo do Kuro roda no mundo de cabeça para baixo ---- */
 function cnIn(){if(!CN||!CN.flip)return 0;var A2=CN.A*2,i,s,m;
   if(!CN.mir||CN.mirN!==solids.length||CN.mirS!==solids){CN.mir=solids.map(function(q){var o=Object.create(q);q.__cm=o;return o});CN.mirN=solids.length;CN.mirS=solids}
@@ -12332,6 +12397,7 @@ function animate(dt){
     var q=Math.max(0,s.sq)/.35;
     s.pad.position.y=.42-.2*q+(s.sq>0?Math.sin((1-q)*Math.PI)*.12:0);
     s.coil.scale.y=1-.45*q;
+    if(s.plume){s.plume.visible=s.sq>0;s.plume.scale.set(.6+q*.6,.3+(1-q)*1.2,.6+q*.6);s.plume.material.opacity=.55*q+.1}/* gêiser de areia */
   });
   if(flag.geo){
     var p=flag.geo.attributes.position,b=flag.base;
@@ -12357,7 +12423,7 @@ function animate(dt){
 function viewLeft(){var cm=(LV&&LV.camMin!==undefined)?LV.camMin:7,hw=cam.dist*((LV&&LV.zoom)||1)*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;return cm-hw}
 function updateCamera(dt,snap){
   var tx=clamp(P.x+P.face*.8+clamp(P.vx*.36,-3.6,3.6),(LV&&LV.camMin!==undefined)?LV.camMin:7,LV?LV.camMax:186),ty=((LV&&LV.tall)?Math.max(2.4,P.y+1.7):Math.max(2.4,2.6+P.y*.66))+P.look*1.0;
-  if(LV&&LV.canyon){var Ac=LV.canyon.A,cfr=LV.canyon.free!==undefined?clamp((P.x-LV.canyon.free)/6,0,1):0;ty=lerp(Ac+(P.y+P.h/2-Ac)*.25+.4,P.y+P.h/2+((CN&&CN.flip)?-.8:.8),cfr)+P.look}/* parte 3 (sem teto): a câmera acompanha o Kuro na altura *//* Cânion Invertido: a câmera mostra o chão e o teto juntos (não gira) */
+  if(LV&&LV.canyon){var Ac=LV.canyon.A,cfr=LV.canyon.free!==undefined?clamp((P.x-LV.canyon.free)/6,0,1):0;ty=lerp(Ac+(P.y+P.h/2-Ac)*.25+.4,P.y+P.h/2+((CN&&CN.flip)?-.8:(LV.canyon.camUp||.8)),cfr)+P.look}/* parte 3 (sem teto): a câmera acompanha o Kuro na altura *//* Cânion Invertido: a câmera mostra o chão e o teto juntos (não gira) */
   if(LV&&LV.rooms){for(var ri=0;ri<LV.rooms.length;ri++){var rm=LV.rooms[ri];if(P.x>rm.a){var hw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect,lo=rm.l+hw,hi=rm.r-hw;if(lo>hi)lo=hi=(rm.l+rm.r)/2;tx=clamp(P.x,lo,hi);ty=2.6;break}}}
   if(volEsc&&volEsc.on){var ehw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;tx=Math.min(LV.camMax,Math.max(tx,volEsc.wx+ehw-3))}
   if(LV&&LV.boss&&!(boss&&boss.v2&&boss.state==='dead')){var bhw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;tx=Math.min(tx,LV.boss.arena[1]+.4-bhw)}
