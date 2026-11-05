@@ -570,3 +570,4 @@ A área de trabalho do Claude é temporária. Para recomeçar:
 - (05/11) sw.js: a página do jogo agora é buscada na internet primeiro (network-first, sem cache do navegador) e só sem internet usa a cópia guardada — antes era cache-first e a correção só aparecia na 2ª abertura.
 - O app Android já abre o site (GitHub Pages) e só usa a cópia de dentro do APK sem internet: as correções chegam sozinhas, sem baixar APK novo (APK novo só para mudar ícone/nome/configuração do app).
 - (05/11, 2ª correção dos pinheiros do Mundo 18) Saíram os pinheirinhos de cima dos pilares de gelo do fundo (atrás de outro pilar pareciam flutuar sobre a água) e os pinheiros perto do caminho não vão mais em nenhum trecho com água (a água vai 100 além de cada ponta do lago).
+- (05/11, 3ª) Pinheiros do fundo do Mundo 18 trazidos para a costa, em cima da areia vermelha (z −44,6 a −49), a pedido do dono.
