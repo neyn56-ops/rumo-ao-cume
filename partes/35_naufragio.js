@@ -365,7 +365,7 @@ function wkBossUpd(dt){var c=WK.cap;if(!c)return;var C=LV.captain,v=c.v,t=WK.t;
     /* encostar no capitão machuca */
     if(state==='play'&&Math.abs(P.x-c.x)<.7&&P.y<c.y+2.2&&P.y+P.h>c.y)hurt(c.x)}
   /* barris */
-  for(var i=c.bar.length-1;i>=0;i--){var b=c.bar[i];
+  for(var i=c.bar.length-1;i>=0;i--){var b=c.bar[i];if(!b)continue;/* a lista pode esvaziar no meio (o Kuro caiu e a luta recomeçou) */
     if(b.air){b.vy-=20*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;var gy=C.deck+.42;
       if(!b.kick&&b.y<=gy&&b.vy<0){b.y=gy;b.air=0;b.vx=-(2.6+ph*.8);b.vy=0;emit(dustPool,b.x,C.deck+.1,5,2,.4,.4,1.2,-.3)}
       if(b.kick){if(Math.abs(b.x-c.x)<.9&&b.y>c.y+.2&&b.y<c.y+2.4&&c.st!=='stun'){wkBossHit();b.dead=1}if(b.y<-2||b.x>C.wall1+2)b.dead=1}}

@@ -670,23 +670,24 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - wkPart3Build :424
 - wkPart3Upd :428
 
-## 36_canion.js  (162 linhas) /*@@parte:36_canion.js*/
+## 36_canion.js  (184 linhas) /*@@parte:36_canion.js*/
 - cnStrata :10
 - cnMats :17
-- cnSolid :37 — chão e teto do cânion: chão com terra vermelha por cima; teto (5º valor 'roof') com a crosta embaixo — é por o
-- cnScenery :51 — ---- cenário: paredão do fundo em camadas, mesas lá longe, pedras flutuando no céu, cactos ----
-- cnArrowMesh :76 — ---- setas de gravidade: placa de pedra com runa brilhando; azul = gravidade para cima (teto), laranja = para 
-- cnBuild :82
-- cnSeedBuild :91 — a Semente de Luz, pendurada embaixo do arco: tocar nela termina a fase (luz sobe pelo arco)
-- cnSeedUpd :97
-- cnRockMesh :101 — pedra que cai para cima: pedra vermelha com rachaduras azuis brilhando (a mesma cor da seta que leva para o te
-- cnReset :105
-- cnSetFlip :109 — vira a gravidade (chamado quando o Kuro passa por uma seta)
-- cnUpd :117
-- cnRocks :135
-- cnIn :146 — ---- o espelho da física: com a gravidade virada, o passo do Kuro roda no mundo de cabeça para baixo ----
-- cnOut :154
-- cnPose :160 — desenho: o Kuro gira de cabeça para baixo em volta dos pés (a câmera não gira)
+- cnSolid :42 — chão e teto do cânion: chão com terra vermelha por cima; teto (5º valor 'roof') com a crosta embaixo — é por o
+- cnArch :57
+- cnScenery :67 — ---- cenário: paredão do fundo em camadas, mesas lá longe, pedras flutuando no céu, cactos ----
+- cnArrowMesh :92 — ---- setas de gravidade: placa de pedra com runa brilhando; azul = gravidade para cima (teto), laranja = para 
+- cnBuild :104
+- cnSeedBuild :113 — a Semente de Luz, pendurada embaixo do arco: tocar nela termina a fase (luz sobe pelo arco)
+- cnSeedUpd :119
+- cnRockMesh :123 — pedra que cai para cima: pedra vermelha com rachaduras azuis brilhando (a mesma cor da seta que leva para o te
+- cnReset :127
+- cnSetFlip :131 — vira a gravidade (chamado quando o Kuro passa por uma seta)
+- cnUpd :139
+- cnRocks :157
+- cnIn :168 — ---- o espelho da física: com a gravidade virada, o passo do Kuro roda no mundo de cabeça para baixo ----
+- cnOut :176
+- cnPose :182 — desenho: o Kuro gira de cabeça para baixo em volta dos pés (a câmera não gira)
 
 ## 40_estado.js  (398 linhas) /*@@parte:40_estado.js*/
 - hd :5

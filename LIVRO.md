@@ -522,3 +522,10 @@ A área de trabalho do Claude é temporária. Para recomeçar:
 - Teste 63: o robô passa a fase inteira andando e correndo (17 viradas) e termina na Semente de Luz.
 - Obs. (05/11): o arquivo `claude/como-trabalhar.md` citado pelo dono não existe no repositório.
 - Obs. testes (05/11): nesta área de trabalho a bateria completa trava no teste 32 (Mundo 14) com "Target crashed" — acontece igual na versão de antes do Mundo 20 (página acumula memória depois de ~30 testes). Rodando do teste 32 em diante numa página nova, todos passam.
+
+### Mundo 20 — acabamento (05/11, de volta na conversa principal)
+- Setas viraram **placas de pedra entalhadas** (antes pareciam botões do celular): apoiadas no chão, penduradas no teto ou pedra solta no ar; seta brilhando e facho de luz para onde ela manda (só na seta que funciona). Brilho mais fraco (antes estourava em branco).
+- Paredão do fundo bem mais longe (z −26 a −34) e mais claro: não parece mais estar no caminho.
+- **Arco de pedra de verdade** (cnArch): passarela reta na frente (onde o Kuro anda por baixo) e arco curvo atrás, pernas entrando no abismo, pedrinhas de luz dourada pela curva de dentro.
+- Teto não faz sombra no chão (o chão das gargantas ficava escuro).
+- Mundo 19: corrigido travamento na luta do Capitão (lista de barris esvaziava no meio da conta quando o Kuro caía).
