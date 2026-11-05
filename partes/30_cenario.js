@@ -433,6 +433,7 @@ function buildFar(th){
       var u=(y+h/2)/h;
       if(peaks){var rock=(u<.92&&Math.sin(p.getX(v)*.45+i*1.7+y*.12)*Math.cos(p.getZ(v)*.37+y*.22)>.05)||(u>.2&&u<.5&&r()<.45);
         c.set(rock?(th.aurora?(r()<.5?'#7ab4e4':'#5a96d0'):(r()<.5?'#5a4232':'#463428')):(u<.15?(th.aurora?'#b8d8f0':'#c8ccd4'):'#f4f7fb'))}/* Mundo 18: montanhas de gelo azul */
+      else if(th.canyon)c.set('#a8583a').lerp(new T.Color('#e8a878'),u);/* Cânion: mesas de pedra vermelha, sem neve */
       else if(th.name==='trail'||th.falls)c.set('#3f7a4e').lerp(new T.Color('#9cc48a'),u*u);/* Terra Nova: morros verdes, sem neve */
       else if(u>.72)c.set('#eef3f7');
       else c.set('#6b7f95').lerp(new T.Color('#8fa3b6'),u);

@@ -107,7 +107,9 @@ function step(dt){
   else if(curTheme.falls)updFalls(dt);
   else if(curTheme.aurora)auUpd(dt);
   else if(curTheme.wreck)wkUpd(dt);
+  else if(curTheme.canyon)cnUpd(dt);
   if(P.onPlat&&P.onPlat.mover)P.x+=P.onPlat.x-P.onPlat.px;
+  var CNF=curTheme.canyon?cnIn():0;/* Mundo 20: gravidade virada — o passo do Kuro roda no mundo espelhado (ver 36_canion.js) */
   var ax=keys.jx!==0?keys.jx:((keys.right?1:0)-(keys.left?1:0));
   if(P.stun>0){P.stun-=dt;ax=0}
   if(P.inv>0)P.inv-=dt;
@@ -254,6 +256,7 @@ function step(dt){
     }
   }
   }
+  if(CNF)cnOut();
   tryWarp(dt);
   if(LV.lavaY!==undefined&&P.y<LV.lavaY-.15&&state==='play'){emit(sparkPool,P.x,LV.lavaY+.2,24,5,.8,.4,.3,3);fallDeath('O Kuro caiu na lava! Voltando ao último checkpoint.');return}
   if(P.y<-9||(LV.fall&&P.x>LV.fall.x&&P.x<LV.fall.x2&&P.y<LV.fall.y)){fallDeath();return}
@@ -277,9 +280,9 @@ function step(dt){
     if((e.type==='guard'||(e.type==='beetle'&&curTheme.name==='village'))&&pHidden())continue;/* atrás do biombo: o guarda e o gato passam sem encostar */
     if(!e.noHit&&Math.abs(P.x-(e.bx!==undefined?e.bx:e.x))<P.w/2+(e.bhw!==undefined?e.bhw:e.w)&&P.y<e.y+e.h&&P.y+P.h>e.y){
       if((e.slp>0||e.wake)&&!P.sj&&!(P.mount&&P.vy<-1&&P.y>e.y+e.h*.45)){/* montado: caindo de verdade por cima derrota; andando sobe e passa por cima igual *//* dormindo: vira um degrau baixinho — o Kuro sobe e anda por cima (não quica, não atravessa) */
-        var stp=e.y+e.h*.55;if(e.slp>0&&e.landed&&P.vy<=.5&&P.y>stp-.6&&P.y<stp+.3){P.y=stp;P.vy=0;P.grounded=true;P.onPlat=null;P.dj=false}continue}
-      if(e.stomp&&P.vy<=.5&&P.y>e.y+e.h*.45&&(!(e.slp>0||e.wake)||P.sj||P.mount)){/* dormindo: o pulo normal não quica de novo (o Kuro passa e pisa no chão); giratório/raposinha derrotam */
-        killE(e,(P.sj||P.mount)?'sjump':'stomp')/* giratório ou montado na raposinha: derrota na hora */;P.vy=P.inW?(keys.jump?8.5:6.5):(keys.jump?14.5:10.5);P.grounded=false;P.onPlat=null;P.dj=false;
+        var stp=e.y+e.h*.55;if(!CNF&&e.slp>0&&e.landed&&P.vy<=.5&&P.y>stp-.6&&P.y<stp+.3){P.y=stp;P.vy=0;P.grounded=true;P.onPlat=null;P.dj=false}continue}
+      if(e.stomp&&(CNF?(P.vy>=-.5&&P.y+P.h<e.y+e.h*.55):(P.vy<=.5&&P.y>e.y+e.h*.45))&&(!(e.slp>0||e.wake)||P.sj||P.mount)){/* dormindo: o pulo normal não quica de novo (o Kuro passa e pisa no chão); giratório/raposinha derrotam */
+        killE(e,(P.sj||P.mount)?'sjump':'stomp')/* giratório ou montado na raposinha: derrota na hora */;P.vy=(CNF?-1:1)*(P.inW?(keys.jump?8.5:6.5):(keys.jump?14.5:10.5));P.grounded=false;P.onPlat=null;P.dj=false;
         sfx.stomp();emit(dustPool,e.x,e.y+.4,7,2.4,.55,.55,1.2,-.3);
       }else if(P.spinT<=0&&!e.safe)hurt(e.x,(e.type==='urchin'&&curTheme.name!=='peaks'&&curTheme.name!=='ruins')?1:0);
     }

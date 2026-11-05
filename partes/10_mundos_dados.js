@@ -804,3 +804,22 @@ LEVELS.push({name:'O Naufrágio',theme:20,music:16,camMax:416,limit:900,es:1.05,
 })(LEVELS[LEVELS.length-1]);
 blockStd(LEVELS[LEVELS.length-1]);
 STORY.worlds.push({kicker:'Mundo 19 · Terra Nova',title:'O Naufrágio',text:'Uma tempestade partiu um navio pirata ao meio: a proa encalhou na praia e a popa ficou boiando no mar. Suba pelos caixotes e pelo convés, escale o mastro até o cesto da gávea, fuja dos caranguejos e das gaivotas — e cuidado com os raios!'});
+
+/* ===== Terra Nova — Mundo 20: Cânion Invertido (plano aprovado pelo dono, 05/11; manhã, sem chefe). Parte 1: o fundo do cânion =====
+   Chão em y 0 e teto de pedra com a parte de baixo em y 8 (5º valor 'roof'); canyon.A = linha do meio do espelho da gravidade.
+   Setas [x,y,'up'|'down']: 'up' vira a gravidade para o teto, 'down' traz de volta. Buracos do teto dão para o céu (cair neles é queda). */
+LEVELS.push({name:'Cânion Invertido',theme:21,music:17,camMax:150,zoom:1.3,limit:600,es:1.05,noLift:1,coinN:100,
+ canyon:{A:4,arrows:[[12,.9,'up'],[31,6.9,'down'],[58,.9,'up'],[72,6.9,'down'],[91,.9,'up'],[113,6.9,'down']]},
+ solids:[[-14,42,0],[46,62,0],[68,86,0],[90,104,0],[112,152,0],
+  [-14,23,14,8,0,'roof'],[27,52,14,8,0,'roof'],[56,78,14,8,0,'roof'],[81,100,14,8,0,'roof'],[103,124,14,8,0,'roof'],[129,152,14,8,0,'roof']],
+ floats:[],movers:[],crumbles:[],feathers:[],spikes:[],springs:[],
+ enemies:[{t:'beetle',x0:33,x1:41,y:0,s:1.1},{t:'bat',x0:38,x1:40,y:7.35,s:1.4,hang:1},{t:'beetle',x0:48,x1:56,y:0,s:1.3},
+  {t:'bat',x0:65,x1:67,y:7.35,s:1.5,hang:1},{t:'bat',x0:81,x1:83,y:7.35,s:1.5,hang:1},{t:'beetle',x0:70,x1:80,y:0,s:1.3},
+  {t:'bat',x0:107,x1:109,y:7.35,s:1.5,hang:1},{t:'frog',x0:128,x1:140,y:0},{t:'bat',x0:135,x1:137,y:7.35,s:1.6,hang:1}],
+ blocks:[{x:6,y:2.4,t:'q',c:'mushroom'},{x:52,y:2.4,t:'q',c:'fruit'},{x:120,y:2.4,t:'brick'},{x:121,y:2.4,t:'q',c:'coin'},{x:122,y:2.4,t:'brick'},{x:132,y:2.4,t:'q',c:'flower'}],
+ coins:[['r',2,10,.9,4],['r',15,22,7.1,4],['r',27.5,30,7.1,2],['r',34,41,.9,4],['r',47,57,.9,5],['r',53,55,7.1,2],['r',58,71,7.1,6],
+  ['r',76,85,.9,5],['r',92,99,7.1,4],['r',101,102,7.1,1],['r',104,112,7.1,4],['r',114,146,.9,12]],
+ gems:[[70,7.2]],
+ checkpoints:[[47,0],[69,0],[114,0]],goal:{x:146,top:0},start:{x:0,y:0}});
+blockStd(LEVELS[LEVELS.length-1]);
+STORY.worlds.push({kicker:'Mundo 20 · Terra Nova',title:'Cânion Invertido',text:'Num cânion de pedra vermelha, a manhã acorda tudo de cabeça para baixo: setas antigas viram a gravidade e o Kuro cai para o teto! Ande pelo chão e pelo teto, pule os buracos que dão para o céu e cuidado com os morcegos que dormem pendurados.'});

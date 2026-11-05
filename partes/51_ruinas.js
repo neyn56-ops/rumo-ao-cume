@@ -687,7 +687,9 @@ function updEnemy(e,dt){
     if(e.ninja)ninjaAI(e,dt);
   }else if(t==='bat'){
     batSep(e,dt);
-    if(e.st==='patrol'){
+    if(e.st==='hang'){e.x=e.hx;e.y=e.hy;e.cur=0;e.bvx=e.bvy=0;/* Cânion: morcego pendurado no teto, dormindo de cabeça para baixo; acorda com o Kuro perto */
+      if(state==='play'&&Math.abs(P.x-e.x)<5&&Math.abs(P.y+P.h/2-e.y)<9.6){e.st='alert';e.alertT=.35;sfx.alert()}}
+    else if(e.st==='patrol'){
       var bnx=e.x+e.dir*e.speed*dt;if(eHit(e,bnx,e.y))e.dir=-e.dir;else e.x=bnx;
       if(e.x<e.x0){e.x=e.x0;e.dir=1}else if(e.x>e.x1){e.x=e.x1;e.dir=-1}
       var bny=e.base+Math.sin(mt*2.4+e.ph)*.8;if(!eHit(e,e.x,bny))e.y=bny;e.cur=e.speed;e.bvx=e.dir*e.speed;e.bvy=0;
@@ -696,7 +698,7 @@ function updEnemy(e,dt){
       e.alertT-=dt;e.dir=P.x>e.x?1:-1;e.cur=0;
       if(e.alertT<=0){e.st='chase';e.loseT=0}
     }else if(e.st==='chase'){
-      var dx=P.x-e.x,dy=P.y+1.5-e.y,d=Math.hypot(dx,dy)||1,sp=hd(4.3,5.0)*(alarmT>0?1.25:1),kk=1-Math.exp(-dt*hd(3.2,3.4));
+      var dx=P.x-e.x,dy=P.y+((curTheme.canyon&&CN&&CN.flip)?P.h-1.5:1.5)-e.y,/* Cânion: com o Kuro no teto, o morcego vem por baixo dele */d=Math.hypot(dx,dy)||1,sp=hd(4.3,5.0)*(alarmT>0?1.25:1),kk=1-Math.exp(-dt*hd(3.2,3.4));
       e.bvx+=(dx/d*sp-e.bvx)*kk;e.bvy+=(dy/d*sp-e.bvy)*kk;
       var cbx=clamp(e.x+e.bvx*dt,e.x0-9,e.x1+9),cby=clamp(e.y+e.bvy*dt,e.base-3.2,e.base+4.2);
       if(!eHit(e,cbx,e.y))e.x=cbx;else e.bvx=0;

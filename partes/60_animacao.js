@@ -203,6 +203,7 @@ function pose(dt){
   if(typeof AU!=='undefined'&&AU&&AU.lh){var F2=AU.lh.F,dxg=P.x-F2.x,onG=P.y>F2.top-.4&&Math.abs(dxg)<2.8;P.gz=(P.gz||0)+((onG?-3.2+Math.sqrt(Math.max(1,7.3-dxg*dxg)):0)-(P.gz||0))*(1-Math.exp(-dt*8));/* anda em volta da lanterna, dentro da grade */rig.root.position.z=P.gz}/* na galeria do farol o Kuro anda mais para dentro (não fica na beirada) *//* tobogã: o Kuro vai sentado dentro do tubo */
   if(P.mountT>0){var mk2=1-P.mountT/.8,ak=clamp((mk2-.1)/.72,0,1);rig.root.position.y+=Math.sin(ak*Math.PI)*1.7-(mk2<.1?(1-mk2/.1)*seatY()*0:0);rig.root.position.x-=P.face*(1-ak)*.8}/* salto até a sela */
   foxVisUpd(dt);
+  if(curTheme.canyon&&!dyn)cnPose(dt);/* Mundo 20: Kuro de cabeça para baixo no teto */
   if(typeof AU!=='undefined'&&AU&&(AU.sl||AU.sin)){rig.hipL.rotation.x=rig.hipR.rotation.x=-1.45;rig.kneeL.rotation.x=rig.kneeR.rotation.x=.25;rig.root.position.y-=.05}/* tobogã: sentado, pernas para a frente */
   rig.root.visible=!(P.inv>0&&Math.floor(P.inv*14)%2===0&&state==='play');
 }
@@ -256,7 +257,8 @@ function visEnemy(e,dt){
       v.inner.scale.set(1/Math.sqrt(sy),sy,1/Math.sqrt(sy));
     }else if(t==='bat'){
       v.g.rotation.y=e.dir>0?Math.PI/2:-Math.PI/2;
-      v.wings.forEach(function(w){w.p.rotation.z=w.sd*Math.sin(tm*14+e.ph)*.8});
+      var hng=e.st==='hang';v.g.children[0].rotation.z=hng?Math.PI:0;if(hng)v.g.position.y=e.y+.3;/* pendurado de cabeça para baixo, asas fechadas */
+      v.wings.forEach(function(w){w.p.rotation.z=hng?w.sd*-1.2:w.sd*Math.sin(tm*14+e.ph)*.8});
     }else if(t==='wbeetle'){
       v.g.rotation.y=e.dir>0?Math.PI/2:-Math.PI/2;
       v.wings.forEach(function(w){w.p.rotation.z=w.sd*(.15+Math.sin(tm*38+e.ph)*.6)});
@@ -430,6 +432,7 @@ function animate(dt){
 function viewLeft(){var cm=(LV&&LV.camMin!==undefined)?LV.camMin:7,hw=cam.dist*((LV&&LV.zoom)||1)*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;return cm-hw}
 function updateCamera(dt,snap){
   var tx=clamp(P.x+P.face*.8+clamp(P.vx*.36,-3.6,3.6),(LV&&LV.camMin!==undefined)?LV.camMin:7,LV?LV.camMax:186),ty=((LV&&LV.tall)?Math.max(2.4,P.y+1.7):Math.max(2.4,2.6+P.y*.66))+P.look*1.0;
+  if(LV&&LV.canyon){var Ac=LV.canyon.A;ty=Ac+(P.y+P.h/2-Ac)*.25+.4+P.look}/* Cânion Invertido: a câmera mostra o chão e o teto juntos (não gira) */
   if(LV&&LV.rooms){for(var ri=0;ri<LV.rooms.length;ri++){var rm=LV.rooms[ri];if(P.x>rm.a){var hw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect,lo=rm.l+hw,hi=rm.r-hw;if(lo>hi)lo=hi=(rm.l+rm.r)/2;tx=clamp(P.x,lo,hi);ty=2.6;break}}}
   if(volEsc&&volEsc.on){var ehw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;tx=Math.min(LV.camMax,Math.max(tx,volEsc.wx+ehw-3))}
   if(LV&&LV.boss&&!(boss&&boss.v2&&boss.state==='dead')){var bhw=cam.dist*Math.tan(T.MathUtils.degToRad(camera.fov/2))*camera.aspect;tx=Math.min(tx,LV.boss.arena[1]+.4-bhw)}

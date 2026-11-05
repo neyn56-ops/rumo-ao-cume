@@ -168,7 +168,8 @@ function buildDecor(th){
     var zt2=-6.5-r2()*30;
     list.push({x:x,z:zt2,y:mY(x,zt2)-.1,s:.8+r2()*.9,sp:snow?0:(r2(),1),rot:r2()*6.28});
   }
-  if(th.dry)list=list.filter(function(t,k){return k%4===0});/* região seca: só umas árvores soltas */
+  if(th.dry)list=list.filter(function(t,k){return k%4===0});
+  if(th.canyon)list=[];/* Cânion: sem árvores (tem cactos) *//* região seca: só umas árvores soltas */
   var con=list.filter(function(t){return t.sp===0}),bro=list.filter(function(t){return t.sp===1});
   var trunkG=new T.CylinderGeometry(.2,.32,1,6);trunkG.translate(0,.5,0);
   var tr=inst(trunkG,M(0x5a4030,.95),list.length,true);
