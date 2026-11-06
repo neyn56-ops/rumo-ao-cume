@@ -171,7 +171,8 @@ function buildDecor(th){
     list.push({x:x,z:zt2,y:mY(x,zt2)-.1,s:.8+r2()*.9,sp:snow?0:(r2(),1),rot:r2()*6.28});
   }
   if(th.dry)list=list.filter(function(t,k){return k%4===0});
-  if(th.aurora&&LV.lake){var rl=rnd(4646);list.forEach(function(t){if(t.x>LV.lake[0]-101&&t.x<LV.lake[1]+101&&t.z>-46){t.z=-44.8-rl()*5;t.y=mY(t.x,t.z)-.1}})}/* Lago da Aurora: árvore em cima da água ia flutuar — vai para a margem lá do fundo */
+  if(th.aurora&&LV.lake){var rl=rnd(4646);list.forEach(function(t){if(t.x>LV.lake[0]-101&&t.x<LV.lake[1]+101&&t.z>-46){t.z=-44.8-rl()*5;t.y=mY(t.x,t.z)-.1}})}
+  if(th.aurora&&LV.lake){var sd=list.filter(function(t){return t.z<-40}),si=inst(new T.DodecahedronGeometry(1,1),M(0x9a5636,.97),Math.max(1,sd.length),false);sd.forEach(function(t,j){dummy.position.set(t.x,t.y+.12,t.z);dummy.rotation.set(0,j,0);var rr=1.2*t.s+.4;dummy.scale.set(rr,.12,rr*.8);dummy.updateMatrix();si.setMatrixAt(j,dummy.matrix)});si.count=sd.length;add(si)}/* areia vermelha no pé (dono) *//* Lago da Aurora: árvore em cima da água ia flutuar — vai para a margem lá do fundo */
   if(th.canyon)list=[];/* Cânion: sem árvores (tem cactos) *//* região seca: só umas árvores soltas */
   var con=list.filter(function(t){return t.sp===0}),bro=list.filter(function(t){return t.sp===1});
   var trunkG=new T.CylinderGeometry(.2,.32,1,6);trunkG.translate(0,.5,0);
