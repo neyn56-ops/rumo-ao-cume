@@ -695,7 +695,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - cnOut :234
 - cnPose :240 — desenho: o Kuro gira de cabeça para baixo em volta dos pés (a câmera não gira)
 
-## 37_raizes.js  (229 linhas) /*@@parte:37_raizes.js*/
+## 37_raizes.js  (233 linhas) /*@@parte:37_raizes.js*/
 - rtMats :9
 - rtDecor :27 — cenário: raízes enormes que descem do teto, cogumelos que brilham, fios de luz pendurados
 - rtSolid :47 — bloco com 6º valor 'root': raiz grossa deitada (plataforma de madeira viva)
@@ -715,10 +715,11 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - rtSwingAfter :137 — depois da física do Kuro: se está no cipó, a posição é a da ponta do cipó (chamado em step, logo após o movime
 - rtBossMesh :147
 - rtWallMesh :161
-- rtBossBuild :163
-- rtBossReset :175
-- rtBossBar :180
-- rtBossUpd :181
+- rtRootSolid :164 — raiz da semente como sólido: quem estiver dentro quando ela sobe é empurrado para o lado mais perto (nunca fic
+- rtBossBuild :166
+- rtBossReset :179
+- rtBossBar :184
+- rtBossUpd :185
 
 ## 38_copa.js  (146 linhas) /*@@parte:38_copa.js*/
 - cpMats :9

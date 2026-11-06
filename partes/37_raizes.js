@@ -160,6 +160,9 @@ function rtBossMesh(){var g=new T.Group(),bd=M(0x1c1424,.45),ln=new T.MeshStanda
   return {g:g,legs:legs,mark:ln,th:th,stars:stars}}
 function rtWallMesh(x,y0,y1){var A=rtMats(),L=[];for(var i=0;i<4;i++){var g=new T.CylinderGeometry(.22,.3,y1-y0,7,4);L.push({g:xf(ldRough(g,.05,3),[x+(i%2?.25:-.25),(y0+y1)/2,-1+i*.7],[0,0,(i%2?.05:-.05)])})}
   var m=new T.Mesh(mergeG(L),A.bark);m.castShadow=true;add(m);return m}
+/* raiz da semente como sólido: quem estiver dentro quando ela sobe é empurrado para o lado mais perto (nunca fica preso) */
+function rtRootSolid(s,fl,hh){var so=s.so;if(hh<.15){so.dead=true;return}so.dead=false;so.t=fl+hh;so.b=fl-.5;
+  if(state==='play'&&P.x+P.w/2>so.l&&P.x-P.w/2<so.r&&P.y<so.t-.05&&P.y+P.h>fl){P.x=P.x<s.x?so.l-P.w/2-.05:so.r+P.w/2+.05;P.vx=0}}
 function rtBossBuild(){var B=LV.roots&&LV.roots.boss;if(!B)return;var A=rtMats(),fl=B.floor;
   var w0={l:B.w0,r:B.w0+1.2,t:B.top,b:fl-.1,oneway:false,slip:false,dead:true},w1={l:B.w1,r:B.w1+1.2,t:B.top,b:fl-.1,oneway:false,slip:false,dead:false};solids.push(w0,w1);
   var m0=rtWallMesh(B.w0+.6,fl,B.top),m1=rtWallMesh(B.w1+.6,fl,B.top);
@@ -170,11 +173,12 @@ function rtBossBuild(){var B=LV.roots&&LV.roots.boss;if(!B)return;var A=rtMats()
   var seeds=B.seeds.map(function(x){var sd=new T.Group(),core=mesh(new T.IcosahedronGeometry(.3,1),A.seed,false,false);core.scale.y=1.3;sd.add(core);
     var bm=new T.Mesh(new T.CylinderGeometry(.32,.32,6,12,1,true),new T.MeshBasicMaterial({color:0xffe080,transparent:true,opacity:.07,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide}));bm.position.y=3;sd.add(bm);
     sd.position.set(x,fl+.6,0);add(sd);var rg=new T.CylinderGeometry(.35,.7,1,9,6);rg.translate(0,.5,0);var rm=mesh(ldRough(rg,.05,4),A.bark);rm.position.set(x,fl,0);rm.scale.y=.001;add(rm);
-    return {x:x,g:sd,core:core,root:rm,st:'ready',t:0,h:0}});
+    var so={l:x-.55,r:x+.55,t:fl,b:fl-.5,oneway:false,slip:false,dead:true};solids.push(so);/* a raiz que sobe é sólida (dono: tinha que ter física) */
+    return {x:x,g:sd,core:core,root:rm,so:so,st:'ready',t:0,h:0}});
   RT.boss={B:B,w0:w0,w1:w1,m0:m0,m1:m1,v:sp,seeds:seeds,webs:[],balls:[],kids:[],st:'wait',hp:3,max:3,x:cx,y:B.top-2.4,t:0,att:2,won:false};rtBossReset()}
 function rtBossReset(){var b=RT&&RT.boss;if(!b)return;
   b.balls.forEach(function(q){q.m.parent&&q.m.parent.remove(q.m)});b.webs.forEach(function(q){q.m.parent&&q.m.parent.remove(q.m)});b.kids.forEach(function(q){q.m.parent&&q.m.parent.remove(q.m)});b.balls=[];b.webs=[];b.kids=[];RT.camLock=null;
-  b.seeds.forEach(function(s){s.st='ready';s.t=0;s.h=0;s.root.scale.y=.001;s.g.visible=true});
+  b.seeds.forEach(function(s){s.st='ready';s.t=0;s.h=0;s.root.scale.y=.001;s.g.visible=true;s.so.dead=true});
   if(b.won){b.w0.dead=true;b.w1.dead=true;b.m0.visible=false;b.m1.visible=false;b.v.g.visible=false;$('bossBar').hidden=true;return}
   b.st='wait';b.hp=b.max;b.x=(b.B.x0+b.B.x1)/2;b.y=b.B.top-2.4;b.att=2.2;b.w0.dead=true;b.w1.dead=false;b.m0.visible=false;b.m1.visible=true;b.v.g.visible=true;$('bossBar').hidden=true}
 function rtBossBar(){var b=RT.boss;$('bossFill').style.width=(b.hp/b.max*100)+'%'}
@@ -187,11 +191,11 @@ function rtBossUpd(dt){var b=RT.boss;if(!b)return;var B=b.B,fl=B.floor,t=RT.t,v=
   /* sementes e raízes que sobem */
   b.seeds.forEach(function(s){s.core.rotation.y+=dt*1.5;
     if(s.st==='ready'&&b.st!=='wait'&&b.st!=='dead'&&state==='play'&&Math.abs(P.x-s.x)<.9&&P.y<fl+6){s.st='up';s.t=0;sfxMagic();emit(sparkPool,s.x,fl+.5,14,3,.8,.8,.3,0);s.g.visible=false}
-    if(s.st==='up'){s.t+=dt;s.h=Math.min(1,s.t/.22);var hh=(B.top-fl-.4)*s.h;s.root.scale.y=Math.max(.001,hh);
+    if(s.st==='up'){s.t+=dt;s.h=Math.min(1,s.t/.22);var hh=(B.top-fl-.4)*s.h;s.root.scale.y=Math.max(.001,hh);rtRootSolid(s,fl,hh);
       if((b.st==='hang'||b.st==='warn')&&Math.abs(b.x-s.x)<1.9&&fl+hh>b.y-.2){b.st='fall';b.vy=0;shake=Math.max(shake,.4);beep(90,.4,'square',.05,-40);emit(dustPool,b.x,b.y,16,3,.8,.8,1.3,-.2);if(!RT.toldB2){RT.toldB2=1;toast('Acertou! Agora pule no abdômen brilhante da Aranha!')}}
       if(s.t>.9){s.st='down';s.t=0}}
-    else if(s.st==='down'){s.t+=dt;s.root.scale.y=Math.max(.001,(B.top-fl-.4)*(1-s.t/.5));if(s.t>.5){s.st='rest';s.t=0;s.root.scale.y=.001}}
-    else if(s.st==='rest'){s.t+=dt;if(s.t>2.4){s.st='ready';s.g.visible=true}}});
+    else if(s.st==='down'){s.t+=dt;s.root.scale.y=Math.max(.001,(B.top-fl-.4)*(1-s.t/.5));rtRootSolid(s,fl,(B.top-fl-.4)*(1-s.t/.5));if(s.t>.5){s.st='rest';s.t=0;s.root.scale.y=.001}}
+    else if(s.st==='rest'){s.so.dead=true;s.t+=dt;if(s.t>2.4){s.st='ready';s.g.visible=true}}});
   /* teias no chão: prendem os pés */
   b.webs=b.webs.filter(function(w){w.t-=dt;w.m.material.opacity=Math.min(.55,w.t*.4);if(state==='play'&&P.grounded&&Math.abs(P.x-w.x)<1.3&&Math.abs(P.y-fl)<.2){P.vx*=.55;P.webT=.2}if(w.t<=0){w.m.parent&&w.m.parent.remove(w.m);return false}return true});
   /* bolas de teia */

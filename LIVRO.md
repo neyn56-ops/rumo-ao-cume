@@ -574,3 +574,4 @@ A área de trabalho do Claude é temporária. Para recomeçar:
 - (05/11) Mundo 18: mancha de areia vermelha em volta do pé de cada pinheiro da costa (dono: tirar a impressão de flutuar).
 - (05/11) Mundo 18, decisão final do dono: todos os pinheiros do fundo atrás da costa vermelha (z −51 a −61), sem mancha de areia no pé.
 - (05/11) **Causa real dos pinheiros flutuando no Mundo 18:** o chão de fundo (buildBackdrop) acabava em z −45, logo depois da costa vermelha; os pinheiros atrás dela ficavam sem chão embaixo (o branco era a montanha lá longe). Agora no Mundo 18 o chão vai até z −72 e os pinheiros ficam em cima dele; sombra suave no pé.
+- (05/11) Mundo 21: o buraco do 1º cipó virou queda de verdade (dono: o Kuro não morria; tinha um chão escondido em −6 com cogumelo de volta — saiu). Na luta da Aranha, a raiz que sobe da semente agora é sólida (rtRootSolid): bloqueia e empurra o Kuro para o lado se ele estiver dentro.
