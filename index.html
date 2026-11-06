@@ -2030,11 +2030,11 @@ LEVELS.push({name:'Raízes da Árvore Mãe',theme:22,music:18,camMax:372,limit:9
   spiders:[[194,9,1.4],[281,13,5.6],[292,13,5.6]],
   /* parte 3: arena da Aranha das Raízes (paredes de raiz em w0 e w1, sementes que derrubam a aranha) */
   boss:{x0:316,x1:346,floor:4.2,top:13.6,w0:314.4,w1:346.8,seeds:[321,331,341]}},
- solids:[[-14,14,6],[14,26,4.2],[36,52,4.2],[52,74,2.4],[93.5,120,0],[103,110,6.4,0,0,'root'],[132,172,0],[172,183,-6],[183,200.4,0],[202.8,222,4.2],[237.3,256,4.2],[256,270,0],[270,374,4.2],[309.5,313,9,0,0,'root']],
- floats:[],movers:[{cx:226,range:2,speed:.9,top:4.2,w:3.4},{cx:233.5,range:2,speed:1.15,top:4.2,w:3.4}],crumbles:[],feathers:[],spikes:[],springs:[[50.5,4.2],[100.5,0],[172.5,-6],[256.5,0],[307.5,4.2]],
+ solids:[[-14,14,6],[14,26,4.2],[36,52,4.2],[52,74,2.4],[93.5,120,0],[103,110,6.4,0,0,'root'],[132,172,0],[183,200.4,0],[202.8,222,4.2],[237.3,256,4.2],[256,270,0],[270,374,4.2],[309.5,313,9,0,0,'root']],
+ floats:[],movers:[{cx:226,range:2,speed:.9,top:4.2,w:3.4},{cx:233.5,range:2,speed:1.15,top:4.2,w:3.4}],crumbles:[],feathers:[],spikes:[],springs:[[50.5,4.2],[100.5,0],[256.5,0],[307.5,4.2]],
  enemies:[{t:'beetle',x0:40,x1:47,y:4.2,s:1.1},{t:'bat',x0:56,x1:66,y:5.5,s:1.2},{t:'beetle',x0:58,x1:68,y:2.4,s:1.2},{t:'beetle',x0:111,x1:116,y:0,s:1.3},{t:'bat',x0:124,x1:130,y:3,s:1.3},{t:'beetle',x0:136,x1:146,y:0,s:1.3},{t:'beetle',x0:207,x1:218,y:4.2,s:1.3},{t:'bat',x0:244,x1:254,y:7.5,s:1.3},{t:'beetle',x0:294,x1:300,y:4.2,s:1.3}],
  blocks:[{x:6,y:8.4,t:'q',c:'mushroom'},{x:19,y:6.6,t:'q',c:'coin'},{x:60,y:4.8,t:'brick'},{x:61,y:4.8,t:'q',c:'flower'},{x:62,y:4.8,t:'brick'},{x:140,y:2.4,t:'q',c:'fox'}],
- coins:[['r',2,12,6.9,5],['r',15,24,5.1,4],['r',27,35,5.6,5],['r',37,46,5.1,4],['r',53,58,3.3,3],['r',63,72,3.3,4],['r',77.5,79.5,4.3,2],['r',83.5,85.5,5.5,2],['r',89.5,91.5,4.3,2],['r',111,117,.9,4],['r',104,109.5,7.3,4],['r',121,131,1.4,5],['r',134,148,.9,5],['r',152,170,.9,6],['r',173,182,-5.1,4],['r',187,190,.9,2],['r',193,196,.9,2],['r',199,201,.9,2],['r',205,220,5.1,6],['r',224,238,5.6,6],['r',241,255,5.1,5],['r',258,269,.9,4],['r',272,283,5.1,4],['r',287,296,5.1,4],['r',301,306,5.1,3],['r',310,312.5,9.9,2],['r',349,366,5.1,6]],
+ coins:[['r',2,12,6.9,5],['r',15,24,5.1,4],['r',27,35,5.6,5],['r',37,46,5.1,4],['r',53,58,3.3,3],['r',63,72,3.3,4],['r',77.5,79.5,4.3,2],['r',83.5,85.5,5.5,2],['r',89.5,91.5,4.3,2],['r',111,117,.9,4],['r',104,109.5,7.3,4],['r',121,131,1.4,5],['r',134,148,.9,5],['r',152,170,.9,6],['r',187,190,.9,2],['r',193,196,.9,2],['r',199,201,.9,2],['r',205,220,5.1,6],['r',224,238,5.6,6],['r',241,255,5.1,5],['r',258,269,.9,4],['r',272,283,5.1,4],['r',287,296,5.1,4],['r',301,306,5.1,3],['r',310,312.5,9.9,2],['r',349,366,5.1,6]],
  gems:[[108,8.2],[267.8,9],[311.5,10.6]],
  checkpoints:[[38,4.2],[98,0],[158,0],[188,0],[242,4.2],[276,4.2],[304,4.2],[351,4.2]],goal:{x:368,top:4.2},start:{x:0,y:6}});
 blockStd(LEVELS[LEVELS.length-1]);
@@ -9579,6 +9579,9 @@ function rtBossMesh(){var g=new T.Group(),bd=M(0x1c1424,.45),ln=new T.MeshStanda
   return {g:g,legs:legs,mark:ln,th:th,stars:stars}}
 function rtWallMesh(x,y0,y1){var A=rtMats(),L=[];for(var i=0;i<4;i++){var g=new T.CylinderGeometry(.22,.3,y1-y0,7,4);L.push({g:xf(ldRough(g,.05,3),[x+(i%2?.25:-.25),(y0+y1)/2,-1+i*.7],[0,0,(i%2?.05:-.05)])})}
   var m=new T.Mesh(mergeG(L),A.bark);m.castShadow=true;add(m);return m}
+/* raiz da semente como sólido: quem estiver dentro quando ela sobe é empurrado para o lado mais perto (nunca fica preso) */
+function rtRootSolid(s,fl,hh){var so=s.so;if(hh<.15){so.dead=true;return}so.dead=false;so.t=fl+hh;so.b=fl-.5;
+  if(state==='play'&&P.x+P.w/2>so.l&&P.x-P.w/2<so.r&&P.y<so.t-.05&&P.y+P.h>fl){P.x=P.x<s.x?so.l-P.w/2-.05:so.r+P.w/2+.05;P.vx=0}}
 function rtBossBuild(){var B=LV.roots&&LV.roots.boss;if(!B)return;var A=rtMats(),fl=B.floor;
   var w0={l:B.w0,r:B.w0+1.2,t:B.top,b:fl-.1,oneway:false,slip:false,dead:true},w1={l:B.w1,r:B.w1+1.2,t:B.top,b:fl-.1,oneway:false,slip:false,dead:false};solids.push(w0,w1);
   var m0=rtWallMesh(B.w0+.6,fl,B.top),m1=rtWallMesh(B.w1+.6,fl,B.top);
@@ -9589,11 +9592,12 @@ function rtBossBuild(){var B=LV.roots&&LV.roots.boss;if(!B)return;var A=rtMats()
   var seeds=B.seeds.map(function(x){var sd=new T.Group(),core=mesh(new T.IcosahedronGeometry(.3,1),A.seed,false,false);core.scale.y=1.3;sd.add(core);
     var bm=new T.Mesh(new T.CylinderGeometry(.32,.32,6,12,1,true),new T.MeshBasicMaterial({color:0xffe080,transparent:true,opacity:.07,depthWrite:false,blending:T.AdditiveBlending,side:T.DoubleSide}));bm.position.y=3;sd.add(bm);
     sd.position.set(x,fl+.6,0);add(sd);var rg=new T.CylinderGeometry(.35,.7,1,9,6);rg.translate(0,.5,0);var rm=mesh(ldRough(rg,.05,4),A.bark);rm.position.set(x,fl,0);rm.scale.y=.001;add(rm);
-    return {x:x,g:sd,core:core,root:rm,st:'ready',t:0,h:0}});
+    var so={l:x-.55,r:x+.55,t:fl,b:fl-.5,oneway:false,slip:false,dead:true};solids.push(so);/* a raiz que sobe é sólida (dono: tinha que ter física) */
+    return {x:x,g:sd,core:core,root:rm,so:so,st:'ready',t:0,h:0}});
   RT.boss={B:B,w0:w0,w1:w1,m0:m0,m1:m1,v:sp,seeds:seeds,webs:[],balls:[],kids:[],st:'wait',hp:3,max:3,x:cx,y:B.top-2.4,t:0,att:2,won:false};rtBossReset()}
 function rtBossReset(){var b=RT&&RT.boss;if(!b)return;
   b.balls.forEach(function(q){q.m.parent&&q.m.parent.remove(q.m)});b.webs.forEach(function(q){q.m.parent&&q.m.parent.remove(q.m)});b.kids.forEach(function(q){q.m.parent&&q.m.parent.remove(q.m)});b.balls=[];b.webs=[];b.kids=[];RT.camLock=null;
-  b.seeds.forEach(function(s){s.st='ready';s.t=0;s.h=0;s.root.scale.y=.001;s.g.visible=true});
+  b.seeds.forEach(function(s){s.st='ready';s.t=0;s.h=0;s.root.scale.y=.001;s.g.visible=true;s.so.dead=true});
   if(b.won){b.w0.dead=true;b.w1.dead=true;b.m0.visible=false;b.m1.visible=false;b.v.g.visible=false;$('bossBar').hidden=true;return}
   b.st='wait';b.hp=b.max;b.x=(b.B.x0+b.B.x1)/2;b.y=b.B.top-2.4;b.att=2.2;b.w0.dead=true;b.w1.dead=false;b.m0.visible=false;b.m1.visible=true;b.v.g.visible=true;$('bossBar').hidden=true}
 function rtBossBar(){var b=RT.boss;$('bossFill').style.width=(b.hp/b.max*100)+'%'}
@@ -9606,11 +9610,11 @@ function rtBossUpd(dt){var b=RT.boss;if(!b)return;var B=b.B,fl=B.floor,t=RT.t,v=
   /* sementes e raízes que sobem */
   b.seeds.forEach(function(s){s.core.rotation.y+=dt*1.5;
     if(s.st==='ready'&&b.st!=='wait'&&b.st!=='dead'&&state==='play'&&Math.abs(P.x-s.x)<.9&&P.y<fl+6){s.st='up';s.t=0;sfxMagic();emit(sparkPool,s.x,fl+.5,14,3,.8,.8,.3,0);s.g.visible=false}
-    if(s.st==='up'){s.t+=dt;s.h=Math.min(1,s.t/.22);var hh=(B.top-fl-.4)*s.h;s.root.scale.y=Math.max(.001,hh);
+    if(s.st==='up'){s.t+=dt;s.h=Math.min(1,s.t/.22);var hh=(B.top-fl-.4)*s.h;s.root.scale.y=Math.max(.001,hh);rtRootSolid(s,fl,hh);
       if((b.st==='hang'||b.st==='warn')&&Math.abs(b.x-s.x)<1.9&&fl+hh>b.y-.2){b.st='fall';b.vy=0;shake=Math.max(shake,.4);beep(90,.4,'square',.05,-40);emit(dustPool,b.x,b.y,16,3,.8,.8,1.3,-.2);if(!RT.toldB2){RT.toldB2=1;toast('Acertou! Agora pule no abdômen brilhante da Aranha!')}}
       if(s.t>.9){s.st='down';s.t=0}}
-    else if(s.st==='down'){s.t+=dt;s.root.scale.y=Math.max(.001,(B.top-fl-.4)*(1-s.t/.5));if(s.t>.5){s.st='rest';s.t=0;s.root.scale.y=.001}}
-    else if(s.st==='rest'){s.t+=dt;if(s.t>2.4){s.st='ready';s.g.visible=true}}});
+    else if(s.st==='down'){s.t+=dt;s.root.scale.y=Math.max(.001,(B.top-fl-.4)*(1-s.t/.5));rtRootSolid(s,fl,(B.top-fl-.4)*(1-s.t/.5));if(s.t>.5){s.st='rest';s.t=0;s.root.scale.y=.001}}
+    else if(s.st==='rest'){s.so.dead=true;s.t+=dt;if(s.t>2.4){s.st='ready';s.g.visible=true}}});
   /* teias no chão: prendem os pés */
   b.webs=b.webs.filter(function(w){w.t-=dt;w.m.material.opacity=Math.min(.55,w.t*.4);if(state==='play'&&P.grounded&&Math.abs(P.x-w.x)<1.3&&Math.abs(P.y-fl)<.2){P.vx*=.55;P.webT=.2}if(w.t<=0){w.m.parent&&w.m.parent.remove(w.m);return false}return true});
   /* bolas de teia */
@@ -14019,4 +14023,4 @@ ldBoot([function(){setHearts();applyGfx()},function(){buildLevel(0)},function(){
 })();
 </script>
 
-<div id="verTag" style="position:fixed;right:6px;bottom:4px;z-index:1000;font:11px sans-serif;color:#fff;opacity:.55;pointer-events:none;text-shadow:0 1px 2px #000">versão d951a4</div><script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").then(function(r){try{r.update()}catch(e){}}).catch(function(){});var t0=Date.now(),rl=false,had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(had&&!rl&&Date.now()-t0<20000){rl=true;location.reload()}})/* versão nova chegou logo ao abrir: recarrega sozinho uma vez */})}</script></body></html>
+<div id="verTag" style="position:fixed;right:6px;bottom:4px;z-index:1000;font:11px sans-serif;color:#fff;opacity:.55;pointer-events:none;text-shadow:0 1px 2px #000">versão b7c80c</div><script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").then(function(r){try{r.update()}catch(e){}}).catch(function(){});var t0=Date.now(),rl=false,had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(had&&!rl&&Date.now()-t0<20000){rl=true;location.reload()}})/* versão nova chegou logo ao abrir: recarrega sozinho uma vez */})}</script></body></html>
