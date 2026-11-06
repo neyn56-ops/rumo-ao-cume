@@ -577,3 +577,4 @@ A área de trabalho do Claude é temporária. Para recomeçar:
 - (05/11) Mundo 21: o buraco do 1º cipó virou queda de verdade (dono: o Kuro não morria; tinha um chão escondido em −6 com cogumelo de volta — saiu). Na luta da Aranha, a raiz que sobe da semente agora é sólida (rtRootSolid): bloqueia e empurra o Kuro para o lado se ele estiver dentro.
 - (05/11) Cipó (Mundos 21/22): pose nova (rtSwingPose) — braços para cima segurando a ponta, corpo pendurado seguindo o ângulo do cipó, pernas balançando atrás do movimento.
 - (05/11) Cipó: ao soltar, o corpo do Kuro voltava torto (a inclinação ficava); agora zera ao sair (RT.posed).
+- (05/11) Tela de carregamento: raposinha sem a sela, as bolsas e o rolinho (makeFoxVis(skin,semSela)).

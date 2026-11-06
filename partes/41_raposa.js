@@ -1,7 +1,7 @@
 /*@@parte:41_raposa.js*/
 /* ===================== Raposinha Foguete (montaria) ===================== */
 var fox=null,FOXH=.62,foxGeoCache={};
-function makeFoxVis(skin){
+function makeFoxVis(skin,semSela){
   /* cada parte animada vira 1 malha só (cores por vértice): ~7 desenhos por quadro, leve no celular */
   var C={org:0xec741f,crm:0xf8e4c4,brn:0x5a3020,paw:0x9a5426,blk:0x1a1210,blu:0x2f62b8,lea:0x7a4a2a,gld:0xf0b030,wht:0xffffff,iri:0x7a3a12,mth:0x6a1a22,tng:0xe86a78,rol:0x2f62b8,acc:0xec741f};
   /* visual novo da Terra Nova (Mundo 12 em diante, pedido do dono): pelo preto, topete e faixas laranja, ponta do rabo branca, patas pretas, olhos verdes, lenço laranja e rolinho laranja */
@@ -9,6 +9,7 @@ function makeFoxVis(skin){
   if(skin===1){C.org=0x2a2a30;C.brn=0x121216;C.paw=0x111114;C.blu=0xf07a1a;C.rol=0xc8641c;C.iri=0x4ea52c;C.acc=0xf27f1c}/* pelo preto (o verde sumia na floresta), detalhes laranja e olhos verdes */
   var groups={},o3=new T.Object3D(),col=new T.Color();
   function part(key,geo,c,p,r,s){
+    if(semSela&&(c==='lea'||c==='rol'||(c==='gld'&&p[0]<0)))return;/* sem sela, bolsas e rolinho (tela de carregamento) */
     o3.position.set(p[0],p[1],p[2]);o3.rotation.set(r?r[0]:0,r?r[1]:0,r?r[2]:0);o3.scale.set(s?s[0]:1,s?s[1]:1,s?s[2]:1);o3.updateMatrix();
     var g=(geo.index?geo.toNonIndexed():geo.clone());g.applyMatrix4(o3.matrix);if(!g.attributes.normal)g.computeVertexNormals();
     (groups[key]=groups[key]||[]).push({g:g,c:C[c]});

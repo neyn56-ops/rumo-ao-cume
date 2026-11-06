@@ -119,7 +119,7 @@ function ldStart(){var c=renderer.domElement,sc=new T.Scene(),cam=new T.Perspect
   ldExtra(sc,IS);
   /* o Kuro (o mesmo do jogo) e a raposinha */
   LD.home=rig.root.parent;sc.add(rig.root);
-  try{LD.fox=makeFoxVis();LD.fox.g.position.set(1.5,0,.95);LD.fox.g.scale.setScalar(.95);sc.add(LD.fox.g)}catch(e){LD.fox=null}
+  try{LD.fox=makeFoxVis(undefined,true);LD.fox.g.position.set(1.5,0,.95);LD.fox.g.scale.setScalar(.95);sc.add(LD.fox.g)}catch(e){LD.fox=null}
   cam.position.set(-1.9,1.25,6.4);LD.look=new T.Vector3(2.4,3.4,-12);cam.lookAt(LD.look);
   var el=document.getElementById('ld');if(el)el.classList.add('on3d');ldTip()}
 function ldTip(){var e=document.getElementById('ldTip');if(e&&LD){e.textContent=LD_TIPS[LD.tip%LD_TIPS.length];LD.tip++}}

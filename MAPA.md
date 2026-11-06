@@ -791,31 +791,31 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - timeUp :386
 - fallDeath :394
 
-## 41_raposa.js  (306 linhas) /*@@parte:41_raposa.js*/
+## 41_raposa.js  (307 linhas) /*@@parte:41_raposa.js*/
 - makeFoxVis :4
 - part :11
-- tuft :19
-- shag :29 — espalha tufos num elipsoide (centro c, raios e); varre para trás (-x)
-- build :34
-- mk :100
-- furTex :113
-- r :115
-- foxMat :120
-- spawnFox :126
-- foxGround :132
-- mountFox :133
-- dismountFox :139
-- foxBoost :146
-- updFox :152
-- seatY :197 — altura da sela: o quadril do Kuro encosta na sela (a raposa abaixa quando ele agacha)
-- foxVisUpd :198
-- collectItem :238
-- foxBubble :263
-- bubUpd :270
-- bubPop :277
-- foxSpit :283
-- updSpit :289
-- warmShaders :299
+- tuft :20
+- shag :30 — espalha tufos num elipsoide (centro c, raios e); varre para trás (-x)
+- build :35
+- mk :101
+- furTex :114
+- r :116
+- foxMat :121
+- spawnFox :127
+- foxGround :133
+- mountFox :134
+- dismountFox :140
+- foxBoost :147
+- updFox :153
+- seatY :198 — altura da sela: o quadril do Kuro encosta na sela (a raposa abaixa quando ele agacha)
+- foxVisUpd :199
+- collectItem :239
+- foxBubble :264
+- bubUpd :271
+- bubPop :278
+- foxSpit :284
+- updSpit :290
+- warmShaders :300
 
 ## 42_blocos.js  (262 linhas) /*@@parte:42_blocos.js*/
 - quakeM :3
