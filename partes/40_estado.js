@@ -17,6 +17,8 @@ if(save.best[7]>0&&save.unlocked<9&&LEVELS.length>8)save.unlocked=9;
 if(save.best[8]>0&&save.unlocked<10&&LEVELS.length>9)save.unlocked=10;
 /* TESTE: todas as fases liberadas enquanto o jogo está em construção (trocar para false quando o jogo estiver pronto) */
 var TESTE_LIBERADO=true;if(TESTE_LIBERADO)save.unlocked=Math.max(save.unlocked,LEVELS.length);
+if(TESTE_LIBERADO)save.unlocked=Math.max(save.unlocked,TOTAL_W+1);/* em construção: o Mundo 23 do robô também fica aberto */
+rbGarante(save.unlocked+3);/* Ilhas do Robô: gera os mundos até o liberado + 3 */
 function writeSave(){try{localStorage.setItem('rumo-ao-cume-v2',JSON.stringify(save))}catch(e){}}
 
 function fmt(t){var m=Math.floor(t/60),s=Math.floor(t%60);return m+':'+(s<10?'0':'')+s}
@@ -42,8 +44,8 @@ function toast(msg){
   clearTimeout(toast.k);toast.k=setTimeout(function(){t.classList.remove('show')},2300);
 }
 function spawn(pt){
-  if(curTheme.canyon&&typeof cnReset==='function')cnReset();/* Cânion: renasce com a gravidade normal */
-  if((curTheme.roots||curTheme.copa)&&typeof rtReset==='function')rtReset();/* Raízes: pontes e fungos voltam ao começo */
+  if((curTheme.canyon||LV.canyon)&&typeof cnReset==='function')cnReset();/* Cânion: renasce com a gravidade normal */
+  if((curTheme.roots||curTheme.copa||LV.roots)&&typeof rtReset==='function')rtReset();/* Raízes: pontes e fungos voltam ao começo */
   if(curTheme.copa&&typeof cpReset==='function')cpReset();
   if(LV&&LV.kites)sumMechReset();
   if(volEsc&&volEsc.on){volEsc.on=false;volEsc.wall.visible=false;volEsc.gl.visible=false}/* renasceu: a parede recomeça um pouco atrás dele */
@@ -66,8 +68,8 @@ function resetState(){
   if(LV&&LV.maze&&typeof mzReset==='function')mzReset();
   if(curTheme.aurora&&typeof aurReset==='function')aurReset();
   if(curTheme.wreck&&typeof wkReset==='function')wkReset();
-  if(curTheme.canyon&&typeof cnReset==='function')cnReset();
-  if((curTheme.roots||curTheme.copa)&&typeof rtReset==='function')rtReset();
+  if((curTheme.canyon||LV.canyon)&&typeof cnReset==='function')cnReset();
+  if((curTheme.roots||curTheme.copa||LV.roots)&&typeof rtReset==='function')rtReset();
   if(curTheme.copa&&typeof cpReset==='function')cpReset();
   resetBoss();resetDrops();P.swimToast=false;$('airStat').hidden=true;airBubs.forEach(function(b){b.on=true;b.cd=0;b.mesh.visible=true});
   respawn={x:LV.start.x,y:LV.start.y};placeEnemies(respawn.x);
@@ -134,7 +136,7 @@ function lose(ttl,txt){
   showCard({kicker:'Quase lá!',title:ttl||'Kuro caiu',text:txt||'Os inimigos levaram a melhor, mas o Kuro nunca desiste. Vamos de novo?',stats:stats(),primary:{label:'Tentar de novo',fn:retry},secondary:{label:'Mapa',fn:function(){openMap({from:levelIdx})}}});
 }
 function recordLevel(){
-  var i=levelIdx;
+  var i=levelIdx;if(typeof rbGarante==='function')rbGarante(i+5);/* robô: o próximo mundo (e mais 3) já existe */
   save.gems[i]=Math.max(save.gems[i]||0,gemsGot);
   save.coins[i]=Math.max(save.coins[i]||0,coinsGot);
   save.bank=bank;save.hearts=Math.max(1,hearts);/* os corações passam para a próxima fase */
@@ -161,7 +163,7 @@ function winGame(){
   state='win';sfx.win();P.cheer=6;recordLevel();
   emit(sparkPool,P.x,P.y+2,60,7,1.6,.6,.5,4);
   showCard({kicker:'Fim da aventura',title:'Kuro salvou a vila',text:STORY.worlds[levelIdx].end,stats:stats(scoreLis()),
-    primary:{label:'Jogar de novo',fn:function(){startLevel(0)}},secondary:{label:'Mapa',fn:function(){openMap({from:levelIdx})}}});
+    primary:{label:'Seguir viagem',fn:function(){openMap({from:levelIdx,walkTo:levelIdx+1})}},secondary:{label:'Jogar de novo',fn:function(){startLevel(0)}}});/* barco para as Ilhas do Robô */
 }
 var debris=[],debrisG=null;
 function spawnDebris(x,y){

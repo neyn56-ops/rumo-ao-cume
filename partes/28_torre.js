@@ -167,7 +167,7 @@ function updTower(dt){
     /* o sino: tocar no sino termina a fase */
     var B=LV.bell;if(B&&twFx.bell){var bb=twFx.bell;
       if(twFx.ring>0){twFx.ring+=dt;bb.g.rotation.z=Math.sin(twFx.ring*9)*.45*Math.max(0,1-twFx.ring/2.2);bb.gl.material.opacity=.1+.6*Math.max(0,1-twFx.ring/2);
-        if(twFx.ring>1.6&&state==='play'){twFx.ring=-1;if(levelIdx>=TOTAL_W-1)winGame();else winLevel()}}
+        if(twFx.ring>1.6&&state==='play'){twFx.ring=-1;if(levelIdx===TOTAL_W-1)winGame();else winLevel()}}
       else if(twFx.ring===0&&state==='play'&&Math.abs(P.x-B.x)<1.6&&P.y>B.y-.3&&P.y<B.y+3.6){twFx.ring=.001;try{beep(784,.9,'sine',.18,1.2);beep(1175,1.2,'triangle',.08,1)}catch(e){}emit(sparkPool,B.x,B.y+2.4,30,4,1,.4,.4,4);
         twG.forEach(function(G){G.q.on=0});toast('Dooong! A torre acordou!')}}}
   /* quedas (regra do dono, igual ao Mundo 13): 3 voltas por bandeirinha; na 4ª cai de verdade; queda nunca tira coração */

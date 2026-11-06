@@ -106,7 +106,7 @@ function cnArrowMesh(up,x,y){var A=cnMats(),g=new T.Group(),pv=new T.Group(),sh=
   var bm=new T.Mesh(new T.CylinderGeometry(.42,.18,2.6,12,1,true),up?A.beamU:A.beamD);bm.position.y=2.0;pv.add(bm);/* facho de luz para onde a seta manda */
   var ring=new T.Group();if(!up)pv.rotation.z=Math.PI;g.add(pv);
   return {g:g,pv:pv,ar:ar,bm:bm,ring:ring}}
-function cnBuild(th){CN={flip:0,rot:0,A:LV.canyon.A,arrows:[],cd:0,t:0,mir:null,real:null,emit0:null,told:0};cnMats();cnScenery();
+function cnBuild(th){CN={flip:0,rot:0,A:LV.canyon.A,arrows:[],cd:0,t:0,mir:null,real:null,emit0:null,told:0};cnMats();if(curTheme.canyon)cnScenery();
   (LV.canyon.arrows||[]).forEach(function(a){var v=cnArrowMesh(a[2]==='up',a[0],a[1]);v.g.position.set(a[0],a[1],-.6);add(v.g);
     if(a[3]){v.ring.material=cnM.swM;var r2=new T.Mesh(new T.RingGeometry(.86,.92,28,1,0,Math.PI*1.5),cnM.swM);r2.position.z=.22;v.g.add(r2);v.r2=r2}/* seta que troca sozinha: anel amarelo e um arco que gira */
     CN.arrows.push({x:a[0],y:a[1],up:a[2]==='up',up0:a[2]==='up',per:a[3]||0,off:a[4]||0,go:a[5]||null,v:v,ph:a[0]*.7,fl:0,rz:a[2]==='up'?0:Math.PI})});
@@ -117,8 +117,8 @@ function cnBuild(th){CN={flip:0,rot:0,A:LV.canyon.A,arrows:[],cd:0,t:0,mir:null,
   CN.crs=(LV.canyon.crushers||[]).map(function(q){var w=q[1],h=w>5?1.4:1.3,rest=q[2],so={l:q[0]-w/2,r:q[0]+w/2,t:rest+h,b:rest,oneway:false,slip:false,crush:1};solids.push(so);
     return {x:q[0],w:w,h:h,rest:rest,up:q[3],off:q[4]||0,warn:q[5]||.45,so:so,m:cnCrushMesh(q[0],w,h,rest),st:'up',t:0,v:0}});
   CN.logs=(LV.canyon.logs||[]).map(function(q){return {px:q[0],py:q[1],L:q[2],amp:q[3],sp:q[4],ph:q[5]||0,m:cnLogMesh(q[0],q[1],q[2]),a:0,lx:0,ly:0}});
-  if(LV.canyon.crushers)cnGorge(160,306);
-  if(LV.canyon.crushers)cnGorge(306,400);
+  if(LV.canyon.crushers&&!LV.gen)cnGorge(160,306);
+  if(LV.canyon.crushers&&!LV.gen)cnGorge(306,400);
   if(LV.canyon.bridge){var B=LV.canyon.bridge,rpM=M(0xc8a46a,.9),wd=pbr(texWood,.85,.5,{color:new T.Color(0xb88a5a)});/* cordas e postes da ponte (as tábuas são as que caem) */
     [-1,1].forEach(function(sd){var rl=B[1]-B[0],rp=mesh(new T.CylinderGeometry(.035,.035,rl,5),rpM,false,false);rp.rotation.z=Math.PI/2;rp.position.set((B[0]+B[1])/2,B[2]+.85,sd*.85);add(rp);
       [B[0],B[1]].forEach(function(px){var po=mesh(new T.CylinderGeometry(.07,.08,1.1,6),wd);po.position.set(px,B[2]+.45,sd*.85);add(po)})})}

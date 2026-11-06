@@ -118,7 +118,7 @@ const PRE=`enemies.forEach(function(e){e.alive=false;e.x=-999});P.inv=1e9;hearts
   marca('Mundo 12: barquinho, Trilha Verde, Rio Cristalino e Jardim dos Cogumelos dão para passar',r[0]&&!r[1]&&r[2]&&r[3]&&!f.length&&tr[0]&&tr[1]&&tr[2],'abertura='+r.slice(0,3).join(',')+' raposa='+r[3]+' troncos='+tr[0]+' correnteza devolve='+tr[1]+' cogumelos='+tr[3]+(f.length?' falhas: '+f.join(', '):''));
   const m=await E(`(function(){state='play';openMap({from:10});var n=mapNodes.length,barco=false,t=0;mapGo(${W12});for(var k=0;k<60*40&&mapAt!==${W12};k++){mapUpdate(1/60);if(mapBoat.g.visible)barco=true}var chegou=mapAt===${W12};
     mapGo(3);for(k=0;k<60*60&&mapAt!==3;k++)mapUpdate(1/60);var volta=mapAt===3;leaveMap();return [n,barco,chegou,volta,mapBoat.g.visible]})()`);
-  marca('mapa com as duas ilhas: Kuro vai de barco até a Terra Nova e volta',m[0]===22&&m[1]&&m[2]&&m[3]&&!m[4],'nós='+m[0]+' barco='+m[1]+' chegou no 12='+m[2]+' voltou ao 4='+m[3])}
+  marca('mapa com as duas ilhas: Kuro vai de barco até a Terra Nova e volta',m[0]>=22&&m[1]&&m[2]&&m[3]&&!m[4],'nós='+m[0]+' barco='+m[1]+' chegou no 12='+m[2]+' voltou ao 4='+m[3])}
  /* 21: Mundo 12, Caminho das Copas — cipó, tábuas, plataforma que anda, elevador, cipó e pendurado no cipó */
  {const rotas=require('./rotas.js');const X='if(trIntro)trIntro.on=false;';
   const f=await rotas(E,11,[[[388,404,1.6],[404,500,1.6]],[[459,464,19.8],[466.2,467.6,20.6]],[[466.2,467.6,20.6],[469.6,471,21.4]],[[469.6,471,21.4],[473,474.4,22.2]],[[473,474.4,22.2],[476.5,500,23]]].map(p=>[p[0],p[1],X]));
@@ -650,5 +650,12 @@ var won=b.won;for(k=0;k<90*5&&state==='play';k++)step(STEP);
 hurt=h0;dyn=null;keys.left=keys.right=keys.jump=false;
 return 'venceu='+won+' estado='+state+' batidas='+hits+' '+log})()`);const r4=await E(`(function(){var o=[],k;startLevel(21);beginPlay();card.hidden=true;state='play';P.inv=1e9;CP.w.t=9999;var b=CP.boss;P.x=334;P.y=18;for(k=0;k<30;k++)step(STEP);var ok1=!b.w0.dead;resetState();var ok2=b.w0.dead&&b.st==='wait';return 'arena fecha '+(ok1?'ok':'NÃO')+' | morreu na luta: reabre e reinicia '+(ok2?'ok':'NÃO')})()`);
   marca('Mundo 22: Copa — folhas, Bruxa que aparece, cipó, galhos podres, pinhas, flores, pena, luta final e Fim da aventura',/venceu=true estado=win/.test(g4)&&!/NÃO/.test(r4)&&/andando: .*ok.*correndo: .*ok/.test(g)&&/andando: x=31[6-9].*correndo: x=31[6-9]/.test(g2)&&!/NÃO/.test(g+r+r2),g+' || '+r+' || '+g2+' || '+r2+' || '+g4+' || '+r4)}
+ /* 66: Robô gerador de fases — Mundos 23 a 72: cada mundo gerado é passado pelo robô de teste andando e correndo (tem que chegar ao fim) */
+ {const BOT=require('fs').readFileSync(__dirname+'/robo_bot.js','utf8');const g=await E(BOT+`(function(){var bad=[],ok=0,names={};for(var n=23;n<=72;n++){[0,1].forEach(function(run){var r=rbBot(n,run,180);if(/: win/.test(r))ok++;else bad.push(r)});names[LV.name]=1}
+  return ok+' de 100 ok, '+Object.keys(names).length+' nomes'+(bad.length?' | '+bad.join(' | '):'')})()`);
+  marca('Robô gerador: mundos 23 a 72 dá para passar andando e correndo',/^100 de 100/.test(g),g)}
+ {const m=await E(`(function(){var u=save.unlocked;save.unlocked=23;rbGarante(26);openMap({from:21});var a=mapNodes.length===LEVELS.length&&mapNodes[22].state!=='lock'&&mapNodes[23].state==='lock';
+  levelIdx=22;LV=LEVELS[22];recordLevel();openMap({from:22,walkTo:23});for(var k=0;k<400;k++)mapUpdate(1/60);var b=mapAt===23&&mapNodes.length===LEVELS.length&&save.unlocked===24;leaveMap();state='menu';save.unlocked=u;return (a?'ilha 23 aberta ok':'ilha 23 NÃO')+' | '+(b?'barco/trilha até a 24 ok':'24 NÃO')+' | ilhas '+mapNodes.length})()`);
+  marca('Ilhas do Robô no mapa: ilha nova aparece e o Kuro anda até ela',!/NÃO/.test(m),m)}
  marca('sem erros de JavaScript durante os testes',!erros.length,erros.slice(0,3).join('; '));await pg.close();
  await b.close();const f=res.filter(r=>!r[1]).length;console.log('\n'+(f?'❌ '+f+' teste(s) falharam':'✅ todos os '+res.length+' testes passaram'));process.exit(f?1:0)})();

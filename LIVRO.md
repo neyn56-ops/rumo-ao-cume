@@ -131,7 +131,20 @@ A área de trabalho do Claude é temporária. Para recomeçar:
   - formatos variados de fase: para a direita, torre, descida, fuga, chave e porta;
   - o testador de pulos garante que toda fase gerada dá para passar.
 
-  Ainda não foi decidido se vira um Modo Infinito, uma Fábrica de Fases com código, ou os dois.
+  **Decidido (06/11):** depois do Mundo 22, um barco leva a um terceiro mapa, as **Ilhas do Robô**, com mundos gerados na sequência (23, 24, 25… sem fim), cada um com nome. Tudo automático, sem botão: terminou um mundo, o próximo aparece. O número do mundo é a semente — o Mundo 23 é igual para todo mundo. O mapa mostra só as próximas 3 ou 4 ilhas. **Chefe a cada 10 mundos** (30, 40, 50…), escolhido entre os chefes que já existem. A Fábrica com código pode vir depois.
+  Feito em 3 partes: (1) o robô que monta e testa as fases; (2) o barco e o mapa das ilhas; (3) os chefes.
+  - **Parte 1 — pronta (06/11), `partes/39_robo.js`.** `rbMundo(n)` gera o mundo n e põe em LEVELS/STORY.worlds.
+    - Cenários (12): Vale, Caverna, Floresta, Castelo, Montanha, Deserto, Vila, Encosta, Vulcão, Cânion, Raízes, Copa.
+    - Formatos: para a direita, subida (alto) e descida (profunda). Fuga e chave-e-porta ficam para depois.
+    - Hora e clima por cima do tema (`LV.look`): dia, pôr do sol, noite, neblina, neve (cenários frios).
+    - Trechos básicos: chão com besouros/morcegos/blocos, buraco, degraus, ilhas no ar, ponte que cai, plataforma que anda, mola, espinhos.
+    - Mistura (1 ou 2 famílias por mundo, em qualquer cenário): pedras rolando, pilões e troncos do cânion; semente-ponte, cipó, raiz que sobe e espinhos de raiz das Raízes.
+    - Dificuldade sobe até o Mundo 63; a cada 5 mundos um mais calmo. Fase de 250 a 380 de comprimento, checkpoint a cada ~45, 3 joias, 2 corações à vista, flor/raposa/fruta, pena com tartaruga às vezes.
+    - Limites de pulo usados: buraco até 3,3; subida até 2,2. Sem corações escondidos (eles ficavam na beira e atrapalhavam o pulo).
+    - Nome: cenário + coisa do mundo ("Vale dos Pilões", "Floresta do Pôr do Sol", "Alto Cânion das Pedras Rolantes").
+    - Garantia: `testes/robo_bot.js` joga sozinho (olha chão, buraco, parede, espinho, plataforma, pilão, tronco, cipó). Teste 66: os mundos 23 a 72 passam andando e correndo.
+    - Mudanças no motor: tema com `LV.look`; cânion e raízes funcionam em outro cenário quando `LV.canyon`/`LV.roots` (portões em 11_construcao, 40_estado, 53_agua, 60_animacao); RT/CN zeram ao trocar de fase.
+  - **Parte 2 — pronta (06/11): o mapa das Ilhas do Robô.** Ao vencer o Mundo 22, o cartão "Fim da aventura" tem **Seguir viagem**: o Kuro atravessa o mar de barco, ao norte da Terra Nova, até a ilha 23. As ilhas (uma por mundo, ligadas por pontes, cor do cenário do mundo) aparecem até o mundo liberado + 3; as da frente ficam na nuvem com cadeado. Ao vencer um mundo, o robô gera os próximos e o mapa é refeito com a ilha nova (`rbIlhasMapa`, `rbGarante` em 39_robo.js; `openMap` refaz o mapa quando o número de mundos muda). O fim de jogo (winGame) agora é só no Mundo 22 (`levelIdx===TOTAL_W-1`). Em construção (TESTE_LIBERADO) o Mundo 23 já vem aberto. Teste 67.
 - **Mundo 11, o Cume:** pronto (final da primeira ilha).
 - **Segunda ilha — Terra Nova (aprovado pelo dono, 11 mundos feitos à mão, do 12 ao 22).** História: a luz da terra nova vem da **Árvore Mãe**; o **Corvo Sombrio** (mestre ninja de penas pretas, chefe do Rei Besouro) roubou as **Sementes de Luz**. Em cada mundo Kuro recupera uma semente.
 
