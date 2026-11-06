@@ -2343,7 +2343,7 @@ function buildLevel(idx){
   if(typeof autoPick==='function')autoPick(idx);/* Automático: começa na qualidade que já deu certo neste mundo */
   if(typeof spitB!=='undefined')spitB=[];
   if(rig.setOutfit)rig.setOutfit(idx>=11?1:0);/* roupa nova do Kuro na Terra Nova (Mundo 12 em diante) */
-  var th=THEMES[LV.theme],m3=MATS[LV.theme];
+  var th=THEMES[LV.theme],m3=MATS[LV.theme];if(LV.look){var lk=LV.look,th2={},q;for(q in th)th2[q]=th[q];for(q in lk)th2[q]=lk[q];th=th2}/* Robô: hora do dia e clima por cima do tema */
   applyTheme(th);sandS.flames=null;
   W=new T.Group();scene.add(W);fox=null;P.mount=false;tuftMesh=null;broMat=null;lushPend=false;lastBro=null;lushG=null;lushSky=null;
   debris=[];popCoins=[];dropCoins=[];solids=[];movers=[];crumbles=[];springs=[];hazards=[];enemies=[];checkpoints=[];coins=[];items=[];blades=[];blocks=[];vines=[];pipes=[];plants=[];drops=[];balls=[];airBubs=[];extraCoins=0;boss=null;flames=[];eShots=[];doorObj=null;castleFx.torches=[];castleFx.bolt=null;vilLan=[];ropes=[];pulleys=[];vdoors=[];hLifts=[];hDrafts=[];hFall=null;hFall2=null;hSkyC=null;volSinks=[];volMovers=[];volMet=null;volEsc=null;volFallT=null;volPortal=null;volOut=null;hBirds=[];hSwans=[];alarmT=0;if(alarmEl)alarmEl.style.opacity=0;if(hidS)hidS.visible=false;
@@ -2357,8 +2357,9 @@ function buildLevel(idx){
   buildLush(th);
   if(typeof kuroDry==='function')kuroDry();/* Kuro seco ao começar qualquer fase */
   if(th.aurora)auroraBuild(th);
-  if(th.canyon)cnBuild(th);
-  if(th.roots||th.copa)rtBuild(th);
+  if(!(th.canyon||LV.canyon))CN=null;if(!(th.roots||th.copa||LV.roots))RT=null;/* não sobra cipó nem pilão da fase anterior */
+  if(th.canyon||LV.canyon)cnBuild(th);/* LV.canyon/LV.roots em outro cenário = mistura do robô gerador (39_robo.js) */
+  if(th.roots||th.copa||LV.roots)rtBuild(th);
   if(th.copa)cpBuild(th);/* Mundo 22: folhas que dobram, a Bruxa que aparece *//* Mundo 21: sementes que viram ponte, esporos *//* Mundo 20: paredões, setas de gravidade */
   if(th.wreck)wkBuild(th);/* Mundo 19: navio encalhado, mar com ondas, chuva e raios *//* Mundo 18: aurora, estrelas, lago, gelo que trinca */
   if(th.falls)buildFalls(th);/* Mundo 16: cachoeiras, rio, castelo lá longe e os Pedrões-totem */
@@ -5796,7 +5797,7 @@ function updTower(dt){
     /* o sino: tocar no sino termina a fase */
     var B=LV.bell;if(B&&twFx.bell){var bb=twFx.bell;
       if(twFx.ring>0){twFx.ring+=dt;bb.g.rotation.z=Math.sin(twFx.ring*9)*.45*Math.max(0,1-twFx.ring/2.2);bb.gl.material.opacity=.1+.6*Math.max(0,1-twFx.ring/2);
-        if(twFx.ring>1.6&&state==='play'){twFx.ring=-1;if(levelIdx>=TOTAL_W-1)winGame();else winLevel()}}
+        if(twFx.ring>1.6&&state==='play'){twFx.ring=-1;if(levelIdx===TOTAL_W-1)winGame();else winLevel()}}
       else if(twFx.ring===0&&state==='play'&&Math.abs(P.x-B.x)<1.6&&P.y>B.y-.3&&P.y<B.y+3.6){twFx.ring=.001;try{beep(784,.9,'sine',.18,1.2);beep(1175,1.2,'triangle',.08,1)}catch(e){}emit(sparkPool,B.x,B.y+2.4,30,4,1,.4,.4,4);
         twG.forEach(function(G){G.q.on=0});toast('Dooong! A torre acordou!')}}}
   /* quedas (regra do dono, igual ao Mundo 13): 3 voltas por bandeirinha; na 4ª cai de verdade; queda nunca tira coração */
@@ -9283,7 +9284,7 @@ function cnArrowMesh(up,x,y){var A=cnMats(),g=new T.Group(),pv=new T.Group(),sh=
   var bm=new T.Mesh(new T.CylinderGeometry(.42,.18,2.6,12,1,true),up?A.beamU:A.beamD);bm.position.y=2.0;pv.add(bm);/* facho de luz para onde a seta manda */
   var ring=new T.Group();if(!up)pv.rotation.z=Math.PI;g.add(pv);
   return {g:g,pv:pv,ar:ar,bm:bm,ring:ring}}
-function cnBuild(th){CN={flip:0,rot:0,A:LV.canyon.A,arrows:[],cd:0,t:0,mir:null,real:null,emit0:null,told:0};cnMats();cnScenery();
+function cnBuild(th){CN={flip:0,rot:0,A:LV.canyon.A,arrows:[],cd:0,t:0,mir:null,real:null,emit0:null,told:0};cnMats();if(curTheme.canyon)cnScenery();
   (LV.canyon.arrows||[]).forEach(function(a){var v=cnArrowMesh(a[2]==='up',a[0],a[1]);v.g.position.set(a[0],a[1],-.6);add(v.g);
     if(a[3]){v.ring.material=cnM.swM;var r2=new T.Mesh(new T.RingGeometry(.86,.92,28,1,0,Math.PI*1.5),cnM.swM);r2.position.z=.22;v.g.add(r2);v.r2=r2}/* seta que troca sozinha: anel amarelo e um arco que gira */
     CN.arrows.push({x:a[0],y:a[1],up:a[2]==='up',up0:a[2]==='up',per:a[3]||0,off:a[4]||0,go:a[5]||null,v:v,ph:a[0]*.7,fl:0,rz:a[2]==='up'?0:Math.PI})});
@@ -9294,8 +9295,8 @@ function cnBuild(th){CN={flip:0,rot:0,A:LV.canyon.A,arrows:[],cd:0,t:0,mir:null,
   CN.crs=(LV.canyon.crushers||[]).map(function(q){var w=q[1],h=w>5?1.4:1.3,rest=q[2],so={l:q[0]-w/2,r:q[0]+w/2,t:rest+h,b:rest,oneway:false,slip:false,crush:1};solids.push(so);
     return {x:q[0],w:w,h:h,rest:rest,up:q[3],off:q[4]||0,warn:q[5]||.45,so:so,m:cnCrushMesh(q[0],w,h,rest),st:'up',t:0,v:0}});
   CN.logs=(LV.canyon.logs||[]).map(function(q){return {px:q[0],py:q[1],L:q[2],amp:q[3],sp:q[4],ph:q[5]||0,m:cnLogMesh(q[0],q[1],q[2]),a:0,lx:0,ly:0}});
-  if(LV.canyon.crushers)cnGorge(160,306);
-  if(LV.canyon.crushers)cnGorge(306,400);
+  if(LV.canyon.crushers&&!LV.gen)cnGorge(160,306);
+  if(LV.canyon.crushers&&!LV.gen)cnGorge(306,400);
   if(LV.canyon.bridge){var B=LV.canyon.bridge,rpM=M(0xc8a46a,.9),wd=pbr(texWood,.85,.5,{color:new T.Color(0xb88a5a)});/* cordas e postes da ponte (as tábuas são as que caem) */
     [-1,1].forEach(function(sd){var rl=B[1]-B[0],rp=mesh(new T.CylinderGeometry(.035,.035,rl,5),rpM,false,false);rp.rotation.z=Math.PI/2;rp.position.set((B[0]+B[1])/2,B[2]+.85,sd*.85);add(rp);
       [B[0],B[1]].forEach(function(px){var po=mesh(new T.CylinderGeometry(.07,.08,1.1,6),wd);po.position.set(px,B[2]+.45,sd*.85);add(po)})})}
@@ -9807,6 +9808,128 @@ function cpBossUpd(dt){var b=CP.boss;if(!b)return;var B=b.B,fl=B.floor,t=CP.t,v=
   /* encostar nela machuca (menos quando está mexendo o caldeirão) */
   if(state==='play'&&b.st!=='stir'&&b.st!=='dead'&&b.st!=='wait'&&b.st!=='flee'&&b.st!=='flee2'&&Math.abs(P.x-b.x)<1+P.w/2&&P.y<b.y+2.6&&P.y+P.h>b.y+.4&&!(P.vy<0&&P.y>b.y+1.4))hurt(b.x,1)}
 
+/* ===== Robô gerador de fases — Mundo 23 em diante (plano aprovado pelo dono, 06/11) =====
+   rbMundo(n) gera o Mundo n (e os que faltam antes dele) e põe em LEVELS/STORY.worlds. O número do mundo é a semente:
+   o Mundo 23 sai sempre igual, para todo mundo. A fase é costurada com trechos curtos (rbC*), sempre dentro dos limites
+   de pulo do Kuro (RB_PULO), e o robô de teste (rbBot) passa por ela nos testes (bloco 66 de testes/roda.js).
+   Mistura: em qualquer cenário podem entrar os perigos do cânion (pedras, pilões, troncos) e as coisas das raízes
+   (semente-ponte, cipó, raiz que sobe, espinhos) — os portões estão em 11_construcao, 40_estado, 53_agua e 60_animacao (LV.gen). */
+var RB_PULO={gap:3.3,up:2.2,gapUp:2.3};/* buraco máximo no mesmo nível, subida máxima, buraco máximo numa subida (andando, pulo segurado) */
+/* cenários que o robô usa: t = tema, m = música, nome (para o título), fem = feminino, frio = pode nevar */
+var RB_BASES=[{t:0,nome:'Vale'},{t:1,nome:'Caverna',fem:1},{t:2,nome:'Floresta',fem:1},{t:4,nome:'Castelo'},{t:5,nome:'Montanha',fem:1,frio:1},
+  {t:6,nome:'Deserto'},{t:7,nome:'Vila',fem:1},{t:8,nome:'Encosta',fem:1,frio:1},{t:9,nome:'Vulcão'},{t:21,m:17,nome:'Cânion'},{t:22,m:18,nome:'Raízes',pl:1,fem:1},{t:23,m:19,nome:'Copa',fem:1}];
+/* hora do dia e clima (por cima do tema da base) */
+var RB_LOOK={
+  noite:{sky:['#0a1830','#14284a','#1e3c5a','#0c1c30'],fog:'#16304a',sun:0xb8ccff,si:1.0,hemi:[0x98b8f0,0x1c2a2a,.5],exp:.8},
+  tarde:{sky:['#3a56a8','#c8789a','#ffb878','#ffe6b0'],fog:'#f6d6b4',sun:0xffd8a0,si:2.2,hemi:[0xffe2c8,0x6a4a5a,.5],exp:.88},
+  neblina:{fog:'#c8d0d8',fdK:2.4},
+  neve:{snow:true}};
+function rbRng(n){var s=n>>>0;s=Math.imul(s^s>>>16,0x85ebca6b);s=Math.imul(s^s>>>13,0xc2b2ae35);s=(s^s>>>16)>>>0;return function(){s=(s+0x6D2B79F5)>>>0;var t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function rbMundo(n){while(LEVELS.length<n){var g=rbGera(LEVELS.length+1);LEVELS.push(g.L);STORY.worlds.push(g.s)}return LEVELS[n-1]}
+function rbGera(n){var r=rbRng(n*977+13);for(var w=0;w<7;w++)r();var k=n-23,rest=k>0&&k%5===4;/* a cada 5 mundos, um mais calmo */
+  var d=Math.min(1,k/40)*(rest?.45:1);
+  function rr(a,b){return a+(b-a)*r()}function pick(a){return a[Math.floor(r()*a.length)]}
+  var B=RB_BASES[(n*7+Math.floor(r()*RB_BASES.length))%RB_BASES.length];
+  var fmt=pick(['direita','direita','direita','subida','descida']);
+  var hora=pick(['dia','dia','dia','tarde','noite','neblina']);if(B.t===22)hora='dia';/* Raízes já é noite */
+  var neve=B.frio&&r()<.5;
+  var look=null;if(hora!=='dia'){var lk=RB_LOOK[hora];look={};for(var q in lk)look[q]=lk[q];if(lk.fdK)look.fd=(THEMES[B.t].fd||.008)*lk.fdK}
+  if(neve){look=look||{};look.snow=true}
+  /* mistura de mecânicas: cada mundo ganha 1 ou 2 famílias especiais além do básico */
+  var fam=[];var all=['cnPedra','cnPilao','cnTronco','rtPonte','rtCipo','rtSobe','rtEspinho'];
+  while(fam.length<(d>.3?2:1)){var f=pick(all);if(fam.indexOf(f)<0)fam.push(f)}
+  var y0=fmt==='descida'?34:0;
+  var L={name:'',theme:B.t,music:B.m,gen:{n:n,fmt:fmt,hora:hora,fam:fam,log:[]},camMax:0,limit:900,es:1.05,noLift:1,jk:1.1,noHeartFit:1,coinN:100,look:look,
+    solids:[],floats:[],movers:[],crumbles:[],feathers:[],spikes:[],springs:[],enemies:[],blocks:[],coins:[],gems:[],checkpoints:[],wind:[],
+    goal:null,start:{x:0,y:y0}};
+  if(fmt!=='direita')L.tall=1;
+  if(THEMES[B.t].canyon)L.canyon={A:4,free:-20,camUp:2.1,arrows:[],rocks:[],boulders:[],crushers:[],logs:[]};/* o tema do cânion precisa disto */
+  var G={L:L,r:r,rr:rr,pick:pick,d:d,x:10,y:y0,fmt:fmt,lastCp:0,used:{}};
+  L.solids.push([-14,10,y0]);
+  L.blocks.push({x:5,y:y0+2.4,t:'q',c:'mushroom'});
+  L.coins.push(['r',1,9,y0+.9,4]);
+  var LEN=rr(250,320)+d*60,cps=[],gems=0,hz=0,items=['flower','fox','coin','fruit'];
+  var C=[rbChao,rbBuraco,rbBuraco,rbDegraus,rbIlhas,rbPonte,rbMover,rbMola,rbEspinhos,rbChao];
+  var esp={cnPedra:rbPedras,cnPilao:rbPiloes,cnTronco:rbTroncos,rtPonte:rbSemente,rtCipo:rbCipo,rtSobe:rbRaizSobe,rtEspinho:rbEspinhoRaiz};
+  var prev=null;
+  while(G.x<LEN){
+    if(G.x-G.lastCp>45){var cx0=G.x;rbChao(G,1);cps.push([G.x-3,G.y]);G.lastCp=G.x;
+      var bx=Math.round((cx0+G.x)/2)-1;if(items.length&&r()<.5){var it=items.shift();L.blocks.push({x:bx,y:G.y+2.4,t:'q',c:it})}
+      else if(hz<2&&G.x>LEN*(.3+hz*.4)){hz++;L.blocks.push({x:bx,y:G.y+2.4,t:'q',c:'heart'})}continue}/* corações à vista (sem os escondidos: longe da beira) */
+    var c=r()<.3?esp[pick(fam)]:pick(C);if(c===prev&&c!==rbChao)c=rbChao;prev=c;var x0=G.x;c(G);L.gen.log.push((x0|0)+':'+c.name.slice(2));
+    if(gems<3&&G.gem){L.gems.push(G.gem);gems++}G.gem=null}
+  if(gems<3){/* joias que faltaram: no alto, em cima do caminho */for(;gems<3;gems++)L.gems.push([G.x-40*gems-20,rbTopo(L,G.x-40*gems-20)+3.4])}
+  if(r()<.6)L.blocks.push({x:cps[1]?Math.round(cps[1][0]-3):30,y:(cps[1]?cps[1][1]:y0)+2.4,t:'q',c:'feather'});
+  rbChao(G,1,16);L.goal={x:G.x-6,top:G.y};L.camMax=G.x-2;L.checkpoints=cps;
+  if(!L.wind.length)delete L.wind;
+  /* nome e história */
+  var Q={noite:['da Lua','das Estrelas','da Meia-Noite'],tarde:['do Pôr do Sol','do Crepúsculo'],neblina:['da Neblina','das Brumas'],
+    cnPedra:['das Pedras Rolantes'],cnPilao:['dos Pilões'],cnTronco:['dos Troncos'],rtPonte:['das Sementes'],rtCipo:['dos Cipós'],rtSobe:['das Raízes'],rtEspinho:['dos Espinhos']};
+  var qs=(Q[hora]||[]).concat(Q[fam[0]]);if(neve)qs=qs.concat(['da Neve','do Inverno']);
+  var q2=pick(qs);if(B.t===22&&q2==='das Raízes')q2='dos Espinhos';
+  var pre=fmt==='subida'?(B.fem?'Alta ':'Alto '):'';if(fmt==='descida')q2=q2+(B.fem?' Profunda':' Profundo');
+  if(B.pl&&pre)pre='Altas ';if(B.pl&&fmt==='descida')q2=q2.replace(' Profunda',' Profundas');
+  L.name=pre+B.nome+' '+q2;
+  var txt={direita:'Corra até o fim',subida:'Suba até o alto',descida:'Desça até o fundo'}[fmt];
+  return {L:L,s:{kicker:'Mundo '+n+' · Ilhas do Robô',title:L.name,text:txt+' — este mundo foi montado pelo robô, com pedaços de todos os mundos do Kuro. Boa sorte!',end:'O robô já está montando a próxima ilha. Siga em frente!'}}}
+/* topo do chão em x (para pôr joias e moedas) */
+function rbTopo(L,x){var t=-99;L.solids.forEach(function(s){if(x>=s[0]&&x<=s[1]&&s[2]>t)t=s[2]});return t<-50?0:t}
+function rbChao0(G,len){G.L.solids.push([G.x,G.x+len,G.y]);G.x+=len}
+/* direção da altura conforme o formato (subida sobe, descida desce, direita oscila entre 0 e 6) */
+function rbDy(G,a,b){var v=G.rr(a,b);if(G.fmt==='subida')return Math.abs(v);if(G.fmt==='descida')return -Math.abs(v);
+  if(G.y+v>6||G.y+v<0)v=-v;return Math.max(-G.y,v)}
+function rbChao(G,cp,len){var L=G.L,r=G.r,x=G.x,y=G.y;len=len||G.rr(8,14);rbChao0(G,len);if(cp)return;
+  if(len>9&&r()<.55+G.d*.35)L.enemies.push({t:'beetle',x0:x+1.5,x1:x+len-1.5,y:y,s:1.1+G.d*.4});
+  if(r()<.35){var bx=Math.round(x+len/2);L.blocks.push({x:bx-1,y:y+2.4,t:'brick'},{x:bx,y:y+2.4,t:'q',c:'coin'},{x:bx+1,y:y+2.4,t:'brick'})}
+  else L.coins.push(['r',x+1,x+len-1,y+.9,Math.max(2,len/2.6|0)]);
+  if(r()<.25+G.d*.3)L.enemies.push({t:'bat',x0:x+1,x1:x+len-1,y:y+4.4,s:1.2+G.d*.3})}
+function rbBuraco(G){var dy=rbDy(G,0,1.8),gap=dy>.3?G.rr(1.6,RB_PULO.gapUp-(dy/RB_PULO.up)*.6):G.rr(1.6,2.2+1.1*G.d);
+  if(dy>RB_PULO.up)dy=RB_PULO.up;G.L.coins.push(['a',G.x+gap/2,G.y+Math.max(dy,0)+2.6]);G.x+=gap;G.y=+(G.y+dy).toFixed(2);rbChao0(G,G.rr(4,7))}
+function rbDegraus(G){var k=2+Math.floor(G.r()*3);for(var i=0;i<k;i++){var dy=rbDy(G,.9,1.6);G.y=+(G.y+dy).toFixed(2);rbChao0(G,G.rr(2.6,4));
+  G.L.coins.push(['a',G.x-1.3,G.y+.9])}}
+function rbIlhas(G){var L=G.L,k=2+Math.floor(G.r()*(2+G.d*2)),y=G.y;
+  for(var i=0;i<k;i++){var gap=G.rr(1.4,2.2+G.d*.7),w=G.rr(3.6,2.4)-G.d*.4,dy=rbDy(G,0,1.2);if(dy>1.2)dy=1.2;y=Math.max(G.fmt==='descida'?-50:.6,+(y+dy).toFixed(2));
+    G.x+=gap;L.floats.push([G.x,G.x+w,y]);if(i===1&&G.r()<.5)G.gem=[G.x+w/2,y+3.2];else L.coins.push(['r',G.x+.5,G.x+w-.5,y+.9,2]);G.x+=w}
+  G.x+=G.rr(1.4,2.2);G.y=G.fmt==='direita'?Math.max(0,Math.min(6,y)):y;rbChao0(G,G.rr(4,6))}
+function rbPonte(G){var n=3+Math.floor(G.r()*3);G.L.coins.push(['r',G.x+.5,G.x+n*2.2-.5,G.y+.9,n*2]);for(var i=0;i<n;i++){G.L.crumbles.push([G.x,G.x+2.2,G.y]);G.x+=2.2}rbChao0(G,G.rr(4,6))}
+function rbMover(G){var w=3.2,rg=G.rr(1.6,2.2),gap=w+2*rg+.6;G.L.movers.push({cx:+(G.x+gap/2).toFixed(2),range:+rg.toFixed(2),speed:+G.rr(.7,.9+G.d*.4).toFixed(2),top:G.y,w:w});
+  G.L.coins.push(['r',G.x+1,G.x+gap-1,G.y+1.6,3]);G.x+=gap;rbChao0(G,G.rr(4,6))}
+function rbMola(G){if(G.fmt==='descida'){rbDegraus(G);return}rbChao0(G,3);G.L.springs.push([G.x-1.4,G.y]);var h=G.rr(3.4,4.6);G.gem=[G.x-1.4,G.y+h+3.4];
+  G.y=+(G.y+h).toFixed(2);rbChao0(G,G.rr(5,8));if(G.fmt==='direita'){/* e desce de novo em degraus */var k=0;while(G.y>2&&k++<4){G.y=+Math.max(0,G.y-G.rr(1.2,1.8)).toFixed(2);rbChao0(G,G.rr(2.6,3.6))}}}
+function rbEspinhos(G){var w=G.rr(1.3,2+G.d*.5),len=3+w+G.rr(6,8),s=G.x+3;/* depois do espinho sobra chão para pousar */rbChao0(G,len);G.L.spikes.push([+s.toFixed(2),+(s+w).toFixed(2),G.y]);G.L.coins.push(['a',s+w/2,G.y+3.2])}
+/* ----- famílias especiais (misturadas de outros mundos) ----- */
+function rbCn(G){var L=G.L;if(!L.canyon)L.canyon={A:4,free:-20,camUp:2.1,arrows:[],rocks:[],boulders:[],crushers:[],logs:[]};return L.canyon}
+function rbPedras(G){/* Cânion: pedra que rola vindo contra o Kuro, no chão reto */var C=rbCn(G),len=G.rr(18,26),x=G.x;rbChao0(G,len);
+  C.boulders.push([+(x+len-1).toFixed(1),+(x+1).toFixed(1),+G.rr(3.4,4.2-G.d*.6).toFixed(1),+G.rr(0,1.5).toFixed(1)]);G.L.coins.push(['r',x+2,x+len-2,G.y+.9,6])}
+function rbPiloes(G){var C=rbCn(G),k=1+Math.floor(G.r()*(2+G.d*2)),x=G.x;rbChao0(G,3);for(var i=0;i<k;i++){C.crushers.push([+(G.x+1.1).toFixed(2),2.2,+(G.y+4.6).toFixed(2),+G.rr(1.3,1.6).toFixed(2),+(i*.7).toFixed(2),.45]);rbChao0(G,4)}
+  rbChao0(G,3);G.L.coins.push(['r',x+3,G.x-3,G.y+.9,k*2])}
+function rbTroncos(G){var C=rbCn(G),k=1+Math.floor(G.r()*2),x=G.x;rbChao0(G,4);for(var i=0;i<k;i++){C.logs.push([+(G.x+2).toFixed(2),+(G.y+9.2).toFixed(2),7.4,.8,+G.rr(1.4,1.7).toFixed(2),+(i*1.2).toFixed(2)]);rbChao0(G,8)}
+  rbChao0(G,2);G.L.coins.push(['r',x+3,G.x-3,G.y+.9,k*3])}
+function rbRt(G){var L=G.L;if(!L.roots)L.roots={bridges:[],vines:[],lifts:[],thorns:[],spiders:[]};return L.roots}
+function rbSemente(G){/* Raízes: semente que faz a raiz virar ponte sobre um buraco largo */var R=rbRt(G);rbChao0(G,5);var gap=G.rr(9,11);
+  R.bridges.push({seed:[+(G.x-1.5).toFixed(2),+(G.y+.9).toFixed(2)],l:+G.x.toFixed(2),r:+(G.x+gap).toFixed(2),t:G.y,dur:9});G.L.coins.push(['r',G.x+1,G.x+gap-1,G.y+1.4,5]);G.x+=gap;rbChao0(G,G.rr(5,7))}
+function rbCipo(G){/* cipó sobre um buraco largo */if(G.fmt==='descida'){rbBuraco(G);return}var R=rbRt(G);rbChao0(G,4);var gap=G.rr(7.4,8.4);
+  R.vines.push([+(G.x+gap*.42).toFixed(2),+(G.y+9.6).toFixed(2),6.8]);G.L.coins.push(['a',G.x+gap*.42,G.y+1.8]);G.x+=gap;rbChao0(G,G.rr(5,7))}
+function rbRaizSobe(G){/* raiz que sobe (elevador) até um degrau alto */if(G.fmt==='descida'){rbDegraus(G);return}var R=rbRt(G);rbChao0(G,3);var h=G.rr(4.2,5);
+  R.lifts.push([+(G.x+1.2).toFixed(2),2.4,G.y,+(G.y+h).toFixed(2),+G.rr(.8,1).toFixed(2)]);G.x+=2.4;G.y=+(G.y+h-.4).toFixed(2);rbChao0(G,G.rr(5,7));G.gem=[G.x-3,G.y+3.2];
+  if(G.fmt==='direita'){var k=0;while(G.y>2&&k++<4){G.y=+Math.max(0,G.y-G.rr(1.2,1.8)).toFixed(2);rbChao0(G,G.rr(2.6,3.6))}}}
+function rbEspinhoRaiz(G){/* raízes de espinho que saem do chão de tempos em tempos */var R=rbRt(G),k=1+Math.floor(G.r()*(1+G.d*2));rbChao0(G,3);
+  for(var i=0;i<k;i++){R.thorns.push([+(G.x+1.5).toFixed(2),1.4,G.y,+G.rr(2.4,2.8).toFixed(2),+(i*1.3).toFixed(2)]);rbChao0(G,5)}rbChao0(G,2)}
+/* ===== parte 2: as Ilhas do Robô no mapa (terceiro mapa, depois da Terra Nova, do outro lado do mar) =====
+   O mapa mostra os mundos gerados até o liberado + 3 (os da frente ficam na nuvem). rbGarante gera os que faltam. */
+function rbGarante(k){rbMundo(Math.max(k,TOTAL_W+3))}
+var RB_MP0=-1,RB_MWP0=-1;
+var RB_COR={0:['#86d44f','#7b5e3e'],1:['#a08a6a','#5a4636'],2:['#35b08a','#2b6556'],4:['#56505e','#2e2a34'],5:['#eef4fa','#9fb0c4'],6:['#e8a24a','#9c6130'],
+  7:['#8a9a6a','#5a4a36'],8:['#6cc24a','#c8823a'],9:['#3a2a2a','#1e1416'],21:['#e89a5a','#9a5a30'],22:['#2e5a3a','#1e3424'],23:['#7ad05a','#6a4a2e']};
+function rbIlhasMapa(){/* põe as ilhas 23… em MP e a trilha (com a travessia de barco) em MWP; refaz do zero a cada chamada */
+  if(RB_MP0<0){RB_MP0=MP.length;RB_MWP0=MWP.length}MP.length=RB_MP0;MWP.length=RB_MWP0;
+  var w22=MP[RB_MP0-1],prev=null;
+  for(var n=TOTAL_W+1;n<=LEVELS.length;n++){var k=n-TOTAL_W-1,L=LEVELS[n-1],c=RB_COR[L.theme]||['#7ccf4a','#7b5e3e'];
+    var p={n:'rb'+n,x:w22.x+4+Math.sin(k*1.1)*9,z:w22.z-36-k*10.5,r:5.4,y:.3+(k%3)*.15,top:c[0],side:c[1]};MP.push(p);
+    if(!prev)MWP.push([w22.x-1,w22.z-6.5],[w22.x+1,w22.z-14],[p.x-1,p.z+12],[p.x,p.z+5]);/* sai da Copa, atravessa o mar de barco */
+    else MWP.push([(prev.x+p.x)/2+(k%2?1:-1),(prev.z+p.z)/2]);
+    MWP.push([p.x+(k%2?.6:-.6),p.z+.4,n-1]);prev=p}}
+
 /*@@parte:40_estado.js*/
 /* ===================== estado do jogo ===================== */
 var P={look:0,flapA:0,cape:false,pm:0,flyT:0,glide:0,spinT:0,spinCd:0,jsq:0,jsnap:false,fire:false,fcd:0,shootT:0,runT:0,x:0,y:0,vx:0,vy:0,w:.6,h:1.35,face:1,grounded:false,onPlat:null,coyote:0,jbuf:0,inv:0,stun:0,prevY:0,phase:0,land:0,airVy:0,yaw:Math.PI/2,stepIdx:0,feather:0,dj:false,noCut:0,cheer:0,nextBlink:2,blink:0,cph:0,climb:null,warp:null,vineCd:0,shield:false,idleT:0,pipeT:0,skid:0,big:false,crouch:false,sz:.78,csq:1,growT:0,sc:[0,0,0,0],inW:false,hd:false,air:1,swimCd:0,tapCd:0,drownT:.4};
@@ -9826,6 +9949,8 @@ if(save.best[7]>0&&save.unlocked<9&&LEVELS.length>8)save.unlocked=9;
 if(save.best[8]>0&&save.unlocked<10&&LEVELS.length>9)save.unlocked=10;
 /* TESTE: todas as fases liberadas enquanto o jogo está em construção (trocar para false quando o jogo estiver pronto) */
 var TESTE_LIBERADO=true;if(TESTE_LIBERADO)save.unlocked=Math.max(save.unlocked,LEVELS.length);
+if(TESTE_LIBERADO)save.unlocked=Math.max(save.unlocked,TOTAL_W+1);/* em construção: o Mundo 23 do robô também fica aberto */
+rbGarante(save.unlocked+3);/* Ilhas do Robô: gera os mundos até o liberado + 3 */
 function writeSave(){try{localStorage.setItem('rumo-ao-cume-v2',JSON.stringify(save))}catch(e){}}
 
 function fmt(t){var m=Math.floor(t/60),s=Math.floor(t%60);return m+':'+(s<10?'0':'')+s}
@@ -9851,8 +9976,8 @@ function toast(msg){
   clearTimeout(toast.k);toast.k=setTimeout(function(){t.classList.remove('show')},2300);
 }
 function spawn(pt){
-  if(curTheme.canyon&&typeof cnReset==='function')cnReset();/* Cânion: renasce com a gravidade normal */
-  if((curTheme.roots||curTheme.copa)&&typeof rtReset==='function')rtReset();/* Raízes: pontes e fungos voltam ao começo */
+  if((curTheme.canyon||LV.canyon)&&typeof cnReset==='function')cnReset();/* Cânion: renasce com a gravidade normal */
+  if((curTheme.roots||curTheme.copa||LV.roots)&&typeof rtReset==='function')rtReset();/* Raízes: pontes e fungos voltam ao começo */
   if(curTheme.copa&&typeof cpReset==='function')cpReset();
   if(LV&&LV.kites)sumMechReset();
   if(volEsc&&volEsc.on){volEsc.on=false;volEsc.wall.visible=false;volEsc.gl.visible=false}/* renasceu: a parede recomeça um pouco atrás dele */
@@ -9875,8 +10000,8 @@ function resetState(){
   if(LV&&LV.maze&&typeof mzReset==='function')mzReset();
   if(curTheme.aurora&&typeof aurReset==='function')aurReset();
   if(curTheme.wreck&&typeof wkReset==='function')wkReset();
-  if(curTheme.canyon&&typeof cnReset==='function')cnReset();
-  if((curTheme.roots||curTheme.copa)&&typeof rtReset==='function')rtReset();
+  if((curTheme.canyon||LV.canyon)&&typeof cnReset==='function')cnReset();
+  if((curTheme.roots||curTheme.copa||LV.roots)&&typeof rtReset==='function')rtReset();
   if(curTheme.copa&&typeof cpReset==='function')cpReset();
   resetBoss();resetDrops();P.swimToast=false;$('airStat').hidden=true;airBubs.forEach(function(b){b.on=true;b.cd=0;b.mesh.visible=true});
   respawn={x:LV.start.x,y:LV.start.y};placeEnemies(respawn.x);
@@ -9943,7 +10068,7 @@ function lose(ttl,txt){
   showCard({kicker:'Quase lá!',title:ttl||'Kuro caiu',text:txt||'Os inimigos levaram a melhor, mas o Kuro nunca desiste. Vamos de novo?',stats:stats(),primary:{label:'Tentar de novo',fn:retry},secondary:{label:'Mapa',fn:function(){openMap({from:levelIdx})}}});
 }
 function recordLevel(){
-  var i=levelIdx;
+  var i=levelIdx;if(typeof rbGarante==='function')rbGarante(i+5);/* robô: o próximo mundo (e mais 3) já existe */
   save.gems[i]=Math.max(save.gems[i]||0,gemsGot);
   save.coins[i]=Math.max(save.coins[i]||0,coinsGot);
   save.bank=bank;save.hearts=Math.max(1,hearts);/* os corações passam para a próxima fase */
@@ -9970,7 +10095,7 @@ function winGame(){
   state='win';sfx.win();P.cheer=6;recordLevel();
   emit(sparkPool,P.x,P.y+2,60,7,1.6,.6,.5,4);
   showCard({kicker:'Fim da aventura',title:'Kuro salvou a vila',text:STORY.worlds[levelIdx].end,stats:stats(scoreLis()),
-    primary:{label:'Jogar de novo',fn:function(){startLevel(0)}},secondary:{label:'Mapa',fn:function(){openMap({from:levelIdx})}}});
+    primary:{label:'Seguir viagem',fn:function(){openMap({from:levelIdx,walkTo:levelIdx+1})}},secondary:{label:'Jogar de novo',fn:function(){startLevel(0)}}});/* barco para as Ilhas do Robô */
 }
 var debris=[],debrisG=null;
 function spawnDebris(x,y){
@@ -10467,7 +10592,7 @@ function collectItem(it){
     if(!P.fire){setFire(true);toast('Flor de fogo! Aperte Fogo (ou J) para atirar')}else{hearts++;setHearts();toast('+1 vida')}
   }
   else if(it.type==='fruit'){P.shield=true;sfx.heart();emit(sparkPool,it.x,it.y,14,3.5,.8,.35,.3,3);toast('Escudo mágico! Protege de um golpe')}
-  else if(it.type==='core'){if(levelIdx>=TOTAL_W-1||(LV.boss&&LV.boss.v2))winGame();else winLevel()}
+  else if(it.type==='core'){if(levelIdx===TOTAL_W-1||(LV.boss&&LV.boss.v2))winGame();else winLevel()}
 }
 /* ===== poder novo da raposinha na Terra Nova (pedido do dono): Bolha de Ponte =====
    no Impulso, o inimigo atingido fica preso numa bolha laranja que sobe um pouco e flutua parada ~5 s; o Kuro pode pisar nela como degrau. Depois estoura e o inimigo volta. */
@@ -12249,6 +12374,7 @@ function step(dt){
   else if(curTheme.canyon)cnUpd(dt);
   else if(curTheme.roots)rtUpd(dt);
   else if(curTheme.copa){rtUpd(dt);cpUpd(dt)}
+  if(LV&&LV.gen){if(LV.canyon&&!curTheme.canyon)cnUpd(dt);if(LV.roots&&!curTheme.roots&&!curTheme.copa)rtUpd(dt)}/* robô gerador: mecânicas misturadas */
   if(P.onPlat&&P.onPlat.mover)P.x+=P.onPlat.x-P.onPlat.px;
   var CNF=curTheme.canyon?cnIn():0;/* Mundo 20: gravidade virada — o passo do Kuro roda no mundo espelhado (ver 36_canion.js) */
   var ax=keys.jx!==0?keys.jx:((keys.right?1:0)-(keys.left?1:0));
@@ -12398,7 +12524,7 @@ function step(dt){
   }
   }
   if(CNF)cnOut();
-  if((curTheme.roots||curTheme.copa)&&RT&&RT.sw)rtSwingAfter(dt);/* Mundo 21: pendurado no cipó */
+  if((curTheme.roots||curTheme.copa||LV.roots)&&RT&&RT.sw)rtSwingAfter(dt);/* Mundo 21: pendurado no cipó */
   tryWarp(dt);
   if(LV.lavaY!==undefined&&P.y<LV.lavaY-.15&&state==='play'){emit(sparkPool,P.x,LV.lavaY+.2,24,5,.8,.4,.3,3);fallDeath('O Kuro caiu na lava! Voltando ao último checkpoint.');return}
   if(P.y<-9||(LV.fall&&P.x>LV.fall.x&&P.x<LV.fall.x2&&P.y<LV.fall.y)){fallDeath();return}
@@ -12453,7 +12579,7 @@ function step(dt){
     }
   }
   updFox(dt);
-  if(LV.goal&&!LV.crystalGoal&&P.x>=LV.goal.x-.2&&P.y>=LV.goal.top-.2&&!inRoom(P.x)){if(levelIdx>=TOTAL_W-1||(LV.boss&&LV.boss.v2))winGame();else winLevel()}
+  if(LV.goal&&!LV.crystalGoal&&P.x>=LV.goal.x-.2&&P.y>=LV.goal.top-.2&&!inRoom(P.x)){if(levelIdx===TOTAL_W-1||(LV.boss&&LV.boss.v2))winGame();else winLevel()}
 }
 
 /*@@parte:60_animacao.js*/
@@ -12662,7 +12788,7 @@ function pose(dt){
   if(P.mountT>0){var mk2=1-P.mountT/.8,ak=clamp((mk2-.1)/.72,0,1);rig.root.position.y+=Math.sin(ak*Math.PI)*1.7-(mk2<.1?(1-mk2/.1)*seatY()*0:0);rig.root.position.x-=P.face*(1-ak)*.8}/* salto até a sela */
   foxVisUpd(dt);
   if(curTheme.canyon&&!dyn)cnPose(dt);
-  if((curTheme.roots||curTheme.copa)&&typeof RT!=='undefined'&&RT&&RT.sw&&!dyn){rtSwingPose();RT.posed=1}
+  if((curTheme.roots||curTheme.copa||(LV&&LV.roots))&&typeof RT!=='undefined'&&RT&&RT.sw&&!dyn){rtSwingPose();RT.posed=1}
   else if(typeof RT!=='undefined'&&RT&&RT.posed){RT.posed=0;rig.root.rotation.x=0;rig.root.rotation.z=0}/* soltou o cipó: o corpo volta de pé *//* Mundos 21/22: pendurado no cipó, segurando com as mãos e balançando o corpo *//* Mundo 20: Kuro de cabeça para baixo no teto */
   if(typeof AU!=='undefined'&&AU&&(AU.sl||AU.sin)){rig.hipL.rotation.x=rig.hipR.rotation.x=-1.45;rig.kneeL.rotation.x=rig.kneeR.rotation.x=.25;rig.root.position.y-=.05}/* tobogã: sentado, pernas para a frente */
   rig.root.visible=!(P.inv>0&&Math.floor(P.inv*14)%2===0&&state==='play');
@@ -13493,7 +13619,7 @@ function mapHeight(x,z){
   for(var i=0;i<MP.length;i++){var p=MP[i],dx=x-p.x,dz=z-p.z,d=Math.sqrt(dx*dx+dz*dz),a=Math.atan2(dz,dx);
     var rr=p.r*(1+.06*Math.sin(a*3+i)+.04*Math.sin(a*5+i*2))*.97;
     if(d<rr)h=Math.max(h,p.y)}
-  for(i=0;i<MP.length-1;i++){if(i===10)continue;var a1=MP[i],b1=MP[i+1],mx=(a1.x+b1.x)/2,mz=(a1.z+b1.z)/2,d2=Math.hypot(x-mx,z-mz);if(d2<3.8)h=Math.max(h,Math.min(a1.y,b1.y)*.5+Math.max(a1.y,b1.y)*.5)}
+  for(i=0;i<MP.length-1;i++){if(i===10||i===TOTAL_W-1)continue;var a1=MP[i],b1=MP[i+1],mx=(a1.x+b1.x)/2,mz=(a1.z+b1.z)/2,d2=Math.hypot(x-mx,z-mz);if(d2<3.8)h=Math.max(h,Math.min(a1.y,b1.y)*.5+Math.max(a1.y,b1.y)*.5)}
   return h;
 }
 function mapPathDist(x,z){var m=1e9;for(var i=0;i<mapPath.pts.length;i+=2){var q=mapPath.pts[i],d=Math.hypot(q.x-x,q.z-z);if(d<m)m=d}return m}
@@ -13509,8 +13635,9 @@ function mapLabel(n,state){
   var t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;return t;
 }
 function buildMap(){
-  var IS={off:0,n:MAPN,bg:'#3aa6d8'};
-  mapScene=new T.Scene();mapScene.background=new T.Color(IS.bg);mapScene.fog=new T.Fog(IS.bg,70,170);
+  if(typeof rbIlhasMapa==='function')rbIlhasMapa();/* Ilhas do Robô (mundos 23…) */
+  var IS={off:0,n:MP.length,bg:'#3aa6d8'};
+  mapScene=new T.Scene();mapScene.userData.n=MP.length;mapScene.background=new T.Color(IS.bg);mapScene.fog=new T.Fog(IS.bg,70,170);
   mapScene.add(new T.HemisphereLight(0xdff1ff,0x4a6a58,.55));
   var dl=new T.DirectionalLight(0xfff1d8,1.35);dl.position.set(-14,30,18);mapScene.add(dl);
   var r=rnd(4242),i,j;
@@ -13525,7 +13652,7 @@ function buildMap(){
     var m=new T.Mesh(g,[mapMat(sideC),mapMat(topC),mapMat(sideC)]);m.position.set(x,top-1.3,z);mapScene.add(m);return m;
   }
   MP.forEach(function(p,k){slab(p.x,p.z,p.r,p.y,p.top,p.side,k)});
-  for(i=0;i<MP.length-1;i++){if(i===10)continue;var a=MP[i],b=MP[i+1];slab((a.x+b.x)/2,(a.z+b.z)/2,3.4,(a.y+b.y)/2,a.top,a.side,20+i)}
+  for(i=0;i<MP.length-1;i++){if(i===10||i===TOTAL_W-1)continue;var a=MP[i],b=MP[i+1];slab((a.x+b.x)/2,(a.z+b.z)/2,3.4,(a.y+b.y)/2,a.top,a.side,20+i)}
   // trilha
   var wp=MWP.map(function(w){return new T.Vector3(w[0],0,w[1])});
   var curve=new T.CatmullRomCurve3(wp,false,'catmullrom',.4),N=700,pts=[],len=[0];
@@ -13835,6 +13962,7 @@ function mapGo(i,instant){
 function openMap(opts){
   opts=opts||{};
   var from=opts.from!=null?opts.from:(mapAt>=0?mapAt:Math.max(0,Math.min(save.unlocked,LEVELS.length)-1));
+  if(mapScene&&mapScene.userData.n!==LEVELS.length){mapAvatarOff();mapScene=null;mapNodes=[];mapClouds=[]}/* ilha nova do robô: refaz o mapa */
   if(!mapScene)buildMap();
   state='map';card.hidden=true;$('cfg').hidden=true;
   $('hud').style.visibility='hidden';$('mapUI').hidden=false;$('mapPanel').hidden=true;
@@ -14037,4 +14165,4 @@ ldBoot([function(){setHearts();applyGfx()},function(){buildLevel(0)},function(){
 })();
 </script>
 
-<div id="verTag" style="position:fixed;right:6px;bottom:4px;z-index:1000;font:11px sans-serif;color:#fff;opacity:.55;pointer-events:none;text-shadow:0 1px 2px #000">versão ade769</div><script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").then(function(r){try{r.update()}catch(e){}}).catch(function(){});var t0=Date.now(),rl=false,had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(had&&!rl&&Date.now()-t0<20000){rl=true;location.reload()}})/* versão nova chegou logo ao abrir: recarrega sozinho uma vez */})}</script></body></html>
+<div id="verTag" style="position:fixed;right:6px;bottom:4px;z-index:1000;font:11px sans-serif;color:#fff;opacity:.55;pointer-events:none;text-shadow:0 1px 2px #000">versão 82ee37</div><script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").then(function(r){try{r.update()}catch(e){}}).catch(function(){});var t0=Date.now(),rl=false,had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(had&&!rl&&Date.now()-t0<20000){rl=true;location.reload()}})/* versão nova chegou logo ao abrir: recarrega sozinho uma vez */})}</script></body></html>
