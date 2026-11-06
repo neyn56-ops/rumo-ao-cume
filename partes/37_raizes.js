@@ -230,3 +230,14 @@ function rtBossUpd(dt){var b=RT.boss;if(!b)return;var B=b.B,fl=B.floor,t=RT.t,v=
   else if(b.st==='climb'){b.y+=dt*4;if(b.y>=B.top-2.4){b.y=B.top-2.4;b.st='hang';b.att=1.6}}
   /* encostar machuca (menos quando está tonta no chão) */
   if(state==='play'&&b.st!=='stun'&&b.st!=='dead'&&Math.abs(P.x-b.x)<1.4+P.w/2&&P.y<b.y+1.6&&P.y+P.h>b.y-.4)hurt(b.x,1)}
+
+/* pose no cipó: braços para cima segurando a ponta, corpo pendurado seguindo o ângulo do cipó, pernas balançando atrás */
+var _swQ=new T.Quaternion(),_swQ2=new T.Quaternion(),_swZ=new T.Vector3(0,0,1),_swY=new T.Vector3(0,1,0),_swV=new T.Vector3();
+function rtSwingPose(){var v=RT.sw,R=rig,a=v.a,w=v.w,hand=1.62;
+  var tx=v.px+Math.sin(a)*v.L,ty=v.py-Math.cos(a)*v.L;
+  _swQ.setFromAxisAngle(_swZ,a);_swQ2.setFromAxisAngle(_swY,P.face>=0?Math.PI/2:-Math.PI/2);R.root.quaternion.copy(_swQ).multiply(_swQ2);
+  _swV.set(0,-hand,0).applyQuaternion(_swQ);R.root.position.set(tx+_swV.x,ty+_swV.y,0);
+  R.hips.position.y=HY;R.hips.rotation.set(0,0,0);R.torso.rotation.x=-.08;R.torso.rotation.y=0;R.head.rotation.x=-.25;R.head.rotation.y=0;
+  R.shL.rotation.x=-3.0;R.shL.rotation.z=.12;R.elL.rotation.x=-.15;R.shR.rotation.x=-3.0;R.shR.rotation.z=-.12;R.elR.rotation.x=-.15;
+  var sw=clamp(w*(P.face>=0?1:-1)*.35,-.7,.7);/* pernas ficam para trás do movimento */
+  R.hipL.rotation.x=-.25+sw;R.kneeL.rotation.x=.35+Math.abs(sw)*.4;R.ankL.rotation.x=-.2;R.hipR.rotation.x=-.05+sw*.9;R.kneeR.rotation.x=.55+Math.abs(sw)*.3;R.ankR.rotation.x=-.25}

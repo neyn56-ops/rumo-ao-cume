@@ -203,7 +203,8 @@ function pose(dt){
   if(typeof AU!=='undefined'&&AU&&AU.lh){var F2=AU.lh.F,dxg=P.x-F2.x,onG=P.y>F2.top-.4&&Math.abs(dxg)<2.8;P.gz=(P.gz||0)+((onG?-3.2+Math.sqrt(Math.max(1,7.3-dxg*dxg)):0)-(P.gz||0))*(1-Math.exp(-dt*8));/* anda em volta da lanterna, dentro da grade */rig.root.position.z=P.gz}/* na galeria do farol o Kuro anda mais para dentro (não fica na beirada) *//* tobogã: o Kuro vai sentado dentro do tubo */
   if(P.mountT>0){var mk2=1-P.mountT/.8,ak=clamp((mk2-.1)/.72,0,1);rig.root.position.y+=Math.sin(ak*Math.PI)*1.7-(mk2<.1?(1-mk2/.1)*seatY()*0:0);rig.root.position.x-=P.face*(1-ak)*.8}/* salto até a sela */
   foxVisUpd(dt);
-  if(curTheme.canyon&&!dyn)cnPose(dt);/* Mundo 20: Kuro de cabeça para baixo no teto */
+  if(curTheme.canyon&&!dyn)cnPose(dt);
+  if((curTheme.roots||curTheme.copa)&&typeof RT!=='undefined'&&RT&&RT.sw&&!dyn)rtSwingPose();/* Mundos 21/22: pendurado no cipó, segurando com as mãos e balançando o corpo *//* Mundo 20: Kuro de cabeça para baixo no teto */
   if(typeof AU!=='undefined'&&AU&&(AU.sl||AU.sin)){rig.hipL.rotation.x=rig.hipR.rotation.x=-1.45;rig.kneeL.rotation.x=rig.kneeR.rotation.x=.25;rig.root.position.y-=.05}/* tobogã: sentado, pernas para a frente */
   rig.root.visible=!(P.inv>0&&Math.floor(P.inv*14)%2===0&&state==='play');
 }

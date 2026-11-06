@@ -695,7 +695,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - cnOut :234
 - cnPose :240 — desenho: o Kuro gira de cabeça para baixo em volta dos pés (a câmera não gira)
 
-## 37_raizes.js  (233 linhas) /*@@parte:37_raizes.js*/
+## 37_raizes.js  (244 linhas) /*@@parte:37_raizes.js*/
 - rtMats :9
 - rtDecor :27 — cenário: raízes enormes que descem do teto, cogumelos que brilham, fios de luz pendurados
 - rtSolid :47 — bloco com 6º valor 'root': raiz grossa deitada (plataforma de madeira viva)
@@ -720,6 +720,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - rtBossReset :179
 - rtBossBar :184
 - rtBossUpd :185
+- rtSwingPose :236
 
 ## 38_copa.js  (146 linhas) /*@@parte:38_copa.js*/
 - cpMats :9
@@ -961,14 +962,14 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - updAir :69
 - step :87
 
-## 60_animacao.js  (465 linhas) /*@@parte:60_animacao.js*/
+## 60_animacao.js  (466 linhas) /*@@parte:60_animacao.js*/
 - pose :6
-- visEnemy :211
-- visKids :320
-- visBoss :328
-- animate :362
-- viewLeft :433 — borda esquerda que a câmera mostra quando está no começo da fase (na altura do chão)
-- updateCamera :434
+- visEnemy :212
+- visKids :321
+- visBoss :329
+- animate :363
+- viewLeft :434 — borda esquerda que a câmera mostra quando está no começo da fase (na altura do chão)
+- updateCamera :435
 
 ## 65_carregando.js  (173 linhas) /*@@parte:65_carregando.js*/
 - ldSkyTex :11
