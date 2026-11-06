@@ -572,3 +572,4 @@ A área de trabalho do Claude é temporária. Para recomeçar:
 - (05/11, 2ª correção dos pinheiros do Mundo 18) Saíram os pinheirinhos de cima dos pilares de gelo do fundo (atrás de outro pilar pareciam flutuar sobre a água) e os pinheiros perto do caminho não vão mais em nenhum trecho com água (a água vai 100 além de cada ponta do lago).
 - (05/11, 3ª) Pinheiros do fundo do Mundo 18 trazidos para a costa, em cima da areia vermelha (z −44,6 a −49), a pedido do dono.
 - (05/11) Mundo 18: mancha de areia vermelha em volta do pé de cada pinheiro da costa (dono: tirar a impressão de flutuar).
+- (05/11) Mundo 18, decisão final do dono: todos os pinheiros do fundo atrás da costa vermelha (z −51 a −61), sem mancha de areia no pé.

@@ -207,7 +207,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - sceneEnd :212 — fim do cenário: cobre a fase e as salas de cano que ficam além dela
 - buildBackdrop :213
 
-## 24_caverna.js  (250 linhas) /*@@parte:24_caverna.js*/
+## 24_caverna.js  (249 linhas) /*@@parte:24_caverna.js*/
 - crysGeo :4
 - crysMat :14
 - buildCaveMouth :20 — boca da caverna: arco de rocha com estalactites, pedras na entrada e o céu claro lá fora
@@ -591,42 +591,42 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - mzHoldKey :213 — a chave presa na mão do Kuro (a mão do lado da câmera), pela argola, com a haste para baixo
 - mzFreeKey :219
 
-## 34_aurora.js  (409 linhas) /*@@parte:34_aurora.js*/
+## 34_aurora.js  (407 linhas) /*@@parte:34_aurora.js*/
 - auroraBuild :7
 - pine :48
-- makePeng :97 — ---- bichos: Pinguim-tobogã ----
-- pengAI :109
-- pengVis :116
-- makeSeal :123 — ---- bichos: Foca (sai do buraco e joga bola de neve em arco) ----
-- sealAI :135
-- sealVis :144
-- auThrow :149
-- auBallUpd :152
-- auUpd :159 — ---- atualização ----
-- aurReset :186
-- auMats :191
-- auSolid :205
-- auFloeMesh :216 — placa de gelo boiando (flutua um pouquinho, só no visual)
-- auAirBlock :219 — bloco de gelo flutuando no ar (com neve e gotas), como plataforma
-- auFloe :224
-- makeSBird :230 — ---- pássaro-da-neve: voa em onda; quando o Kuro passa embaixo, dá um rasante e volta (desiste depois de um me
-- sbirdAI :240
-- sbirdVis :245
-- auVila :248 — ===================== Vila dos Pescadores (área de fora do Mundo 18) =====================
-- auVilaUpd :285
-- auEnter :310 — (testes e fotos) leva o Kuro direto ao começo do lago
-- auBack :312 — gelo e pilares de gelo lá no fundo (com neve em cima e pinheirinhos), e uma cachoeira congelada
-- auIcUpd :324
-- auChute :334 — calha de gelo aberta (tobogã) ao longo da curva cv
-- auHouse :345
-- auBridgeBuild :362 — ponte de corda com tábuas de luz da aurora: ficam firmes, piscam e somem por um tempo (ritmo da aurora)
-- auBridgeState :371
-- auBridgeUpd :372
-- auLightBuild :377 — o farol: torre listrada vermelha e branca no alto do penhasco, com degraus em volta; lá em cima o Kuro acende 
-- auLightUpd :396
-- auWaveTex :401 — mapa de relevo das ondas (normal map), 2 variações, repetem sem emenda
-- h :403
-- auIceShape :408 — placa do lago congelado com a borda irregular (gelo quebrado), de x0 a x1
+- makePeng :95 — ---- bichos: Pinguim-tobogã ----
+- pengAI :107
+- pengVis :114
+- makeSeal :121 — ---- bichos: Foca (sai do buraco e joga bola de neve em arco) ----
+- sealAI :133
+- sealVis :142
+- auThrow :147
+- auBallUpd :150
+- auUpd :157 — ---- atualização ----
+- aurReset :184
+- auMats :189
+- auSolid :203
+- auFloeMesh :214 — placa de gelo boiando (flutua um pouquinho, só no visual)
+- auAirBlock :217 — bloco de gelo flutuando no ar (com neve e gotas), como plataforma
+- auFloe :222
+- makeSBird :228 — ---- pássaro-da-neve: voa em onda; quando o Kuro passa embaixo, dá um rasante e volta (desiste depois de um me
+- sbirdAI :238
+- sbirdVis :243
+- auVila :246 — ===================== Vila dos Pescadores (área de fora do Mundo 18) =====================
+- auVilaUpd :283
+- auEnter :308 — (testes e fotos) leva o Kuro direto ao começo do lago
+- auBack :310 — gelo e pilares de gelo lá no fundo (com neve em cima e pinheirinhos), e uma cachoeira congelada
+- auIcUpd :322
+- auChute :332 — calha de gelo aberta (tobogã) ao longo da curva cv
+- auHouse :343
+- auBridgeBuild :360 — ponte de corda com tábuas de luz da aurora: ficam firmes, piscam e somem por um tempo (ritmo da aurora)
+- auBridgeState :369
+- auBridgeUpd :370
+- auLightBuild :375 — o farol: torre listrada vermelha e branca no alto do penhasco, com degraus em volta; lá em cima o Kuro acende 
+- auLightUpd :394
+- auWaveTex :399 — mapa de relevo das ondas (normal map), 2 variações, repetem sem emenda
+- h :401
+- auIceShape :406 — placa do lago congelado com a borda irregular (gelo quebrado), de x0 a x1
 
 ## 35_naufragio.js  (437 linhas) /*@@parte:35_naufragio.js*/
 - wkMats :6
