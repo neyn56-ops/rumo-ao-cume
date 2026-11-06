@@ -722,25 +722,25 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - rtBossUpd :185
 - rtSwingPose :237
 
-## 38_copa.js  (146 linhas) /*@@parte:38_copa.js*/
+## 38_copa.js  (145 linhas) /*@@parte:38_copa.js*/
 - cpMats :9
 - cpSolid :20 — galho: tronco deitado de casca com musgo em cima e um galho de apoio que volta para o tronco lá atrás
 - cpDecor :29 — cenário: o tronco gigante atrás, copas de folhas, flores, pétalas e nuvens lá embaixo
 - cpLeafMesh :38 — ---- folhas gigantes que dobram e a Bruxa que aparece ----
 - cpWitchVis :42
-- cpBuild :46
-- cpReset :51
-- cpPoof :53
-- cpInZone :54
-- cpUpd :55
-- cpConeMesh :75 — ===== Parte 2: a copa alta — galhos podres (crumbles), pinhas que rolam, flores que jogam para cima (springs),
-- cpConesBuild :77
-- cpConesUpd :78
-- cpCauldron :89
-- cpBossBuild :95
-- cpBossReset :100
-- cpBossBar :102
-- cpBossUpd :103
+- cpBuild :45
+- cpReset :50
+- cpPoof :52
+- cpInZone :53
+- cpUpd :54
+- cpConeMesh :74 — ===== Parte 2: a copa alta — galhos podres (crumbles), pinhas que rolam, flores que jogam para cima (springs),
+- cpConesBuild :76
+- cpConesUpd :77
+- cpCauldron :88
+- cpBossBuild :94
+- cpBossReset :99
+- cpBossBar :101
+- cpBossUpd :102
 
 ## 40_estado.js  (402 linhas) /*@@parte:40_estado.js*/
 - hd :5

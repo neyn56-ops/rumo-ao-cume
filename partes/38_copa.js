@@ -39,8 +39,7 @@ function cpLeafMesh(w){var A=cpMats(),g=new T.Group(),sh=new T.Shape();sh.moveTo
   var lg=new T.ExtrudeGeometry(sh,{depth:.14,bevelEnabled:true,bevelSize:.06,bevelThickness:.05,bevelSegments:1,curveSegments:10});lg.rotateX(-Math.PI/2);var l=mesh(lg,A.leafL,true,true);l.position.y=-.2;l.rotation.x=.18;g.add(l);/* folha grossa e um pouco virada para a câmera */
   var v=mesh(new T.CylinderGeometry(.05,.05,w+.6,5),A.vein);v.rotation.z=Math.PI/2;v.position.y=.02;g.add(v);
   var st=mesh(new T.CylinderGeometry(.08,.12,4,6),A.vein);st.position.set(-w/2-.3,-1.8,-.4);st.rotation.z=.5;g.add(st);return g}
-function cpWitchVis(){var w=makeWitch();var br=new T.Group(),wd=M(0x6b4a2e,.8);var st=mesh(new T.CylinderGeometry(.05,.05,2.2,6),wd);st.rotation.z=Math.PI/2;br.add(st);
-  var bs=mesh(new T.ConeGeometry(.3,.8,10),M(0xc8a050,.9));bs.rotation.z=Math.PI/2;bs.position.x=-1.3;br.add(bs);br.position.y=.35;w.g.add(br);w.broom=br;
+function cpWitchVis(){var w=makeWitch();var br=new T.Group();w.g.add(br);w.broom=br;/* a Bruxa do castelo já vem com a vassoura dela (a 2ª saiu) */
   var pot=new T.Group(),pb=mesh(new T.SphereGeometry(.2,10,8),new T.MeshStandardMaterial({color:0x70ff60,emissive:0x30c020,emissiveIntensity:.6,roughness:.3}));pot.add(pb);var nk=mesh(new T.CylinderGeometry(.06,.08,.18,6),M(0x8a6aa0,.5));nk.position.y=.22;pot.add(nk);
   w.pot=pot;return w}
 function cpBuild(th){CP={t:0,leaves:[],w:null,pots:[],clouds:[]};var C=LV.copa||{};
@@ -94,7 +93,7 @@ function cpCauldron(x,y){var g=new T.Group(),ir=M(0x1c1a22,.4,.5);var p=mesh(new
   g.position.set(x,y,-.2);add(g);return {g:g,liq:liq,ring:ring}}
 function cpBossBuild(){var B=LV.copa&&LV.copa.boss;if(!B)return;var fl=B.floor;
   var w0={l:B.x0-1.2,r:B.x0,t:fl+12,b:fl-.1,oneway:false,slip:false,dead:true};solids.push(w0);var m0=rtWallMesh(B.x0-.6,fl,fl+12);m0.material=cpMats().bark;solids.push({l:B.x1+.2,r:B.x1+1.6,t:fl+14,b:fl-.1,oneway:false,slip:false});var mE=rtWallMesh(B.x1+.9,fl,fl+14);mE.material=cpMats().bark;/* fundo da arena: galhos fechando o fim do galho (não dá para cair) */
-  var wv=cpWitchVis();wv.g.scale.setScalar(2.1);wv.g.visible=false;add(wv.g);var cd=cpCauldron(B.cx,fl);
+  var wv=cpWitchVis();wv.g.scale.setScalar(2.1);wv.g.visible=false;add(wv.g);var cd=cpCauldron(B.cx,fl);solids.push({l:B.cx-.95,r:B.cx+.95,t:fl+1.95,b:fl,oneway:false,slip:false});/* caldeirão sólido: não dá para atravessar, dá para subir */
   var stars=new T.Group();for(var s=0;s<4;s++){var st=mesh(new T.OctahedronGeometry(.18),new T.MeshBasicMaterial({color:0xffe060}),false,false);st.position.set(Math.cos(s*1.57)*1,2.6,Math.sin(s*1.57)*1);stars.add(st)}stars.visible=false;wv.g.add(stars);
   CP.boss={B:B,w0:w0,m0:m0,v:wv,cd:cd,stars:stars,orbs:[],bolts:[],crows:[],st:'wait',hp:3,max:3,x:B.cx,y:fl+7,t:0,att:2,n:0,won:false};cpBossReset()}
 function cpBossReset(){var b=CP&&CP.boss;if(!b)return;b.orbs.concat(b.bolts,b.crows).forEach(function(q){q.m&&q.m.parent&&q.m.parent.remove(q.m)});b.orbs=[];b.bolts=[];b.crows=[];
@@ -128,7 +127,7 @@ function cpBossUpd(dt){var b=CP.boss;if(!b)return;var B=b.B,fl=B.floor,t=CP.t,v=
       else{var xs=[P.x];if(ph>=2)xs.push(P.x+(P.x<B.cx?3:-3));if(ph>=3)xs.push(P.x+(P.x<B.cx?-3:3));xs.forEach(function(x){x=clamp(x,B.x0+.5,B.x1-.5);var bm=new T.Mesh(new T.CircleGeometry(.9,20),new T.MeshBasicMaterial({color:0xb070ff,transparent:true,opacity:.4,depthWrite:false}));bm.rotation.x=-Math.PI/2;bm.position.set(x,fl+.04,0);add(bm);b.bolts.push({x:x,t:.8,m:bm})})}
       if(ph>=2&&b.crows.length<2&&Math.random()<.4)[0,1].forEach(function(i){var cm=makeCrow();var cg=cm.g||cm;add(cg);b.crows.push({x:B.x0+(i?B.x1-B.x0:0),y:fl+9,t:0,m:cg})});
       b.att=2.2-ph*.35}}
-  else if(b.st==='down'){b.x+=(B.cx+1.4-b.x)*Math.min(1,dt*2.5);b.y+=(fl+.2-b.y)*Math.min(1,dt*2.5);if(Math.abs(b.y-fl-.2)<.15){b.st='stir';b.t=3.2-ph*.5}}
+  else if(b.st==='down'){if(b.sd===undefined||b.t2!==b.n){b.sd=P.x<B.cx?-1:1;b.t2=b.n}b.x+=(B.cx+1.55*b.sd-b.x)*Math.min(1,dt*2.5);b.y+=(fl+.2-b.y)*Math.min(1,dt*2.5);if(Math.abs(b.y-fl-.2)<.15){b.st='stir';b.t=3.2-ph*.5}}
   else if(b.st==='stir'){b.t-=dt;v.g.rotation.z=Math.sin(t*6)*.08;
     if(state==='play'&&P.vy<0&&Math.abs(P.x-b.x)<1.3&&P.y>b.y+2&&P.y<b.y+3.6){if(b.hp>1)b.hp--;cpBossBar();P.vy=keys.jump?15:12;P.grounded=false;sfx.stomp();emit(sparkPool,b.x,b.y+3,24,5,.9,.5,.3,2);shake=.35;v.g.rotation.z=0;
       if(b.hp<=1){b.st='flee';b.t=0;toast('Ela está fugindo para o sol! Fique no círculo do caldeirão!')}else{b.st='fly';b.att=1.4;toast('Isso! Ela ficou furiosa...')}}
