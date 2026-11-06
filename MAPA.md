@@ -962,14 +962,14 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - updAir :69
 - step :87
 
-## 60_animacao.js  (466 linhas) /*@@parte:60_animacao.js*/
+## 60_animacao.js  (467 linhas) /*@@parte:60_animacao.js*/
 - pose :6
-- visEnemy :212
-- visKids :321
-- visBoss :329
-- animate :363
-- viewLeft :434 — borda esquerda que a câmera mostra quando está no começo da fase (na altura do chão)
-- updateCamera :435
+- visEnemy :213
+- visKids :322
+- visBoss :330
+- animate :364
+- viewLeft :435 — borda esquerda que a câmera mostra quando está no começo da fase (na altura do chão)
+- updateCamera :436
 
 ## 65_carregando.js  (173 linhas) /*@@parte:65_carregando.js*/
 - ldSkyTex :11

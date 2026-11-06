@@ -576,3 +576,4 @@ A área de trabalho do Claude é temporária. Para recomeçar:
 - (05/11) **Causa real dos pinheiros flutuando no Mundo 18:** o chão de fundo (buildBackdrop) acabava em z −45, logo depois da costa vermelha; os pinheiros atrás dela ficavam sem chão embaixo (o branco era a montanha lá longe). Agora no Mundo 18 o chão vai até z −72 e os pinheiros ficam em cima dele; sombra suave no pé.
 - (05/11) Mundo 21: o buraco do 1º cipó virou queda de verdade (dono: o Kuro não morria; tinha um chão escondido em −6 com cogumelo de volta — saiu). Na luta da Aranha, a raiz que sobe da semente agora é sólida (rtRootSolid): bloqueia e empurra o Kuro para o lado se ele estiver dentro.
 - (05/11) Cipó (Mundos 21/22): pose nova (rtSwingPose) — braços para cima segurando a ponta, corpo pendurado seguindo o ângulo do cipó, pernas balançando atrás do movimento.
+- (05/11) Cipó: ao soltar, o corpo do Kuro voltava torto (a inclinação ficava); agora zera ao sair (RT.posed).
