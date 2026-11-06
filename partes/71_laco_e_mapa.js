@@ -48,7 +48,7 @@ function mapHeight(x,z){
   for(var i=0;i<MP.length;i++){var p=MP[i],dx=x-p.x,dz=z-p.z,d=Math.sqrt(dx*dx+dz*dz),a=Math.atan2(dz,dx);
     var rr=p.r*(1+.06*Math.sin(a*3+i)+.04*Math.sin(a*5+i*2))*.97;
     if(d<rr)h=Math.max(h,p.y)}
-  for(i=0;i<MP.length-1;i++){if(i===10||i===TOTAL_W-1)continue;var a1=MP[i],b1=MP[i+1],mx=(a1.x+b1.x)/2,mz=(a1.z+b1.z)/2,d2=Math.hypot(x-mx,z-mz);if(d2<3.8)h=Math.max(h,Math.min(a1.y,b1.y)*.5+Math.max(a1.y,b1.y)*.5)}
+  for(i=0;i<MP.length-1;i++){if(i===10)continue;var a1=MP[i],b1=MP[i+1],mx=(a1.x+b1.x)/2,mz=(a1.z+b1.z)/2,d2=Math.hypot(x-mx,z-mz);if(d2<3.8)h=Math.max(h,Math.min(a1.y,b1.y)*.5+Math.max(a1.y,b1.y)*.5)}
   return h;
 }
 function mapPathDist(x,z){var m=1e9;for(var i=0;i<mapPath.pts.length;i+=2){var q=mapPath.pts[i],d=Math.hypot(q.x-x,q.z-z);if(d<m)m=d}return m}
@@ -64,9 +64,8 @@ function mapLabel(n,state){
   var t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;return t;
 }
 function buildMap(){
-  if(typeof rbIlhasMapa==='function')rbIlhasMapa();/* Ilhas do Robô (mundos 23…) */
-  var IS={off:0,n:MP.length,bg:'#3aa6d8'};
-  mapScene=new T.Scene();mapScene.userData.n=MP.length;mapScene.background=new T.Color(IS.bg);mapScene.fog=new T.Fog(IS.bg,70,170);
+  var IS={off:0,n:MAPN,bg:'#3aa6d8'};
+  mapScene=new T.Scene();mapScene.background=new T.Color(IS.bg);mapScene.fog=new T.Fog(IS.bg,70,170);
   mapScene.add(new T.HemisphereLight(0xdff1ff,0x4a6a58,.55));
   var dl=new T.DirectionalLight(0xfff1d8,1.35);dl.position.set(-14,30,18);mapScene.add(dl);
   var r=rnd(4242),i,j;
@@ -81,7 +80,7 @@ function buildMap(){
     var m=new T.Mesh(g,[mapMat(sideC),mapMat(topC),mapMat(sideC)]);m.position.set(x,top-1.3,z);mapScene.add(m);return m;
   }
   MP.forEach(function(p,k){slab(p.x,p.z,p.r,p.y,p.top,p.side,k)});
-  for(i=0;i<MP.length-1;i++){if(i===10||i===TOTAL_W-1)continue;var a=MP[i],b=MP[i+1];slab((a.x+b.x)/2,(a.z+b.z)/2,3.4,(a.y+b.y)/2,a.top,a.side,20+i)}
+  for(i=0;i<MP.length-1;i++){if(i===10)continue;var a=MP[i],b=MP[i+1];slab((a.x+b.x)/2,(a.z+b.z)/2,3.4,(a.y+b.y)/2,a.top,a.side,20+i)}
   // trilha
   var wp=MWP.map(function(w){return new T.Vector3(w[0],0,w[1])});
   var curve=new T.CatmullRomCurve3(wp,false,'catmullrom',.4),N=700,pts=[],len=[0];
@@ -391,7 +390,6 @@ function mapGo(i,instant){
 function openMap(opts){
   opts=opts||{};
   var from=opts.from!=null?opts.from:(mapAt>=0?mapAt:Math.max(0,Math.min(save.unlocked,LEVELS.length)-1));
-  if(mapScene&&mapScene.userData.n!==LEVELS.length){mapAvatarOff();mapScene=null;mapNodes=[];mapClouds=[]}/* ilha nova do robô: refaz o mapa */
   if(!mapScene)buildMap();
   state='map';card.hidden=true;$('cfg').hidden=true;
   $('hud').style.visibility='hidden';$('mapUI').hidden=false;$('mapPanel').hidden=true;

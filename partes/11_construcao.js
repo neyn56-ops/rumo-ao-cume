@@ -284,7 +284,7 @@ function buildLevel(idx){
   if(typeof autoPick==='function')autoPick(idx);/* Automático: começa na qualidade que já deu certo neste mundo */
   if(typeof spitB!=='undefined')spitB=[];
   if(rig.setOutfit)rig.setOutfit(idx>=11?1:0);/* roupa nova do Kuro na Terra Nova (Mundo 12 em diante) */
-  var th=THEMES[LV.theme],m3=MATS[LV.theme];if(LV.look){var lk=LV.look,th2={},q;for(q in th)th2[q]=th[q];for(q in lk)th2[q]=lk[q];th=th2}/* Robô: hora do dia e clima por cima do tema */
+  var th=THEMES[LV.theme],m3=MATS[LV.theme];
   applyTheme(th);sandS.flames=null;
   W=new T.Group();scene.add(W);fox=null;P.mount=false;tuftMesh=null;broMat=null;lushPend=false;lastBro=null;lushG=null;lushSky=null;
   debris=[];popCoins=[];dropCoins=[];solids=[];movers=[];crumbles=[];springs=[];hazards=[];enemies=[];checkpoints=[];coins=[];items=[];blades=[];blocks=[];vines=[];pipes=[];plants=[];drops=[];balls=[];airBubs=[];extraCoins=0;boss=null;flames=[];eShots=[];doorObj=null;castleFx.torches=[];castleFx.bolt=null;vilLan=[];ropes=[];pulleys=[];vdoors=[];hLifts=[];hDrafts=[];hFall=null;hFall2=null;hSkyC=null;volSinks=[];volMovers=[];volMet=null;volEsc=null;volFallT=null;volPortal=null;volOut=null;hBirds=[];hSwans=[];alarmT=0;if(alarmEl)alarmEl.style.opacity=0;if(hidS)hidS.visible=false;
@@ -298,9 +298,8 @@ function buildLevel(idx){
   buildLush(th);
   if(typeof kuroDry==='function')kuroDry();/* Kuro seco ao começar qualquer fase */
   if(th.aurora)auroraBuild(th);
-  if(!(th.canyon||LV.canyon))CN=null;if(!(th.roots||th.copa||LV.roots))RT=null;/* não sobra cipó nem pilão da fase anterior */
-  if(th.canyon||LV.canyon)cnBuild(th);/* LV.canyon/LV.roots em outro cenário = mistura do robô gerador (39_robo.js) */
-  if(th.roots||th.copa||LV.roots)rtBuild(th);
+  if(th.canyon)cnBuild(th);
+  if(th.roots||th.copa)rtBuild(th);
   if(th.copa)cpBuild(th);/* Mundo 22: folhas que dobram, a Bruxa que aparece *//* Mundo 21: sementes que viram ponte, esporos *//* Mundo 20: paredões, setas de gravidade */
   if(th.wreck)wkBuild(th);/* Mundo 19: navio encalhado, mar com ondas, chuva e raios *//* Mundo 18: aurora, estrelas, lago, gelo que trinca */
   if(th.falls)buildFalls(th);/* Mundo 16: cachoeiras, rio, castelo lá longe e os Pedrões-totem */

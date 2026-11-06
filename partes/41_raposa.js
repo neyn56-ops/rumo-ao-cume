@@ -256,7 +256,7 @@ function collectItem(it){
     if(!P.fire){setFire(true);toast('Flor de fogo! Aperte Fogo (ou J) para atirar')}else{hearts++;setHearts();toast('+1 vida')}
   }
   else if(it.type==='fruit'){P.shield=true;sfx.heart();emit(sparkPool,it.x,it.y,14,3.5,.8,.35,.3,3);toast('Escudo mágico! Protege de um golpe')}
-  else if(it.type==='core'){if(levelIdx===TOTAL_W-1||(LV.boss&&LV.boss.v2))winGame();else winLevel()}
+  else if(it.type==='core'){if(levelIdx>=TOTAL_W-1||(LV.boss&&LV.boss.v2))winGame();else winLevel()}
 }
 /* ===== poder novo da raposinha na Terra Nova (pedido do dono): Bolha de Ponte =====
    no Impulso, o inimigo atingido fica preso numa bolha laranja que sobe um pouco e flutua parada ~5 s; o Kuro pode pisar nela como degrau. Depois estoura e o inimigo volta. */

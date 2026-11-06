@@ -80,7 +80,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - g :588
 - xs :746
 
-## 11_construcao.js  (541 linhas) /*@@parte:11_construcao.js*/
+## 11_construcao.js  (540 linhas) /*@@parte:11_construcao.js*/
 - add :7
 - topAt :8
 - disposeLevel :10
@@ -99,20 +99,20 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - makeFish :253
 - makeEel :267
 - buildLevel :281 — ---------- construção do mundo ----------
-- splitBig :333
-- fixCoins :346
-- buildPlatforms :380
-- scaleUV :413
-- barkCyl :414
-- softSprite :416
-- buildPlatformsForest :422
-- leafBlob :424
-- hangVine :425
-- buildBackdropForest :472
-- splitInst :521
-- splitInstIn :535
-- splitInstQueue :538
-- splitInstTick :539
+- splitBig :332
+- fixCoins :345
+- buildPlatforms :379
+- scaleUV :412
+- barkCyl :413
+- softSprite :415
+- buildPlatformsForest :421
+- leafBlob :423
+- hangVine :424
+- buildBackdropForest :471
+- splitInst :520
+- splitInstIn :534
+- splitInstQueue :537
+- splitInstTick :538
 
 ## 20_vila_ninja.js  (353 linhas) /*@@parte:20_vila_ninja.js*/
 - kawaraTex :6
@@ -742,83 +742,54 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - cpBossBar :101
 - cpBossUpd :102
 
-## 39_robo.js  (122 linhas) /* ===== Robô gerador de fases — Mundo 23 em diante (plano aprovado pelo dono, 06/11) =====
-- rbRng :17
-- rbMundo :18
-- rbGera :19
-- rr :21
-- pick :21
-- rbTopo :66 — topo do chão em x (para pôr joias e moedas)
-- rbChao0 :67
-- rbDy :69 — direção da altura conforme o formato (subida sobe, descida desce, direita oscila entre 0 e 6)
-- rbChao :71
-- rbBuraco :76
-- rbDegraus :78
-- rbIlhas :80
-- rbPonte :84
-- rbMover :85
-- rbMola :87
-- rbEspinhos :89
-- rbCn :91 — ----- famílias especiais (misturadas de outros mundos) -----
-- rbPedras :92
-- rbPiloes :94
-- rbTroncos :96
-- rbRt :98
-- rbSemente :99
-- rbCipo :101
-- rbRaizSobe :103
-- rbEspinhoRaiz :106
-- rbGarante :110
-- rbIlhasMapa :114
-
-## 40_estado.js  (404 linhas) /*@@parte:40_estado.js*/
+## 40_estado.js  (402 linhas) /*@@parte:40_estado.js*/
 - hd :5
-- writeSave :22
-- fmt :24
-- setHearts :25
-- giveLife :31
-- addCoin :37
-- toast :42
-- spawn :46
-- resetState :56
-- showCard :82
-- buildWorlds :94
-- showMenu :104
-- startLevel :111
-- beginPlay :120
-- retry :121
-- stats :128
-- lose :131
-- recordLevel :138
-- scoreLis :147
-- winLevel :151
-- winGame :161
-- spawnDebris :169
-- shatterEnemy :179
-- updDebris :194
-- setAct :217
-- setFire :218
-- setCape :220
-- spinJump :222 — pulo giratório (K ou arrastar o Pular para cima): sem poder só gira; com capa gira com a capa (acerta em volta
-- sjGo :223
-- actUp :226
-- act :227
-- spin :228
-- updWind :241
-- mountFx :258
-- fireFx :264
-- kuroGlow :271
-- capeFx :282
-- updSpin :288
-- updFeathers :307
-- fbClear :317
-- shoot :318
-- fbBoom :331
-- fireCoin :333 — fogo derrota o inimigo e ele vira uma moeda: pula, cai no chão e fica lá até o Kuro pegar
-- updFire :334
-- hurt :365
-- timeUp :388
-- fallDeath :396
+- writeSave :20
+- fmt :22
+- setHearts :23
+- giveLife :29
+- addCoin :35
+- toast :40
+- spawn :44
+- resetState :54
+- showCard :80
+- buildWorlds :92
+- showMenu :102
+- startLevel :109
+- beginPlay :118
+- retry :119
+- stats :126
+- lose :129
+- recordLevel :136
+- scoreLis :145
+- winLevel :149
+- winGame :159
+- spawnDebris :167
+- shatterEnemy :177
+- updDebris :192
+- setAct :215
+- setFire :216
+- setCape :218
+- spinJump :220 — pulo giratório (K ou arrastar o Pular para cima): sem poder só gira; com capa gira com a capa (acerta em volta
+- sjGo :221
+- actUp :224
+- act :225
+- spin :226
+- updWind :239
+- mountFx :256
+- fireFx :262
+- kuroGlow :269
+- capeFx :280
+- updSpin :286
+- updFeathers :305
+- fbClear :315
+- shoot :316
+- fbBoom :329
+- fireCoin :331 — fogo derrota o inimigo e ele vira uma moeda: pula, cai no chão e fica lá até o Kuro pegar
+- updFire :332
+- hurt :363
+- timeUp :386
+- fallDeath :394
 
 ## 41_raposa.js  (307 linhas) /*@@parte:41_raposa.js*/
 - makeFoxVis :4
@@ -975,7 +946,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - throwStar :524
 - updStars :531
 
-## 53_agua.js  (320 linhas) /*@@parte:53_agua.js*/
+## 53_agua.js  (319 linhas) /*@@parte:53_agua.js*/
 - wTop :4
 - surfWave :6 — altura da onda da superfície (a mesma da faixa da frente): o Kuro boia junto com ela
 - inWater :7
@@ -1058,7 +1029,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - resumeGame :316
 - closeCfg :321
 
-## 71_laco_e_mapa.js  (571 linhas) /*@@parte:71_laco_e_mapa.js*/
+## 71_laco_e_mapa.js  (569 linhas) /*@@parte:71_laco_e_mapa.js*/
 - render :4
 - onSea :44
 - mapHeight :46
@@ -1066,30 +1037,30 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - mapMat :55
 - mapLabel :56
 - buildMap :66
-- slab :77 — ilhas
-- ribbon :94
-- spot :107
-- many :117
-- parts :119
-- lm :140
-- best :141
-- faceTo :148
-- bx :263
-- buildMapDecor2 :307 — maquete da Terra Nova: o mundo 12 (praia, trilha, rio, cogumelos e a árvore gigante); os outros ficam na nebli
-- mapPosAt :348
-- mapRefresh :354
-- mapAvatarOn :367
-- mapAvatarOff :371
-- mapShowPanel :377
-- mapGo :385
-- openMap :391
-- leaveMap :410
-- mapUpdate :413
-- mapTap :467
-- up :488
-- startBench :496
-- benchStep :503
-- frame :525
+- slab :76 — ilhas
+- ribbon :93
+- spot :106
+- many :116
+- parts :118
+- lm :139
+- best :140
+- faceTo :147
+- bx :262
+- buildMapDecor2 :306 — maquete da Terra Nova: o mundo 12 (praia, trilha, rio, cogumelos e a árvore gigante); os outros ficam na nebli
+- mapPosAt :347
+- mapRefresh :353
+- mapAvatarOn :366
+- mapAvatarOff :370
+- mapShowPanel :376
+- mapGo :384
+- openMap :390
+- leaveMap :408
+- mapUpdate :411
+- mapTap :465
+- up :486
+- startBench :494
+- benchStep :501
+- frame :523
 
 ## 99_fim.html  (26 linhas) <!--@@parte:99_fim.html-->
 - upd :12
