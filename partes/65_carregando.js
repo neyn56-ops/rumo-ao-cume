@@ -119,11 +119,11 @@ function ldStart(){var c=renderer.domElement,sc=new T.Scene(),cam=new T.Perspect
   ldExtra(sc,IS);
   /* o Kuro (o mesmo do jogo) e a raposinha */
   LD.home=rig.root.parent;sc.add(rig.root);
-  try{LD.fox=makeFoxVis(undefined,true);LD.fox.g.position.set(1.5,0,.95);LD.fox.g.scale.setScalar(.95);sc.add(LD.fox.g)}catch(e){LD.fox=null}
+  try{LD.fox=makeFoxVis();LD.fox.g.position.set(1.5,0,.95);LD.fox.g.scale.setScalar(.95);sc.add(LD.fox.g)}catch(e){LD.fox=null}
   cam.position.set(-1.9,1.25,6.4);LD.look=new T.Vector3(2.4,3.4,-12);cam.lookAt(LD.look);
   var el=document.getElementById('ld');if(el)el.classList.add('on3d');ldTip()}
 function ldTip(){var e=document.getElementById('ldTip');if(e&&LD){e.textContent=LD_TIPS[LD.tip%LD_TIPS.length];LD.tip++}}
-function ldPose(dt){var t=LD.t,R=rig,j=LD.end>=0?clamp((t-LD.end)/.8,0,1):0,air=j>0&&j<1?Math.sin(j*Math.PI):0,pre=LD.end>=0?clamp((t-LD.end)/.15,0,1)*(1-j):0;
+function ldPose(dt){var t=LD.t,R=rig,j=0,/* sem o pulo no fim (dono) */air=j>0&&j<1?Math.sin(j*Math.PI):0,pre=0;
   var br=Math.sin(t*2.1)*.03;
   R.root.position.set(.05+j*1.5,air*1.6,.3-j*.8);R.root.rotation.set(0,1.05-j*.25,0);R.root.scale.setScalar(1);
   R.hips.position.y=HY-.24+br*.5-pre*.12+air*.1;R.hips.rotation.set(0,0,0);
@@ -135,7 +135,7 @@ function ldPose(dt){var t=LD.t,R=rig,j=LD.end>=0?clamp((t-LD.end)/.8,0,1):0,air=
   R.shL.rotation.x=-.75-air*1.6;R.shL.rotation.z=.25;R.elL.rotation.x=-1.05;
   R.shR.rotation.x=.25-air*1.6;R.shR.rotation.z=-.3;R.elR.rotation.x=-.6;
   if(R.scarf&&R.scarf.rotation)R.scarf.rotation.z=Math.sin(t*3.2)*.15;
-  var F=LD.fox;if(F){var fj=LD.end>=0?clamp((t-LD.end-.08)/.75,0,1):0,fa=fj>0&&fj<1?Math.sin(fj*Math.PI):0;
+  var F=LD.fox;if(F){var fj=0,fa=fj>0&&fj<1?Math.sin(fj*Math.PI):0;
     F.g.position.set(1.5+fj*1.6,fa*1.3,.95-fj*.7);F.g.rotation.y=-.75;F.b.position.y=Math.sin(t*2.2)*.012;F.b.rotation.z=fa*.3;
     F.legs.forEach(function(lg,i){lg.rotation.z=fa?(i<2?.9:-.9):(i<2?0:.12);if(lg.knee)lg.knee.rotation.z=fa?(i<2?-.3:.4):(i<2?0:-.22)});
     if(F.tail)F.tail.rotation.z=.35+Math.sin(t*5)*.18;if(F.tail)F.tail.rotation.y=Math.sin(t*2.6)*.35;
