@@ -162,7 +162,7 @@ function rtWallMesh(x,y0,y1){var A=rtMats(),L=[];for(var i=0;i<4;i++){var g=new 
   var m=new T.Mesh(mergeG(L),A.bark);m.castShadow=true;add(m);return m}
 /* raiz da semente como sólido: quem estiver dentro quando ela sobe é empurrado para o lado mais perto (nunca fica preso) */
 function rtRootSolid(s,fl,hh){var so=s.so;if(hh<.15){so.dead=true;return}so.dead=false;so.t=fl+hh;so.b=fl-.5;
-  if(state==='play'&&P.x+P.w/2>so.l&&P.x-P.w/2<so.r&&P.y<so.t-.05&&P.y+P.h>fl){P.x=P.x<s.x?so.l-P.w/2-.05:so.r+P.w/2+.05;P.vx=0}}
+  if(state==='play'&&P.x+P.w/2>so.l&&P.x-P.w/2<so.r&&P.y<so.t-.05&&P.y+P.h>fl){var dir=Math.abs(P.vx)>.3?Math.sign(P.vx):(P.x<s.x?-1:1);P.x=dir<0?so.l-P.w/2-.05:so.r+P.w/2+.05}}/* empurra para o lado em que ele ia (segue o caminho) */
 function rtBossBuild(){var B=LV.roots&&LV.roots.boss;if(!B)return;var A=rtMats(),fl=B.floor;
   var w0={l:B.w0,r:B.w0+1.2,t:B.top,b:fl-.1,oneway:false,slip:false,dead:true},w1={l:B.w1,r:B.w1+1.2,t:B.top,b:fl-.1,oneway:false,slip:false,dead:false};solids.push(w0,w1);
   var m0=rtWallMesh(B.w0+.6,fl,B.top),m1=rtWallMesh(B.w1+.6,fl,B.top);
@@ -190,7 +190,8 @@ function rtBossUpd(dt){var b=RT.boss;if(!b)return;var B=b.B,fl=B.floor,t=RT.t,v=
   v.g.position.set(b.x+(b.st==='warn'?Math.sin(t*50)*.08:0),b.y,0);v.g.rotation.y=b.st==='stun'?0:clamp((P.x-b.x)*.15,-.6,.6);
   /* sementes e raízes que sobem */
   b.seeds.forEach(function(s){s.core.rotation.y+=dt*1.5;
-    if(s.st==='ready'&&b.st!=='wait'&&b.st!=='dead'&&state==='play'&&Math.abs(P.x-s.x)<.9&&P.y<fl+6){s.st='up';s.t=0;sfxMagic();emit(sparkPool,s.x,fl+.5,14,3,.8,.8,.3,0);s.g.visible=false}
+    var sdn=P.x<s.x?-1:1,crossed=s.side&&sdn!==s.side&&Math.abs(P.x-s.x)<1.5;s.side=sdn;
+    if(s.st==='ready'&&b.st!=='wait'&&b.st!=='dead'&&state==='play'&&crossed&&P.y<fl+6){/* sobe quando o Kuro PASSA pela semente (cruza o meio), não antes */s.st='up';s.t=0;sfxMagic();emit(sparkPool,s.x,fl+.5,14,3,.8,.8,.3,0);s.g.visible=false}
     if(s.st==='up'){s.t+=dt;s.h=Math.min(1,s.t/.22);var hh=(B.top-fl-.4)*s.h;s.root.scale.y=Math.max(.001,hh);rtRootSolid(s,fl,hh);
       if((b.st==='hang'||b.st==='warn')&&Math.abs(b.x-s.x)<1.9&&fl+hh>b.y-.2){b.st='fall';b.vy=0;shake=Math.max(shake,.4);beep(90,.4,'square',.05,-40);emit(dustPool,b.x,b.y,16,3,.8,.8,1.3,-.2);if(!RT.toldB2){RT.toldB2=1;toast('Acertou! Agora pule no abdômen brilhante da Aranha!')}}
       if(s.t>.9){s.st='down';s.t=0}}

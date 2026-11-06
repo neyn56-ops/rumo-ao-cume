@@ -578,3 +578,4 @@ A área de trabalho do Claude é temporária. Para recomeçar:
 - (05/11) Cipó (Mundos 21/22): pose nova (rtSwingPose) — braços para cima segurando a ponta, corpo pendurado seguindo o ângulo do cipó, pernas balançando atrás do movimento.
 - (05/11) Cipó: ao soltar, o corpo do Kuro voltava torto (a inclinação ficava); agora zera ao sair (RT.posed).
 - (05/11) Tela de carregamento: sem o pulo do Kuro e da raposinha no fim (só o clarão e abre o mapa); a raposinha continua com a sela.
+- (05/11) Luta da Aranha: a raiz sobe quando o Kuro PASSA pela semente (cruza o meio), não quando chega perto; se ele estiver em cima, é empurrado para o lado em que ia.
