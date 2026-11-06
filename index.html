@@ -3949,8 +3949,7 @@ function buildDecor(th){
     list.push({x:x,z:zt2,y:mY(x,zt2)-.1,s:.8+r2()*.9,sp:snow?0:(r2(),1),rot:r2()*6.28});
   }
   if(th.dry)list=list.filter(function(t,k){return k%4===0});
-  if(th.aurora&&LV.lake){var rl=rnd(4646);list.forEach(function(t){if(t.x>LV.lake[0]-101&&t.x<LV.lake[1]+101&&t.z>-46){t.z=-44.8-rl()*5;t.y=mY(t.x,t.z)-.1}})}
-  if(th.aurora&&LV.lake){var sd=list.filter(function(t){return t.z<-40}),si=inst(new T.DodecahedronGeometry(1,1),M(0x9a5636,.97),Math.max(1,sd.length),false);sd.forEach(function(t,j){dummy.position.set(t.x,t.y+.12,t.z);dummy.rotation.set(0,j,0);var rr=1.2*t.s+.4;dummy.scale.set(rr,.12,rr*.8);dummy.updateMatrix();si.setMatrixAt(j,dummy.matrix)});si.count=sd.length;add(si)}/* areia vermelha no pé (dono) *//* Lago da Aurora: árvore em cima da água ia flutuar — vai para a margem lá do fundo */
+  if(th.aurora&&LV.lake){var rl=rnd(4646);list.forEach(function(t){if(t.x>LV.lake[0]-101&&t.x<LV.lake[1]+101&&t.z>-46){t.z=-51-rl()*10;t.y=mY(t.x,t.z)-.1}})}
   if(th.canyon)list=[];/* Cânion: sem árvores (tem cactos) *//* região seca: só umas árvores soltas */
   var con=list.filter(function(t){return t.sp===0}),bro=list.filter(function(t){return t.sp===1});
   var trunkG=new T.CylinderGeometry(.2,.32,1,6);trunkG.translate(0,.5,0);
@@ -8378,10 +8377,8 @@ function auroraBuild(th){A0=auMats();
   var PT=[],xe=sceneEnd();function pine(x,y,z,s){PT.push([x,y,z,s])}
   for(var px=-14;px<xe+20;px+=1.6+r()*2.2){var inL=LV.lake&&px>LV.lake[0]-101&&px<LV.lake[1]+101;/* a água do lago vai 100 além de cada ponta: ali também não tem chão */
     if(!inL){var zz=-6-r()*16;pine(px,mY(px,zz),zz,.8+r()*.8)}
-    var zb=-44.6-r()*4;pine(px+r(),mY(px,zb),zb,1.1+r()*1)}/* fileira na costa, em cima da areia vermelha */
+    var zb=-51-r()*9;pine(px+r(),mY(px,zb),zb,1.3+r()*1.1)}/* atrás da costa vermelha (dono) */
   (LV.solids||[]).forEach(function(q){if(q[4]||q[1]-q[0]>40||q[0]<0)return;var vl4=!!LV.vila&&q[1]<=LV.vila.end;if(vl4)return;for(var k2=0;k2<4;k2++){var x4=q[0]+1+r()*(q[1]-q[0]-2);pine(x4,q[2],-3.1-r()*1.2,.55+r()*.35)}/* em cima do bloco de gelo (antes ficavam atrás dele, em cima da água) */});
-  if(PT.length){var BD=PT.filter(function(q){return q[2]<-40});if(BD.length){var bg=new T.DodecahedronGeometry(1,1),bi=inst(bg,M(0x9a5636,.97),BD.length,false),bo=new T.Object3D(),br=rnd(5151);
-      BD.forEach(function(q,j){bo.position.set(q[0],q[1]+.02,q[2]);bo.rotation.set(0,br()*6,0);var rr=(1.3+br()*.6)*q[3];bo.scale.set(rr,.12,rr*.8);bo.updateMatrix();bi.setMatrixAt(j,bo.matrix)});add(bi)}}/* areia vermelha em volta do pé dos pinheiros da costa (pedido do dono: tira a impressão de flutuar) */
   if(PT.length){var tr=new T.CylinderGeometry(.12,.16,.8,6);tr.translate(0,.4,0);var cg=[];for(var t=0;t<3;t++){var c=new T.ConeGeometry(1.05-t*.27,1.3,8);c.translate(0,1.1+t*.78,0);cg.push(c)}
     var sn=[];for(t=0;t<3;t++){var c2=new T.ConeGeometry(.62-t*.17,.5,8);c2.translate(0,1.62+t*.78,0);sn.push(c2)}
     var tm1=inst(tr,M(0x3a2618,.9),PT.length,true),tm2=inst(mgL(cg),M(0x1c4a3a,.85,0,{flatShading:true}),PT.length,true),tm3=inst(mgL(sn),M(0xe8f2ff,.7,0,{flatShading:true}),PT.length,false),dd=new T.Object3D();
@@ -14018,4 +14015,4 @@ ldBoot([function(){setHearts();applyGfx()},function(){buildLevel(0)},function(){
 })();
 </script>
 
-<div id="verTag" style="position:fixed;right:6px;bottom:4px;z-index:1000;font:11px sans-serif;color:#fff;opacity:.55;pointer-events:none;text-shadow:0 1px 2px #000">versão c7fdc2</div><script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").then(function(r){try{r.update()}catch(e){}}).catch(function(){});var t0=Date.now(),rl=false,had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(had&&!rl&&Date.now()-t0<20000){rl=true;location.reload()}})/* versão nova chegou logo ao abrir: recarrega sozinho uma vez */})}</script></body></html>
+<div id="verTag" style="position:fixed;right:6px;bottom:4px;z-index:1000;font:11px sans-serif;color:#fff;opacity:.55;pointer-events:none;text-shadow:0 1px 2px #000">versão e20787</div><script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").then(function(r){try{r.update()}catch(e){}}).catch(function(){});var t0=Date.now(),rl=false,had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(had&&!rl&&Date.now()-t0<20000){rl=true;location.reload()}})/* versão nova chegou logo ao abrir: recarrega sozinho uma vez */})}</script></body></html>
