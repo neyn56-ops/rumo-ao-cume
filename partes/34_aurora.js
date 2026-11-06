@@ -50,6 +50,9 @@ function auroraBuild(th){A0=auMats();
     if(!inL){var zz=-6-r()*16;pine(px,mY(px,zz),zz,.8+r()*.8)}
     var zb=-51-r()*9;pine(px+r(),mY(px,zb),zb,1.3+r()*1.1)}/* atrás da costa vermelha (dono) */
   (LV.solids||[]).forEach(function(q){if(q[4]||q[1]-q[0]>40||q[0]<0)return;var vl4=!!LV.vila&&q[1]<=LV.vila.end;if(vl4)return;for(var k2=0;k2<4;k2++){var x4=q[0]+1+r()*(q[1]-q[0]-2);pine(x4,q[2],-3.1-r()*1.2,.55+r()*.35)}/* em cima do bloco de gelo (antes ficavam atrás dele, em cima da água) */});
+  if(PT.length){var BS=PT.filter(function(q){return q[2]<-40});if(BS.length){var sc=document.createElement('canvas');sc.width=sc.height=64;var sx=sc.getContext('2d'),sg=sx.createRadialGradient(32,32,0,32,32,32);sg.addColorStop(0,'rgba(40,52,80,.75)');sg.addColorStop(.55,'rgba(60,72,100,.35)');sg.addColorStop(1,'rgba(60,72,100,0)');sx.fillStyle=sg;sx.fillRect(0,0,64,64);
+      var spg=new T.PlaneGeometry(1,1);spg.rotateX(-Math.PI/2);var spm=new T.MeshBasicMaterial({map:new T.CanvasTexture(sc),transparent:true,depthWrite:false}),si=new T.InstancedMesh(spg,spm,BS.length),so=new T.Object3D();
+      BS.forEach(function(q,j){so.position.set(q[0],q[1]+.03,q[2]);so.scale.set(2.6*q[3],1,2.2*q[3]);so.updateMatrix();si.setMatrixAt(j,so.matrix)});si.frustumCulled=false;add(si)}}/* sombra no pé dos pinheiros do fundo: sem ela, o tronco termina no branco da neve e parece flutuar */
   if(PT.length){var tr=new T.CylinderGeometry(.12,.16,.8,6);tr.translate(0,.4,0);var cg=[];for(var t=0;t<3;t++){var c=new T.ConeGeometry(1.05-t*.27,1.3,8);c.translate(0,1.1+t*.78,0);cg.push(c)}
     var sn=[];for(t=0;t<3;t++){var c2=new T.ConeGeometry(.62-t*.17,.5,8);c2.translate(0,1.62+t*.78,0);sn.push(c2)}
     var tm1=inst(tr,M(0x3a2618,.9),PT.length,true),tm2=inst(mgL(cg),M(0x1c4a3a,.85,0,{flatShading:true}),PT.length,true),tm3=inst(mgL(sn),M(0xe8f2ff,.7,0,{flatShading:true}),PT.length,false),dd=new T.Object3D();

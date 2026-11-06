@@ -172,6 +172,7 @@ function buildDecor(th){
   }
   if(th.dry)list=list.filter(function(t,k){return k%4===0});
   if(th.aurora&&LV.lake){var rl=rnd(4646);list.forEach(function(t){if(t.x>LV.lake[0]-101&&t.x<LV.lake[1]+101&&t.z>-46){t.z=-51-rl()*10;t.y=mY(t.x,t.z)-.1}})}
+  if(th.aurora&&LV.lake){var sd=list.filter(function(t){return t.z<-40});if(sd.length){var c2=document.createElement('canvas');c2.width=c2.height=64;var x2=c2.getContext('2d'),g2=x2.createRadialGradient(32,32,0,32,32,32);g2.addColorStop(0,'rgba(40,52,80,.75)');g2.addColorStop(.55,'rgba(60,72,100,.35)');g2.addColorStop(1,'rgba(60,72,100,0)');x2.fillStyle=g2;x2.fillRect(0,0,64,64);var pg2=new T.PlaneGeometry(1,1);pg2.rotateX(-Math.PI/2);var si2=new T.InstancedMesh(pg2,new T.MeshBasicMaterial({map:new T.CanvasTexture(c2),transparent:true,depthWrite:false}),sd.length);sd.forEach(function(t,j){dummy.position.set(t.x,t.y+.13,t.z);dummy.rotation.set(0,0,0);dummy.scale.set(2.4*t.s,1,2*t.s);dummy.updateMatrix();si2.setMatrixAt(j,dummy.matrix)});si2.frustumCulled=false;add(si2)}}/* sombra no pé (parecia flutuar no branco) */
   if(th.canyon)list=[];/* Cânion: sem árvores (tem cactos) *//* região seca: só umas árvores soltas */
   var con=list.filter(function(t){return t.sp===0}),bro=list.filter(function(t){return t.sp===1});
   var trunkG=new T.CylinderGeometry(.2,.32,1,6);trunkG.translate(0,.5,0);

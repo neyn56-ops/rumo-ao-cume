@@ -573,3 +573,4 @@ A área de trabalho do Claude é temporária. Para recomeçar:
 - (05/11, 3ª) Pinheiros do fundo do Mundo 18 trazidos para a costa, em cima da areia vermelha (z −44,6 a −49), a pedido do dono.
 - (05/11) Mundo 18: mancha de areia vermelha em volta do pé de cada pinheiro da costa (dono: tirar a impressão de flutuar).
 - (05/11) Mundo 18, decisão final do dono: todos os pinheiros do fundo atrás da costa vermelha (z −51 a −61), sem mancha de areia no pé.
+- (05/11) **Causa real dos pinheiros flutuando no Mundo 18:** o chão de fundo (buildBackdrop) acabava em z −45, logo depois da costa vermelha; os pinheiros atrás dela ficavam sem chão embaixo (o branco era a montanha lá longe). Agora no Mundo 18 o chão vai até z −72 e os pinheiros ficam em cima dele; sombra suave no pé.

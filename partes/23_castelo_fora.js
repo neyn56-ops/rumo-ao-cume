@@ -214,10 +214,10 @@ function buildBackdrop(th,m3){
   if(th.name==='forest'){buildBackdropForest(th);return}
   if(th.copa)return;/* Copa: no alto, sem chão */
   if(th.name==='volcano'||th.name==='summit'||th.name==='sky'||th.name==='tower'||th.name==='mine'||th.name==='maze')return;/* o cume tem o mar de nuvens; o vulcão tem o rio de lava no lugar do chão de fundo */
-  var depth=-5-th.mz;
+  var MZ=th.aurora?-72:th.mz,depth=-5-MZ;/* Mundo 18: o chão continua atrás da costa vermelha (os pinheiros do fundo ficavam no ar, sem chão embaixo) */
   var xl=(th.name==='castle'&&LV.outX!==undefined)?LV.outX:(th.name==='trail'?4:(th.aurora&&LV.lake?Math.min(-40,LV.lake[0]-60):-40)),/* Mundo 18: o terreno vai até antes da vila */xe=sceneEnd(),bw=xe-xl,bc=(xe+xl)/2;
   var g=new T.PlaneGeometry(bw,depth,Math.round(bw/2),Math.max(4,Math.round(depth)));
-  g.rotateX(-Math.PI/2);g.translate(bc,0,(-5+th.mz)/2);
+  g.rotateX(-Math.PI/2);g.translate(bc,0,(-5+MZ)/2);
   var p=g.attributes.position,uv=g.attributes.uv;
   for(var i=0;i<p.count;i++){var x=p.getX(i),z=p.getZ(i);p.setY(i,mY(x,z));uv.setXY(i,x/7,z/7)}
   g.computeVertexNormals();
