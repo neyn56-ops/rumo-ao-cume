@@ -16,7 +16,7 @@ if(save.best[6]>0&&save.unlocked<8&&LEVELS.length>7)save.unlocked=8;
 if(save.best[7]>0&&save.unlocked<9&&LEVELS.length>8)save.unlocked=9;
 if(save.best[8]>0&&save.unlocked<10&&LEVELS.length>9)save.unlocked=10;
 /* TESTE: todas as fases liberadas enquanto o jogo está em construção (trocar para false quando o jogo estiver pronto) */
-var TESTE_LIBERADO=true;if(TESTE_LIBERADO)save.unlocked=Math.max(save.unlocked,LEVELS.length);
+var TESTE_LIBERADO=!window.PORTAL;/* portal de jogos: fases travadas de verdade */if(TESTE_LIBERADO)save.unlocked=Math.max(save.unlocked,LEVELS.length);
 function writeSave(){try{localStorage.setItem('rumo-ao-cume-v2',JSON.stringify(save))}catch(e){}}
 
 function fmt(t){var m=Math.floor(t/60),s=Math.floor(t%60);return m+':'+(s<10?'0':'')+s}
@@ -107,7 +107,7 @@ function showMenu(){
 }
 var carryNow=null;
 function startLevel(i){
-  if(i===0&&!save.seenOpen&&!opn&&!window.__noOpen){playOpening(function(){startLevel(0)});return}/* primeira vez no Mundo 1: o clipe do roubo do Coração de Cristal */
+  if(i===0&&!save.seenOpen&&!opn&&!window.__noOpen&&!window.PORTAL){playOpening(function(){startLevel(0)});return}/* primeira vez no Mundo 1: o clipe do roubo do Coração de Cristal */
   initAudio();cpSave[i]=null;trIntroDone=false;prePast[i]=false;
   carryNow=(i>0&&save.carryFor===i&&save.carry)?save.carry:null;
   buildLevel(i);resetState();

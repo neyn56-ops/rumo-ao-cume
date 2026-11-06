@@ -990,7 +990,12 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - next :163
 - finish :170
 
-## 70_entrada.js  (347 linhas) /*@@parte:70_entrada.js*/
+## 69_idioma.js  (181 linhas) /* ===== Idioma: português ou inglês (para os portais de jogos, 06/11) =====
+- trTxt :167
+- trNode :171
+- idiomaFaltando :173
+
+## 70_entrada.js  (348 linhas) /*@@parte:70_entrada.js*/
 - dblTap :4
 - press :14
 - navBox :34
@@ -1015,21 +1020,21 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - row :174
 - cur :204
 - cur :214
-- cur :235
-- refreshCfg :241
-- verdict :261
-- setCx :265
-- snapBase :272
-- showcase :280
-- openCfg :288
-- clearKeys :298
-- pauseUI :299
-- pauseGame :303
-- leavePause :311
-- resumeGame :316
-- closeCfg :321
+- cur :236
+- refreshCfg :242
+- verdict :262
+- setCx :266
+- snapBase :273
+- showcase :281
+- openCfg :289
+- clearKeys :299
+- pauseUI :300
+- pauseGame :304
+- leavePause :312
+- resumeGame :317
+- closeCfg :322
 
-## 71_laco_e_mapa.js  (569 linhas) /*@@parte:71_laco_e_mapa.js*/
+## 71_laco_e_mapa.js  (571 linhas) /*@@parte:71_laco_e_mapa.js*/
 - render :4
 - onSea :44
 - mapHeight :46

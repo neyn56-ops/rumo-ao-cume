@@ -3,7 +3,7 @@ const {chromium}=require('/opt/npm-tools/node_modules/playwright');
 const ARQ='file://'+__dirname+'/teste.html';
 const res=[];function marca(nome,ok,det){res.push([nome,ok,det]);console.log((ok?'  OK     ':'  FALHOU ')+nome+(det?'  — '+det:''))}
 async function pagina(b,preset,lite){const pg=await b.newPage({viewport:{width:800,height:360}});const erros=[];pg.on('pageerror',e=>erros.push(e.message));await pg.route(/fonts/,r=>r.abort());
-  await pg.addInitScript(p=>{window.requestAnimationFrame=()=>1;localStorage.setItem('rumo-ao-cume-cfg',JSON.stringify({preset:p,pMig:1,aaMig:2}))},preset);
+  await pg.addInitScript(p=>{window.requestAnimationFrame=()=>1;localStorage.setItem('rumo-ao-cume-cfg',JSON.stringify({preset:p,pMig:1,aaMig:2,lang:'pt'}))},preset);
   await pg.goto(ARQ+(lite?'?lite=1':''),{waitUntil:'domcontentloaded'});await pg.waitForTimeout(2200);
   const E=c=>pg.evaluate(c=>window.__ev(c),c);return {pg,E,erros}}
 const LEVELS_CUME=10;

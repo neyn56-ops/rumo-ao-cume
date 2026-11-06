@@ -164,7 +164,7 @@ function ldBoot(steps,fim){var el=document.getElementById('ld');
     if(i<steps.length){var home=rig.root.parent;steps[i++]();if(LD){if(rig.root.parent!==LD.sc){LD.home=rig.root.parent;LD.sc.add(rig.root)}else if(home!==LD.sc)LD.home=home}
       if(LD)LD.p=i/steps.length;requestAnimationFrame(next);return}
     if(LD&&window.__ldHold){window.__LD=LD;LD.p=1;requestAnimationFrame(next);return}/* fotos da tela (testes/ld.js) */
-    if(LD&&!done&&(performance.now()-t0<6000||LD.shown<.97)){LD.p=1;requestAnimationFrame(next);return}
+    if(LD&&!done&&(performance.now()-t0<(window.PORTAL?2500:6000)||LD.shown<.97)){LD.p=1;requestAnimationFrame(next);return}
     if(!done){done=true;if(!LD){finish();return}LD.end=LD.t;el.classList.add('pulo');setTimeout(function(){el.classList.add('flash')},650);setTimeout(finish,1050)}
     if(LD)requestAnimationFrame(next)}
   function finish(){window.__ldMs=performance.now()-t0;var L=LD;LD=null;if(L){if(L.home)L.home.add(rig.root);if(L.fox)L.sc.remove(L.fox.g)}

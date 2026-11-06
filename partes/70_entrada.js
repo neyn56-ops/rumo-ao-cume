@@ -226,6 +226,7 @@ soundOn=cfg.snd!==false;musicOn=cfg.mus!==false;
   row('Limite de quadros',[[30,'30'],[60,'60'],[0,'Sem limite']],function(){return cfg.cap},function(v){cfg.cap=v;saveCfg();applyGfx()});
   row('Câmera',[['clas','Clássica'],['cine','Cinemática']],function(){return cfg.cam||'clas'},function(v){cfg.cam=v;saveCfg()});/* cinemática: leve rotação, mais baixa, respira e recua ao correr */
   row('Contador de FPS',onoff,function(){return !!cfg.fps},function(v){cfg.fps=v;saveCfg();applyGfx()});
+  row('Idioma / Language',[['pt','Português'],['en','English']],function(){return LANG},function(v){if(v===LANG)return;cfg.lang=v;saveCfg();location.reload()});/* troca de idioma recarrega a página */
   row('Música',onoff,function(){return musicOn},function(v){musicOn=v;cfg.mus=v;saveCfg();refreshCfg()});
   row('Efeitos sonoros',onoff,function(){return soundOn},function(v){soundOn=v;cfg.snd=v;saveCfg();refreshCfg()});
   /* volumes (100% = o novo padrão, já mais alto que antes) */

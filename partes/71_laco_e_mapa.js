@@ -562,6 +562,8 @@ ldBoot([function(){setHearts();applyGfx()},function(){buildLevel(0)},function(){
   function(){openMap()/* o jogo abre direto no mapa (o título fica no botão Início) */},
   function(){try{renderer.compile(mapScene,camera)}catch(e){}}],
  function(){
+  /* portal: jogador novo cai direto jogando o Mundo 1, com os controles na tela */
+  if(window.PORTAL&&!(save.best&&save.best[0]>0)){leaveMap();startLevel(0);beginPlay();setTimeout(function(){toast(coarse?'Analógico à esquerda anda · botão Pular à direita':'Setas ou A/D andam · Espaço pula · Shift corre')},600)}
   /* depois de recarregar por troca de qualidade: volta direto para as configurações com a prévia */
   try{if(sessionStorage.getItem('rac-reopen')==='cfg'){sessionStorage.removeItem('rac-reopen');setTimeout(function(){if(window.__openCfg){leaveMap();if(window.__cfgFromMap)window.__cfgFromMap();window.__openCfg()}},60)}}catch(e){}
   requestAnimationFrame(frame)});

@@ -5,6 +5,7 @@
 <script>
 (function(){
   var b=document.getElementById('fsBtn'),de=document.documentElement;
+  if(window.PORTAL){if(b)b.hidden=true;return}/* portal: o próprio site dá a tela cheia (botão nosso é proibido) */
   var rf=de.requestFullscreen||de.webkitRequestFullscreen;
   /* app instalado (ícone na tela inicial) já abre em tela cheia: sem botão nem aviso */
   var app=function(){try{return location.protocol==='file:'||/[?&]apk=1/.test(location.search)||matchMedia('(display-mode: fullscreen)').matches||matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}};
