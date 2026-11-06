@@ -9825,7 +9825,7 @@ if(save.best[6]>0&&save.unlocked<8&&LEVELS.length>7)save.unlocked=8;
 if(save.best[7]>0&&save.unlocked<9&&LEVELS.length>8)save.unlocked=9;
 if(save.best[8]>0&&save.unlocked<10&&LEVELS.length>9)save.unlocked=10;
 /* TESTE: todas as fases liberadas enquanto o jogo está em construção (trocar para false quando o jogo estiver pronto) */
-var TESTE_LIBERADO=true;if(TESTE_LIBERADO)save.unlocked=Math.max(save.unlocked,LEVELS.length);
+var TESTE_LIBERADO=!window.PORTAL;/* portal de jogos: fases travadas de verdade */if(TESTE_LIBERADO)save.unlocked=Math.max(save.unlocked,LEVELS.length);
 function writeSave(){try{localStorage.setItem('rumo-ao-cume-v2',JSON.stringify(save))}catch(e){}}
 
 function fmt(t){var m=Math.floor(t/60),s=Math.floor(t%60);return m+':'+(s<10?'0':'')+s}
@@ -9916,7 +9916,7 @@ function showMenu(){
 }
 var carryNow=null;
 function startLevel(i){
-  if(i===0&&!save.seenOpen&&!opn&&!window.__noOpen){playOpening(function(){startLevel(0)});return}/* primeira vez no Mundo 1: o clipe do roubo do Coração de Cristal */
+  if(i===0&&!save.seenOpen&&!opn&&!window.__noOpen&&!window.PORTAL){playOpening(function(){startLevel(0)});return}/* primeira vez no Mundo 1: o clipe do roubo do Coração de Cristal */
   initAudio();cpSave[i]=null;trIntroDone=false;prePast[i]=false;
   carryNow=(i>0&&save.carryFor===i&&save.carry)?save.carry:null;
   buildLevel(i);resetState();
@@ -13089,12 +13089,193 @@ function ldBoot(steps,fim){var el=document.getElementById('ld');
     if(i<steps.length){var home=rig.root.parent;steps[i++]();if(LD){if(rig.root.parent!==LD.sc){LD.home=rig.root.parent;LD.sc.add(rig.root)}else if(home!==LD.sc)LD.home=home}
       if(LD)LD.p=i/steps.length;requestAnimationFrame(next);return}
     if(LD&&window.__ldHold){window.__LD=LD;LD.p=1;requestAnimationFrame(next);return}/* fotos da tela (testes/ld.js) */
-    if(LD&&!done&&(performance.now()-t0<6000||LD.shown<.97)){LD.p=1;requestAnimationFrame(next);return}
+    if(LD&&!done&&(performance.now()-t0<(window.PORTAL?2500:6000)||LD.shown<.97)){LD.p=1;requestAnimationFrame(next);return}
     if(!done){done=true;if(!LD){finish();return}LD.end=LD.t;el.classList.add('pulo');setTimeout(function(){el.classList.add('flash')},650);setTimeout(finish,1050)}
     if(LD)requestAnimationFrame(next)}
   function finish(){window.__ldMs=performance.now()-t0;var L=LD;LD=null;if(L){if(L.home)L.home.add(rig.root);if(L.fox)L.sc.remove(L.fox.g)}
     document.body.classList.remove('ldg');fim();el.classList.add('sai');setTimeout(function(){el.remove()},700)}
   requestAnimationFrame(next)}
+
+/* ===== Idioma: português ou inglês (para os portais de jogos, 06/11) =====
+   O jogo é escrito em português. Em inglês, um observador troca os textos da página na hora em que aparecem:
+   primeiro o texto inteiro (EN[texto]), depois pedaços (frases com espaço). Escolha: Configurações > Idioma;
+   sem escolha, segue o idioma do aparelho (pt* = português, o resto = inglês). idiomaFaltando() lista o que não foi traduzido. */
+var LANG=(cfg&&cfg.lang)||((navigator.language||'pt').toLowerCase().indexOf('pt')===0?'pt':'en');
+var EN={
+/* mundos */
+'Vale Verde':'Green Valley','Caverna de Cristal':'Crystal Cave','Floresta Esmeralda':'Emerald Forest','Recife Submerso':'Sunken Reef','Castelo do Medo':'Castle of Fear',
+'Montanha Gelada':'Frozen Mountain','Deserto das Ruínas':'Desert of Ruins','Vila Ninja':'Ninja Village','Torre Verde':'Green Tower','Vulcão':'Volcano','O Cume':'The Summit',
+'Floresta Ancestral':'Ancient Forest','Escalada dos Blocos Celestes':'Sky Block Climb','Torre dos Vaga-lumes':'Firefly Tower','Mina dos Trilhos':'Rail Mine','MINA DOS TRILHOS':'RAIL MINE',
+'Vale das Cachoeiras':'Waterfall Valley','Labirinto de Tijolos':'Brick Labyrinth','Lago da Aurora':'Aurora Lake','O Naufrágio':'The Shipwreck','Cânion do Sol':'Sun Canyon',
+'Raízes da Árvore Mãe':'Roots of the Mother Tree','Copa da Árvore Mãe':'Mother Tree Canopy','TERRA NOVA':'NEW LAND','Terra Nova':'New Land',
+/* chefes */
+'Rei Besouro':'Beetle King','Aranha das Raízes':'Root Spider','Capitão Corvo-Pirata':'Captain Crow the Pirate','Toupeirão':'Big Mole',
+/* menus e tela inicial */
+'Rumo ao':'Rumo ao','Cume':'Cume','Explore • Pule • Conquiste':'Explore • Jump • Conquer','Grandes aventuras':'Great adventures','te esperam!':'await you!',
+'Carregando...':'Loading...','Jogar':'Play','Começar':'Start','Mapa':'Map','Ver o mapa':'See the map','Voltar':'Back','← Início':'← Home','⚙ Configurações':'⚙ Settings',
+'Configurações':'Settings','⛶ Tela cheia':'⛶ Fullscreen','Reiniciar fase':'Restart level','Jogar de novo':'Play again','Tentar de novo':'Try again','Mais uma vez!':'One more time!',
+'Abertura':'Intro','Continuar':'Continue','Menu':'Menu','Bloqueado':'Locked','Cristais ':'Crystals ','Novos mundos em breve':'New worlds coming soon','Ir para a Terra Nova':'Go to the New Land',
+'Gire o celular para o modo paisagem':'Turn your phone sideways (landscape)','Termine a fase anterior para liberar':'Finish the previous level to unlock',
+'Toque numa fase para o Kuro ir até ela · arraste para olhar as ilhas':'Tap a level to send Kuro there · drag to look around the islands',
+'← → ou A/D escolhe a fase · Enter/Espaço joga · Q/E zoom · Esc volta · ou clique numa fase':'← → or A/D picks a level · Enter/Space plays · Q/E zoom · Esc goes back · or click a level',
+'Mundo concluído':'World complete','Fim da aventura':'End of the adventure','Fim da primeira ilha':'End of the first island','Kuro salvou a vila':'Kuro saved the village',
+'Kuro chegou ao Cume!':'Kuro reached the Summit!','Tempo restante':'Time left','Bônus de tempo':'Time bonus','Pontos':'Points','Melhor tempo':'Best time','Acabou o tempo':'Out of time',
+'Kuro caiu':'Kuro fell','Mundo ':'World ',
+/* HUD */
+'Pular':'Jump','Fogo':'Fire','Capa':'Cape','Pena':'Feather','Ar':'Air','Shuriken':'Shuriken','🔑 Chave':'🔑 Key','Chances de volta: 3':'Retries: 3',
+/* configurações */
+'Ligado':'On','Desligado':'Off','Leve':'Light','Médio':'Medium','Alto':'High','Completo':'Full','Baixo':'Low','Baixas':'Low','Médias':'Medium','Altas':'High','Máximo':'Max',
+'Automático':'Automatic','Automático (agora: ':'Automatic (now: ','Predefinição':'Preset','Predefinição <em>':'Preset <em>','Resolução':'Resolution','Saturação':'Saturation','Brilho':'Brightness','(padrão)':'(default)',
+'Sombras':'Shadows','Bloom (luz)':'Bloom (glow)','Cenário detalhado':'Detailed scenery','(grama, partículas e cor)':'(grass, particles and color)','Relevo das texturas':'Texture relief',
+'Partículas':'Particles','Efeitos de água e luz':'Water and light effects','(ao entrar na fase)':'(when entering a level)','Suavização de bordas':'Anti-aliasing','(ao reabrir)':'(after reopening)',
+'Limite de quadros':'Frame limit','Sem limite':'No limit','Câmera':'Camera','Clássica':'Classic','Cinemática':'Cinematic','Contador de FPS':'FPS counter','Música':'Music',
+'Efeitos sonoros':'Sound effects','Volume da música':'Music volume','Volume dos efeitos':'Effects volume','Analógico':'Joystick','Vale ao reabrir o jogo':'Takes effect after reopening the game',
+'A troca completa vale ao voltar ao menu':'The full change applies when you go back to the menu','Aplicando a qualidade…':'Applying quality…','Testar neste aparelho':'Test on this device',
+'Mede os quadros por segundo de cada nível e mostra um selo: fluido, dá para jogar ou pesado.':'Measures the frames per second of each level and shows a badge: smooth, playable or heavy.',
+'Idioma / Language':'Idioma / Language',
+'Não foi possível carregar o motor 3D. Confira a conexão e abra de novo.':'Could not load the 3D engine. Check your connection and open the game again.',
+'Seu navegador não conseguiu iniciar o gráfico 3D (WebGL).':'Your browser could not start 3D graphics (WebGL).',
+/* ajuda */
+'Pule em cima dos inimigos para derrotá-los':'Jump on enemies to defeat them','Procure os 3 cristais escondidos de cada fase':'Find the 3 hidden crystals in each level',
+'Saia de um bloco com a raposinha e monte nela para ir mais rápido':'Get the little fox out of a block and ride her to go faster',
+'Toque duas vezes na seta e segure para correr':'Double-tap the arrow and hold to run','arraste o Pular para cima':'drag Jump upward',
+'Teclado: setas ou A/D movem, espaço pula, Shift corre (ou toque duas vezes na seta e segure), J ou X atira (flor) ou gira (capa); K faz o pulo giratório (sai de cima da raposinha); com a capa, corra até o medidor encher, pule e segure pular para voar, S ou ↓ agacha e entra no cano. No celular: analógico à esquerda (empurre até o fim para correr; para cima sobe no cipó; para baixo agacha ou entra no cano) botão Pular à direita (arraste ele para cima = pulo giratório) e botão Fogo/Giro quando pegar a flor ou a capa. Na água: toque em Pular para dar braçadas (segure para subir devagar, empurre o analógico para baixo para mergulhar) e vigie a barra de Ar. Bata nos blocos por baixo. Menus, configurações e mapa: setas escolhem, Enter confirma, Esc volta (←/→ mexem nas barras).':
+ 'Keyboard: arrows or A/D move, Space jumps, Shift runs (or double-tap the arrow and hold), J or X shoots (flower) or spins (cape); K does the spin jump (also gets off the little fox); with the cape, run until the meter fills, jump and hold jump to fly; S or ↓ crouches and enters pipes. On mobile: joystick on the left (push all the way to run; up climbs vines; down crouches or enters pipes), Jump button on the right (drag it up = spin jump) and the Fire/Spin button when you have the flower or the cape. In water: tap Jump to swim (hold to rise slowly, push the joystick down to dive) and watch the Air bar. Hit blocks from below. Menus, settings and map: arrows choose, Enter confirms, Esc goes back (←/→ move the sliders).',
+/* avisos do jogo */
+' Use o ':' Use the ',' inimigo caiu':' enemy fell',' inimigos caíram':' enemies fell',' para derrotar':' to defeat','pulo giratório (':'spin jump (','Aventura em ':'Adventure in ',
+'A Aranha das Raízes desceu do teto!':'The Root Spider came down from the ceiling!','A Aranha das Raízes foi vencida! O caminho abriu':'The Root Spider is defeated! The way is open',
+'A Bruxa foi vencida! A Árvore Mãe acordou!':'The Witch is defeated! The Mother Tree woke up!','A Bruxa! Cuidado com as poções dela':'The Witch! Watch out for her potions',
+'A Bruxa: "Hi hi hi! A Árvore Mãe é minha!"':'The Witch: "Hee hee hee! The Mother Tree is mine!"','Hi hi hi! A Árvore Mãe é minha!':'Hee hee hee! The Mother Tree is mine!',
+'A Semente de Luz!':'The Light Seed!','O Cristal Ancestral!':'The Ancient Crystal!','A areia engoliu o Kuro. Voltando ao checkpoint.':'The sand swallowed Kuro. Back to the checkpoint.',
+'A areia movediça engoliu o Kuro. Voltando ao checkpoint.':'The quicksand swallowed Kuro. Back to the checkpoint.','A armadura quebrou! Ele ficou furioso: cuidado com as ondas de choque':'The armor broke! He is furious: watch out for the shockwaves',
+'A cachoeira é forte demais! Espere a água parar para passar... e olhe a gruta lá dentro':'The waterfall is too strong! Wait for the water to stop... and look at the grotto inside',
+'A calha é escorregadia! Continue subindo':'The chute is slippery! Keep climbing','A corda do robô parou! Use o ':'The robot\'s rope stopped! Use the ',
+'A correnteza levou o Kuro de volta! Pule de pedra em pedra':'The current pulled Kuro back! Jump from stone to stone','A flor deixa o Kuro atirar: botão J ou X':'The flower lets Kuro shoot: J or X button',
+'A gravidade virou! O Kuro anda no teto. A seta laranja traz de volta':'Gravity flipped! Kuro walks on the ceiling. The orange arrow brings him back',
+'A guardiã perdeu as asas! Use o ':'The guardian lost her wings! Use the ','A guerreira arremessa a lança! Desvie':'The warrior throws her spear! Dodge it',
+'A lava alcançou o Kuro! Voltando ao checkpoint.':'The lava caught Kuro! Back to the checkpoint.','A pena escapou!':'The feather got away!','A porta do trono se abre...':'The throne door opens...',
+'A raiz cresce e vira ponte! Ela murcha depois de um tempo':'The root grows into a bridge! It withers after a while','A raposinha caiu no buraco':'The little fox fell into the pit',
+'A raposinha cospe bolhas! O inimigo preso vira degrau':'The little fox spits bubbles! A trapped enemy becomes a step',
+'A raposinha espera aqui embaixo: lá nas copas é alto demais para ela!':'The little fox waits down here: the treetops are too high for her!',
+'A raposinha fica esperando aqui fora — lá dentro é quente demais!':'The little fox waits out here — it is too hot inside!',
+'A raposinha fugiu assustada! Alcance ela para montar de novo':'The little fox ran off scared! Catch her to ride again',
+'Acertou! Agora pule no abdômen brilhante da Aranha!':'Hit! Now jump on the Spider\'s glowing belly!','Acertou! O navio balança mais — e vêm peixes!':'Hit! The ship rocks harder — and here come the fish!',
+'Agora! Caia em cima dela!':'Now! Land on top of her!','Alarme! O guarda viu o Kuro: os inimigos ficaram mais rápidos':'Alarm! The guard saw Kuro: enemies got faster',
+'Alavanca! As rodas deste andar viraram para o outro lado':'Lever! The wheels on this floor now turn the other way','Arrr! Este navio é meu!':'Arrr! This ship is mine!',
+'Capitão Corvo-Pirata: "Arrr! Este navio é meu!"':'Captain Crow the Pirate: "Arrr! This ship is mine!"',
+'As bandeirinhas avisam: vem rajada! Esconda-se atrás de uma pedra':'The little flags warn you: a gust is coming! Hide behind a rock',
+'As bandeirinhas guardam o caminho: se cair, volta nelas':'The little flags save your progress: if you fall, you return to them',
+'As brocas ficaram presas na parede! Agora: ataque!':'The drills got stuck in the wall! Now: attack!','As brocas protegem ele! Espere ele ficar tonto':'The drills protect him! Wait until he is dizzy',
+'As pontes de aurora somem e voltam no ritmo da luz! Espere ela acender':'The aurora bridges vanish and return with the light! Wait for it to glow',
+'Bandeira falsa! Sem a chave não tem saída...':'Fake flag! Without the key there is no way out...','Bolha de Ponte! O inimigo fica preso: pule em cima da bolha para subir':'Bridge Bubble! The enemy is trapped: jump on the bubble to climb',
+'Caiu! Volta para a bandeirinha — chances: ':'You fell! Back to the little flag — retries: ','Capa! Corra, pule e segure pular para voar. Giro derrota inimigos':'Cape! Run, jump and hold jump to fly. Spinning defeats enemies',
+'Casco duro! Use o ':'Hard shell! Use the ','Clac! A porta da saída destrancou!':'Click! The exit door is unlocked!','Clac! A porta destrancou!':'Click! The door is unlocked!',
+'Cogumelo gigante! Vermelho joga alto, azul mais alto e o dourado lá em cima':'Giant mushroom! Red bounces high, blue higher and gold way up','Cogumelo! Kuro ficou grande':'Mushroom! Kuro got big',
+'Com a capa, corra até o medidor encher e pule para voar':'With the cape, run until the meter fills and jump to fly','Com a raposinha, o pulo giratório (K) derrota de uma vez':'With the little fox, the spin jump (K) defeats at once',
+'Controle conectado! A pula · B giratório · X ação · Start pausa':'Controller connected! A jump · B spin · X action · Start pause','Cubo acelerador! Ele lança o Kuro lá para cima':'Booster cube! It launches Kuro way up',
+'Cuidado: os peixes estão saltando por cima do navio!':'Careful: fish are leaping over the ship!','Dooong! A torre acordou!':'Dooong! The tower woke up!',
+'ERUPÇÃO! Corra até o topo da cratera!':'ERUPTION! Run to the top of the crater!','Ela está fugindo para o sol! Fique no círculo do caldeirão!':'She is flying off to the sun! Stay in the cauldron circle!',
+'Ela voltou! Espere ela descer de novo':'She is back! Wait for her to come down again','Ele abriu as asas! O santuário está desmoronando':'He spread his wings! The shrine is collapsing',
+'Ele está de guarda! Ataque quando ficar tonto':'He is on guard! Attack when he is dizzy','Ele ficou bravo! Cuidado com as pedras do teto':'He got angry! Watch out for rocks from the ceiling',
+'Ele levantou voo! Fique de olho na sombra':'He took off! Keep an eye on his shadow','Escondido! Atrás do biombo o guarda passa sem ver o Kuro':'Hidden! Behind the screen the guard walks by without seeing Kuro',
+'Escudo mágico! Protege de um golpe':'Magic shield! Protects from one hit','Essa ilha afunda! Não fique parado':'This island sinks! Don\'t stand still','Falta só um golpe!':'Just one more hit!',
+'Fim do voo: segure pular para planar':'Flight over: hold jump to glide','Flor de fogo! Aperte Fogo (ou J) para atirar':'Fire flower! Press Fire (or J) to shoot','Fôlego renovado':'Breath restored',
+'Girando e quebrando! Aperte o pulo para parar':'Spinning and smashing! Press jump to stop','Golpe carregado! A guarda dele quebrou':'Charged strike! His guard broke','Golpe carregado! Dano dobrado':'Charged strike! Double damage',
+'Gravidade normal de novo':'Normal gravity again','Isso! Ela ficou furiosa...':'Yes! She is furious...','Isso! Ela ficou mais rápida...':'Yes! She got faster...',
+'Kuro caiu na Mina dos Trilhos!':'Kuro fell into the Rail Mine!','Kuro chegou ao Lago da Aurora!':'Kuro reached Aurora Lake!','Kuro entrou no Labirinto de Tijolos!':'Kuro entered the Brick Labyrinth!',
+'Kuro perdeu a capa':'Kuro lost the cape','Kuro perdeu o cogumelo e voltou ao tamanho normal':'Kuro lost the mushroom and is back to normal size','Kuro perdeu o poder de fogo':'Kuro lost the fire power',
+'Mais uma! Ele está quase caindo!':'One more! He is about to fall!','Mariposa! Ela apaga a luz das rodas. Pule nela para a luz voltar':'Moth! It puts out the wheel light. Jump on it to bring the light back',
+'Montado! Aperte Impulso para disparar. Para baixo + pular desce':'Riding! Press Boost to dash. Down + jump to get off',
+'No Cânion Invertido, as setas viram a gravidade':'In the Upside-down Canyon, the arrows flip gravity','O Kuro caiu na lava! Voltando ao último checkpoint.':'Kuro fell into the lava! Back to the last checkpoint.',
+'O Kuro caiu para o céu! Voltando ao último checkpoint.':'Kuro fell into the sky! Back to the last checkpoint.','O Kuro ficou sem fôlego. Procure as bolhas de ar e os bolsões!':'Kuro ran out of breath. Look for air bubbles and air pockets!',
+'O Rei Besouro apareceu!':'The Beetle King appeared!','O Rei Besouro chamou os filhotes!':'The Beetle King called his young!','O Rei Besouro é forte demais para fogo. Pise nele!':'The Beetle King is too strong for fire. Stomp on him!',
+'O Toupeirão saiu da terra! Katana: toque para cortar. Shuriken: atire de longe':'The Big Mole burst out of the ground! Katana: tap to slash. Shuriken: throw from afar',
+'O abismo é largo demais! Volte e suba no vagonete':'The chasm is too wide! Go back and get in the mine cart','O caminho acabou! Entre no cano: suba nele e segure para baixo':'The path ends here! Enter the pipe: stand on it and hold down',
+'O caminho para o topo está aberto! Finque a bandeira no pico':'The way to the top is open! Plant the flag on the peak','O escudo protegeu o Kuro!':'The shield protected Kuro!',
+'O gelo trincou! Na próxima pisada ele quebra':'The ice cracked! It breaks on the next step','O pé de feijão está crescendo! Segure pular ao lado dele.':'The beanstalk is growing! Hold jump next to it.',
+'O tempo da fase esgotou. Corra mais rápido e tente de novo!':'The level time ran out. Run faster and try again!','O trilho acabou! Pule para o outro vagonete':'The track ends! Jump to the other mine cart',
+'O tronco entra na pedra! Pule antes de chegar lá em cima':'The log goes into the rock! Jump before it reaches the top','Onda gigante! Ela vem levantando os destroços':'Giant wave! It lifts the wreckage',
+'Os esporos acenderam os fungos! Dá para subir neles por um tempo':'The spores lit the mushrooms! You can climb them for a while',
+'Os inimigos levaram a melhor, mas o Kuro nunca desiste. Vamos de novo?':'The enemies won this time, but Kuro never gives up. Try again?',
+'Pedras do teto! Fuja das sombras no chão':'Rocks from the ceiling! Avoid the shadows on the ground','Pegou a chave! Agora encontre a fechadura':'Got the key! Now find the lock',
+'Pendurado! Ande para os lados, pule para soltar para cima, baixo para soltar':'Hanging! Move sideways, jump to let go upward, down to drop',
+'Poderes mantidos da fase anterior':'Powers kept from the previous level','Pouco tempo! Menos de 1 minuto':'Hurry! Less than 1 minute','Quase lá!':'Almost there!',
+'Pule de tartaruga em tartaruga! Segure o pulo para quicar mais alto':'Jump from turtle to turtle! Hold jump to bounce higher',
+'Pule em cima dos barris rolando para chutá-los de volta no capitão!':'Jump on the rolling barrels to kick them back at the captain!',
+'Quando ela descer para mexer o caldeirão, pule no chapéu dela!':'When she comes down to stir the cauldron, jump on her hat!',
+'Quando ela estiver em cima de uma semente, passe pela luz da semente!':'When she is above a seed, run through the seed\'s light!','Raposinha Foguete! Encoste nela para montar':'Rocket Fox! Touch her to ride',
+'Revanche! Katana: toque para cortar, segure e solte para o golpe forte. Cima + Katana: corte para cima. Shuriken: atire de longe':'Rematch! Katana: tap to slash, hold and release for a strong strike. Up + Katana: upward slash. Shuriken: throw from afar',
+'Sala do Rei Besouro! Sem poderes. Só a katana!':'Beetle King\'s room! No powers. Only the katana!','Segure firme! A pipa leva o Kuro até a próxima ilha. Baixo ou pular para soltar':'Hold on! The kite carries Kuro to the next island. Down or jump to let go',
+'Segurou o cipó! Use a seta para balançar e pule para soltar':'Grabbed the vine! Use the arrows to swing and jump to let go','Sem ar':'No air','Sem ar! Procure uma bolha':'Out of air! Find a bubble',
+'Sem chances! O Kuro cai até achar onde pisar':'No retries! Kuro falls until he finds solid ground','Tatu-espinho! Pular nele machuca: use o fogo ou a capa':'Spiky armadillo! Jumping on it hurts: use fire or the cape',
+'Tempo esgotado! Voltando ao checkpoint com mais ':'Time\'s up! Back to the checkpoint with ',' segundos':' seconds','Terra Nova! A trilha começa na mata':'New Land! The trail starts in the woods','Tobogã de gelo!':'Ice slide!',
+'Toque em Pular para nadar. Segure para subir devagar':'Tap Jump to swim. Hold to rise slowly','Trancada! Encontre a chave e a fechadura':'Locked! Find the key and the lock','Uma fechadura... falta a chave':'A lock... you still need the key',
+'Vagonete! Fique dentro: ele anda sozinho':'Mine cart! Stay inside: it moves on its own','Ventania! Quando as setas aparecerem, segure firme':'Strong wind! When the arrows appear, hold on tight',
+'Vento a favor chegando: pule junto com a rajada para ir mais longe!':'Tailwind coming: jump with the gust to go farther!','Vento para cima! Ande para o lado para sair':'Updraft! Walk sideways to get out',
+'Viga baixa! Segure para baixo para se abaixar':'Low beam! Hold down to duck','Voando! Toque em pular para bater a capa':'Flying! Tap jump to flap the cape','Você acendeu a Luz da Aurora!':'You lit the Aurora Light!',
+'Você caiu. Voltando ao último checkpoint.':'You fell. Back to the last checkpoint.','Você venceu o Capitão Corvo-Pirata! Siga até a ilha':'You beat Captain Crow the Pirate! Head to the island',
+'Última volta! A próxima queda é de verdade':'Last chance! The next fall is for real','Checkpoint':'Checkpoint','Analógico à esquerda anda · botão Pular à direita':'Joystick on the left moves · Jump button on the right','Setas ou A/D andam · Espaço pula · Shift corre':'Arrows or A/D move · Space jumps · Shift runs','Mundo 12 · Terra Nova':'World 12 · New Land',
+/* histórias (começo e fim de cada mundo) */
+'Kuro é o ninja mais jovem da Vila das Folhas. Numa manhã de sol, o Rei Besouro roubou o Coração de Cristal, que deixa a vila sempre em paz. Kuro apertou a faixa, pegou a katana e saiu para trazê-lo de volta.':'Kuro is the youngest ninja of the Leaf Village. One sunny morning, the Beetle King stole the Crystal Heart, which keeps the village at peace. Kuro tightened his headband, grabbed his katana and set off to bring it back.',
+'O caminho começa num vale ensolarado. Pise nos besouros de pedra, cuidado com os espinhos e ache os 3 cristais escondidos.':'The journey begins in a sunny valley. Stomp the stone beetles, watch out for spikes and find the 3 hidden crystals.',
+'O Rei Besouro deixou pegadas que entram na Caverna de Cristal. Vamos atrás!':'The Beetle King left footprints leading into the Crystal Cave. Let\'s follow them!',
+'Aqui dentro é escuro, mas os cristais brilham. Corra pelas pedras frágeis, desvie dos morcegos e das lâminas.':'It is dark in here, but the crystals glow. Run across the fragile stones and dodge the bats and the blades.',
+'No fim da caverna, uma luz verde aparece entre as raízes. O rei fugiu pelas copas da Floresta Esmeralda!':'At the end of the cave, a green light shines between the roots. The king escaped through the treetops of the Emerald Forest!',
+'Aqui não existe chão: só galhos, troncos e folhas gigantes. Pule de árvore em árvore e use a pena para planar sobre os vãos. A bandeira no topo leva ao Coração de Cristal.':'There is no ground here: only branches, trunks and giant leaves. Jump from tree to tree and use the feather to glide over the gaps. The flag at the top leads to the Crystal Heart.',
+'No topo da floresta, o rei escapou mais uma vez: ele mergulhou no oceano! O Kuro respirou fundo e foi atrás.':'At the top of the forest, the king escaped once again: he dove into the ocean! Kuro took a deep breath and went after him.',
+'Aqui embaixo o Kuro nada! Toque em pular para dar braçadas e olhe a barra de Ar: pegue as bolhas ou suba até um bolsão de ar. Cuidado com águas-vivas, peixes-balão e corais.':'Down here Kuro swims! Tap jump to stroke and watch the Air bar: grab bubbles or swim up to an air pocket. Watch out for jellyfish, pufferfish and coral.',
+'No fundo do recife, um mapa molhado mostra para onde o Rei Besouro fugiu: um castelo sombrio nas colinas. O Kuro respira fundo e segue.':'At the bottom of the reef, a soggy map shows where the Beetle King fled: a gloomy castle in the hills. Kuro takes a deep breath and keeps going.',
+'Aqui os esqueletos ressuscitam, as bruxas sempre voltam e os morcegos não largam o Kuro. O fogo guarda cada corredor. Use a flor de fogo para queimar os ossos de vez e abra a grande porta para enfrentar o Rei Besouro.':'Here skeletons rise again, witches always come back and bats won\'t leave Kuro alone. Fire guards every hallway. Use the fire flower to burn the bones for good and open the great door to face the Beetle King.',
+'O Rei Besouro caiu e o Coração de Cristal voltou às mãos do Kuro. A vila voltou a sorrir. Mas o mapa ainda guarda terras desconhecidas...':'The Beetle King fell and the Crystal Heart is back in Kuro\'s hands. The village is smiling again. But the map still holds unknown lands...',
+'Uma tempestade cobre a montanha e o gelo não perdoa: o Kuro derrapa e demora para parar. Cuidado com os pingentes que caem, as bolas de neve que rolam, o gelo fino que racha e os lobos e bonecos de neve que guardam cada trecho. Esta é a subida mais difícil até agora.':'A storm covers the mountain and the ice is merciless: Kuro slides and takes a while to stop. Watch out for falling icicles, rolling snowballs, thin cracking ice and the wolves and snowmen guarding every stretch. This is the hardest climb yet.',
+'Do alto da Montanha Gelada o Kuro vê o próximo caminho: o cume ainda está mais acima. Descanse, ninja. A subida continua!':'From the top of the Frozen Mountain, Kuro sees the road ahead: the summit is still higher. Rest, ninja. The climb goes on!',
+'O sol queima e o vento empurra. Cuidado com a areia movediça, os escorpiões e as rajadas. Dentro da pirâmide a areia sobe sem parar: não pare de subir até o topo!':'The sun burns and the wind pushes. Watch out for quicksand, scorpions and gusts. Inside the pyramid the sand keeps rising: don\'t stop climbing until you reach the top!',
+'No topo da pirâmide o Kuro enxerga muito longe: há ainda mais terras, escondidas atrás do deserto. A aventura continua!':'From the top of the pyramid Kuro can see far away: there are even more lands, hidden beyond the desert. The adventure continues!',
+'A lua cheia ilumina os telhados da vila. Os guardas andam com lanternas: se a luz pegar o Kuro, o alarme toca e todos ficam mais rápidos. Esconda-se atrás dos biombos, pendure-se nos varais de lanternas (segure pular) e suba até o alto do pagode.':'The full moon lights up the village rooftops. The guards carry lanterns: if the light catches Kuro, the alarm rings and everyone gets faster. Hide behind the screens, hang from the lantern lines (hold jump) and climb to the top of the pagoda.',
+'Do alto do pagode o Kuro vê a vila dormindo lá embaixo e o caminho que segue pelas montanhas. A aventura continua!':'From the top of the pagoda Kuro sees the village sleeping below and the road that leads into the mountains. The adventure continues!',
+'A Torre Verde é uma árvore gigante que sobe até acima das nuvens, e aqui o caminho é só para cima! Suba pelos degraus de grama, deixe o vento das folhas te levar, ande nos elevadores de galho e suba no pé de feijão. Se cair, tudo bem: é só subir de novo. A pena e a Raposinha estão logo no começo.':'The Green Tower is a giant tree that rises above the clouds, and here the only way is up! Climb the grassy steps, let the leaf wind carry you, ride the branch elevators and climb the beanstalk. If you fall, that\'s okay: just climb again. The feather and the little Fox are right at the start.',
+'Lá do alto da árvore, acima das nuvens, o Kuro vê o cume da montanha bem perto. Falta pouco!':'From the top of the tree, above the clouds, Kuro sees the mountain summit up close. Almost there!',
+'O caminho para o cume passa por dentro de um vulcão! Cuidado: cair na lava é fatal. Desvie dos gêiseres, das pedras de fogo e das bolas de lava, pendure-se nas correntes e não fique parado nas pedras que afundam. No fim, o vulcão entra em erupção: corra até o topo da cratera!':'The road to the summit goes through a volcano! Careful: falling into the lava is fatal. Dodge the geysers, the fire rocks and the lava balls, hang from the chains and don\'t stand still on sinking rocks. At the end, the volcano erupts: run to the top of the crater!',
+'O Kuro escapou da erupção e chegou à borda da cratera. Lá em cima, o cume da montanha brilha ao sol. O último desafio está chegando!':'Kuro escaped the eruption and reached the edge of the crater. Up above, the mountain summit shines in the sun. The final challenge is near!',
+'O ponto mais alto da ilha! Aqui em cima o vento sopra forte. Quando as bandeirinhas avisarem, esconda-se atrás das pedras, ou aproveite a rajada para pular mais longe. Lá no topo, alguém espera pelo Kuro...':'The highest point of the island! Up here the wind blows hard. When the little flags warn you, hide behind the rocks, or ride the gust to jump farther. At the top, someone is waiting for Kuro...',
+'O Kuro venceu o Rei Besouro e fincou sua bandeira no ponto mais alto da ilha. O sol nasceu sobre o mar de nuvens... e lá longe, no horizonte, apareceu uma terra que nenhum mapa mostra. A aventura continua!':'Kuro beat the Beetle King and planted his flag on the highest point of the island. The sun rose over the sea of clouds... and far away, on the horizon, appeared a land no map shows. The adventure continues!',
+'O barquinho chegou à Terra Nova! Siga a trilha entre raízes, flores e troncos caídos, rumo à árvore gigante que brilha no horizonte. A fase é longa: as bandeirinhas guardam o caminho.':'The little boat reached the New Land! Follow the trail between roots, flowers and fallen logs toward the giant tree shining on the horizon. The level is long: the little flags save your progress.',
+'O Kuro subiu até o topo da árvore gigante e encontrou o Cristal Ancestral! A luz dele acordou a Floresta Ancestral inteira. Lá do mirante, o Kuro viu o resto da Terra Nova esperando por ele...':'Kuro climbed to the top of the giant tree and found the Ancient Crystal! Its light woke up the whole Ancient Forest. From the lookout, Kuro saw the rest of the New Land waiting for him...',
+'Aqui o caminho é só para cima! Pule de bloco em bloco e olhe a cor das runas: azul desliza, verde sobe e desce, roxo some depois que você pisa, laranja gira e dourado lança o Kuro lá no alto. Cuidado com as tartarugas voadoras.':'Here the only way is up! Jump from block to block and check the rune colors: blue slides, green moves up and down, purple vanishes after you step on it, orange spins and gold launches Kuro high up. Watch out for the flying turtles.',
+'O Kuro chegou ao topo da torre celeste e tocou o sino! O som ecoou por toda a Terra Nova.':'Kuro reached the top of the sky tower and rang the bell! The sound echoed across the whole New Land.',
+'No meio do pântano, uma torre de relógio antiga parou e ficou no escuro. Lá dentro só os vaga-lumes ainda moram. As engrenagens só giram quando um vaga-lume pousa no eixo: espere a luz, suba nas tábuas e pule de roda em roda até a porta lá do alto. Lá fora o dia nasce: atravesse o pântano e suba a colina até o sino.':'In the middle of the swamp, an old clock tower stopped and went dark. Only fireflies live inside now. The gears only turn when a firefly lands on the axle: wait for the light, climb the planks and jump from wheel to wheel up to the door at the top. Outside, day breaks: cross the swamp and climb the hill to the bell.',
+'Dooong! O sino tocou e a torre inteira acendeu. O mecanismo voltou a funcionar e os vaga-lumes mostram o caminho da próxima aventura.':'Dooong! The bell rang and the whole tower lit up. The machinery works again and the fireflies show the way to the next adventure.',
+'Debaixo da Terra Nova existe uma mina antiga, cheia de trilhos e cristais. Para chegar lá, atravesse o campo lá em cima: no fim do caminho, um cano velho é a única saída. Entre nele e caia dentro da mina! Lá embaixo, pule dentro dos vagonetes: eles voam por cima dos abismos! Abaixe-se nas vigas baixas e, se o trilho acabar, pule para outro vagonete. Lá no fundo, alguém não para de cavar...':'Beneath the New Land lies an old mine full of tracks and crystals. To get there, cross the field above: at the end of the path, an old pipe is the only way in. Enter it and drop into the mine! Down there, jump into the mine carts: they fly over the chasms! Duck under the low beams and, if the track ends, jump to another cart. Deep below, someone never stops digging...',
+'O Toupeirão caiu tonto e soltou o Cristal da Mina! Os lampiões acenderam um por um e os trilhos voltaram a brilhar. Um vagonete levou o Kuro de volta para a luz do dia: a Terra Nova ainda guarda muitos segredos.':'The Big Mole fell dizzy and dropped the Mine Crystal! The lamps lit up one by one and the tracks shine again. A mine cart carried Kuro back to daylight: the New Land still holds many secrets.',
+'Um vale cheio de água: cachoeiras por todo lado e um rio lá embaixo. Pule de ilha em ilha, fuja do Minhocão que salta da terra, das abelhas que voam em bando e da coruja que mergulha lá do alto. Cuidado com os Pedrões-totem: quando o Kuro passa embaixo, eles despencam! Lá no alto do morro, o castelo guarda a Semente de Luz.':'A valley full of water: waterfalls everywhere and a river far below. Jump from island to island, escape the Giant Worm that leaps out of the ground, the bees that fly in swarms and the owl that dives from above. Watch out for the Totem Boulders: when Kuro passes under them, they drop! At the top of the hill, the castle guards the Light Seed.',
+'O Kuro subiu até o portão do castelo e encontrou a Semente de Luz! Ela brilhou tão forte que as cachoeiras do vale ficaram douradas. Agora o Kuro sabe: a Terra Nova inteira está esperando por essa luz...':'Kuro climbed up to the castle gate and found the Light Seed! It shone so bright that the valley\'s waterfalls turned gold. Now Kuro knows: the whole New Land is waiting for this light...',
+'Uma montanha inteira de tijolos, cortada por paredes de concreto! Use o pulo giratório em cima dos tijolos para quebrar e descer, e a cabeçada para quebrar os de cima. Em algum lugar está a chave; em outro, a fechadura que destranca a porta da saída. Cuidado: há bandeiras falsas pelo caminho...':'A whole mountain of bricks, cut through by concrete walls! Use the spin jump on top of bricks to break them and go down, and headbutt to break the ones above. Somewhere there is the key; somewhere else, the lock that opens the exit door. Careful: there are fake flags along the way...',
+'Clac! O Kuro achou a chave, a fechadura e a saída do labirinto! Lá fora, o ar fresco da noite... e um lago congelado brilhando debaixo da aurora.':'Click! Kuro found the key, the lock and the way out of the labyrinth! Outside, the cool night air... and a frozen lake shining under the aurora.',
+'Uma noite de inverno sob a aurora boreal! O lago congelou: no gelo liso o Kuro patina rápido e demora a frear. Cuidado com o gelo fino — ele trinca na primeira pisada e quebra na segunda. Os pinguins descem de barriga e as focas saem dos buracos jogando bolas de neve.':'A winter night under the northern lights! The lake froze: on the smooth ice Kuro skates fast and takes a while to stop. Watch out for thin ice — it cracks on the first step and breaks on the second. Penguins slide down on their bellies and seals pop out of holes throwing snowballs.',
+'Uma tempestade partiu um navio pirata ao meio: a proa encalhou na praia e a popa ficou boiando no mar. Suba pelos caixotes e pelo convés, escale o mastro até o cesto da gávea, fuja dos caranguejos e das gaivotas — e cuidado com os raios!':'A storm split a pirate ship in half: the bow ran aground on the beach and the stern is floating at sea. Climb the crates and the deck, scale the mast up to the crow\'s nest, escape the crabs and the seagulls — and watch out for lightning!',
+'Um cânion de pedra vermelha acorda com o sol da manhã — e ele não quer visitas! O chão desmorona, pedras rolam ladeira abaixo, pilões de rocha esmagam e paredes se fecham. Corra, pule e chegue ao arco de pedra onde brilha a Semente de Luz.':'A red rock canyon wakes up with the morning sun — and it doesn\'t want visitors! The ground crumbles, boulders roll downhill, stone crushers slam and walls close in. Run, jump and reach the stone arch where the Light Seed shines.',
+'Embaixo da Árvore Mãe, as raízes guardam um mundo escuro que brilha: cogumelos de luz, esporos no ar e sementes que fazem raízes crescerem. Lá no fundo, no coração das raízes, mora a Aranha das Raízes. O Kuro precisa passar por ela.':'Beneath the Mother Tree, the roots hide a dark world that glows: light mushrooms, spores in the air and seeds that make roots grow. Deep down, in the heart of the roots, lives the Root Spider. Kuro has to get past her.',
+'O sol nasce dourado no alto da Árvore Mãe. Folhas gigantes, galhos que balançam no vento e, lá no topo, a Bruxa espera com o seu caldeirão. Ela vai aparecer pelo caminho para atrapalhar — mas só no fim dá para enfrentá-la de verdade.':'The sun rises golden at the top of the Mother Tree. Giant leaves, branches swaying in the wind and, at the very top, the Witch waits with her cauldron. She will show up along the way to get in your way — but only at the end can you truly face her.',
+'A Bruxa foi vencida e a Árvore Mãe acordou, brilhando com o sol da manhã. A Terra Nova está salva — e o Kuro e a raposinha olham o horizonte, prontos para a próxima aventura.':'The Witch is defeated and the Mother Tree woke up, shining in the morning sun. The New Land is saved — and Kuro and the little fox look at the horizon, ready for the next adventure.'
+};
+for(var _w=12;_w<=22;_w++)EN['Mundo '+_w+' · Terra Nova']='World '+_w+' · New Land';
+EN['Português']='Português';EN['(padrão)']='(default)';
+var EN_FR=Object.keys(EN).filter(function(k){return k.length>=6&&/ |^\(/.test(k)}).sort(function(a,b){return b.length-a.length});/* pedaços (só frases, para não trocar dentro de palavras) */
+var EN_FALTA={};
+function trTxt(s){if(LANG!=='en'||!s||!/[A-Za-zÀ-ú]{2}/.test(s))return s;
+  var t=s.trim();if(EN[t]!==undefined)return s.replace(t,EN[t]);
+  var o=s,i;for(i=0;i<EN_FR.length;i++){var k=EN_FR[i];if(o.indexOf(k)>=0)o=o.split(k).join(EN[k])}
+  if(o===s&&/[ãõçáéíóúâêôà]|\b(de|do|da|que|para|com|não)\b/i.test(s))EN_FALTA[t]=1;return o}
+function trNode(n){if(n.nodeType===3){if(n.parentNode&&/^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName))return;var v=n.nodeValue,w=trTxt(v);if(w!==v)n.nodeValue=w}
+  else if(n.nodeType===1&&n.tagName!=='SCRIPT'&&n.tagName!=='STYLE'){for(var c=n.firstChild;c;c=c.nextSibling)trNode(c)}}
+function idiomaFaltando(){return Object.keys(EN_FALTA)}
+if(LANG==='en'){
+  document.documentElement.lang='en';
+  trNode(document.body);
+  new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var m=ms[i];
+    if(m.type==='characterData')trNode(m.target);else for(var j=0;j<m.addedNodes.length;j++)trNode(m.addedNodes[j])}})
+    .observe(document.body,{childList:true,subtree:true,characterData:true});
+}
 
 /*@@parte:70_entrada.js*/
 /* ===================== entrada ===================== */
@@ -13324,6 +13505,7 @@ soundOn=cfg.snd!==false;musicOn=cfg.mus!==false;
   row('Limite de quadros',[[30,'30'],[60,'60'],[0,'Sem limite']],function(){return cfg.cap},function(v){cfg.cap=v;saveCfg();applyGfx()});
   row('Câmera',[['clas','Clássica'],['cine','Cinemática']],function(){return cfg.cam||'clas'},function(v){cfg.cam=v;saveCfg()});/* cinemática: leve rotação, mais baixa, respira e recua ao correr */
   row('Contador de FPS',onoff,function(){return !!cfg.fps},function(v){cfg.fps=v;saveCfg();applyGfx()});
+  row('Idioma / Language',[['pt','Português'],['en','English']],function(){return LANG},function(v){if(v===LANG)return;cfg.lang=v;saveCfg();location.reload()});/* troca de idioma recarrega a página */
   row('Música',onoff,function(){return musicOn},function(v){musicOn=v;cfg.mus=v;saveCfg();refreshCfg()});
   row('Efeitos sonoros',onoff,function(){return soundOn},function(v){soundOn=v;cfg.snd=v;saveCfg();refreshCfg()});
   /* volumes (100% = o novo padrão, já mais alto que antes) */
@@ -14007,6 +14189,8 @@ ldBoot([function(){setHearts();applyGfx()},function(){buildLevel(0)},function(){
   function(){openMap()/* o jogo abre direto no mapa (o título fica no botão Início) */},
   function(){try{renderer.compile(mapScene,camera)}catch(e){}}],
  function(){
+  /* portal: jogador novo cai direto jogando o Mundo 1, com os controles na tela */
+  if(window.PORTAL&&!(save.best&&save.best[0]>0)){leaveMap();startLevel(0);beginPlay();setTimeout(function(){toast(coarse?'Analógico à esquerda anda · botão Pular à direita':'Setas ou A/D andam · Espaço pula · Shift corre')},600)}
   /* depois de recarregar por troca de qualidade: volta direto para as configurações com a prévia */
   try{if(sessionStorage.getItem('rac-reopen')==='cfg'){sessionStorage.removeItem('rac-reopen');setTimeout(function(){if(window.__openCfg){leaveMap();if(window.__cfgFromMap)window.__cfgFromMap();window.__openCfg()}},60)}}catch(e){}
   requestAnimationFrame(frame)});
@@ -14019,6 +14203,7 @@ ldBoot([function(){setHearts();applyGfx()},function(){buildLevel(0)},function(){
 <script>
 (function(){
   var b=document.getElementById('fsBtn'),de=document.documentElement;
+  if(window.PORTAL){if(b)b.hidden=true;return}/* portal: o próprio site dá a tela cheia (botão nosso é proibido) */
   var rf=de.requestFullscreen||de.webkitRequestFullscreen;
   /* app instalado (ícone na tela inicial) já abre em tela cheia: sem botão nem aviso */
   var app=function(){try{return location.protocol==='file:'||/[?&]apk=1/.test(location.search)||matchMedia('(display-mode: fullscreen)').matches||matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}};
@@ -14037,4 +14222,4 @@ ldBoot([function(){setHearts();applyGfx()},function(){buildLevel(0)},function(){
 })();
 </script>
 
-<div id="verTag" style="position:fixed;right:6px;bottom:4px;z-index:1000;font:11px sans-serif;color:#fff;opacity:.55;pointer-events:none;text-shadow:0 1px 2px #000">versão ade769</div><script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").then(function(r){try{r.update()}catch(e){}}).catch(function(){});var t0=Date.now(),rl=false,had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(had&&!rl&&Date.now()-t0<20000){rl=true;location.reload()}})/* versão nova chegou logo ao abrir: recarrega sozinho uma vez */})}</script></body></html>
+<div id="verTag" style="position:fixed;right:6px;bottom:4px;z-index:1000;font:11px sans-serif;color:#fff;opacity:.55;pointer-events:none;text-shadow:0 1px 2px #000">versão 384c0f</div><script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").then(function(r){try{r.update()}catch(e){}}).catch(function(){});var t0=Date.now(),rl=false,had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(had&&!rl&&Date.now()-t0<20000){rl=true;location.reload()}})/* versão nova chegou logo ao abrir: recarrega sozinho uma vez */})}</script></body></html>
