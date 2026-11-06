@@ -10212,7 +10212,7 @@ function fallDeath(msg,kind){
 /*@@parte:41_raposa.js*/
 /* ===================== Raposinha Foguete (montaria) ===================== */
 var fox=null,FOXH=.62,foxGeoCache={};
-function makeFoxVis(skin){
+function makeFoxVis(skin,semSela){
   /* cada parte animada vira 1 malha só (cores por vértice): ~7 desenhos por quadro, leve no celular */
   var C={org:0xec741f,crm:0xf8e4c4,brn:0x5a3020,paw:0x9a5426,blk:0x1a1210,blu:0x2f62b8,lea:0x7a4a2a,gld:0xf0b030,wht:0xffffff,iri:0x7a3a12,mth:0x6a1a22,tng:0xe86a78,rol:0x2f62b8,acc:0xec741f};
   /* visual novo da Terra Nova (Mundo 12 em diante, pedido do dono): pelo preto, topete e faixas laranja, ponta do rabo branca, patas pretas, olhos verdes, lenço laranja e rolinho laranja */
@@ -10220,6 +10220,7 @@ function makeFoxVis(skin){
   if(skin===1){C.org=0x2a2a30;C.brn=0x121216;C.paw=0x111114;C.blu=0xf07a1a;C.rol=0xc8641c;C.iri=0x4ea52c;C.acc=0xf27f1c}/* pelo preto (o verde sumia na floresta), detalhes laranja e olhos verdes */
   var groups={},o3=new T.Object3D(),col=new T.Color();
   function part(key,geo,c,p,r,s){
+    if(semSela&&(c==='lea'||c==='rol'||(c==='gld'&&p[0]<0)))return;/* sem sela, bolsas e rolinho (tela de carregamento) */
     o3.position.set(p[0],p[1],p[2]);o3.rotation.set(r?r[0]:0,r?r[1]:0,r?r[2]:0);o3.scale.set(s?s[0]:1,s?s[1]:1,s?s[2]:1);o3.updateMatrix();
     var g=(geo.index?geo.toNonIndexed():geo.clone());g.applyMatrix4(o3.matrix);if(!g.attributes.normal)g.computeVertexNormals();
     (groups[key]=groups[key]||[]).push({g:g,c:C[c]});
@@ -13043,7 +13044,7 @@ function ldStart(){var c=renderer.domElement,sc=new T.Scene(),cam=new T.Perspect
   ldExtra(sc,IS);
   /* o Kuro (o mesmo do jogo) e a raposinha */
   LD.home=rig.root.parent;sc.add(rig.root);
-  try{LD.fox=makeFoxVis();LD.fox.g.position.set(1.5,0,.95);LD.fox.g.scale.setScalar(.95);sc.add(LD.fox.g)}catch(e){LD.fox=null}
+  try{LD.fox=makeFoxVis(undefined,true);LD.fox.g.position.set(1.5,0,.95);LD.fox.g.scale.setScalar(.95);sc.add(LD.fox.g)}catch(e){LD.fox=null}
   cam.position.set(-1.9,1.25,6.4);LD.look=new T.Vector3(2.4,3.4,-12);cam.lookAt(LD.look);
   var el=document.getElementById('ld');if(el)el.classList.add('on3d');ldTip()}
 function ldTip(){var e=document.getElementById('ldTip');if(e&&LD){e.textContent=LD_TIPS[LD.tip%LD_TIPS.length];LD.tip++}}
@@ -14036,4 +14037,4 @@ ldBoot([function(){setHearts();applyGfx()},function(){buildLevel(0)},function(){
 })();
 </script>
 
-<div id="verTag" style="position:fixed;right:6px;bottom:4px;z-index:1000;font:11px sans-serif;color:#fff;opacity:.55;pointer-events:none;text-shadow:0 1px 2px #000">versão df56ce</div><script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").then(function(r){try{r.update()}catch(e){}}).catch(function(){});var t0=Date.now(),rl=false,had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(had&&!rl&&Date.now()-t0<20000){rl=true;location.reload()}})/* versão nova chegou logo ao abrir: recarrega sozinho uma vez */})}</script></body></html>
+<div id="verTag" style="position:fixed;right:6px;bottom:4px;z-index:1000;font:11px sans-serif;color:#fff;opacity:.55;pointer-events:none;text-shadow:0 1px 2px #000">versão ed64d6</div><script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").then(function(r){try{r.update()}catch(e){}}).catch(function(){});var t0=Date.now(),rl=false,had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(had&&!rl&&Date.now()-t0<20000){rl=true;location.reload()}})/* versão nova chegou logo ao abrir: recarrega sozinho uma vez */})}</script></body></html>
