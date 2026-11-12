@@ -411,6 +411,7 @@ function animate(dt){
     s.coil.scale.y=1-.45*q;
     if(s.plume){s.plume.visible=s.sq>0;s.plume.scale.set(.6+q*.6,.3+(1-q)*1.2,.6+q*.6);s.plume.material.opacity=.55*q+.1}/* gêiser de areia */
   });
+  if(flag.bell&&flag.ring>0){flag.ring=Math.max(0,flag.ring-dt);flag.bell.rotation.z=Math.sin(flag.ring*14)*flag.ring*.35}
   if(flag.geo){
     var p=flag.geo.attributes.position,b=flag.base;
     for(var j=0;j<p.count;j++){

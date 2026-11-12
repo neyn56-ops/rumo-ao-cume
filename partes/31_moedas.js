@@ -117,7 +117,7 @@ function buildCollectibles(){
   coins=coins.filter(function(c){return !pastEnd(c)});
   fitCoins(LV.coinN||50);
   coins.forEach(function(c){if(pastEnd(c)){c.x=endX-.6-Math.random()*.01}});
-  var cg=new T.CylinderGeometry(.32,.32,.07,24);cg.rotateX(Math.PI/2);
+  var cg=NJ?njMonG():new T.CylinderGeometry(.32,.32,.07,24);if(!NJ)cg.rotateX(Math.PI/2);
   coinMesh=inst(cg,M(0xffc43a,.22,.95,{emissive:new T.Color(0x6a4300),emissiveIntensity:.6}),Math.max(1,coins.length),true);
   coinMesh.count=coins.length;add(coinMesh);
   (LV.gems||[]).forEach(function(p){items.push(mkItem('gem',p[0],p[1]))});
@@ -205,9 +205,11 @@ function mkItem(type,x,y){
   }else if(type==='heart'){
     m=mesh(heartGeo,new T.MeshStandardMaterial({color:0xff4a5e,roughness:.3,emissive:0xb0102a,emissiveIntensity:.8}),false,false);
   }else if(type==='feather'){
-    m=featherModel();
+    m=NJ?njWings():featherModel();
   }else if(type==='mushroom'){
-    m=mushroomModel();
+    m=NJ?njOnigiri():mushroomModel();
+  }else if(type==='flower'&&NJ){
+    m=njScroll();
   }else if(type==='flower'){
     m=new T.Group();
     var fst=mesh(new T.CylinderGeometry(.04,.05,.42,8),new T.MeshStandardMaterial({color:0x3f9a2e,roughness:.6}),false,false);fst.position.y=.21;m.add(fst);
@@ -245,12 +247,13 @@ function buildMarks(){
   });
   if(LV.goal&&(!LV.crystalGoal||LV.goalFlag)){/* goalFlag: bandeira só de enfeite (a fase termina de outro jeito) */
     var gx=LV.goal.x,gt=LV.goal.top,gz=LV.goal.z!==undefined?LV.goal.z:-.4;
-    var pole=mesh(new T.CylinderGeometry(.07,.09,6,10),M(0xc9d1d8,.3,.9));pole.position.set(gx,gt+3,gz);add(pole);
+    if(NJ){var tor=njTorii();tor.position.set(gx+.6,gt,gz-.6);add(tor);flag.parts=[tor];flag.bell=tor.children.filter(function(o){return o.isGroup})[0]}/* identidade ninja: portão torii com sino */
+    else{var pole=mesh(new T.CylinderGeometry(.07,.09,6,10),M(0xc9d1d8,.3,.9));pole.position.set(gx,gt+3,gz);add(pole);
     var fin=mesh(new T.SphereGeometry(.18,16,12),M(0xffc43a,.25,.9,{emissive:new T.Color(0x6a4300),emissiveIntensity:.5}));fin.position.set(gx,gt+6.1,gz);add(fin);
     var fg=new T.PlaneGeometry(2.1,1.3,16,8);
     flag.geo=fg;flag.base=fg.attributes.position.array.slice();
     var fm=mesh(fg,M(0xe0482a,.8,0,{side:T.DoubleSide}));fm.position.set(gx+1.05,gt+5.2,gz);add(fm);
-    flag.mesh=fm;flag.parts=[pole,fin,fm];
+    flag.mesh=fm;flag.parts=[pole,fin,fm]}
   }
 }
 var alertTex=null;

@@ -13,6 +13,7 @@ var quakeMC=null;function quakeM(){
 function buildBlocks(){
   (LV.blocks||[]).forEach(function(d){
     var m=mesh(new T.BoxGeometry(1,1,1.15),d.t==='brick'?brickM:(d.c==='feather'&&d.t==='q'?featherBlkM:qM));
+    if(NJ&&d.t==='q'){m.material=d.c==='feather'?njMats().lanF:njMats().lan;njFrame(m)}/* identidade ninja: lanterna */
     m.position.set(d.x,d.y+.5,0);add(m);
     var b={x:d.x,y:d.y,t:d.t,c:d.c||null,n:d.n||1,state:d.t==='hid'?'hid':'ready',bump:0,mesh:m};
     if(d.t==='hid')m.visible=false;
@@ -71,8 +72,9 @@ function buildPipes(){
     else if(curTheme.name==='forest'){pM=M(0x7a5532,.85,.05);rM=M(0x58a63a,.8,.05)}
     else if(curTheme.name==='peaks'){pM=M(0x7ec4e8,.15,.3);rM=M(0xeaf7ff,.2,.2)}
     else if(curTheme.name==='ruins'){pM=M(0xc99a58,.7,.1);rM=M(0xf2d98c,.4,.5)}
-    var body=mesh(new T.CylinderGeometry(.62,.62,h-.3,22),pM);body.position.y=(h-.3)/2;g.add(body);
-    var rim=mesh(new T.CylinderGeometry(.76,.76,.42,22),rM);rim.position.y=h-.21;g.add(rim);
+    if(NJ){g=njBamboo(h);var rim=g.children[g.children.length-1]}/* identidade ninja: portal de bambu (a corda vermelha pulsa no lugar da borda) */
+    else{var body=mesh(new T.CylinderGeometry(.62,.62,h-.3,22),pM);body.position.y=(h-.3)/2;g.add(body);
+    var rim=mesh(new T.CylinderGeometry(.76,.76,.42,22),rM);rim.position.y=h-.21;g.add(rim)}
     g.position.set(d.x,d.base,0);add(g);d.rim=rim;d.pulse=0;
     d.arrow=null;
     if(d.to){
@@ -83,11 +85,11 @@ function buildPipes(){
     solids.push(sd);pipes.push(d);
   });
 }
-function setEmpty(b){b.state='empty';b.mesh.material=emptyM}
+function setEmpty(b){b.state='empty';b.mesh.material=(NJ&&b.t==='q')?njMats().lanE:emptyM}
 var popCoins=[],popGeo=null,popMat=null;
 function popCoin(b){
   /* a moeda sai do bloco girando, sobe e cai (antes só saía uma faísca) */
-  if(!popGeo){popGeo=new T.CylinderGeometry(.32,.32,.07,24);popGeo.rotateX(Math.PI/2);popMat=M(0xffc43a,.22,.95,{emissive:new T.Color(0x6a4300),emissiveIntensity:.6})}
+  if(!popGeo){popGeo=NJ?njMonG():new T.CylinderGeometry(.32,.32,.07,24);if(!NJ)popGeo.rotateX(Math.PI/2);popMat=M(0xffc43a,.22,.95,{emissive:new T.Color(0x6a4300),emissiveIntensity:.6})}
   var p=null;
   for(var i=0;i<popCoins.length;i++)if(!popCoins[i].on){p=popCoins[i];break}
   if(!p){p={m:mesh(popGeo,popMat,false,false),on:false,y:0,y0:0,vy:0};add(p.m);popCoins.push(p)}
@@ -95,7 +97,7 @@ function popCoin(b){
 }
 var dropCoins=[];
 function dropCoin(x,y){
-  if(!popGeo){popGeo=new T.CylinderGeometry(.32,.32,.07,24);popGeo.rotateX(Math.PI/2);popMat=M(0xffc43a,.22,.95,{emissive:new T.Color(0x6a4300),emissiveIntensity:.6})}
+  if(!popGeo){popGeo=NJ?njMonG():new T.CylinderGeometry(.32,.32,.07,24);if(!NJ)popGeo.rotateX(Math.PI/2);popMat=M(0xffc43a,.22,.95,{emissive:new T.Color(0x6a4300),emissiveIntensity:.6})}
   var p=null;for(var i=0;i<dropCoins.length;i++)if(!dropCoins[i].on){p=dropCoins[i];break}
   if(!p){p={m:mesh(popGeo,popMat,false,false)};add(p.m);dropCoins.push(p)}
   p.on=true;p.x=x;p.y=y;p.vy=8;p.rest=false;p.t=0;p.m.position.set(x,y,0);p.m.scale.setScalar(1.15);p.m.visible=true;

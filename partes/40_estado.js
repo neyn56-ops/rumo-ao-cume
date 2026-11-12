@@ -151,6 +151,7 @@ function winLevel(){
   save.carry={big:!!P.big,fire:!!P.fire,cape:!!P.cape,shield:!!P.shield};save.carryFor=levelIdx+1;
   recordLevel();
   /* fases com chefe não têm bandeira: festa em volta do Kuro (antes isso travava o jogo ao vencer o Rei) */
+  if(flag.bell)flag.ring=1.6;/* torii: o sino toca */
   if(LV.goal)emit(sparkPool,LV.goal.x,LV.goal.top+3,40,6,1.4,.5,.5,5);else emit(sparkPool,P.x,P.y+2,40,6,1.4,.5,.5,5);
   var s=STORY.worlds[levelIdx];
   showCard({kicker:'Mundo concluído',title:s.title,text:s.end,stats:stats(scoreLis()+(save.best[levelIdx]?'<li><small>Melhor tempo</small>'+fmt(save.best[levelIdx])+'</li>':'')),
