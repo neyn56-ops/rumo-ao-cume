@@ -1,9 +1,9 @@
 /* ===== Identidade ninja (proposta 12/11, para o jogo deixar de parecer o Mario) =====
-   Ligadas só quando window.NINJA=1 (página de teste separada, até o dono aprovar). Peças:
+   Aprovado e ligado no jogo oficial em 13/11 (window.NINJA=0 desliga). Peças:
    lanterna de papel (no lugar do bloco "?"), onigiri (no lugar do cogumelo), pergaminho de fogo (no lugar da flor),
    asa ninja (no lugar da pena/capa), portal de bambu (no lugar do cano), portão torii com sino (no lugar da bandeira),
    moeda com furo quadrado (no lugar da moeda redonda). */
-var NJ=!!window.NINJA;
+var NJ=window.NINJA!==0;/* aprovado pelo dono (13/11): ligado no jogo oficial; window.NINJA=0 volta o visual antigo */
 function njLanternTex(empty,green){/* face do bloco: papel de arroz com treliça de madeira e um shuriken vermelho no meio */
   var c=document.createElement('canvas');c.width=c.height=128;var x=c.getContext('2d');
   var g=x.createRadialGradient(64,64,10,64,64,90);g.addColorStop(0,empty?'#b8a98a':(green?'#e8ffd8':'#fff6d8'));g.addColorStop(1,empty?'#7d6f58':(green?'#6ec85a':'#f2c46a'));x.fillStyle=g;x.fillRect(0,0,128,128);

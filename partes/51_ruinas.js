@@ -120,7 +120,7 @@ function startDeath(kind,after,msg){
   shake=Math.max(shake,kind==='fall'?0:.2);
 }
 function finishDeath(){
-  if(!dyn)return;var a=dyn.after;dyn=null;
+  if(!dyn)return;if(typeof dashReset==='function')dashReset();var a=dyn.after;dyn=null;
   rig.root.rotation.z=0;rig.root.rotation.x=0;rig.root.visible=true;
   P.cheer=0;P.sink=0;
   if(shards)shards.forEach(function(q){q.m.visible=false});

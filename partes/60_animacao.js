@@ -207,7 +207,7 @@ function pose(dt){
   if((curTheme.roots||curTheme.copa)&&typeof RT!=='undefined'&&RT&&RT.sw&&!dyn){rtSwingPose();RT.posed=1}
   else if(typeof RT!=='undefined'&&RT&&RT.posed){RT.posed=0;rig.root.rotation.x=0;rig.root.rotation.z=0}/* soltou o cipó: o corpo volta de pé *//* Mundos 21/22: pendurado no cipó, segurando com as mãos e balançando o corpo *//* Mundo 20: Kuro de cabeça para baixo no teto */
   if(typeof AU!=='undefined'&&AU&&(AU.sl||AU.sin)){rig.hipL.rotation.x=rig.hipR.rotation.x=-1.45;rig.kneeL.rotation.x=rig.kneeR.rotation.x=.25;rig.root.position.y-=.05}/* tobogã: sentado, pernas para a frente */
-  rig.root.visible=!(P.inv>0&&Math.floor(P.inv*14)%2===0&&state==='play');
+  rig.root.visible=!(P.inv>0&&Math.floor(P.inv*14)%2===0&&state==='play')&&!(DASH.t>0);/* no dash ele vira sombra */
 }
 var dummyO=new T.Object3D();
 function visEnemy(e,dt){

@@ -52,6 +52,7 @@ html.touch #stickZone{display:block;pointer-events:auto}
 .pad-btn.on{transform:scale(.94);filter:brightness(1.1)}
 .pad-btn.sj{transform:translateY(-10px) rotate(25deg) scale(.94)}
 .pad-btn[hidden],.stat[hidden]{display:none}
+.pad-btn.dash{position:absolute;right:122px;bottom:118px;width:64px;height:64px;font-size:11px;background:radial-gradient(circle at 35% 30%,#b8a0e8,#4a2a8a 60%,#22124a);color:#fff}.pad-btn.dash.cd{opacity:.4}
 .pad-btn.star{position:absolute;right:22px;bottom:150px;width:62px;height:62px;font-size:11px;background:radial-gradient(circle at 35% 30%,#cfe0ff,#5a78c8 60%,#2a3a80);color:#fff}
 .pad-btn.fire{background:radial-gradient(circle at 35% 30%,#ffd08a,#ff7a2a 60%,#c4300a);color:#fff;width:80px;height:80px;margin-left:-96px}
 #bJump{margin-bottom:40px;margin-right:96px}/* guarda o lugar do botão Fogo, para o Pular não mudar de posição ao pegar um poder */
@@ -196,6 +197,7 @@ body.ldg>*:not(#stage):not(#ld):not(script){visibility:hidden!important}/* carre
     <button class="pad-btn" id="bJump" type="button">Pular</button>
     <button class="pad-btn fire" id="bFire" type="button" hidden>Fogo</button>
     <button class="pad-btn star" id="bStar" type="button" hidden>Shuriken</button>
+    <button class="pad-btn dash" id="bDash" type="button" hidden>Sombra</button>
   </div>
 </div>
 <div id="toast" role="status"></div>
@@ -216,7 +218,7 @@ body.ldg>*:not(#stage):not(#ld):not(script){visibility:hidden!important}/* carre
   <ul id="cardStats" hidden></ul>
   <div id="worlds" hidden></div>
   <div class="actions"><button class="btn" id="playBtn" type="button">Jogar</button><button class="btn ghost" id="mapBtn" type="button" hidden>Mapa</button><button class="btn ghost" id="openBtn" type="button" hidden>Abertura</button><button class="btn ghost" id="cfgBtn" type="button" hidden>⚙ Configurações</button></div>
-  <p id="hint" hidden>Teclado: setas ou A/D movem, espaço pula, Shift corre (ou toque duas vezes na seta e segure), J ou X atira (flor) ou gira (capa); K faz o pulo giratório (sai de cima da raposinha); com a capa, corra até o medidor encher, pule e segure pular para voar, S ou ↓ agacha e entra no cano. No celular: analógico à esquerda (empurre até o fim para correr; para cima sobe no cipó; para baixo agacha ou entra no cano) botão Pular à direita (arraste ele para cima = pulo giratório) e botão Fogo/Giro quando pegar a flor ou a capa. Na água: toque em Pular para dar braçadas (segure para subir devagar, empurre o analógico para baixo para mergulhar) e vigie a barra de Ar. Bata nos blocos por baixo. Menus, configurações e mapa: setas escolhem, Enter confirma, Esc volta (←/→ mexem nas barras).</p>
+  <p id="hint" hidden>Teclado: setas ou A/D movem, espaço pula, Shift corre (ou toque duas vezes na seta e segure), J ou X atira (flor) ou gira (capa); K faz o pulo giratório (sai de cima da raposinha); L faz o dash de sombra (some e reaparece à frente); com a capa, corra até o medidor encher, pule e segure pular para voar, S ou ↓ agacha e entra no cano. No celular: analógico à esquerda (empurre até o fim para correr; para cima sobe no cipó; para baixo agacha ou entra no cano) botão Pular à direita (arraste ele para cima = pulo giratório) e botão Fogo/Giro quando pegar a flor ou a capa. O botão Sombra faz o dash de sombra. Na água: toque em Pular para dar braçadas (segure para subir devagar, empurre o analógico para baixo para mergulhar) e vigie a barra de Ar. Bata nos blocos por baixo. Menus, configurações e mapa: setas escolhem, Enter confirma, Esc volta (←/→ mexem nas barras).</p>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>

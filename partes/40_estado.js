@@ -52,6 +52,7 @@ function spawn(pt){
   updateCamera(0,true);
 }
 function resetState(){
+  if(typeof dashReset==='function')dashReset();
   hearts=Math.max(3,(save.hearts|0)||3);coinsGot=0;gemsGot=0;bank=(save.bank|0)%100;timeT=0;TLIM=(LV&&LV.limit)||300;timeLeft=TLIM;clkIn=false;lowWarn=false;mt=0;P.feather=0;P.cheer=0;P.shield=false;P.big=false;setFire(false);setCape(false);
   /* poderes que o Kuro trouxe da fase anterior */
   if(carryNow){if(carryNow.big||carryNow.cape||carryNow.fire)P.big=true;if(carryNow.cape)setCape(true);else if(carryNow.fire)setFire(true);if(carryNow.shield)P.shield=true}
@@ -362,7 +363,7 @@ function updFire(dt){
   }
 }
 function hurt(fromX,sharp){
-  if(P.inv>0||state!=='play')return;
+  if(P.inv>0||state!=='play'||DASH.t>0)return;/* no dash de sombra o Kuro atravessa inimigos e tiros */
   if(P.mount){dismountFox('hit',fromX);P.inv=1.6;P.climb=null;P.vx=(P.x>=fromX?1:-1)*4;P.vy=8;P.grounded=false;P.onPlat=null;emit(sparkPool,P.x,P.y+.8,14,3.5,.7,.4,.3,3);return}
   if(P.shield){P.shield=false;P.inv=1.4;sfx.check();emit(sparkPool,P.x,P.y+1,16,4,.7,.4,.3,2);toast('O escudo protegeu o Kuro!');return}
   if(P.cape){

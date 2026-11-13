@@ -2,7 +2,7 @@
 
 Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp partes/ARQ`.
 
-## 00_inicio.html  (229 linhas) 
+## 00_inicio.html  (231 linhas) 
 
 ## 01_motor.js  (959 linhas) /*@@parte:01_motor.js*/
 - fail :6
@@ -489,7 +489,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - buildCrumbles :676
 - buildSprings :703
 
-## 31_moedas.js  (403 linhas) /*@@parte:31_moedas.js*/
+## 31_moedas.js  (406 linhas) /*@@parte:31_moedas.js*/
 - fitCoins :3 — ===== 100 moedas por fase, nos pontos que valem a pena (buracos, perigos, lugares altos) =====
 - overGap :9
 - fitHearts :47 — corações em blocos: 2 por fase, em pontos estratégicos (uma vez por fase)
@@ -505,15 +505,15 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - mushroomModel :162
 - featherModel :185
 - mkItem :200
-- buildMarks :237
-- makeAlertSprite :257
-- buildEnemies :267
-- buildBlades :322
-- buildBoss :353
-- surfY :364
-- wall :377
-- resetBoss :388
-- setBossBar :402
+- buildMarks :239
+- makeAlertSprite :260
+- buildEnemies :270
+- buildBlades :325
+- buildBoss :356
+- surfY :367
+- wall :380
+- resetBoss :391
+- setBossBar :405
 
 ## 32_cachoeiras.js  (423 linhas) /*@@parte:32_cachoeiras.js*/
 - flMats :11
@@ -742,7 +742,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - cpBossBar :101
 - cpBossUpd :102
 
-## 40_estado.js  (402 linhas) /*@@parte:40_estado.js*/
+## 40_estado.js  (404 linhas) /*@@parte:40_estado.js*/
 - hd :5
 - writeSave :20
 - fmt :22
@@ -752,44 +752,44 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - toast :40
 - spawn :44
 - resetState :54
-- showCard :80
-- buildWorlds :92
-- showMenu :102
-- startLevel :109
-- beginPlay :118
-- retry :119
-- stats :126
-- lose :129
-- recordLevel :136
-- scoreLis :145
-- winLevel :149
-- winGame :159
-- spawnDebris :167
-- shatterEnemy :177
-- updDebris :192
-- setAct :215
-- setFire :216
-- setCape :218
-- spinJump :220 — pulo giratório (K ou arrastar o Pular para cima): sem poder só gira; com capa gira com a capa (acerta em volta
-- sjGo :221
-- actUp :224
-- act :225
-- spin :226
-- updWind :239
-- mountFx :256
-- fireFx :262
-- kuroGlow :269
-- capeFx :280
-- updSpin :286
-- updFeathers :305
-- fbClear :315
-- shoot :316
-- fbBoom :329
-- fireCoin :331 — fogo derrota o inimigo e ele vira uma moeda: pula, cai no chão e fica lá até o Kuro pegar
-- updFire :332
-- hurt :363
-- timeUp :386
-- fallDeath :394
+- showCard :81
+- buildWorlds :93
+- showMenu :103
+- startLevel :110
+- beginPlay :119
+- retry :120
+- stats :127
+- lose :130
+- recordLevel :137
+- scoreLis :146
+- winLevel :150
+- winGame :161
+- spawnDebris :169
+- shatterEnemy :179
+- updDebris :194
+- setAct :217
+- setFire :218
+- setCape :220
+- spinJump :222 — pulo giratório (K ou arrastar o Pular para cima): sem poder só gira; com capa gira com a capa (acerta em volta
+- sjGo :223
+- actUp :226
+- act :227
+- spin :228
+- updWind :241
+- mountFx :258
+- fireFx :264
+- kuroGlow :271
+- capeFx :282
+- updSpin :288
+- updFeathers :307
+- fbClear :317
+- shoot :318
+- fbBoom :331
+- fireCoin :333 — fogo derrota o inimigo e ele vira uma moeda: pula, cai no chão e fica lá até o Kuro pegar
+- updFire :334
+- hurt :365
+- timeUp :388
+- fallDeath :396
 
 ## 41_raposa.js  (307 linhas) /*@@parte:41_raposa.js*/
 - makeFoxVis :4
@@ -817,30 +817,57 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - updSpit :290
 - warmShaders :300
 
-## 42_blocos.js  (262 linhas) /*@@parte:42_blocos.js*/
+## 42_blocos.js  (267 linhas) /*@@parte:42_blocos.js*/
 - quakeM :3
 - buildBlocks :13
-- buildPlants :25 — broto espinhoso: planta que sobe e desce de um cano (desenho original)
-- updPlants :48
-- buildPipes :66
-- setEmpty :86
-- popCoin :88
-- dropCoin :97
-- updDropCoins :103
-- updPopCoins :114
-- hitBlock :121
-- spawnVine :147
-- tryGrab :156
-- ropeMove :179
-- climbMove :185
-- inRoom :202
-- tryWarp :203
-- warpStep :211
-- mountH :244 — montado: no máximo a altura do Kuro grande, para passar pelos mesmos lugares; agachado passa nos túneis
-- stdH :245
-- crH :246
-- blockedAbove :247
-- updCrouch :254
+- buildPlants :26 — broto espinhoso: planta que sobe e desce de um cano (desenho original)
+- updPlants :52
+- buildPipes :70
+- setEmpty :91
+- popCoin :93
+- dropCoin :102
+- updDropCoins :108
+- updPopCoins :119
+- hitBlock :126
+- spawnVine :152
+- tryGrab :161
+- ropeMove :184
+- climbMove :190
+- inRoom :207
+- tryWarp :208
+- warpStep :216
+- mountH :249 — montado: no máximo a altura do Kuro grande, para passar pelos mesmos lugares; agachado passa nos túneis
+- stdH :250
+- crH :251
+- blockedAbove :252
+- updCrouch :259
+
+## 45_ninja.js  (118 linhas) /* ===== Identidade ninja (proposta 12/11, para o jogo deixar de parecer o Mario) =====
+- njLanternTex :7
+- njLanternBlock :16
+- njOnigiri :23
+- njScroll :31
+- njWings :44
+- njBamboo :53
+- njTorii :63
+- njMon :74
+- njMats :80
+- njFrame :83
+- njMonG :86
+- njRig :87
+- njCrateTex :89
+- njSnake :98
+- njStarMesh :111
+
+## 46_sombra.js  (41 linhas) /* ===== Dash de sombra: o golpe "marca" do Kuro (aprovado pelo dono, 12/11; no jogo oficial desde 13/11) =====
+- dashOk :7
+- dashTry :8
+- dashGhosts :15
+- dashPose :21
+- dashPuff :24
+- dashUpd :25
+- dashMove :36
+- dashReset :37
 
 ## 50_fisica.js  (55 linhas) /*@@parte:50_fisica.js*/
 - moveMovers :4
@@ -946,7 +973,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - throwStar :524
 - updStars :531
 
-## 53_agua.js  (319 linhas) /*@@parte:53_agua.js*/
+## 53_agua.js  (321 linhas) /*@@parte:53_agua.js*/
 - wTop :4
 - surfWave :6 — altura da onda da superfície (a mesma da faixa da frente): o Kuro boia junto com ela
 - inWater :7
@@ -962,14 +989,14 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - updAir :69
 - step :87
 
-## 60_animacao.js  (467 linhas) /*@@parte:60_animacao.js*/
+## 60_animacao.js  (468 linhas) /*@@parte:60_animacao.js*/
 - pose :6
 - visEnemy :213
 - visKids :322
 - visBoss :330
 - animate :364
-- viewLeft :435 — borda esquerda que a câmera mostra quando está no começo da fase (na altura do chão)
-- updateCamera :436
+- viewLeft :436 — borda esquerda que a câmera mostra quando está no começo da fase (na altura do chão)
+- updateCamera :437
 
 ## 65_carregando.js  (173 linhas) /*@@parte:65_carregando.js*/
 - ldSkyTex :11
@@ -990,49 +1017,50 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - next :163
 - finish :170
 
-## 69_idioma.js  (181 linhas) /* ===== Idioma: português ou inglês (para os portais de jogos, 06/11) =====
-- trTxt :167
-- trNode :171
-- idiomaFaltando :173
+## 69_idioma.js  (193 linhas) /* ===== Idioma: português ou inglês (para os portais de jogos, 06/11) =====
+- njTx :178
+- trTxt :179
+- trNode :183
+- idiomaFaltando :185
 
-## 70_entrada.js  (348 linhas) /*@@parte:70_entrada.js*/
+## 70_entrada.js  (349 linhas) /*@@parte:70_entrada.js*/
 - dblTap :4
 - press :14
-- navBox :34
-- navList :35
-- navSet :36
-- navClear :37
-- navStart :38
-- navMove :41
-- near :51
-- navPress :57
-- mapKey :65
-- gpKey :79
-- gpPoll :80
-- hide :101
-- show :101
-- home :124
-- drive :129
-- jup :153
-- fup :157
-- sup :159
-- edit :170
-- row :174
-- cur :204
-- cur :214
-- cur :236
-- refreshCfg :242
-- verdict :262
-- setCx :266
-- snapBase :273
-- showcase :281
-- openCfg :289
-- clearKeys :299
-- pauseUI :300
-- pauseGame :304
-- leavePause :312
-- resumeGame :317
-- closeCfg :322
+- navBox :35
+- navList :36
+- navSet :37
+- navClear :38
+- navStart :39
+- navMove :42
+- near :52
+- navPress :58
+- mapKey :66
+- gpKey :80
+- gpPoll :81
+- hide :102
+- show :102
+- home :125
+- drive :130
+- jup :154
+- fup :158
+- sup :160
+- edit :171
+- row :175
+- cur :205
+- cur :215
+- cur :237
+- refreshCfg :243
+- verdict :263
+- setCx :267
+- snapBase :274
+- showcase :282
+- openCfg :290
+- clearKeys :300
+- pauseUI :301
+- pauseGame :305
+- leavePause :313
+- resumeGame :318
+- closeCfg :323
 
 ## 71_laco_e_mapa.js  (571 linhas) /*@@parte:71_laco_e_mapa.js*/
 - render :4
@@ -1067,8 +1095,8 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - benchStep :501
 - frame :523
 
-## 99_fim.html  (26 linhas) <!--@@parte:99_fim.html-->
-- upd :12
-- lockL :14
-- goFs :15
-- first :19
+## 99_fim.html  (27 linhas) <!--@@parte:99_fim.html-->
+- upd :13
+- lockL :15
+- goFs :16
+- first :20

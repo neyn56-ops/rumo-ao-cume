@@ -22,7 +22,8 @@ function press(code,down){
     case 'ShiftLeft':case 'ShiftRight':keys.run=down;break;
     case 'KeyJ':case 'KeyX':case 'KeyZ':if(down)act();else actUp();break;
     case 'KeyK':keys.sjHold=down;if(P.arena){if(down)act();else actUp()}else if(down)spinJump();break;/* segurar o K = segurar o pulo (mesma altura do celular) *//* K: pulo giratório (na luta de katana continua sendo golpe) */
-    case 'KeyL':case 'KeyC':if(down&&P.arena)throwStar();break;
+    case 'KeyL':if(down){if(P.arena)throwStar();else dashTry()}break;/* L: shuriken na arena, dash de sombra no resto */
+    case 'KeyC':if(down&&P.arena)throwStar();break;
     case 'ArrowDown':case 'KeyS':keys.down=down;break;
   }
 }

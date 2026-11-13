@@ -115,6 +115,7 @@ function step(dt){
   var ax=keys.jx!==0?keys.jx:((keys.right?1:0)-(keys.left?1:0));
   if(P.stun>0){P.stun-=dt;ax=0}
   if(P.inv>0)P.inv-=dt;
+  dashUpd(dt);/* dash de sombra (46_sombra.js) */
   if(P.feather>0){P.feather-=dt;if(P.feather<=0)$('featherStat').hidden=true}
   if(P.noCut>0)P.noCut-=dt;
   if(P.vineCd>0)P.vineCd-=dt;
@@ -178,6 +179,7 @@ function step(dt){
   if(P.cape&&P.flyT>0&&!P.grounded)gr*=.55;
   if((keys.jump||(keys.sjHold&&P.sj))&&!P.grounded&&Math.abs(P.vy)<2.2)gr*=.62;
   if(P.inW)waterVy(dt);else P.vy-=gr*dt;
+  dashMove();
   if(P.cape&&P.inW){P.flyT=0;P.pm=0;P.glide=0}
   else if(P.cape){
     if(P.grounded){

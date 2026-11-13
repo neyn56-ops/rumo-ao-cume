@@ -52,6 +52,7 @@ html.touch #stickZone{display:block;pointer-events:auto}
 .pad-btn.on{transform:scale(.94);filter:brightness(1.1)}
 .pad-btn.sj{transform:translateY(-10px) rotate(25deg) scale(.94)}
 .pad-btn[hidden],.stat[hidden]{display:none}
+.pad-btn.dash{position:absolute;right:122px;bottom:118px;width:64px;height:64px;font-size:11px;background:radial-gradient(circle at 35% 30%,#b8a0e8,#4a2a8a 60%,#22124a);color:#fff}.pad-btn.dash.cd{opacity:.4}
 .pad-btn.star{position:absolute;right:22px;bottom:150px;width:62px;height:62px;font-size:11px;background:radial-gradient(circle at 35% 30%,#cfe0ff,#5a78c8 60%,#2a3a80);color:#fff}
 .pad-btn.fire{background:radial-gradient(circle at 35% 30%,#ffd08a,#ff7a2a 60%,#c4300a);color:#fff;width:80px;height:80px;margin-left:-96px}
 #bJump{margin-bottom:40px;margin-right:96px}/* guarda o lugar do botão Fogo, para o Pular não mudar de posição ao pegar um poder */
@@ -196,6 +197,7 @@ body.ldg>*:not(#stage):not(#ld):not(script){visibility:hidden!important}/* carre
     <button class="pad-btn" id="bJump" type="button">Pular</button>
     <button class="pad-btn fire" id="bFire" type="button" hidden>Fogo</button>
     <button class="pad-btn star" id="bStar" type="button" hidden>Shuriken</button>
+    <button class="pad-btn dash" id="bDash" type="button" hidden>Sombra</button>
   </div>
 </div>
 <div id="toast" role="status"></div>
@@ -7531,7 +7533,7 @@ function buildMarks(){
   });
   if(LV.goal&&(!LV.crystalGoal||LV.goalFlag)){/* goalFlag: bandeira só de enfeite (a fase termina de outro jeito) */
     var gx=LV.goal.x,gt=LV.goal.top,gz=LV.goal.z!==undefined?LV.goal.z:-.4;
-    if(NJ){var tor=njTorii();tor.position.set(gx+.6,gt,gz-.6);add(tor);flag.parts=[tor];flag.bell=tor.children.filter(function(o){return o.isGroup})[0]}/* identidade ninja: portão torii com sino */
+    if(NJ){var tor=njTorii();tor.position.set(gx+.3,gt,-.2);tor.rotation.y=Math.PI/2*.62;tor.scale.setScalar(.85);add(tor);flag.parts=[tor];flag.bell=tor.children.filter(function(o){return o.isGroup})[0]}/* identidade ninja: portão torii com sino */
     else{var pole=mesh(new T.CylinderGeometry(.07,.09,6,10),M(0xc9d1d8,.3,.9));pole.position.set(gx,gt+3,gz);add(pole);
     var fin=mesh(new T.SphereGeometry(.18,16,12),M(0xffc43a,.25,.9,{emissive:new T.Color(0x6a4300),emissiveIntensity:.5}));fin.position.set(gx,gt+6.1,gz);add(fin);
     var fg=new T.PlaneGeometry(2.1,1.3,16,8);
@@ -9864,6 +9866,7 @@ function spawn(pt){
   updateCamera(0,true);
 }
 function resetState(){
+  if(typeof dashReset==='function')dashReset();
   hearts=Math.max(3,(save.hearts|0)||3);coinsGot=0;gemsGot=0;bank=(save.bank|0)%100;timeT=0;TLIM=(LV&&LV.limit)||300;timeLeft=TLIM;clkIn=false;lowWarn=false;mt=0;P.feather=0;P.cheer=0;P.shield=false;P.big=false;setFire(false);setCape(false);
   /* poderes que o Kuro trouxe da fase anterior */
   if(carryNow){if(carryNow.big||carryNow.cape||carryNow.fire)P.big=true;if(carryNow.cape)setCape(true);else if(carryNow.fire)setFire(true);if(carryNow.shield)P.shield=true}
@@ -10174,7 +10177,7 @@ function updFire(dt){
   }
 }
 function hurt(fromX,sharp){
-  if(P.inv>0||state!=='play')return;
+  if(P.inv>0||state!=='play'||DASH.t>0)return;/* no dash de sombra o Kuro atravessa inimigos e tiros */
   if(P.mount){dismountFox('hit',fromX);P.inv=1.6;P.climb=null;P.vx=(P.x>=fromX?1:-1)*4;P.vy=8;P.grounded=false;P.onPlat=null;emit(sparkPool,P.x,P.y+.8,14,3.5,.7,.4,.3,3);return}
   if(P.shield){P.shield=false;P.inv=1.4;sfx.check();emit(sparkPool,P.x,P.y+1,16,4,.7,.4,.3,2);toast('O escudo protegeu o Kuro!');return}
   if(P.cape){
@@ -10888,7 +10891,7 @@ function njSnake(){/* cobra que sai do bambu (no lugar da planta do cano): corpo
   var g=new T.Group(),bm=new T.MeshStandardMaterial({color:0x3e8a3a,roughness:.5}),bl=new T.MeshStandardMaterial({color:0xd8c050,roughness:.5});
   var pts=[];for(var i=0;i<=10;i++){var t=i/10;pts.push(new T.Vector3(Math.sin(t*5)*.18*(1-t),-2.2+t*2.2,Math.cos(t*4)*.08))}
   var body=mesh(new T.TubeGeometry(new T.CatmullRomCurve3(pts),40,.2,10,false),bm);g.add(body);
-  for(var j=0;j<6;j++){var p=pts[2+j],rg=mesh(new T.TorusGeometry(.2,.035,6,14),bl);rg.position.copy(p);rg.rotation.x=Math.PI/2;g.add(rg)}
+  for(var j=0;j<6;j++){var p=pts[2+j],rg=mesh(new T.TorusGeometry(.205,.03,6,14),new T.MeshStandardMaterial({color:0x234a20,roughness:.6}));rg.position.copy(p);rg.rotation.x=Math.PI/2;g.add(rg)}
   var head=new T.Group();head.position.y=.12;g.add(head);
   var hd=mesh(new T.SphereGeometry(.3,16,12),bm);hd.scale.set(1.25,.75,1.3);head.add(hd);
   var jaw=mesh(new T.SphereGeometry(.24,12,8),bl);jaw.scale.set(1.1,.45,1.2);jaw.position.set(0,-.12,.06);head.add(jaw);
@@ -10904,6 +10907,47 @@ function njStarMesh(mat){/* shuriken de fogo (no lugar da bola de fogo) */
   return mesh(njStarGeo,mat,false,false)}
 if(NJ)brickM.map=njCrateTex();
 njRig();
+
+/* ===== Dash de sombra: o golpe "marca" do Kuro (aprovado pelo dono, 12/11; por enquanto só com window.NINJA) =====
+   Tecla L (ou botão "Sombra" no celular): o Kuro some numa fumaça escura, dispara ~4 passos para a frente e reaparece.
+   Regras: atravessa inimigos e tiros sem dano; NÃO atravessa parede nem chão (a física normal resolve as colisões);
+   no ar só 1 vez por pulo (recarrega ao pisar no chão); recarga de 0,75 s. Rastro: 3 sombras do Kuro que somem. */
+var DASH={t:0,cd:0,air:0,dir:1,told:0,gT:0,gi:0,ghosts:null};
+var DASH_T=.16,DASH_V=25;
+function dashOk(){return NJ&&state==='play'&&!P.climb&&!P.warp&&!(P.growT>0)&&!(P.stun>0)&&!P.mount&&!P.inW&&!dyn&&!(RT&&RT.sw)}
+function dashTry(){
+  if(!dashOk()||DASH.cd>0||DASH.t>0)return;
+  if(!P.grounded&&DASH.air)return;/* no ar, só uma vez por pulo */
+  DASH.dir=P.face||1;DASH.t=DASH_T;DASH.cd=.75;if(!P.grounded)DASH.air=1;
+  P.vy=0;P.vx=DASH.dir*DASH_V;DASH.gT=0;
+  dashPuff(P.x,P.y+.7,10);try{sfx.spin()}catch(e){}
+  if(!DASH.told){DASH.told=1;toast(coarse?'Dash de sombra! Toque em Sombra para sumir e reaparecer à frente':'Dash de sombra! Aperte L para sumir e reaparecer à frente')}}
+function dashGhosts(){/* sombras = cópias do próprio Kuro (mesmo corpo e mesma pose), num roxo transparente; feitas uma vez por fase */
+  if(DASH.ghosts&&DASH.gW===W)return DASH.ghosts;
+  DASH.gW=W;DASH.ghosts=[];for(var i=0;i<3;i++){var m=new T.MeshBasicMaterial({color:0x7a5ad0,transparent:true,opacity:0,depthWrite:false});
+    var g=rig.root.clone(true);g.traverse(function(o){if(o.isMesh||o.isSprite){o.material=m;o.castShadow=false;o.receiveShadow=false}});
+    g.visible=false;add(g);DASH.ghosts.push({g:g,m:m,a:0})}
+  return DASH.ghosts}
+function dashPose(src,dst){/* copia a pose do Kuro para a sombra (posição, giro e tamanho de cada parte) */
+  dst.position.copy(src.position);dst.quaternion.copy(src.quaternion);dst.scale.copy(src.scale);
+  var n=Math.min(src.children.length,dst.children.length);for(var i=0;i<n;i++){dashPose(src.children[i],dst.children[i]);dst.children[i].visible=src.children[i].visible}}
+function dashPuff(x,y,n){emit(dustPool,x,y,n,2.6,.45,.5,1.6,-.4)}
+function dashUpd(dt){/* chamado no passo do Kuro, antes do movimento */
+  if(DASH.cd>0)DASH.cd-=dt;
+  if(P.grounded&&DASH.t<=0)DASH.air=0;
+  var G=NJ&&W?dashGhosts():null;
+  if(DASH.t>0){
+    if(!dashOk()){DASH.t=0}else{
+      DASH.t-=dt;DASH.gT-=dt;
+      if(G&&DASH.gT<=0){DASH.gT=.05;var q=G[DASH.gi++%3];dashPose(rig.root,q.g);q.g.position.z-=.05;q.a=.42;q.g.visible=true}
+      if(DASH.t<=0){P.vx=DASH.dir*8.5;dashPuff(P.x+DASH.dir*.3,P.y+.7,10)}}}
+  if(G)G.forEach(function(q){if(q.a>0){q.a=Math.max(0,q.a-dt*1.5);q.m.opacity=q.a;if(q.a<=0)q.g.visible=false}});
+  var b=document.getElementById('bDash');if(b)b.classList.toggle('cd',DASH.cd>0||(!P.grounded&&!!DASH.air))}
+function dashMove(){if(DASH.t>0){P.vx=DASH.dir*DASH_V;P.vy=0}}/* depois da gravidade: anda reto, sem cair */
+function dashReset(){DASH.t=0;DASH.cd=0;DASH.air=0;if(DASH.ghosts)DASH.ghosts.forEach(function(q){q.a=0;q.g.visible=false})}
+(function(){var b=document.getElementById('bDash');if(!b)return;if(!NJ){b.remove();return}b.hidden=false;
+  b.addEventListener('pointerdown',function(e){e.preventDefault();try{b.setPointerCapture(e.pointerId)}catch(_){}initAudio();dashTry();b.classList.add('on')});
+  ['pointerup','pointercancel','lostpointercapture'].forEach(function(ev){b.addEventListener(ev,function(){b.classList.remove('on')})})})();
 
 /*@@parte:50_fisica.js*/
 /* ===================== física ===================== */
@@ -11082,7 +11126,7 @@ function startDeath(kind,after,msg){
   shake=Math.max(shake,kind==='fall'?0:.2);
 }
 function finishDeath(){
-  if(!dyn)return;var a=dyn.after;dyn=null;
+  if(!dyn)return;if(typeof dashReset==='function')dashReset();var a=dyn.after;dyn=null;
   rig.root.rotation.z=0;rig.root.rotation.x=0;rig.root.visible=true;
   P.cheer=0;P.sink=0;
   if(shards)shards.forEach(function(q){q.m.visible=false});
@@ -12381,6 +12425,7 @@ function step(dt){
   var ax=keys.jx!==0?keys.jx:((keys.right?1:0)-(keys.left?1:0));
   if(P.stun>0){P.stun-=dt;ax=0}
   if(P.inv>0)P.inv-=dt;
+  dashUpd(dt);/* dash de sombra (46_sombra.js) */
   if(P.feather>0){P.feather-=dt;if(P.feather<=0)$('featherStat').hidden=true}
   if(P.noCut>0)P.noCut-=dt;
   if(P.vineCd>0)P.vineCd-=dt;
@@ -12444,6 +12489,7 @@ function step(dt){
   if(P.cape&&P.flyT>0&&!P.grounded)gr*=.55;
   if((keys.jump||(keys.sjHold&&P.sj))&&!P.grounded&&Math.abs(P.vy)<2.2)gr*=.62;
   if(P.inW)waterVy(dt);else P.vy-=gr*dt;
+  dashMove();
   if(P.cape&&P.inW){P.flyT=0;P.pm=0;P.glide=0}
   else if(P.cape){
     if(P.grounded){
@@ -12792,7 +12838,7 @@ function pose(dt){
   if((curTheme.roots||curTheme.copa)&&typeof RT!=='undefined'&&RT&&RT.sw&&!dyn){rtSwingPose();RT.posed=1}
   else if(typeof RT!=='undefined'&&RT&&RT.posed){RT.posed=0;rig.root.rotation.x=0;rig.root.rotation.z=0}/* soltou o cipó: o corpo volta de pé *//* Mundos 21/22: pendurado no cipó, segurando com as mãos e balançando o corpo *//* Mundo 20: Kuro de cabeça para baixo no teto */
   if(typeof AU!=='undefined'&&AU&&(AU.sl||AU.sin)){rig.hipL.rotation.x=rig.hipR.rotation.x=-1.45;rig.kneeL.rotation.x=rig.kneeR.rotation.x=.25;rig.root.position.y-=.05}/* tobogã: sentado, pernas para a frente */
-  rig.root.visible=!(P.inv>0&&Math.floor(P.inv*14)%2===0&&state==='play');
+  rig.root.visible=!(P.inv>0&&Math.floor(P.inv*14)%2===0&&state==='play')&&!(DASH.t>0);/* no dash ele vira sombra */
 }
 var dummyO=new T.Object3D();
 function visEnemy(e,dt){
@@ -13342,7 +13388,7 @@ var EN={
 'Vento a favor chegando: pule junto com a rajada para ir mais longe!':'Tailwind coming: jump with the gust to go farther!','Vento para cima! Ande para o lado para sair':'Updraft! Walk sideways to get out',
 'Viga baixa! Segure para baixo para se abaixar':'Low beam! Hold down to duck','Voando! Toque em pular para bater a capa':'Flying! Tap jump to flap the cape','Você acendeu a Luz da Aurora!':'You lit the Aurora Light!',
 'Você caiu. Voltando ao último checkpoint.':'You fell. Back to the last checkpoint.','Você venceu o Capitão Corvo-Pirata! Siga até a ilha':'You beat Captain Crow the Pirate! Head to the island',
-'Última volta! A próxima queda é de verdade':'Last chance! The next fall is for real','Checkpoint':'Checkpoint','Analógico à esquerda anda · botão Pular à direita':'Joystick on the left moves · Jump button on the right','Setas ou A/D andam · Espaço pula · Shift corre':'Arrows or A/D move · Space jumps · Shift runs','Mundo 12 · Terra Nova':'World 12 · New Land',
+'Última volta! A próxima queda é de verdade':'Last chance! The next fall is for real','Checkpoint':'Checkpoint','Sombra':'Shadow','Dash de sombra! Aperte L para sumir e reaparecer à frente':'Shadow dash! Press L to vanish and reappear ahead','Dash de sombra! Toque em Sombra para sumir e reaparecer à frente':'Shadow dash! Tap Shadow to vanish and reappear ahead','Analógico à esquerda anda · botão Pular à direita':'Joystick on the left moves · Jump button on the right','Setas ou A/D andam · Espaço pula · Shift corre':'Arrows or A/D move · Space jumps · Shift runs','Mundo 12 · Terra Nova':'World 12 · New Land',
 /* histórias (começo e fim de cada mundo) */
 'Kuro é o ninja mais jovem da Vila das Folhas. Numa manhã de sol, o Rei Besouro roubou o Coração de Cristal, que deixa a vila sempre em paz. Kuro apertou a faixa, pegou a katana e saiu para trazê-lo de volta.':'Kuro is the youngest ninja of the Leaf Village. One sunny morning, the Beetle King stole the Crystal Heart, which keeps the village at peace. Kuro tightened his headband, grabbed his katana and set off to bring it back.',
 'O caminho começa num vale ensolarado. Pise nos besouros de pedra, cuidado com os espinhos e ache os 3 cristais escondidos.':'The journey begins in a sunny valley. Stomp the stone beetles, watch out for spikes and find the 3 hidden crystals.',
@@ -13441,7 +13487,8 @@ function press(code,down){
     case 'ShiftLeft':case 'ShiftRight':keys.run=down;break;
     case 'KeyJ':case 'KeyX':case 'KeyZ':if(down)act();else actUp();break;
     case 'KeyK':keys.sjHold=down;if(P.arena){if(down)act();else actUp()}else if(down)spinJump();break;/* segurar o K = segurar o pulo (mesma altura do celular) *//* K: pulo giratório (na luta de katana continua sendo golpe) */
-    case 'KeyL':case 'KeyC':if(down&&P.arena)throwStar();break;
+    case 'KeyL':if(down){if(P.arena)throwStar();else dashTry()}break;/* L: shuriken na arena, dash de sombra no resto */
+    case 'KeyC':if(down&&P.arena)throwStar();break;
     case 'ArrowDown':case 'KeyS':keys.down=down;break;
   }
 }
