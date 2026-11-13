@@ -52,6 +52,7 @@ html.touch #stickZone{display:block;pointer-events:auto}
 .pad-btn.on{transform:scale(.94);filter:brightness(1.1)}
 .pad-btn.sj{transform:translateY(-10px) rotate(25deg) scale(.94)}
 .pad-btn[hidden],.stat[hidden]{display:none}
+.pad-btn.dash{position:absolute;right:122px;bottom:118px;width:64px;height:64px;font-size:11px;background:radial-gradient(circle at 35% 30%,#b8a0e8,#4a2a8a 60%,#22124a);color:#fff}.pad-btn.dash.cd{opacity:.4}
 .pad-btn.star{position:absolute;right:22px;bottom:150px;width:62px;height:62px;font-size:11px;background:radial-gradient(circle at 35% 30%,#cfe0ff,#5a78c8 60%,#2a3a80);color:#fff}
 .pad-btn.fire{background:radial-gradient(circle at 35% 30%,#ffd08a,#ff7a2a 60%,#c4300a);color:#fff;width:80px;height:80px;margin-left:-96px}
 #bJump{margin-bottom:40px;margin-right:96px}/* guarda o lugar do botão Fogo, para o Pular não mudar de posição ao pegar um poder */
@@ -196,6 +197,7 @@ body.ldg>*:not(#stage):not(#ld):not(script){visibility:hidden!important}/* carre
     <button class="pad-btn" id="bJump" type="button">Pular</button>
     <button class="pad-btn fire" id="bFire" type="button" hidden>Fogo</button>
     <button class="pad-btn star" id="bStar" type="button" hidden>Shuriken</button>
+    <button class="pad-btn dash" id="bDash" type="button" hidden>Sombra</button>
   </div>
 </div>
 <div id="toast" role="status"></div>
@@ -216,7 +218,7 @@ body.ldg>*:not(#stage):not(#ld):not(script){visibility:hidden!important}/* carre
   <ul id="cardStats" hidden></ul>
   <div id="worlds" hidden></div>
   <div class="actions"><button class="btn" id="playBtn" type="button">Jogar</button><button class="btn ghost" id="mapBtn" type="button" hidden>Mapa</button><button class="btn ghost" id="openBtn" type="button" hidden>Abertura</button><button class="btn ghost" id="cfgBtn" type="button" hidden>⚙ Configurações</button></div>
-  <p id="hint" hidden>Teclado: setas ou A/D movem, espaço pula, Shift corre (ou toque duas vezes na seta e segure), J ou X atira (flor) ou gira (capa); K faz o pulo giratório (sai de cima da raposinha); com a capa, corra até o medidor encher, pule e segure pular para voar, S ou ↓ agacha e entra no cano. No celular: analógico à esquerda (empurre até o fim para correr; para cima sobe no cipó; para baixo agacha ou entra no cano) botão Pular à direita (arraste ele para cima = pulo giratório) e botão Fogo/Giro quando pegar a flor ou a capa. Na água: toque em Pular para dar braçadas (segure para subir devagar, empurre o analógico para baixo para mergulhar) e vigie a barra de Ar. Bata nos blocos por baixo. Menus, configurações e mapa: setas escolhem, Enter confirma, Esc volta (←/→ mexem nas barras).</p>
+  <p id="hint" hidden>Teclado: setas ou A/D movem, espaço pula, Shift corre (ou toque duas vezes na seta e segure), J ou X atira (flor) ou gira (capa); K faz o pulo giratório (sai de cima da raposinha); L faz o dash de sombra (some e reaparece à frente); com a capa, corra até o medidor encher, pule e segure pular para voar, S ou ↓ agacha e entra no cano. No celular: analógico à esquerda (empurre até o fim para correr; para cima sobe no cipó; para baixo agacha ou entra no cano) botão Pular à direita (arraste ele para cima = pulo giratório) e botão Fogo/Giro quando pegar a flor ou a capa. O botão Sombra faz o dash de sombra. Na água: toque em Pular para dar braçadas (segure para subir devagar, empurre o analógico para baixo para mergulhar) e vigie a barra de Ar. Bata nos blocos por baixo. Menus, configurações e mapa: setas escolhem, Enter confirma, Esc volta (←/→ mexem nas barras).</p>
 </div>
 
 <script src="lib/build/three.min.js"></script>
@@ -7401,7 +7403,7 @@ function buildCollectibles(){
   coins=coins.filter(function(c){return !pastEnd(c)});
   fitCoins(LV.coinN||50);
   coins.forEach(function(c){if(pastEnd(c)){c.x=endX-.6-Math.random()*.01}});
-  var cg=new T.CylinderGeometry(.32,.32,.07,24);cg.rotateX(Math.PI/2);
+  var cg=NJ?njMonG():new T.CylinderGeometry(.32,.32,.07,24);if(!NJ)cg.rotateX(Math.PI/2);
   coinMesh=inst(cg,M(0xffc43a,.22,.95,{emissive:new T.Color(0x6a4300),emissiveIntensity:.6}),Math.max(1,coins.length),true);
   coinMesh.count=coins.length;add(coinMesh);
   (LV.gems||[]).forEach(function(p){items.push(mkItem('gem',p[0],p[1]))});
@@ -7489,9 +7491,11 @@ function mkItem(type,x,y){
   }else if(type==='heart'){
     m=mesh(heartGeo,new T.MeshStandardMaterial({color:0xff4a5e,roughness:.3,emissive:0xb0102a,emissiveIntensity:.8}),false,false);
   }else if(type==='feather'){
-    m=featherModel();
+    m=NJ?njWings():featherModel();
   }else if(type==='mushroom'){
-    m=mushroomModel();
+    m=NJ?njOnigiri():mushroomModel();
+  }else if(type==='flower'&&NJ){
+    m=njScroll();
   }else if(type==='flower'){
     m=new T.Group();
     var fst=mesh(new T.CylinderGeometry(.04,.05,.42,8),new T.MeshStandardMaterial({color:0x3f9a2e,roughness:.6}),false,false);fst.position.y=.21;m.add(fst);
@@ -7529,12 +7533,13 @@ function buildMarks(){
   });
   if(LV.goal&&(!LV.crystalGoal||LV.goalFlag)){/* goalFlag: bandeira só de enfeite (a fase termina de outro jeito) */
     var gx=LV.goal.x,gt=LV.goal.top,gz=LV.goal.z!==undefined?LV.goal.z:-.4;
-    var pole=mesh(new T.CylinderGeometry(.07,.09,6,10),M(0xc9d1d8,.3,.9));pole.position.set(gx,gt+3,gz);add(pole);
+    if(NJ){var tor=njTorii();tor.position.set(gx+.3,gt,-.2);tor.rotation.y=Math.PI/2*.62;tor.scale.setScalar(.85);add(tor);flag.parts=[tor];flag.bell=tor.children.filter(function(o){return o.isGroup})[0]}/* identidade ninja: portão torii com sino */
+    else{var pole=mesh(new T.CylinderGeometry(.07,.09,6,10),M(0xc9d1d8,.3,.9));pole.position.set(gx,gt+3,gz);add(pole);
     var fin=mesh(new T.SphereGeometry(.18,16,12),M(0xffc43a,.25,.9,{emissive:new T.Color(0x6a4300),emissiveIntensity:.5}));fin.position.set(gx,gt+6.1,gz);add(fin);
     var fg=new T.PlaneGeometry(2.1,1.3,16,8);
     flag.geo=fg;flag.base=fg.attributes.position.array.slice();
     var fm=mesh(fg,M(0xe0482a,.8,0,{side:T.DoubleSide}));fm.position.set(gx+1.05,gt+5.2,gz);add(fm);
-    flag.mesh=fm;flag.parts=[pole,fin,fm];
+    flag.mesh=fm;flag.parts=[pole,fin,fm]}
   }
 }
 var alertTex=null;
@@ -9861,6 +9866,7 @@ function spawn(pt){
   updateCamera(0,true);
 }
 function resetState(){
+  if(typeof dashReset==='function')dashReset();
   hearts=Math.max(3,(save.hearts|0)||3);coinsGot=0;gemsGot=0;bank=(save.bank|0)%100;timeT=0;TLIM=(LV&&LV.limit)||300;timeLeft=TLIM;clkIn=false;lowWarn=false;mt=0;P.feather=0;P.cheer=0;P.shield=false;P.big=false;setFire(false);setCape(false);
   /* poderes que o Kuro trouxe da fase anterior */
   if(carryNow){if(carryNow.big||carryNow.cape||carryNow.fire)P.big=true;if(carryNow.cape)setCape(true);else if(carryNow.fire)setFire(true);if(carryNow.shield)P.shield=true}
@@ -9960,6 +9966,7 @@ function winLevel(){
   save.carry={big:!!P.big,fire:!!P.fire,cape:!!P.cape,shield:!!P.shield};save.carryFor=levelIdx+1;
   recordLevel();
   /* fases com chefe não têm bandeira: festa em volta do Kuro (antes isso travava o jogo ao vencer o Rei) */
+  if(flag.bell)flag.ring=1.6;/* torii: o sino toca */
   if(LV.goal)emit(sparkPool,LV.goal.x,LV.goal.top+3,40,6,1.4,.5,.5,5);else emit(sparkPool,P.x,P.y+2,40,6,1.4,.5,.5,5);
   var s=STORY.worlds[levelIdx];
   showCard({kicker:'Mundo concluído',title:s.title,text:s.end,stats:stats(scoreLis()+(save.best[levelIdx]?'<li><small>Melhor tempo</small>'+fmt(save.best[levelIdx])+'</li>':'')),
@@ -10129,7 +10136,7 @@ function shoot(){
   if(n>=3)return;
   if(!f){
     if(!fbM)fbM=new T.MeshStandardMaterial({color:0xffb040,emissive:0xff5a00,emissiveIntensity:2.4,roughness:.3});
-    var m=mesh(new T.SphereGeometry(.2,14,10),fbM,false,false);m.visible=false;add(m);
+    var m=NJ?njStarMesh(fbM):mesh(new T.SphereGeometry(.2,14,10),fbM,false,false);m.visible=false;add(m);
     f={on:false,mesh:m,x:0,y:0,vx:0,vy:0,life:0,py:0};fbs.push(f);
   }
   f.on=true;f.x=P.x+P.face*.55;f.y=P.y+P.h*.55;f.vx=P.face*15+P.vx*.25;f.vy=3;f.life=2.2;f.py=f.y;f.mesh.visible=true;
@@ -10165,12 +10172,12 @@ function updFire(dt){
     }
     if(dead)continue;
     if(boss&&boss.state!=='dead'&&boss.state!=='wait'&&Math.abs(f.x-boss.x)<boss.w&&f.y>boss.top&&f.y<boss.top+boss.h){fbBoom(f);toast('O Rei Besouro é forte demais para fogo. Pise nele!');continue}
-    f.mesh.position.set(f.x,f.y,0);
+    f.mesh.position.set(f.x,f.y,0);if(NJ)f.mesh.rotation.z-=dt*22*(f.vx>0?1:-1);
     if(((tm*40)|0)%2===0)emit(sparkPool,f.x,f.y,1,.8,.25,.22,0,0);
   }
 }
 function hurt(fromX,sharp){
-  if(P.inv>0||state!=='play')return;
+  if(P.inv>0||state!=='play'||DASH.t>0)return;/* no dash de sombra o Kuro atravessa inimigos e tiros */
   if(P.mount){dismountFox('hit',fromX);P.inv=1.6;P.climb=null;P.vx=(P.x>=fromX?1:-1)*4;P.vy=8;P.grounded=false;P.onPlat=null;emit(sparkPool,P.x,P.y+.8,14,3.5,.7,.4,.3,3);return}
   if(P.shield){P.shield=false;P.inv=1.4;sfx.check();emit(sparkPool,P.x,P.y+1,16,4,.7,.4,.3,2);toast('O escudo protegeu o Kuro!');return}
   if(P.cape){
@@ -10531,6 +10538,7 @@ var quakeMC=null;function quakeM(){
 function buildBlocks(){
   (LV.blocks||[]).forEach(function(d){
     var m=mesh(new T.BoxGeometry(1,1,1.15),d.t==='brick'?brickM:(d.c==='feather'&&d.t==='q'?featherBlkM:qM));
+    if(NJ&&d.t==='q'){m.material=d.c==='feather'?njMats().lanF:njMats().lan;njFrame(m)}/* identidade ninja: lanterna */
     m.position.set(d.x,d.y+.5,0);add(m);
     var b={x:d.x,y:d.y,t:d.t,c:d.c||null,n:d.n||1,state:d.t==='hid'?'hid':'ready',bump:0,mesh:m};
     if(d.t==='hid')m.visible=false;
@@ -10547,6 +10555,8 @@ function buildPlants(){
     var isTarget=false;(LV.pipes||[]).forEach(function(q){if(q.to&&q.to.pipe!==undefined&&LV.pipes[q.to.pipe]===pp)isTarget=true});
     if(!pp||pp.to||isTarget)return;
     var g=new T.Group();
+    if(NJ)g=njSnake();/* identidade ninja: cobra no bambu */
+    else{
     var stM=M(0x3f8a2a,.8),buM=M(0xe0482a,.45,.1,{emissive:new T.Color(0x5a0a00),emissiveIntensity:.35}),spM=M(0xfff0c8,.5),lfM=M(0x2f7a22,.8);
     var st=mesh(new T.CylinderGeometry(.1,.13,2.2,8),stM);st.position.y=-.9;g.add(st);
     var bu=mesh(new T.SphereGeometry(.44,16,12),buM);bu.scale.set(1,1.1,1);g.add(bu);
@@ -10559,6 +10569,7 @@ function buildPlants(){
     [-1,1].forEach(function(sd){var e=mesh(new T.SphereGeometry(.07,8,6),new T.MeshStandardMaterial({color:0x220a00,emissive:0xffd23a,emissiveIntensity:1.2}),false,false);e.position.set(sd*.16,.1,.4);g.add(e)});
     var lf=mesh(new T.SphereGeometry(1,10,6),lfM);lf.scale.set(.5,.05,.2);lf.position.set(-.5,-.55,0);lf.rotation.z=.5;g.add(lf);
     var lf2=lf.clone();lf2.position.x=.5;lf2.rotation.z=-.5;g.add(lf2);
+    }
     g.position.set(pp.x,pp.top-.7,0);add(g);
     plants.push({x:pp.x,top:pp.top,g:g,t:d.ph||0,len:0,dead:false,hold:false});
   });
@@ -10589,8 +10600,9 @@ function buildPipes(){
     else if(curTheme.name==='forest'){pM=M(0x7a5532,.85,.05);rM=M(0x58a63a,.8,.05)}
     else if(curTheme.name==='peaks'){pM=M(0x7ec4e8,.15,.3);rM=M(0xeaf7ff,.2,.2)}
     else if(curTheme.name==='ruins'){pM=M(0xc99a58,.7,.1);rM=M(0xf2d98c,.4,.5)}
-    var body=mesh(new T.CylinderGeometry(.62,.62,h-.3,22),pM);body.position.y=(h-.3)/2;g.add(body);
-    var rim=mesh(new T.CylinderGeometry(.76,.76,.42,22),rM);rim.position.y=h-.21;g.add(rim);
+    if(NJ){g=njBamboo(h);var rim=g.children[g.children.length-1]}/* identidade ninja: portal de bambu (a corda vermelha pulsa no lugar da borda) */
+    else{var body=mesh(new T.CylinderGeometry(.62,.62,h-.3,22),pM);body.position.y=(h-.3)/2;g.add(body);
+    var rim=mesh(new T.CylinderGeometry(.76,.76,.42,22),rM);rim.position.y=h-.21;g.add(rim)}
     g.position.set(d.x,d.base,0);add(g);d.rim=rim;d.pulse=0;
     d.arrow=null;
     if(d.to){
@@ -10601,11 +10613,11 @@ function buildPipes(){
     solids.push(sd);pipes.push(d);
   });
 }
-function setEmpty(b){b.state='empty';b.mesh.material=emptyM}
+function setEmpty(b){b.state='empty';b.mesh.material=(NJ&&b.t==='q')?njMats().lanE:emptyM}
 var popCoins=[],popGeo=null,popMat=null;
 function popCoin(b){
   /* a moeda sai do bloco girando, sobe e cai (antes só saía uma faísca) */
-  if(!popGeo){popGeo=new T.CylinderGeometry(.32,.32,.07,24);popGeo.rotateX(Math.PI/2);popMat=M(0xffc43a,.22,.95,{emissive:new T.Color(0x6a4300),emissiveIntensity:.6})}
+  if(!popGeo){popGeo=NJ?njMonG():new T.CylinderGeometry(.32,.32,.07,24);if(!NJ)popGeo.rotateX(Math.PI/2);popMat=M(0xffc43a,.22,.95,{emissive:new T.Color(0x6a4300),emissiveIntensity:.6})}
   var p=null;
   for(var i=0;i<popCoins.length;i++)if(!popCoins[i].on){p=popCoins[i];break}
   if(!p){p={m:mesh(popGeo,popMat,false,false),on:false,y:0,y0:0,vy:0};add(p.m);popCoins.push(p)}
@@ -10613,7 +10625,7 @@ function popCoin(b){
 }
 var dropCoins=[];
 function dropCoin(x,y){
-  if(!popGeo){popGeo=new T.CylinderGeometry(.32,.32,.07,24);popGeo.rotateX(Math.PI/2);popMat=M(0xffc43a,.22,.95,{emissive:new T.Color(0x6a4300),emissiveIntensity:.6})}
+  if(!popGeo){popGeo=NJ?njMonG():new T.CylinderGeometry(.32,.32,.07,24);if(!NJ)popGeo.rotateX(Math.PI/2);popMat=M(0xffc43a,.22,.95,{emissive:new T.Color(0x6a4300),emissiveIntensity:.6})}
   var p=null;for(var i=0;i<dropCoins.length;i++)if(!dropCoins[i].on){p=dropCoins[i];break}
   if(!p){p={m:mesh(popGeo,popMat,false,false)};add(p.m);dropCoins.push(p)}
   p.on=true;p.x=x;p.y=y;p.vy=8;p.rest=false;p.t=0;p.m.position.set(x,y,0);p.m.scale.setScalar(1.15);p.m.visible=true;
@@ -10778,6 +10790,165 @@ function updCrouch(){
   }
   P.h=P.mount?(P.crouch?crH()+.3:mountH()):(P.crouch?crH():stdH());
 }
+/* ===== Identidade ninja (proposta 12/11, para o jogo deixar de parecer o Mario) =====
+   Aprovado e ligado no jogo oficial em 13/11 (window.NINJA=0 desliga). Peças:
+   lanterna de papel (no lugar do bloco "?"), onigiri (no lugar do cogumelo), pergaminho de fogo (no lugar da flor),
+   asa ninja (no lugar da pena/capa), portal de bambu (no lugar do cano), portão torii com sino (no lugar da bandeira),
+   moeda com furo quadrado (no lugar da moeda redonda). */
+var NJ=window.NINJA!==0;/* aprovado pelo dono (13/11): ligado no jogo oficial; window.NINJA=0 volta o visual antigo */
+function njLanternTex(empty,green){/* face do bloco: papel de arroz com treliça de madeira e um shuriken vermelho no meio */
+  var c=document.createElement('canvas');c.width=c.height=128;var x=c.getContext('2d');
+  var g=x.createRadialGradient(64,64,10,64,64,90);g.addColorStop(0,empty?'#b8a98a':(green?'#e8ffd8':'#fff6d8'));g.addColorStop(1,empty?'#7d6f58':(green?'#6ec85a':'#f2c46a'));x.fillStyle=g;x.fillRect(0,0,128,128);
+  x.strokeStyle=empty?'#3a2a1c':'#5a3418';x.lineWidth=10;x.strokeRect(5,5,118,118);/* moldura de madeira */
+  x.lineWidth=3;[44,84].forEach(function(p){x.beginPath();x.moveTo(p,10);x.lineTo(p,118);x.stroke();x.beginPath();x.moveTo(10,p);x.lineTo(118,p);x.stroke()});/* treliça do shoji */
+  if(!empty){x.save();x.translate(64,64);x.rotate(.3);x.fillStyle='#c8281e';
+    for(var i=0;i<4;i++){x.rotate(Math.PI/2);x.beginPath();x.moveTo(0,-6);x.lineTo(30,-2);x.lineTo(8,8);x.closePath();x.fill()}/* shuriken */
+    x.fillStyle='#fff6d8';x.beginPath();x.arc(0,0,5,0,6.283);x.fill();x.restore()}
+  var t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;t.anisotropy=4;return t}
+function njLanternBlock(empty){/* cubo do mesmo tamanho do bloco (1×1), com cantos de madeira e brilho por dentro */
+  var g=new T.Group(),tx=njLanternTex(empty);
+  var body=mesh(new T.BoxGeometry(1,1,1.15),new T.MeshStandardMaterial({map:tx,emissive:empty?0x000000:0xffa040,emissiveMap:tx,emissiveIntensity:empty?0:.55,roughness:.7}));g.add(body);
+  var wd=new T.MeshStandardMaterial({color:0x4a2a14,roughness:.8});
+  [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(function(q){var p=mesh(new T.BoxGeometry(.1,1.06,.1),wd);p.position.set(q[0]*.5,0,q[1]*.575);g.add(p)});
+  [-1,1].forEach(function(s){var b=mesh(new T.BoxGeometry(1.08,.09,1.23),wd);b.position.y=s*.52;g.add(b)});
+  return g}
+function njOnigiri(){/* bolinho de arroz: triângulo redondinho branco com a faixa de alga (nori) embaixo */
+  var g=new T.Group(),sh=new T.Shape(),R=.42;
+  for(var i=0;i<=60;i++){var a=i/60*6.283,k=1+.13*Math.cos(3*(a-Math.PI/2));sh[i?'lineTo':'moveTo'](Math.cos(a)*R*k,Math.sin(a)*R*k*.95+.02)}
+  var rice=new T.ExtrudeGeometry(sh,{depth:.3,bevelEnabled:true,bevelThickness:.1,bevelSize:.08,bevelSegments:4,curveSegments:24});rice.translate(0,0,-.15);
+  g.add(mesh(rice,new T.MeshStandardMaterial({color:0xfbfaf2,roughness:.85,emissive:0x302a20,emissiveIntensity:.2})));
+  var nori=mesh(new T.BoxGeometry(.36,.44,.64),new T.MeshStandardMaterial({color:0x1d2a1a,roughness:.6}));nori.position.y=-.24;g.add(nori);
+  [-.08,.02,.12].forEach(function(px,i){var gr=mesh(new T.SphereGeometry(.035,6,4),new T.MeshStandardMaterial({color:0xffffff,roughness:.6}));gr.position.set(px,.15-i*.06,.27);g.add(gr)});/* grãos */
+  g.position.y=.5;var o=new T.Group();o.add(g);return o}
+function njScroll(){/* pergaminho de fogo: rolo de papel aberto com a chama desenhada, pontas de madeira vermelha */
+  var g=new T.Group(),c=document.createElement('canvas');c.width=128;c.height=192;var x=c.getContext('2d');
+  x.fillStyle='#f4e6c4';x.fillRect(0,0,128,192);x.strokeStyle='#b08850';x.lineWidth=4;x.strokeRect(8,6,112,180);
+  var fg=x.createLinearGradient(0,40,0,160);fg.addColorStop(0,'#ffd23a');fg.addColorStop(1,'#e8380e');x.fillStyle=fg;
+  x.beginPath();x.moveTo(64,34);x.bezierCurveTo(100,80,96,120,64,158);x.bezierCurveTo(32,120,28,80,64,34);x.fill();
+  x.fillStyle='#fff3b0';x.beginPath();x.moveTo(64,88);x.bezierCurveTo(80,110,76,130,64,148);x.bezierCurveTo(52,130,48,110,64,88);x.fill();
+  var tx=new T.CanvasTexture(c);tx.encoding=T.sRGBEncoding;
+  var pg=new T.PlaneGeometry(.62,.9,6,1),ps=pg.attributes.position;for(var i=0;i<ps.count;i++)ps.setZ(i,Math.sin((ps.getX(i)/.62+.5)*Math.PI)*.04);pg.computeVertexNormals();
+  var paper=mesh(pg,new T.MeshStandardMaterial({map:tx,side:T.DoubleSide,roughness:.8,emissive:0xff6a1f,emissiveMap:tx,emissiveIntensity:.35}),false,false);g.add(paper);
+  var rm=new T.MeshStandardMaterial({color:0xf0dcb0,roughness:.8}),wm=new T.MeshStandardMaterial({color:0x9a1e14,roughness:.4,metalness:.2});
+  [-1,1].forEach(function(s){var r=mesh(new T.CylinderGeometry(.07,.07,.72,14),rm);r.rotation.z=Math.PI/2;r.position.y=s*.47;g.add(r);
+    [-1,1].forEach(function(e){var cp=mesh(new T.CylinderGeometry(.085,.085,.06,12),wm);cp.rotation.z=Math.PI/2;cp.position.set(e*.38,s*.47,0);g.add(cp)})});
+  var o=new T.Group();g.position.y=.6;o.add(g);return o}
+function njWings(){/* asa ninja: duas asas de pano escuro esticadas em varetas de bambu, com faixa vermelha, presas num nó no meio */
+  var g=new T.Group(),cl=new T.MeshStandardMaterial({color:0x2a2440,roughness:.7,side:T.DoubleSide}),rd=new T.MeshStandardMaterial({color:0xc8281e,roughness:.5,side:T.DoubleSide}),bm=new T.MeshStandardMaterial({color:0xc8a860,roughness:.6});
+  [-1,1].forEach(function(s){var w=new T.Shape();w.moveTo(0,0);w.quadraticCurveTo(s*.5,.55,s*1.05,.42);w.lineTo(s*.92,.18);w.lineTo(s*.8,.26);w.lineTo(s*.66,.02);w.lineTo(s*.52,.12);w.lineTo(s*.36,-.12);w.quadraticCurveTo(s*.15,-.05,0,0);
+    var wg=new T.ShapeGeometry(w,16);g.add(mesh(wg,cl,false,false));
+    var tr=new T.Shape();tr.moveTo(s*.06,.06);tr.quadraticCurveTo(s*.5,.5,s*1.0,.38);tr.lineTo(s*.98,.32);tr.quadraticCurveTo(s*.5,.42,s*.06,0);
+    var tm2=mesh(new T.ShapeGeometry(tr,12),rd,false,false);tm2.position.z=.01;g.add(tm2);
+    var rib=mesh(new T.CylinderGeometry(.018,.018,1.1,6),bm);rib.rotation.z=s*-1.2;rib.position.set(s*.5,.27,.02);g.add(rib)});
+  var knot=mesh(new T.SphereGeometry(.09,10,8),rd);knot.position.z=.03;g.add(knot);
+  var o=new T.Group();g.position.y=.55;o.add(g);return o}
+function njBamboo(h){/* portal de bambu (no lugar do cano): três gomos grossos, corte em diagonal no alto, nós salientes e folhinhas — nada de borda larga de cano */
+  var g=new T.Group(),bm=new T.MeshStandardMaterial({color:0x7ab846,roughness:.5}),nm=new T.MeshStandardMaterial({color:0x557f2a,roughness:.6}),cut=new T.MeshStandardMaterial({color:0xe8dca0,roughness:.7}),lf=new T.MeshStandardMaterial({color:0x3f9a2e,roughness:.6,side:T.DoubleSide});
+  var body=mesh(new T.CylinderGeometry(.66,.7,h,24),bm);body.position.y=h/2;g.add(body);
+  for(var y=.55;y<h-.2;y+=.75){var n=mesh(new T.TorusGeometry(.69,.06,6,24),nm);n.rotation.x=Math.PI/2;n.position.y=y;g.add(n)}
+  var lip=mesh(new T.TorusGeometry(.62,.07,8,24),cut);lip.rotation.x=Math.PI/2;lip.position.y=h;g.add(lip);/* a madeira clara do corte */
+  var hole=mesh(new T.CircleGeometry(.58,24),new T.MeshBasicMaterial({color:0x14180c}));hole.rotation.x=-Math.PI/2;hole.position.y=h+.01;g.add(hole);
+  [[-1,.4],[1,.9]].forEach(function(q){var br=new T.Group();for(var i=0;i<3;i++){var l=mesh(new T.PlaneGeometry(.5,.12),lf,false,false);l.position.set(q[0]*(.25+i*.06),i*.08,0);l.rotation.z=q[0]*(.4+i*.25);br.add(l)}
+    br.position.set(q[0]*.7,h*q[1],.1);g.add(br)});
+  var rope=mesh(new T.TorusGeometry(.72,.05,6,24),new T.MeshStandardMaterial({color:0xc8281e,roughness:.6}));rope.rotation.x=Math.PI/2;rope.position.y=h-.35;g.add(rope);
+  return g}
+function njTorii(){/* portão torii vermelho com um sino pendurado (no lugar da bandeira do fim) */
+  var g=new T.Group(),red=new T.MeshStandardMaterial({color:0xd2281c,roughness:.45}),blk=new T.MeshStandardMaterial({color:0x221a18,roughness:.6}),gold=new T.MeshStandardMaterial({color:0xffc43a,roughness:.25,metalness:.85,emissive:0x6a4300,emissiveIntensity:.5});
+  [-1,1].forEach(function(s){var p=mesh(new T.CylinderGeometry(.16,.2,4.6,14),red);p.position.set(s*1.4,2.3,0);g.add(p);var ft=mesh(new T.CylinderGeometry(.24,.24,.3,14),blk);ft.position.set(s*1.4,.15,0);g.add(ft)});
+  var nuki=mesh(new T.BoxGeometry(3.6,.22,.24),red);nuki.position.y=3.7;g.add(nuki);
+  var kg=new T.BoxGeometry(4.4,.3,.36,12,1,1),kp=kg.attributes.position;for(var i=0;i<kp.count;i++){var xx=kp.getX(i);kp.setY(i,kp.getY(i)+Math.pow(Math.abs(xx)/2.2,2.2)*.35)}kg.computeVertexNormals();
+  var kasa=mesh(kg,blk);kasa.position.y=4.75;g.add(kasa);var sh=mesh(new T.BoxGeometry(4.0,.24,.3),red);sh.position.y=4.45;g.add(sh);
+  var tab=mesh(new T.BoxGeometry(.5,.6,.1),blk);tab.position.set(0,4.1,.14);g.add(tab);
+  var bell=new T.Group(),bp=[];for(var j=0;j<=10;j++){var t=j/10;bp.push(new T.Vector2(.08+.28*Math.pow(t,1.6),-t*.62))}
+  bell.add(mesh(new T.LatheGeometry(bp,20),gold));var cl=mesh(new T.SphereGeometry(.07,8,6),gold);cl.position.y=-.62;bell.add(cl);
+  var rp=mesh(new T.CylinderGeometry(.02,.02,.5,6),new T.MeshStandardMaterial({color:0xc8281e}));rp.position.y=.25;bell.add(rp);bell.position.y=3.45;g.add(bell);
+  return g}
+function njMon(){/* moeda japonesa: dourada, com furo quadrado no meio e bordinha */
+  var s=new T.Shape();s.absarc(0,0,.3,0,6.283,false);var h=new T.Path();h.moveTo(-.08,-.08);h.lineTo(-.08,.08);h.lineTo(.08,.08);h.lineTo(.08,-.08);h.lineTo(-.08,-.08);s.holes.push(h);
+  var gm=new T.ExtrudeGeometry(s,{depth:.05,bevelEnabled:true,bevelThickness:.02,bevelSize:.02,bevelSegments:2,curveSegments:28});gm.translate(0,0,-.025);
+  return mesh(gm,new T.MeshStandardMaterial({color:0xffcf3a,roughness:.25,metalness:.85,emissive:0x7a5200,emissiveIntensity:.45}),false,false)}
+/* ----- ligação com o jogo (só com NJ) ----- */
+var njM=null;
+function njMats(){if(njM)return njM;var a=njLanternTex(false),b=njLanternTex(false,true),e=njLanternTex(true);
+  njM={lan:new T.MeshStandardMaterial({map:a,emissive:0xffa040,emissiveMap:a,emissiveIntensity:.55,roughness:.7}),lanF:new T.MeshStandardMaterial({map:b,emissive:0x60ff60,emissiveMap:b,emissiveIntensity:.4,roughness:.7}),
+    lanE:new T.MeshStandardMaterial({map:e,roughness:.85}),wood:new T.MeshStandardMaterial({color:0x4a2a14,roughness:.8})};return njM}
+function njFrame(m){/* cantos e faixas de madeira presos no bloco (filhos do mesmo mesh, sobem e descem junto) */
+  var W=njMats().wood;[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(function(q){var p=mesh(new T.BoxGeometry(.1,1.06,.1),W,false,false);p.position.set(q[0]*.5,0,q[1]*.575);m.add(p)});
+  [-1,1].forEach(function(s){var b=mesh(new T.BoxGeometry(1.08,.09,1.23),W,false,false);b.position.y=s*.52;m.add(b)})}
+var njMonGeo=null;function njMonG(){if(njMonGeo)return njMonGeo;var g=njMon().geometry;njMonGeo=g;return g}
+function njRig(){/* a capa do Kuro vira asa ninja: pano escuro com a ponta vermelha */
+  if(!NJ||!rig||!rig.cape||!rig.cape.s)return;rig.cape.s.forEach(function(sg,i){sg.children.forEach(function(c){if(c.material){c.material=c.material.clone();c.material.color.set(i===2?0xc8281e:0x2a2440)}})})}
+function njCrateTex(){/* caixote de madeira com tábuas, pregos e corda (no lugar do tijolo) */
+  var c=document.createElement('canvas');c.width=c.height=128;var x=c.getContext('2d'),r=rnd(31);
+  x.fillStyle='#a8743c';x.fillRect(0,0,128,128);
+  for(var i=0;i<4;i++){var y=i*32;x.fillStyle=i%2?'#b07c42':'#9c6a34';x.fillRect(0,y,128,32);x.strokeStyle='rgba(60,30,10,.6)';x.lineWidth=2;x.strokeRect(0,y,128,32);
+    for(var k=0;k<5;k++){x.strokeStyle='rgba(70,40,15,'+(.15+r()*.2)+')';x.lineWidth=1;x.beginPath();x.moveTo(0,y+4+r()*24);x.bezierCurveTo(40,y+r()*32,80,y+r()*32,128,y+4+r()*24);x.stroke()}}
+  x.strokeStyle='#5a3418';x.lineWidth=9;x.strokeRect(4,4,120,120);
+  x.beginPath();x.moveTo(8,8);x.lineTo(120,120);x.stroke();/* travessa em diagonal */
+  x.fillStyle='#3a3a3a';[[12,12],[116,12],[12,116],[116,116],[64,64]].forEach(function(p){x.beginPath();x.arc(p[0],p[1],3.5,0,6.283);x.fill()});
+  var t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;t.anisotropy=4;return t}
+function njSnake(){/* cobra que sai do bambu (no lugar da planta do cano): corpo listrado, cabeça larga, olhos amarelos, língua vermelha */
+  var g=new T.Group(),bm=new T.MeshStandardMaterial({color:0x3e8a3a,roughness:.5}),bl=new T.MeshStandardMaterial({color:0xd8c050,roughness:.5});
+  var pts=[];for(var i=0;i<=10;i++){var t=i/10;pts.push(new T.Vector3(Math.sin(t*5)*.18*(1-t),-2.2+t*2.2,Math.cos(t*4)*.08))}
+  var body=mesh(new T.TubeGeometry(new T.CatmullRomCurve3(pts),40,.2,10,false),bm);g.add(body);
+  for(var j=0;j<6;j++){var p=pts[2+j],rg=mesh(new T.TorusGeometry(.205,.03,6,14),new T.MeshStandardMaterial({color:0x234a20,roughness:.6}));rg.position.copy(p);rg.rotation.x=Math.PI/2;g.add(rg)}
+  var head=new T.Group();head.position.y=.12;g.add(head);
+  var hd=mesh(new T.SphereGeometry(.3,16,12),bm);hd.scale.set(1.25,.75,1.3);head.add(hd);
+  var jaw=mesh(new T.SphereGeometry(.24,12,8),bl);jaw.scale.set(1.1,.45,1.2);jaw.position.set(0,-.12,.06);head.add(jaw);
+  [-1,1].forEach(function(s){var e=mesh(new T.SphereGeometry(.075,10,8),new T.MeshStandardMaterial({color:0x221100,emissive:0xffd23a,emissiveIntensity:1.3}),false,false);e.position.set(s*.17,.1,.27);head.add(e);
+    var f=mesh(new T.ConeGeometry(.03,.12,5),new T.MeshStandardMaterial({color:0xfff6e0}));f.rotation.x=Math.PI;f.position.set(s*.09,-.14,.33);head.add(f)});
+  var tg=mesh(new T.BoxGeometry(.04,.015,.3),new T.MeshStandardMaterial({color:0xe02a2a}));tg.position.set(0,-.08,.48);head.add(tg);
+  return g}
+var njStarGeo=null;
+function njStarMesh(mat){/* shuriken de fogo (no lugar da bola de fogo) */
+  if(!njStarGeo){var s=new T.Shape();for(var i=0;i<8;i++){var a=i/8*6.283,r=i%2?.08:.24;s[i?'lineTo':'moveTo'](Math.cos(a)*r,Math.sin(a)*r)}
+    var h=new T.Path();h.absarc(0,0,.035,0,6.283,true);s.holes.push(h);
+    njStarGeo=new T.ExtrudeGeometry(s,{depth:.03,bevelEnabled:true,bevelThickness:.01,bevelSize:.01,bevelSegments:1});njStarGeo.translate(0,0,-.015)}
+  return mesh(njStarGeo,mat,false,false)}
+if(NJ)brickM.map=njCrateTex();
+njRig();
+
+/* ===== Dash de sombra: o golpe "marca" do Kuro (aprovado pelo dono, 12/11; no jogo oficial desde 13/11) =====
+   Tecla L (ou botão "Sombra" no celular): o Kuro some numa fumaça escura, dispara ~4 passos para a frente e reaparece.
+   Regras: atravessa inimigos e tiros sem dano; NÃO atravessa parede nem chão (a física normal resolve as colisões);
+   no ar só 1 vez por pulo (recarrega ao pisar no chão); recarga de 0,75 s. Rastro: 3 sombras do Kuro que somem. */
+var DASH={t:0,cd:0,air:0,dir:1,told:0,gT:0,gi:0,ghosts:null};
+var DASH_T=.16,DASH_V=25;
+function dashOk(){return NJ&&state==='play'&&!P.climb&&!P.warp&&!(P.growT>0)&&!(P.stun>0)&&!P.mount&&!P.inW&&!dyn&&!(RT&&RT.sw)}
+function dashTry(){
+  if(!dashOk()||DASH.cd>0||DASH.t>0)return;
+  if(!P.grounded&&DASH.air)return;/* no ar, só uma vez por pulo */
+  DASH.dir=P.face||1;DASH.t=DASH_T;DASH.cd=.75;if(!P.grounded)DASH.air=1;
+  P.vy=0;P.vx=DASH.dir*DASH_V;DASH.gT=0;
+  dashPuff(P.x,P.y+.7,10);try{sfx.spin()}catch(e){}
+  if(!DASH.told){DASH.told=1;toast(coarse?'Dash de sombra! Toque em Sombra para sumir e reaparecer à frente':'Dash de sombra! Aperte L para sumir e reaparecer à frente')}}
+function dashGhosts(){/* sombras = cópias do próprio Kuro (mesmo corpo e mesma pose), num roxo transparente; feitas uma vez por fase */
+  if(DASH.ghosts&&DASH.gW===W)return DASH.ghosts;
+  DASH.gW=W;DASH.ghosts=[];for(var i=0;i<3;i++){var m=new T.MeshBasicMaterial({color:0x7a5ad0,transparent:true,opacity:0,depthWrite:false});
+    var g=rig.root.clone(true);g.traverse(function(o){if(o.isMesh||o.isSprite){o.material=m;o.castShadow=false;o.receiveShadow=false}});
+    g.visible=false;add(g);DASH.ghosts.push({g:g,m:m,a:0})}
+  return DASH.ghosts}
+function dashPose(src,dst){/* copia a pose do Kuro para a sombra (posição, giro e tamanho de cada parte) */
+  dst.position.copy(src.position);dst.quaternion.copy(src.quaternion);dst.scale.copy(src.scale);
+  var n=Math.min(src.children.length,dst.children.length);for(var i=0;i<n;i++){dashPose(src.children[i],dst.children[i]);dst.children[i].visible=src.children[i].visible}}
+function dashPuff(x,y,n){emit(dustPool,x,y,n,2.6,.45,.5,1.6,-.4)}
+function dashUpd(dt){/* chamado no passo do Kuro, antes do movimento */
+  if(DASH.cd>0)DASH.cd-=dt;
+  if(P.grounded&&DASH.t<=0)DASH.air=0;
+  var G=NJ&&W?dashGhosts():null;
+  if(DASH.t>0){
+    if(!dashOk()){DASH.t=0}else{
+      DASH.t-=dt;DASH.gT-=dt;
+      if(G&&DASH.gT<=0){DASH.gT=.05;var q=G[DASH.gi++%3];dashPose(rig.root,q.g);q.g.position.z-=.05;q.a=.42;q.g.visible=true}
+      if(DASH.t<=0){P.vx=DASH.dir*8.5;dashPuff(P.x+DASH.dir*.3,P.y+.7,10)}}}
+  if(G)G.forEach(function(q){if(q.a>0){q.a=Math.max(0,q.a-dt*1.5);q.m.opacity=q.a;if(q.a<=0)q.g.visible=false}});
+  var b=document.getElementById('bDash');if(b)b.classList.toggle('cd',DASH.cd>0||(!P.grounded&&!!DASH.air))}
+function dashMove(){if(DASH.t>0){P.vx=DASH.dir*DASH_V;P.vy=0}}/* depois da gravidade: anda reto, sem cair */
+function dashReset(){DASH.t=0;DASH.cd=0;DASH.air=0;if(DASH.ghosts)DASH.ghosts.forEach(function(q){q.a=0;q.g.visible=false})}
+(function(){var b=document.getElementById('bDash');if(!b)return;if(!NJ){b.remove();return}b.hidden=false;
+  b.addEventListener('pointerdown',function(e){e.preventDefault();try{b.setPointerCapture(e.pointerId)}catch(_){}initAudio();dashTry();b.classList.add('on')});
+  ['pointerup','pointercancel','lostpointercapture'].forEach(function(ev){b.addEventListener(ev,function(){b.classList.remove('on')})})})();
+
 /*@@parte:50_fisica.js*/
 /* ===================== física ===================== */
 var STEP=1/90;
@@ -10955,7 +11126,7 @@ function startDeath(kind,after,msg){
   shake=Math.max(shake,kind==='fall'?0:.2);
 }
 function finishDeath(){
-  if(!dyn)return;var a=dyn.after;dyn=null;
+  if(!dyn)return;if(typeof dashReset==='function')dashReset();var a=dyn.after;dyn=null;
   rig.root.rotation.z=0;rig.root.rotation.x=0;rig.root.visible=true;
   P.cheer=0;P.sink=0;
   if(shards)shards.forEach(function(q){q.m.visible=false});
@@ -12254,6 +12425,7 @@ function step(dt){
   var ax=keys.jx!==0?keys.jx:((keys.right?1:0)-(keys.left?1:0));
   if(P.stun>0){P.stun-=dt;ax=0}
   if(P.inv>0)P.inv-=dt;
+  dashUpd(dt);/* dash de sombra (46_sombra.js) */
   if(P.feather>0){P.feather-=dt;if(P.feather<=0)$('featherStat').hidden=true}
   if(P.noCut>0)P.noCut-=dt;
   if(P.vineCd>0)P.vineCd-=dt;
@@ -12317,6 +12489,7 @@ function step(dt){
   if(P.cape&&P.flyT>0&&!P.grounded)gr*=.55;
   if((keys.jump||(keys.sjHold&&P.sj))&&!P.grounded&&Math.abs(P.vy)<2.2)gr*=.62;
   if(P.inW)waterVy(dt);else P.vy-=gr*dt;
+  dashMove();
   if(P.cape&&P.inW){P.flyT=0;P.pm=0;P.glide=0}
   else if(P.cape){
     if(P.grounded){
@@ -12665,7 +12838,7 @@ function pose(dt){
   if((curTheme.roots||curTheme.copa)&&typeof RT!=='undefined'&&RT&&RT.sw&&!dyn){rtSwingPose();RT.posed=1}
   else if(typeof RT!=='undefined'&&RT&&RT.posed){RT.posed=0;rig.root.rotation.x=0;rig.root.rotation.z=0}/* soltou o cipó: o corpo volta de pé *//* Mundos 21/22: pendurado no cipó, segurando com as mãos e balançando o corpo *//* Mundo 20: Kuro de cabeça para baixo no teto */
   if(typeof AU!=='undefined'&&AU&&(AU.sl||AU.sin)){rig.hipL.rotation.x=rig.hipR.rotation.x=-1.45;rig.kneeL.rotation.x=rig.kneeR.rotation.x=.25;rig.root.position.y-=.05}/* tobogã: sentado, pernas para a frente */
-  rig.root.visible=!(P.inv>0&&Math.floor(P.inv*14)%2===0&&state==='play');
+  rig.root.visible=!(P.inv>0&&Math.floor(P.inv*14)%2===0&&state==='play')&&!(DASH.t>0);/* no dash ele vira sombra */
 }
 var dummyO=new T.Object3D();
 function visEnemy(e,dt){
@@ -12869,6 +13042,7 @@ function animate(dt){
     s.coil.scale.y=1-.45*q;
     if(s.plume){s.plume.visible=s.sq>0;s.plume.scale.set(.6+q*.6,.3+(1-q)*1.2,.6+q*.6);s.plume.material.opacity=.55*q+.1}/* gêiser de areia */
   });
+  if(flag.bell&&flag.ring>0){flag.ring=Math.max(0,flag.ring-dt);flag.bell.rotation.z=Math.sin(flag.ring*14)*flag.ring*.35}
   if(flag.geo){
     var p=flag.geo.attributes.position,b=flag.base;
     for(var j=0;j<p.count;j++){
@@ -13139,8 +13313,8 @@ var EN={
 'Pule em cima dos inimigos para derrotá-los':'Jump on enemies to defeat them','Procure os 3 cristais escondidos de cada fase':'Find the 3 hidden crystals in each level',
 'Saia de um bloco com a raposinha e monte nela para ir mais rápido':'Get the little fox out of a block and ride her to go faster',
 'Toque duas vezes na seta e segure para correr':'Double-tap the arrow and hold to run','arraste o Pular para cima':'drag Jump upward',
-'Teclado: setas ou A/D movem, espaço pula, Shift corre (ou toque duas vezes na seta e segure), J ou X atira (flor) ou gira (capa); K faz o pulo giratório (sai de cima da raposinha); com a capa, corra até o medidor encher, pule e segure pular para voar, S ou ↓ agacha e entra no cano. No celular: analógico à esquerda (empurre até o fim para correr; para cima sobe no cipó; para baixo agacha ou entra no cano) botão Pular à direita (arraste ele para cima = pulo giratório) e botão Fogo/Giro quando pegar a flor ou a capa. Na água: toque em Pular para dar braçadas (segure para subir devagar, empurre o analógico para baixo para mergulhar) e vigie a barra de Ar. Bata nos blocos por baixo. Menus, configurações e mapa: setas escolhem, Enter confirma, Esc volta (←/→ mexem nas barras).':
- 'Keyboard: arrows or A/D move, Space jumps, Shift runs (or double-tap the arrow and hold), J or X shoots (flower) or spins (cape); K does the spin jump (also gets off the little fox); with the cape, run until the meter fills, jump and hold jump to fly; S or ↓ crouches and enters pipes. On mobile: joystick on the left (push all the way to run; up climbs vines; down crouches or enters pipes), Jump button on the right (drag it up = spin jump) and the Fire/Spin button when you have the flower or the cape. In water: tap Jump to swim (hold to rise slowly, push the joystick down to dive) and watch the Air bar. Hit blocks from below. Menus, settings and map: arrows choose, Enter confirms, Esc goes back (←/→ move the sliders).',
+'Teclado: setas ou A/D movem, espaço pula, Shift corre (ou toque duas vezes na seta e segure), J ou X atira (flor) ou gira (capa); K faz o pulo giratório (sai de cima da raposinha); L faz o dash de sombra (some e reaparece à frente); com a capa, corra até o medidor encher, pule e segure pular para voar, S ou ↓ agacha e entra no cano. No celular: analógico à esquerda (empurre até o fim para correr; para cima sobe no cipó; para baixo agacha ou entra no cano) botão Pular à direita (arraste ele para cima = pulo giratório) e botão Fogo/Giro quando pegar a flor ou a capa. O botão Sombra faz o dash de sombra. Na água: toque em Pular para dar braçadas (segure para subir devagar, empurre o analógico para baixo para mergulhar) e vigie a barra de Ar. Bata nos blocos por baixo. Menus, configurações e mapa: setas escolhem, Enter confirma, Esc volta (←/→ mexem nas barras).':
+ 'Keyboard: arrows or A/D move, Space jumps, Shift runs (or double-tap the arrow and hold), J or X shoots (flower) or spins (cape); K does the spin jump (also gets off the little fox); L does the shadow dash (vanish and reappear ahead); with the cape, run until the meter fills, jump and hold jump to fly; S or ↓ crouches and enters pipes. On mobile: joystick on the left (push all the way to run; up climbs vines; down crouches or enters pipes), Jump button on the right (drag it up = spin jump) and the Fire/Spin button when you have the flower or the cape. The Shadow button does the shadow dash. In water: tap Jump to swim (hold to rise slowly, push the joystick down to dive) and watch the Air bar. Hit blocks from below. Menus, settings and map: arrows choose, Enter confirms, Esc goes back (←/→ move the sliders).',
 /* avisos do jogo */
 ' Use o ':' Use the ',' inimigo caiu':' enemy fell',' inimigos caíram':' enemies fell',' para derrotar':' to defeat','pulo giratório (':'spin jump (','Aventura em ':'Adventure in ',
 'A Aranha das Raízes desceu do teto!':'The Root Spider came down from the ceiling!','A Aranha das Raízes foi vencida! O caminho abriu':'The Root Spider is defeated! The way is open',
@@ -13214,7 +13388,7 @@ var EN={
 'Vento a favor chegando: pule junto com a rajada para ir mais longe!':'Tailwind coming: jump with the gust to go farther!','Vento para cima! Ande para o lado para sair':'Updraft! Walk sideways to get out',
 'Viga baixa! Segure para baixo para se abaixar':'Low beam! Hold down to duck','Voando! Toque em pular para bater a capa':'Flying! Tap jump to flap the cape','Você acendeu a Luz da Aurora!':'You lit the Aurora Light!',
 'Você caiu. Voltando ao último checkpoint.':'You fell. Back to the last checkpoint.','Você venceu o Capitão Corvo-Pirata! Siga até a ilha':'You beat Captain Crow the Pirate! Head to the island',
-'Última volta! A próxima queda é de verdade':'Last chance! The next fall is for real','Checkpoint':'Checkpoint','Analógico à esquerda anda · botão Pular à direita':'Joystick on the left moves · Jump button on the right','Setas ou A/D andam · Espaço pula · Shift corre':'Arrows or A/D move · Space jumps · Shift runs','Mundo 12 · Terra Nova':'World 12 · New Land',
+'Última volta! A próxima queda é de verdade':'Last chance! The next fall is for real','Checkpoint':'Checkpoint','Sombra':'Shadow','Dash de sombra! Aperte L para sumir e reaparecer à frente':'Shadow dash! Press L to vanish and reappear ahead','Dash de sombra! Toque em Sombra para sumir e reaparecer à frente':'Shadow dash! Tap Shadow to vanish and reappear ahead','Analógico à esquerda anda · botão Pular à direita':'Joystick on the left moves · Jump button on the right','Setas ou A/D andam · Espaço pula · Shift corre':'Arrows or A/D move · Space jumps · Shift runs','Mundo 12 · Terra Nova':'World 12 · New Land',
 /* histórias (começo e fim de cada mundo) */
 'Kuro é o ninja mais jovem da Vila das Folhas. Numa manhã de sol, o Rei Besouro roubou o Coração de Cristal, que deixa a vila sempre em paz. Kuro apertou a faixa, pegou a katana e saiu para trazê-lo de volta.':'Kuro is the youngest ninja of the Leaf Village. One sunny morning, the Beetle King stole the Crystal Heart, which keeps the village at peace. Kuro tightened his headband, grabbed his katana and set off to bring it back.',
 'O caminho começa num vale ensolarado. Pise nos besouros de pedra, cuidado com os espinhos e ache os 3 cristais escondidos.':'The journey begins in a sunny valley. Stomp the stone beetles, watch out for spikes and find the 3 hidden crystals.',
@@ -13262,15 +13436,27 @@ for(var _w=12;_w<=22;_w++)EN['Mundo '+_w+' · Terra Nova']='World '+_w+' · New 
 EN['Português']='Português';EN['(padrão)']='(default)';
 var EN_FR=Object.keys(EN).filter(function(k){return k.length>=6&&/ |^\(/.test(k)}).sort(function(a,b){return b.length-a.length});/* pedaços (só frases, para não trocar dentro de palavras) */
 var EN_FALTA={};
-function trTxt(s){if(LANG!=='en'||!s||!/[A-Za-zÀ-ú]{2}/.test(s))return s;
-  var t=s.trim();if(EN[t]!==undefined)return s.replace(t,EN[t]);
+/* identidade ninja (window.NINJA): os textos trocam cogumelo/flor/pena/capa/cano por onigiri/pergaminho/asa/bambu — pedaços aplicados depois da tradução */
+var NJ_TX={pt:[['Cogumelo! Kuro ficou grande','Onigiri! Kuro ficou forte e grande'],['Kuro perdeu o cogumelo e voltou ao tamanho normal','Kuro perdeu a força do onigiri e voltou ao tamanho normal'],
+  ['A flor deixa o Kuro atirar','O pergaminho deixa o Kuro atirar'],['Flor de fogo! Aperte Fogo (ou J) para atirar','Pergaminho de fogo! Aperte Fogo (ou J) para atirar shurikens de fogo'],['flor de fogo','pergaminho de fogo'],
+  ['A pena escapou!','A asa escapou!'],['A pena e a Raposinha','A asa e a Raposinha'],['use a pena para planar','use a asa para planar'],['Capa! Corra','Asa ninja! Corra'],['Com a capa','Com a asa'],['com a capa','com a asa'],
+  ['perdeu a capa','perdeu a asa'],['o fogo ou a capa','o fogo ou a asa'],['bater a capa','bater a asa'],['Entre no cano','Entre no bambu'],['um cano velho','um bambu gigante'],['entra no cano','entra no bambu'],
+  ['(flor)','(pergaminho)'],['(capa)','(asa)'],['a flor ou a capa','o pergaminho ou a asa']],
+ en:[['Mushroom! Kuro got big','Onigiri! Kuro got strong and big'],['Kuro lost the mushroom','Kuro lost the onigiri power'],['The flower lets','The scroll lets'],['Fire flower! Press Fire (or J) to shoot','Fire scroll! Press Fire (or J) to throw fire shuriken'],
+  ['fire flower','fire scroll'],['The feather got away!','The wing got away!'],['The feather and','The wing and'],['use the feather','use the wing'],['Cape! Run','Ninja wing! Run'],['With the cape','With the wing'],['with the cape','with the wing'],
+  ['lost the cape','lost the wing'],['fire or the cape','fire or the wing'],['flap the cape','flap the wing'],['Enter the pipe','Enter the bamboo'],['an old pipe','a giant bamboo'],['enters pipes','enters bamboo portals'],
+  ['(flower)','(scroll)'],['(cape)','(wing)'],['the flower or the cape','the scroll or the wing']]};
+var NJ_HUD={pt:{'Capa':'Asa','Pena':'Asa'},en:{'Cape':'Wing','Feather':'Wing'}};
+function njTx(s){if(!NJ||!s)return s;var t=s.trim(),H=NJ_HUD[LANG];if(H[t])return s.replace(t,H[t]);var L=NJ_TX[LANG]||[];for(var i=0;i<L.length;i++)if(s.indexOf(L[i][0])>=0)s=s.split(L[i][0]).join(L[i][1]);return s}
+function trTxt(s){if(!s||!/[A-Za-zÀ-ú]{2}/.test(s))return s;if(LANG!=='en')return njTx(s);
+  var t=s.trim();if(EN[t]!==undefined)return njTx(s.replace(t,EN[t]));
   var o=s,i;for(i=0;i<EN_FR.length;i++){var k=EN_FR[i];if(o.indexOf(k)>=0)o=o.split(k).join(EN[k])}
-  if(o===s&&/[ãõçáéíóúâêôà]|\b(de|do|da|que|para|com|não)\b/i.test(s))EN_FALTA[t]=1;return o}
+  if(o===s&&/[ãõçáéíóúâêôà]|\b(de|do|da|que|para|com|não)\b/i.test(s))EN_FALTA[t]=1;return njTx(o)}
 function trNode(n){if(n.nodeType===3){if(n.parentNode&&/^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName))return;var v=n.nodeValue,w=trTxt(v);if(w!==v)n.nodeValue=w}
   else if(n.nodeType===1&&n.tagName!=='SCRIPT'&&n.tagName!=='STYLE'){for(var c=n.firstChild;c;c=c.nextSibling)trNode(c)}}
 function idiomaFaltando(){return Object.keys(EN_FALTA)}
-if(LANG==='en'){
-  document.documentElement.lang='en';
+if(LANG==='en'||NJ){
+  if(LANG==='en')document.documentElement.lang='en';
   trNode(document.body);
   new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var m=ms[i];
     if(m.type==='characterData')trNode(m.target);else for(var j=0;j<m.addedNodes.length;j++)trNode(m.addedNodes[j])}})
@@ -13301,7 +13487,8 @@ function press(code,down){
     case 'ShiftLeft':case 'ShiftRight':keys.run=down;break;
     case 'KeyJ':case 'KeyX':case 'KeyZ':if(down)act();else actUp();break;
     case 'KeyK':keys.sjHold=down;if(P.arena){if(down)act();else actUp()}else if(down)spinJump();break;/* segurar o K = segurar o pulo (mesma altura do celular) *//* K: pulo giratório (na luta de katana continua sendo golpe) */
-    case 'KeyL':case 'KeyC':if(down&&P.arena)throwStar();break;
+    case 'KeyL':if(down){if(P.arena)throwStar();else dashTry()}break;/* L: shuriken na arena, dash de sombra no resto */
+    case 'KeyC':if(down&&P.arena)throwStar();break;
     case 'ArrowDown':case 'KeyS':keys.down=down;break;
   }
 }
@@ -14222,4 +14409,4 @@ ldBoot([function(){setHearts();applyGfx()},function(){buildLevel(0)},function(){
 })();
 </script>
 
-<div id="verTag" style="position:fixed;right:6px;bottom:4px;z-index:1000;font:11px sans-serif;color:#fff;opacity:.55;pointer-events:none;text-shadow:0 1px 2px #000">versão 384c0f</div><script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").then(function(r){try{r.update()}catch(e){}}).catch(function(){});var t0=Date.now(),rl=false,had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(had&&!rl&&Date.now()-t0<20000){rl=true;location.reload()}})/* versão nova chegou logo ao abrir: recarrega sozinho uma vez */})}</script></body></html>
+<div id="verTag" style="position:fixed;right:6px;bottom:4px;z-index:1000;font:11px sans-serif;color:#fff;opacity:.55;pointer-events:none;text-shadow:0 1px 2px #000">versão 913c44</div><script>if("serviceWorker" in navigator&&location.protocol!=="file:"){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").then(function(r){try{r.update()}catch(e){}}).catch(function(){});var t0=Date.now(),rl=false,had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(had&&!rl&&Date.now()-t0<20000){rl=true;location.reload()}})/* versão nova chegou logo ao abrir: recarrega sozinho uma vez */})}</script></body></html>
