@@ -164,15 +164,27 @@ for(var _w=12;_w<=22;_w++)EN['Mundo '+_w+' · Terra Nova']='World '+_w+' · New 
 EN['Português']='Português';EN['(padrão)']='(default)';
 var EN_FR=Object.keys(EN).filter(function(k){return k.length>=6&&/ |^\(/.test(k)}).sort(function(a,b){return b.length-a.length});/* pedaços (só frases, para não trocar dentro de palavras) */
 var EN_FALTA={};
-function trTxt(s){if(LANG!=='en'||!s||!/[A-Za-zÀ-ú]{2}/.test(s))return s;
-  var t=s.trim();if(EN[t]!==undefined)return s.replace(t,EN[t]);
+/* identidade ninja (window.NINJA): os textos trocam cogumelo/flor/pena/capa/cano por onigiri/pergaminho/asa/bambu — pedaços aplicados depois da tradução */
+var NJ_TX={pt:[['Cogumelo! Kuro ficou grande','Onigiri! Kuro ficou forte e grande'],['Kuro perdeu o cogumelo e voltou ao tamanho normal','Kuro perdeu a força do onigiri e voltou ao tamanho normal'],
+  ['A flor deixa o Kuro atirar','O pergaminho deixa o Kuro atirar'],['Flor de fogo! Aperte Fogo (ou J) para atirar','Pergaminho de fogo! Aperte Fogo (ou J) para atirar shurikens de fogo'],['flor de fogo','pergaminho de fogo'],
+  ['A pena escapou!','A asa escapou!'],['A pena e a Raposinha','A asa e a Raposinha'],['use a pena para planar','use a asa para planar'],['Capa! Corra','Asa ninja! Corra'],['Com a capa','Com a asa'],['com a capa','com a asa'],
+  ['perdeu a capa','perdeu a asa'],['o fogo ou a capa','o fogo ou a asa'],['bater a capa','bater a asa'],['Entre no cano','Entre no bambu'],['um cano velho','um bambu gigante'],['entra no cano','entra no bambu'],
+  ['(flor)','(pergaminho)'],['(capa)','(asa)'],['a flor ou a capa','o pergaminho ou a asa']],
+ en:[['Mushroom! Kuro got big','Onigiri! Kuro got strong and big'],['Kuro lost the mushroom','Kuro lost the onigiri power'],['The flower lets','The scroll lets'],['Fire flower! Press Fire (or J) to shoot','Fire scroll! Press Fire (or J) to throw fire shuriken'],
+  ['fire flower','fire scroll'],['The feather got away!','The wing got away!'],['The feather and','The wing and'],['use the feather','use the wing'],['Cape! Run','Ninja wing! Run'],['With the cape','With the wing'],['with the cape','with the wing'],
+  ['lost the cape','lost the wing'],['fire or the cape','fire or the wing'],['flap the cape','flap the wing'],['Enter the pipe','Enter the bamboo'],['an old pipe','a giant bamboo'],['enters pipes','enters bamboo portals'],
+  ['(flower)','(scroll)'],['(cape)','(wing)'],['the flower or the cape','the scroll or the wing']]};
+var NJ_HUD={pt:{'Capa':'Asa','Pena':'Asa'},en:{'Cape':'Wing','Feather':'Wing'}};
+function njTx(s){if(!window.NINJA||!s)return s;var t=s.trim(),H=NJ_HUD[LANG];if(H[t])return s.replace(t,H[t]);var L=NJ_TX[LANG]||[];for(var i=0;i<L.length;i++)if(s.indexOf(L[i][0])>=0)s=s.split(L[i][0]).join(L[i][1]);return s}
+function trTxt(s){if(!s||!/[A-Za-zÀ-ú]{2}/.test(s))return s;if(LANG!=='en')return njTx(s);
+  var t=s.trim();if(EN[t]!==undefined)return njTx(s.replace(t,EN[t]));
   var o=s,i;for(i=0;i<EN_FR.length;i++){var k=EN_FR[i];if(o.indexOf(k)>=0)o=o.split(k).join(EN[k])}
-  if(o===s&&/[ãõçáéíóúâêôà]|\b(de|do|da|que|para|com|não)\b/i.test(s))EN_FALTA[t]=1;return o}
+  if(o===s&&/[ãõçáéíóúâêôà]|\b(de|do|da|que|para|com|não)\b/i.test(s))EN_FALTA[t]=1;return njTx(o)}
 function trNode(n){if(n.nodeType===3){if(n.parentNode&&/^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName))return;var v=n.nodeValue,w=trTxt(v);if(w!==v)n.nodeValue=w}
   else if(n.nodeType===1&&n.tagName!=='SCRIPT'&&n.tagName!=='STYLE'){for(var c=n.firstChild;c;c=c.nextSibling)trNode(c)}}
 function idiomaFaltando(){return Object.keys(EN_FALTA)}
-if(LANG==='en'){
-  document.documentElement.lang='en';
+if(LANG==='en'||window.NINJA){
+  if(LANG==='en')document.documentElement.lang='en';
   trNode(document.body);
   new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var m=ms[i];
     if(m.type==='characterData')trNode(m.target);else for(var j=0;j<m.addedNodes.length;j++)trNode(m.addedNodes[j])}})

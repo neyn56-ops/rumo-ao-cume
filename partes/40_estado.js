@@ -321,7 +321,7 @@ function shoot(){
   if(n>=3)return;
   if(!f){
     if(!fbM)fbM=new T.MeshStandardMaterial({color:0xffb040,emissive:0xff5a00,emissiveIntensity:2.4,roughness:.3});
-    var m=mesh(new T.SphereGeometry(.2,14,10),fbM,false,false);m.visible=false;add(m);
+    var m=NJ?njStarMesh(fbM):mesh(new T.SphereGeometry(.2,14,10),fbM,false,false);m.visible=false;add(m);
     f={on:false,mesh:m,x:0,y:0,vx:0,vy:0,life:0,py:0};fbs.push(f);
   }
   f.on=true;f.x=P.x+P.face*.55;f.y=P.y+P.h*.55;f.vx=P.face*15+P.vx*.25;f.vy=3;f.life=2.2;f.py=f.y;f.mesh.visible=true;
@@ -357,7 +357,7 @@ function updFire(dt){
     }
     if(dead)continue;
     if(boss&&boss.state!=='dead'&&boss.state!=='wait'&&Math.abs(f.x-boss.x)<boss.w&&f.y>boss.top&&f.y<boss.top+boss.h){fbBoom(f);toast('O Rei Besouro é forte demais para fogo. Pise nele!');continue}
-    f.mesh.position.set(f.x,f.y,0);
+    f.mesh.position.set(f.x,f.y,0);if(NJ)f.mesh.rotation.z-=dt*22*(f.vx>0?1:-1);
     if(((tm*40)|0)%2===0)emit(sparkPool,f.x,f.y,1,.8,.25,.22,0,0);
   }
 }

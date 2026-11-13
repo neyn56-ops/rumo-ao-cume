@@ -30,6 +30,8 @@ function buildPlants(){
     var isTarget=false;(LV.pipes||[]).forEach(function(q){if(q.to&&q.to.pipe!==undefined&&LV.pipes[q.to.pipe]===pp)isTarget=true});
     if(!pp||pp.to||isTarget)return;
     var g=new T.Group();
+    if(NJ)g=njSnake();/* identidade ninja: cobra no bambu */
+    else{
     var stM=M(0x3f8a2a,.8),buM=M(0xe0482a,.45,.1,{emissive:new T.Color(0x5a0a00),emissiveIntensity:.35}),spM=M(0xfff0c8,.5),lfM=M(0x2f7a22,.8);
     var st=mesh(new T.CylinderGeometry(.1,.13,2.2,8),stM);st.position.y=-.9;g.add(st);
     var bu=mesh(new T.SphereGeometry(.44,16,12),buM);bu.scale.set(1,1.1,1);g.add(bu);
@@ -42,6 +44,7 @@ function buildPlants(){
     [-1,1].forEach(function(sd){var e=mesh(new T.SphereGeometry(.07,8,6),new T.MeshStandardMaterial({color:0x220a00,emissive:0xffd23a,emissiveIntensity:1.2}),false,false);e.position.set(sd*.16,.1,.4);g.add(e)});
     var lf=mesh(new T.SphereGeometry(1,10,6),lfM);lf.scale.set(.5,.05,.2);lf.position.set(-.5,-.55,0);lf.rotation.z=.5;g.add(lf);
     var lf2=lf.clone();lf2.position.x=.5;lf2.rotation.z=-.5;g.add(lf2);
+    }
     g.position.set(pp.x,pp.top-.7,0);add(g);
     plants.push({x:pp.x,top:pp.top,g:g,t:d.ph||0,len:0,dead:false,hold:false});
   });

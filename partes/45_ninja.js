@@ -86,4 +86,32 @@ function njFrame(m){/* cantos e faixas de madeira presos no bloco (filhos do mes
 var njMonGeo=null;function njMonG(){if(njMonGeo)return njMonGeo;var g=njMon().geometry;njMonGeo=g;return g}
 function njRig(){/* a capa do Kuro vira asa ninja: pano escuro com a ponta vermelha */
   if(!NJ||!rig||!rig.cape||!rig.cape.s)return;rig.cape.s.forEach(function(sg,i){sg.children.forEach(function(c){if(c.material){c.material=c.material.clone();c.material.color.set(i===2?0xc8281e:0x2a2440)}})})}
+function njCrateTex(){/* caixote de madeira com tábuas, pregos e corda (no lugar do tijolo) */
+  var c=document.createElement('canvas');c.width=c.height=128;var x=c.getContext('2d'),r=rnd(31);
+  x.fillStyle='#a8743c';x.fillRect(0,0,128,128);
+  for(var i=0;i<4;i++){var y=i*32;x.fillStyle=i%2?'#b07c42':'#9c6a34';x.fillRect(0,y,128,32);x.strokeStyle='rgba(60,30,10,.6)';x.lineWidth=2;x.strokeRect(0,y,128,32);
+    for(var k=0;k<5;k++){x.strokeStyle='rgba(70,40,15,'+(.15+r()*.2)+')';x.lineWidth=1;x.beginPath();x.moveTo(0,y+4+r()*24);x.bezierCurveTo(40,y+r()*32,80,y+r()*32,128,y+4+r()*24);x.stroke()}}
+  x.strokeStyle='#5a3418';x.lineWidth=9;x.strokeRect(4,4,120,120);
+  x.beginPath();x.moveTo(8,8);x.lineTo(120,120);x.stroke();/* travessa em diagonal */
+  x.fillStyle='#3a3a3a';[[12,12],[116,12],[12,116],[116,116],[64,64]].forEach(function(p){x.beginPath();x.arc(p[0],p[1],3.5,0,6.283);x.fill()});
+  var t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;t.anisotropy=4;return t}
+function njSnake(){/* cobra que sai do bambu (no lugar da planta do cano): corpo listrado, cabeça larga, olhos amarelos, língua vermelha */
+  var g=new T.Group(),bm=new T.MeshStandardMaterial({color:0x3e8a3a,roughness:.5}),bl=new T.MeshStandardMaterial({color:0xd8c050,roughness:.5});
+  var pts=[];for(var i=0;i<=10;i++){var t=i/10;pts.push(new T.Vector3(Math.sin(t*5)*.18*(1-t),-2.2+t*2.2,Math.cos(t*4)*.08))}
+  var body=mesh(new T.TubeGeometry(new T.CatmullRomCurve3(pts),40,.2,10,false),bm);g.add(body);
+  for(var j=0;j<6;j++){var p=pts[2+j],rg=mesh(new T.TorusGeometry(.205,.03,6,14),new T.MeshStandardMaterial({color:0x234a20,roughness:.6}));rg.position.copy(p);rg.rotation.x=Math.PI/2;g.add(rg)}
+  var head=new T.Group();head.position.y=.12;g.add(head);
+  var hd=mesh(new T.SphereGeometry(.3,16,12),bm);hd.scale.set(1.25,.75,1.3);head.add(hd);
+  var jaw=mesh(new T.SphereGeometry(.24,12,8),bl);jaw.scale.set(1.1,.45,1.2);jaw.position.set(0,-.12,.06);head.add(jaw);
+  [-1,1].forEach(function(s){var e=mesh(new T.SphereGeometry(.075,10,8),new T.MeshStandardMaterial({color:0x221100,emissive:0xffd23a,emissiveIntensity:1.3}),false,false);e.position.set(s*.17,.1,.27);head.add(e);
+    var f=mesh(new T.ConeGeometry(.03,.12,5),new T.MeshStandardMaterial({color:0xfff6e0}));f.rotation.x=Math.PI;f.position.set(s*.09,-.14,.33);head.add(f)});
+  var tg=mesh(new T.BoxGeometry(.04,.015,.3),new T.MeshStandardMaterial({color:0xe02a2a}));tg.position.set(0,-.08,.48);head.add(tg);
+  return g}
+var njStarGeo=null;
+function njStarMesh(mat){/* shuriken de fogo (no lugar da bola de fogo) */
+  if(!njStarGeo){var s=new T.Shape();for(var i=0;i<8;i++){var a=i/8*6.283,r=i%2?.08:.24;s[i?'lineTo':'moveTo'](Math.cos(a)*r,Math.sin(a)*r)}
+    var h=new T.Path();h.absarc(0,0,.035,0,6.283,true);s.holes.push(h);
+    njStarGeo=new T.ExtrudeGeometry(s,{depth:.03,bevelEnabled:true,bevelThickness:.01,bevelSize:.01,bevelSegments:1});njStarGeo.translate(0,0,-.015)}
+  return mesh(njStarGeo,mat,false,false)}
+if(NJ)brickM.map=njCrateTex();
 njRig();
