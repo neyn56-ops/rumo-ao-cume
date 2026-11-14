@@ -284,7 +284,7 @@ function buildLevel(idx){
   if(typeof autoPick==='function')autoPick(idx);/* Automático: começa na qualidade que já deu certo neste mundo */
   if(typeof spitB!=='undefined')spitB=[];
   if(rig.setOutfit)rig.setOutfit(idx>=11?1:0);/* roupa nova do Kuro na Terra Nova (Mundo 12 em diante) */
-  var th=THEMES[LV.theme],m3=MATS[LV.theme];
+  var th=THEMES[LV.theme],m3=MATS[LV.theme];if(LV.look){var lk=LV.look,th2={},q;for(q in th)th2[q]=th[q];for(q in lk)th2[q]=lk[q];th=th2}/* hora do dia por cima do tema (prólogo: amanhecer na vila) */
   applyTheme(th);sandS.flames=null;
   W=new T.Group();scene.add(W);fox=null;P.mount=false;tuftMesh=null;broMat=null;lushPend=false;lastBro=null;lushG=null;lushSky=null;
   debris=[];popCoins=[];dropCoins=[];solids=[];movers=[];crumbles=[];springs=[];hazards=[];enemies=[];checkpoints=[];coins=[];items=[];blades=[];blocks=[];vines=[];pipes=[];plants=[];drops=[];balls=[];airBubs=[];extraCoins=0;boss=null;flames=[];eShots=[];doorObj=null;castleFx.torches=[];castleFx.bolt=null;vilLan=[];ropes=[];pulleys=[];vdoors=[];hLifts=[];hDrafts=[];hFall=null;hFall2=null;hSkyC=null;volSinks=[];volMovers=[];volMet=null;volEsc=null;volFallT=null;volPortal=null;volOut=null;hBirds=[];hSwans=[];alarmT=0;if(alarmEl)alarmEl.style.opacity=0;if(hidS)hidS.visible=false;

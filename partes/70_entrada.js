@@ -163,7 +163,7 @@ window.addEventListener('blur',function(){keys.left=keys.right=keys.jump=keys.ru
 })();
 $('playBtn').addEventListener('click',function(){initAudio();if(primaryFn)primaryFn()});
 $('mapBtn').addEventListener('click',function(){if(secondaryFn)secondaryFn()});
-$('openBtn').addEventListener('click',function(){playOpening(function(){buildLevel(0);resetState();updateCamera(0,true);showMenu()})});
+$('openBtn').addEventListener('click',function(){proStart()});/* Abertura: joga o prólogo de novo */
 soundOn=cfg.snd!==false;musicOn=cfg.mus!==false;
 (function(){
   var rows=$('cfgRows'),upd=[];

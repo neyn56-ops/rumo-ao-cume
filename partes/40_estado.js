@@ -108,8 +108,8 @@ function showMenu(){
 }
 var carryNow=null;
 function startLevel(i){
-  if(i===0&&!save.seenOpen&&!opn&&!window.__noOpen&&!window.PORTAL){playOpening(function(){startLevel(0)});return}/* primeira vez no Mundo 1: o clipe do roubo do Coração de Cristal */
-  initAudio();cpSave[i]=null;trIntroDone=false;prePast[i]=false;
+  if(i===0&&!save.seenPro&&!opn&&!window.__noOpen){proStart();return}/* primeira vez no Mundo 1: o prólogo nos telhados (47_prologo.js; antes era o clipe do roubo) */
+  initAudio();cpSave[i]=null;trIntroDone=false;prePast[i]=(i===0);/* Mundo 1: a parte de fora é o prólogo, que só abre pelo proStart */
   carryNow=(i>0&&save.carryFor===i&&save.carry)?save.carry:null;
   buildLevel(i);resetState();
   state='intro';
@@ -131,7 +131,7 @@ function lose(ttl,txt){
   state='dead';sfx.lose();
   /* morreu: perde os poderes trazidos da fase anterior */
   carryNow=null;save.carry=null;save.carryFor=-1;save.hearts=3;/* perdeu tudo: volta para 3 corações */writeSave();
-  if(typeof prePast!=='undefined')prePast[levelIdx]=false;/* mundo com superfície (Mina): perdeu tudo = recomeça lá em cima, no começo da fase */
+  if(typeof prePast!=='undefined'&&levelIdx!==0)prePast[levelIdx]=false;/* mundo com superfície (Mina): perdeu tudo = recomeça lá em cima, no começo da fase */
   showCard({kicker:'Quase lá!',title:ttl||'Kuro caiu',text:txt||'Os inimigos levaram a melhor, mas o Kuro nunca desiste. Vamos de novo?',stats:stats(),primary:{label:'Tentar de novo',fn:retry},secondary:{label:'Mapa',fn:function(){openMap({from:levelIdx})}}});
 }
 function recordLevel(){

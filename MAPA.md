@@ -869,6 +869,12 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - dashMove :36
 - dashReset :37
 
+## 47_prologo.js  (59 linhas) /* ===== Prólogo "Ladrão nos Telhados" (plano aprovado pelo dono, 13/11) — o novo começo do jogo, ~1,5 min =====
+- proStart :20
+- proBuild :25
+- proUpd :37
+- proEnd :52
+
 ## 50_fisica.js  (55 linhas) /*@@parte:50_fisica.js*/
 - moveMovers :4
 - buildDrops :14
@@ -973,7 +979,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - throwStar :524
 - updStars :531
 
-## 53_agua.js  (321 linhas) /*@@parte:53_agua.js*/
+## 53_agua.js  (322 linhas) /*@@parte:53_agua.js*/
 - wTop :4
 - surfWave :6 — altura da onda da superfície (a mesma da faixa da frente): o Kuro boia junto com ela
 - inWater :7

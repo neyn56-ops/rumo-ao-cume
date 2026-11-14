@@ -253,12 +253,12 @@ const PRE=`enemies.forEach(function(e){e.alive=false;e.x=-999});P.inv=1e9;hearts
   LV.blocks.forEach(function(bk){var a={l:bk.x-.5,r:bk.x+.5,b:bk.y,t:bk.y+1};SUP.forEach(function(c){var ov=Math.min(a.r,c.r)-Math.max(a.l,c.l);if(ov<=-.3)return;var up=c.b-a.t,dn=a.b-c.t;
    if((ov>.05&&((up>-.01&&up<2)||(dn>-.01&&dn<2)||(up<0&&dn<0)))||(ov>-.3&&ov<=.05&&up<0&&dn<0))out.push((bk.c||bk.t)+'@'+bk.x+','+bk.y+' x '+c.n)})});return JSON.stringify(out)})()`));
   marca('Mundo 13: blocos com espaço, sem encostar nos cubos',!r.length,r.slice(0,4).join('; '))}
- /* 34: clipe de abertura — passa na 1ª vez do Mundo 1, termina no cartão do Mundo 1, marca como visto; pular funciona; da 2ª vez não passa */
- {const r=JSON.parse(await E(`(function(){var o=[];window.__noOpen=false;save.seenOpen=0;startLevel(0);o.push(state==='cine'&&!!opn);var n=0;while(opn&&n<2400){animate(1/60);n++}o.push(!opn&&state==='intro'&&!card.hidden&&save.seenOpen===1&&n>1100);
-   startLevel(0);o.push(state==='intro'&&!opn);
+ /* 34: 1ª vez no Mundo 1 abre o prólogo; da 2ª vez vai direto ao cartão; o clipe antigo ainda toca e pular funciona */
+ {const r=JSON.parse(await E(`(function(){var o=[];window.__noOpen=false;save.seenPro=0;startLevel(0);o.push(!!LV.prologue&&state==='play'&&!opn);/* 1ª vez: agora é o prólogo jogável (47_prologo.js) no lugar do clipe */var n=0;
+   save.seenPro=1;PR=null;startLevel(0);o.push(state==='intro'&&!opn&&!LV.prologue);
    playOpening(function(){startLevel(0)});for(n=0;n<120;n++)animate(1/60);endOpening();o.push(!opn&&state==='intro'&&!document.getElementById('opnOv'));
    window.__noOpen=true;card.hidden=true;return JSON.stringify(o)})()`));
-  marca('abertura: o Rei Besouro rouba o cristal (passa 1 vez, pular funciona)',r.every(Boolean),r.join(','))}
+  marca('abertura: prólogo na 1ª vez, depois o Mundo 1; clipe antigo ainda funciona',r.every(Boolean),r.join(','))}
  /* 35: roupa nova do Kuro — troca no final do Cume (luz descendo), usa do Mundo 12 em diante, roupa antiga do 1 ao 11 */
  {const r=JSON.parse(await E(`(function(){startLevel(10);beginPlay();var o=[rig.outfit===0];var fv0=fox&&fox.vis;cumeEnding();for(var k=0;k<200;k++)animate(1/60);o.push(rig.outfit===1);o.push(!!(fox&&fox.vis&&fox.vis!==fv0&&fox.vis.g.parent));sumEnd=null;card.hidden=true;
    startLevel(11);o.push(rig.outfit===1);startLevel(0);o.push(rig.outfit===0);startLevel(13);o.push(rig.outfit===1);startLevel(5);o.push(rig.outfit===0);card.hidden=true;return JSON.stringify(o)})()`));
@@ -650,5 +650,15 @@ var won=b.won;for(k=0;k<90*5&&state==='play';k++)step(STEP);
 hurt=h0;dyn=null;keys.left=keys.right=keys.jump=false;
 return 'venceu='+won+' estado='+state+' batidas='+hits+' '+log})()`);const r4=await E(`(function(){var o=[],k;startLevel(21);beginPlay();card.hidden=true;state='play';P.inv=1e9;CP.w.t=9999;var b=CP.boss;P.x=334;P.y=18;for(k=0;k<30;k++)step(STEP);var ok1=!b.w0.dead;resetState();var ok2=b.w0.dead&&b.st==='wait';return 'arena fecha '+(ok1?'ok':'NÃO')+' | morreu na luta: reabre e reinicia '+(ok2?'ok':'NÃO')})()`);
   marca('Mundo 22: Copa — folhas, Bruxa que aparece, cipó, galhos podres, pinhas, flores, pena, luta final e Fim da aventura',/venceu=true estado=win/.test(g4)&&!/NÃO/.test(r4)&&/andando: .*ok.*correndo: .*ok/.test(g)&&/andando: x=31[6-9].*correndo: x=31[6-9]/.test(g2)&&!/NÃO/.test(g+r+r2),g+' || '+r+' || '+g2+' || '+r2+' || '+g4+' || '+r4)}
+ /* 66: Prólogo "Ladrão nos Telhados": robô corre, pula, dá o dash na viga em chamas e no precipício e chega ao torii; cair na rua volta ao telhado; depois começa o Mundo 1 */
+ {const g=await E(`(function(){var o=[];save.seenPro=0;proStart();P.inv=1e9;enemies.forEach(function(e){e.alive=false;e.x=-999});
+  function gnd(x){return solids.some(function(s){return !s.dead&&x>=s.l&&x<=s.r&&Math.abs(s.t-P.y)<.3})}
+  var k,cd=0;keys.right=true;for(k=0;k<90*60&&state==='play';k++){if(P.grounded&&!gnd(P.x+1.1)){keys.jump=true;P.jbuf=.12}else if(P.vy<0)keys.jump=false;
+   if(P.grounded&&Math.abs(P.x+1.5-PRO.fire.x)<.3&&P.y>4){DASH.cd=0;dashTry()}if(!P.grounded&&P.x>80&&P.x<84&&!cd&&P.vy<0){dashTry();cd=1}if(P.grounded)cd=0;step(STEP)}
+  keys.right=keys.jump=false;o.push('chegou '+(state==='win'&&save.seenPro===1?'ok':'NÃO')+' t='+(k/90).toFixed(0)+'s');
+  proStart();P.inv=1e9;P.x=9.2;P.y=1.2;P.vy=-5;for(k=0;k<90;k++)step(STEP);o.push('rua volta ao telhado '+(P.y>2.5?'ok':'NÃO'));
+  P.x=53.2;P.y=4.2;P.vy=0;P.inv=0;var h=hearts;P.face=1;keys.right=true;for(k=0;k<40;k++)step(STEP);keys.right=false;o.push('viga queima sem dash '+(P.inv>0&&P.x<54?'ok':'NÃO'));
+  PR=null;startLevel(0);o.push('depois abre o Mundo 1 '+(!LV.prologue&&LV===LEVELS[0]?'ok':'NÃO'));save.seenPro=0;return o.join(' | ')})()`);
+  marca('Prólogo: telhados, dash na viga em chamas, precipício e torii; não dá para ficar preso',!/NÃO/.test(g),g)}
  marca('sem erros de JavaScript durante os testes',!erros.length,erros.slice(0,3).join('; '));await pg.close();
  await b.close();const f=res.filter(r=>!r[1]).length;console.log('\n'+(f?'❌ '+f+' teste(s) falharam':'✅ todos os '+res.length+' testes passaram'));process.exit(f?1:0)})();

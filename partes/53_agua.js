@@ -116,6 +116,7 @@ function step(dt){
   if(P.stun>0){P.stun-=dt;ax=0}
   if(P.inv>0)P.inv-=dt;
   dashUpd(dt);/* dash de sombra (46_sombra.js) */
+  if(LV&&LV.prologue)proUpd(dt);/* prólogo (47_prologo.js) */
   if(P.feather>0){P.feather-=dt;if(P.feather<=0)$('featherStat').hidden=true}
   if(P.noCut>0)P.noCut-=dt;
   if(P.vineCd>0)P.vineCd-=dt;
@@ -316,5 +317,5 @@ function step(dt){
     }
   }
   updFox(dt);
-  if(LV.goal&&!LV.crystalGoal&&P.x>=LV.goal.x-.2&&P.y>=LV.goal.top-.2&&!inRoom(P.x)){if(levelIdx>=TOTAL_W-1||(LV.boss&&LV.boss.v2))winGame();else winLevel()}
+  if(LV.goal&&!LV.crystalGoal&&P.x>=LV.goal.x-.2&&P.y>=LV.goal.top-.2&&!inRoom(P.x)){if(LV.prologue)proEnd();else if(levelIdx>=TOTAL_W-1||(LV.boss&&LV.boss.v2))winGame();else winLevel()}
 }
