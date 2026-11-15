@@ -12,6 +12,10 @@ for p in libs:
     js=open(NM+p,encoding='utf8').read().replace('</script','<\\/script')
     s=s.replace('<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/'+p+'"></script>','<script>'+js+'</script>')
 assert 'cdn.jsdelivr' not in s, 'sobrou biblioteca de fora'
+# nome no portal (escolhido pelo dono, 15/11): "Ninja Kuro: Summit Quest" em todas as línguas
+NOME='Ninja Kuro: Summit Quest'
+s=s.replace('<title>Rumo ao Cume</title>','<title>'+NOME+'</title>').replace(">Rumo ao Cume<",">"+NOME+"<").replace("title:'Rumo ao Cume'","title:'"+NOME+"'")
+s=s.replace('letter-spacing:.02em">Rumo ao Cume</div>','letter-spacing:.02em;font-size:min(8vw,10vh)">'+NOME+'</div>')
 i=s.index('<head>')+6 if '<head>' in s else s.index('<style>')
 s=s[:i]+'<script>window.PORTAL=1</script>'+s[i:]
 open(O+'/index.html','w',encoding='utf8').write(s)

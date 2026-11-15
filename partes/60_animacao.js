@@ -363,7 +363,7 @@ function visBoss(dt){
 }
 function animate(dt){
   tm+=dt;if(sumEnd)updEnding(dt);if(opn)updOpening(dt);
-  updDebris(dt);updPopCoins(dt);updDropCoins(dt);updWind(dt);updWaterFx(dt);updBubFx(dt);if(curTheme.name==='castle')updCastleFx(dt);
+  updDebris(dt);updPopCoins(dt);fxUpd(dt);updDropCoins(dt);updWind(dt);updWaterFx(dt);updBubFx(dt);if(curTheme.name==='castle')updCastleFx(dt);
   pose(dt);
   if(dyn)updDeath(dt);else if(fadeIn>0){fadeIn-=dt;$('fade').style.opacity=clamp(fadeIn/.45,0,1)}
   updSandWave();

@@ -289,7 +289,7 @@ function step(dt){
         var stp=e.y+e.h*.55;if(!CNF&&e.slp>0&&e.landed&&P.vy<=.5&&P.y>stp-.6&&P.y<stp+.3){P.y=stp;P.vy=0;P.grounded=true;P.onPlat=null;P.dj=false}continue}
       if(e.stomp&&(CNF?(P.vy>=-.5&&P.y+P.h<e.y+e.h*.55):(P.vy<=.5&&P.y>e.y+e.h*.45))&&(!(e.slp>0||e.wake)||P.sj||P.mount)){/* dormindo: o pulo normal não quica de novo (o Kuro passa e pisa no chão); giratório/raposinha derrotam */
         killE(e,(P.sj||P.mount)?'sjump':'stomp')/* giratório ou montado na raposinha: derrota na hora */;P.vy=(CNF?-1:1)*(P.inW?(keys.jump?8.5:6.5):(keys.jump?14.5:10.5));P.grounded=false;P.onPlat=null;P.dj=false;
-        sfx.stomp();emit(dustPool,e.x,e.y+.4,7,2.4,.55,.55,1.2,-.3);
+        sfx.stomp();emit(dustPool,e.x,e.y+.4,7,2.4,.55,.55,1.2,-.3);fxStomp(e.x,e.y+e.h*.5);
       }else if(P.spinT<=0&&!e.safe)hurt(e.x,(e.type==='urchin'&&curTheme.name!=='peaks'&&curTheme.name!=='ruins')?1:0);
     }
   }
