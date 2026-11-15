@@ -875,7 +875,7 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - proUpd :37
 - proEnd :52
 
-## 48_acabamento.js  (50 linhas) /* ===== Acabamento (pacote para o CrazyGames, aprovado pelo dono 15/11) =====
+## 48_acabamento.js  (53 linhas) /* ===== Acabamento (pacote para o CrazyGames, aprovado pelo dono 15/11) =====
 - fxTex :7
 - fxPop :11
 - fxUpd :15
@@ -883,9 +883,10 @@ Busca: `grep -i palavra MAPA.md`; depois ler só as linhas: `sed -n INICIO,FIMp 
 - fxHurt :17
 - fxPower :19
 - fxFadeIn :23
-- fxStomp :35
-- fxWinCard :36
-- next :45
+- fxFadeMap :24
+- fxStomp :38
+- fxWinCard :39
+- next :48
 
 ## 50_fisica.js  (55 linhas) /*@@parte:50_fisica.js*/
 - moveMovers :4

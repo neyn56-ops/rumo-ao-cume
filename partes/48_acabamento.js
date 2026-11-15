@@ -21,6 +21,9 @@ function fxPower(name){/* flash branco + nome do poder no meio da tela */
   var t=fxEl('fxPower','position:absolute;left:0;right:0;top:32%;z-index:6;text-align:center;pointer-events:none;color:#ffe680;font:italic 900 min(9vw,10vh)/1 system-ui,sans-serif;letter-spacing:.03em;-webkit-text-stroke:3px #3a1a00;text-shadow:0 4px 14px rgba(0,0,0,.5);opacity:0');
   t.textContent=name;t.style.transition='none';t.style.opacity=1;t.style.transform='scale(.6)';void t.offsetWidth;t.style.transition='transform .35s cubic-bezier(.2,1.6,.4,1),opacity .5s .9s';t.style.transform='scale(1)';t.style.opacity=0}
 function fxFadeIn(){if(dyn||window.__noOpen)return;fadeIn=.35;$('fade').style.opacity=1}/* o animate clareia sozinho (mesmo fadeIn das ruínas) */
+function fxFadeMap(){/* o mapa tem laço próprio (sem animate): clareia por CSS e devolve o controle */
+  if(window.__noOpen)return;fadeIn=0;var f=$('fade');f.style.transition='none';f.style.opacity=1;void f.offsetWidth;f.style.transition='opacity .35s';f.style.opacity=0;
+  setTimeout(function(){f.style.transition=''},450)}
 /* ganchos nas funções do jogo (sem mexer nelas por dentro) */
 (function(){
   var ac=addCoin;addCoin=function(){ac.apply(this,arguments);if(state==='play'){fxPop(P.x,P.y+P.h+.5,'+1','#ffd84a');emit(sparkPool,P.x,P.y+P.h*.6,3,1.6,.35,.18,.1,1)}};
@@ -28,7 +31,7 @@ function fxFadeIn(){if(dyn||window.__noOpen)return;fadeIn=.35;$('fade').style.op
   var ci=collectItem;collectItem=function(it){var t=it&&it.type;ci.apply(this,arguments);
     var nm={mushroom:NJ?'ONIGIRI!':'COGUMELO!',feather:NJ?'ASA NINJA!':'CAPA!',flower:NJ?'PERGAMINHO DE FOGO!':'FLOR DE FOGO!',fruit:'ESCUDO!'}[t];if(nm)fxPower(nm)};
   var sl=startLevel;startLevel=function(){fxFadeIn();return sl.apply(this,arguments)};
-  var om=openMap;openMap=function(){fxFadeIn();return om.apply(this,arguments)};
+  var om=openMap;openMap=function(){var r=om.apply(this,arguments);fxFadeMap();return r};
   var sc=showCard;showCard=function(){var o=document.getElementById('fxBadge');if(o)o.remove();FX.cnt++;return sc.apply(this,arguments)};
   var wl=winLevel;winLevel=function(){wl.apply(this,arguments);fxWinCard()};
 })();
